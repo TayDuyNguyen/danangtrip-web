@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import type { ApiResponse } from "@/types/api";
+import type { ApiResponse } from "@/types";
 
 interface UseFetchOptions<T> {
   immediate?: boolean;

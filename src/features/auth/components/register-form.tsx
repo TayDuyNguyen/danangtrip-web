@@ -1,0 +1,175 @@
+"use client";
+
+import { useState } from "react";
+import { useTranslations } from "next-intl";
+import { Link, useRouter } from "@/i18n/navigation";
+import { IoMailOutline, IoLockClosedOutline, IoPersonOutline } from "react-icons/io5";
+import { useAuth } from "../hooks/use-auth";
+import { Input } from "@/components/ui";
+import { useFieldFocus } from "@/hooks/use-field-focus";
+
+interface RegisterFormProps {
+  onSuccess?: () => void;
+  redirectUrl?: string;
+}
+
+export function RegisterForm({ onSuccess, redirectUrl }: RegisterFormProps) {
+  const t = useTranslations("register");
+  const router = useRouter();
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+  
+  const { register, isLoading, error } = useAuth();
+  const { isFocused, getFocusProps } = useFieldFocus<"name" | "email" | "password" | "confirmPassword">();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (formData.password !== formData.confirmPassword) {
+      // In a real app, I'd set a specific error for confirm password
+      return;
+    }
+
+    const result = await register({
+      username: formData.name, // Using name as username
+      email: formData.email,
+      password: formData.password,
+      password_confirmation: formData.confirmPassword,
+    });
+
+    if (result.success) {
+      onSuccess?.();
+      if (redirectUrl) {
+        window.location.href = redirectUrl;
+      } else {
+        router.push("/login");
+      }
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  return (
+    <div className="flex min-h-screen bg-gray-900 justify-center items-center p-4 sm:p-8 mt-16 md:mt-0">
+      <div className="flex w-full max-w-md lg:max-w-4xl lg:w-3/4 xl:w-2/3 h-auto lg:h-[700px] rounded-2xl overflow-hidden shadow-2xl">
+        {/* Left panel - form */}
+        <div className="flex flex-1 items-center justify-center p-5 sm:p-8 bg-gray-900">
+          <div className="w-full max-w-md">
+            <h2 className="text-3xl font-bold uppercase text-white mb-8 text-center lg:text-left tracking-tight">
+              {t("title")}
+            </h2>
+
+            {error && (
+              <div className="mb-4 p-3 bg-red-500/20 border border-red-500 rounded text-red-400 text-sm text-center">
+                {error}
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-5" noValidate autoComplete="off">
+              <Input
+                label={t("name_label")}
+                name="name"
+                leftIcon={<IoPersonOutline className="w-5 h-5" />}
+                placeholder={t("name_placeholder")}
+                required
+                value={formData.name}
+                onChange={handleChange}
+                isFocused={isFocused("name")}
+                {...getFocusProps("name")}
+              />
+
+              <Input
+                label={t("email_label")}
+                name="email"
+                leftIcon={<IoMailOutline className="w-5 h-5" />}
+                type="email"
+                placeholder={t("email_placeholder")}
+                required
+                value={formData.email}
+                onChange={handleChange}
+                isFocused={isFocused("email")}
+                {...getFocusProps("email")}
+              />
+
+              <Input
+                label={t("password_label")}
+                name="password"
+                leftIcon={<IoLockClosedOutline className="w-5 h-5" />}
+                placeholder={t("password_placeholder")}
+                required
+                isPassword
+                value={formData.password}
+                onChange={handleChange}
+                isFocused={isFocused("password")}
+                {...getFocusProps("password")}
+              />
+
+              <Input
+                label={t("confirm_password_label")}
+                name="confirmPassword"
+                leftIcon={<IoLockClosedOutline className="w-5 h-5" />}
+                placeholder={t("confirm_password_placeholder")}
+                required
+                isPassword
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                isFocused={isFocused("confirmPassword")}
+                {...getFocusProps("confirmPassword")}
+              />
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full flex items-center justify-center gap-2 bg-linear-to-br from-cyan-400 to-blue-600 hover:from-cyan-500 hover:to-blue-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-lg transition-all duration-300 shadow-lg shadow-cyan-500/25 uppercase tracking-wider"
+              >
+                {isLoading ? (
+                  <>
+                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+                    </svg>
+                    {t("registering")}
+                  </>
+                ) : (
+                  t("register_button")
+                )}
+              </button>
+            </form>
+
+            <p className="text-center text-sm text-gray-500 mt-6">
+              {t("has_account")}{" "}
+              <Link
+                href="/login"
+                className="text-cyan-400 font-medium hover:text-cyan-300 hover:underline transition"
+              >
+                {t("login_now")}
+              </Link>
+            </p>
+          </div>
+        </div>
+
+        {/* Right panel - gradient background */}
+        <div
+          className="hidden lg:flex flex-1 bg-linear-to-br from-cyan-500 to-blue-950 flex-col pt-12 pr-8 pl-16 text-white relative text-right items-end"
+          style={{ clipPath: "polygon(40% 0, 100% 0, 100% 100%, 0% 100%)" }}
+        >
+          <h1 className="text-4xl mb-4 font-bold uppercase tracking-wide">
+            {t("welcome_title")}
+          </h1>
+          <p className="text-cyan-100 text-lg">
+            {t("welcome_subtitle")}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}

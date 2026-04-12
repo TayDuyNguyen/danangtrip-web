@@ -1,0 +1,31 @@
+{
+  "welcome_title": "Chào mừng bạn trở lại!",
+  "welcome_subtitle": "Đăng nhập để khám phá Đà Nẵng ngay hôm nay.",
+  "title": "Đăng nhập",
+  "email_label": "Email",
+  "email_placeholder": "Nhập email của bạn",
+  "password_label": "Mật khẩu",
+  "password_placeholder": "Nhập mật khẩu",
+  "remember_me": "Ghi nhớ đăng nhập",
+  "forgot_password": "Quên mật khẩu?",
+  "logging_in": "Đang đăng nhập...",
+  "login_button": "ĐĂNG NHẬP",
+  "or_login_with": "Hoặc đăng nhập với",
+  "no_account": "Chưa có tài khoản?",
+  "register_now": "Đăng ký ngay",
+  "incorrect_credentials": "Email hoặc mật khẩu không đúng.",
+  "account_banned": "Tài khoản bị khóa. Vui lòng liên hệ admin.",
+  "network_error": "Không thể kết nối đến server. Kiểm tra lại mạng.",
+  "server_error": "Lỗi server. Vui lòng thử lại sau.",
+  "general_error": "Đã có lỗi xảy ra. Vui lòng thử lại.",
+  "login_success": "Đăng nhập thành công",
+  "login_error": "Đăng nhập thất bại",
+  "check_again": "Vui lòng kiểm tra lại thông tin.",
+  "account_inactive": "Tài khoản không hoạt động. Vui lòng liên hệ admin.",
+  "validation": {
+    "email_required": "Vui lòng nhập email",
+    "email_invalid": "Email không hợp lệ",
+    "password_required": "Vui lòng nhập mật khẩu",
+    "password_min": "Mật khẩu phải có ít nhất 6 ký tự"
+  }
+}

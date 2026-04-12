@@ -1,0 +1,41 @@
+{
+  "hero_title": "Explore Da Nang",
+  "hero_subtitle": "Experience the best local spots and amazing tours in the most livable city in Vietnam.",
+  "search_placeholder": "Where do you want to go?",
+  "select_date": "Select date...",
+  "book_now": "Book now",
+  "categories": {
+    "dining": "Dining",
+    "hotels": "Hotels",
+    "travel": "Tours",
+    "shopping": "Shopping",
+    "entertainment": "Entertainment",
+    "spa_gym": "Spa & Gym",
+    "places_suffix": "PLACES",
+    "tours_suffix": "TOURS",
+    "shops_suffix": "SHOPS",
+    "points_suffix": "POINTS",
+    "facilities_suffix": "FACILITIES"
+  },
+  "explore_danang": "Featured Locations",
+  "explore_danang_desc": "Must-visit places in Da Nang.",
+  "view_all": "View all",
+  "hot_tours": {
+    "title": "Hot Tours 🔥",
+    "subtitle": "Most booked this week",
+    "cta": "Get deals now"
+  },
+  "blog": {
+    "title": "Travel Guide",
+    "cta": "Explore blog",
+    "article1_title": "Top 10 dishes you \"must try\" in Da Nang",
+    "article1_desc": "Discover the food paradise from Mi Quang to fresh seafood...",
+    "article2_title": "3D2N itinerary to explore Da Nang on a budget",
+    "article2_desc": "Detailed guide on transportation, accommodation, and must-see attractions...",
+    "article3_title": "Top 5 chill cafes with a perfect view of Han River",
+    "article3_desc": "Save these beautiful cafes with unique drinks for your next visit..."
+  },
+  "tour_duration": "{{days}} days {{nights}} nights",
+  "tour_price": "From {{price}}",
+  "tour_rating": "{{count}} reviews"
+}

@@ -1,0 +1,51 @@
+{
+  "nav": {
+    "home": "Home",
+    "destinations": "Places",
+    "travel": "Tours",
+    "blog": "Blog",
+    "contact": "Contact"
+  },
+  "footer": {
+    "description": "Da Nang's most dynamic travel platform, bringing you unique, vibrant, and exciting experiences in the most livable city in Vietnam.",
+    "quick_links": "Discovery",
+    "about_us": "Featured Locations",
+    "terms": "Day Tours",
+    "privacy": "Local Cuisine",
+    "contact": "Travel Guide",
+    "for_partners": "Support",
+    "partner_register": "Terms of Service",
+    "advertise": "Privacy Policy",
+    "support": "FAQs",
+    "news": "Direct Contact",
+    "newsletter": "Newsletter",
+    "newsletter_desc": "Get the latest travel deals via your email.",
+    "subscribe": "Subscribe",
+    "copyright": "© 2026 DA NANG TRIP. ALL RIGHTS RESERVED.",
+    "privacy_policy": "Privacy",
+    "tos": "Terms",
+    "cookies": "Cookies"
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "profile": "Profile"
+  },
+  "language": {
+    "vi": "Tiếng Việt",
+    "en": "English",
+    "select": "Select language"
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page",
+    "of": "of",
+    "items_per_page": "Items per page",
+    "go_to": "Go to",
+    "showing": "Showing",
+    "to": "to",
+    "results": "results"
+  }
+}
