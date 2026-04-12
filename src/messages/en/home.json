@@ -1,0 +1,17 @@
+{
+  "hero_title": "Discover the Best of Da Nang",
+  "hero_subtitle": "Experience amazing journeys with Da Nang Trip. From brilliant Ba Na Hills to the mystical Dragon Bridge.",
+  "search_placeholder": "Where do you want to go?",
+  "select_date": "Select date...",
+  "book_now": "Book now",
+  "explore_danang": "Explore Da Nang",
+  "explore_danang_desc": "Must-visit places in the most livable city.",
+  "popular_tours": "Popular Tours",
+  "popular_tours_desc": "The itineraries most loved by our travelers.",
+  "view_all": "View all",
+  "testimonials": "Guest Reviews",
+  "testimonials_desc": "Honest feedback from those who have experienced with us.",
+  "tour_duration": "{{days}} days {{nights}} nights",
+  "tour_price": "From {{price}}",
+  "tour_rating": "{{count}} reviews"
+}

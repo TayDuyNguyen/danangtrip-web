@@ -1,0 +1,49 @@
+{
+  "nav": {
+    "home": "Home",
+    "destinations": "Destinations",
+    "dining": "Dining",
+    "hotels": "Hotels",
+    "travel": "Tours",
+    "blog": "Blog"
+  },
+  "footer": {
+    "description": "The leading travel support platform in Da Nang, helping you have the best experiences in the most livable city in Vietnam.",
+    "quick_links": "Quick Links",
+    "about_us": "About Us",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "contact": "Contact",
+    "for_partners": "For Partners",
+    "partner_register": "Partner registration",
+    "advertise": "Advertising cooperation",
+    "support": "Support Center",
+    "news": "News",
+    "newsletter": "Newsletter",
+    "newsletter_desc": "Receive the latest travel offers via your email.",
+    "subscribe": "Subscribe",
+    "copyright": "© 2026 Da Nang Trip"
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "profile": "Profile"
+  },
+  "language": {
+    "vi": "Tiếng Việt",
+    "en": "English",
+    "select": "Select language"
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page",
+    "of": "of",
+    "items_per_page": "Items per page",
+    "go_to": "Go to",
+    "showing": "Showing",
+    "to": "to",
+    "results": "results"
+  }
+}
