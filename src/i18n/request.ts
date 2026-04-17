@@ -1,28 +1,29 @@
 import { getRequestConfig } from "next-intl/server";
 import { routing } from "./routing";
-import fs from "fs";
-import path from "path";
+
+// Define the namespaces we have (common, home, login, register, translation)
+const namespaces = ["common", "home", "login", "register", "translation"];
 
 export default getRequestConfig(async ({ requestLocale }) => {
   let locale = await requestLocale;
 
-  if (!locale || !routing.locales.includes(locale as any)) {
+  if (!locale || !(routing.locales as readonly string[]).includes(locale)) {
     locale = routing.defaultLocale;
   }
-  const messagesPath = path.join(process.cwd(), "src", "messages", locale);
-  const messages: Record<string, any> = {};
 
-  if (fs.existsSync(messagesPath)) {
-    const files = fs.readdirSync(messagesPath);
-    for (const file of files) {
-      if (file.endsWith(".json")) {
-        const filePath = path.join(messagesPath, file);
-        const fileContent = fs.readFileSync(filePath, "utf-8");
-        const namespace = file.replace(".json", "");
-        messages[namespace] = JSON.parse(fileContent);
+  // Optimized: Load all namespaces in parallel without fs.readdirSync
+  const messages: Record<string, Record<string, unknown>> = {};
+
+  await Promise.all(
+    namespaces.map(async (ns) => {
+      try {
+        const message = (await import(`../messages/${locale}/${ns}.json`)).default as Record<string, unknown>;
+        messages[ns] = message;
+      } catch {
+        console.warn(`Could not load i18n namespace "${ns}" for locale "${locale}"`);
       }
-    }
-  }
+    })
+  );
 
   return {
     locale,

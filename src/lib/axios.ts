@@ -2,9 +2,11 @@ import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 import { config } from "@/config";
 import { toast } from "sonner";
 import { useAuthStore } from "@/store/auth.store";
+import Cookies from "js-cookie";
+import type { ApiResponse } from "@/types";
 
 /**
- * Enhanced Axios instance ported from DATN_frontend_user
+ * Enhanced Axios instance with cookie-based auth and standardized ApiResponse contract.
  */
 const axiosInstance = axios.create({
   baseURL: config.api.url,
@@ -29,13 +31,13 @@ const processQueue = (error: Error | null, token: string | null = null) => {
 const handleLogout = () => {
   if (isRedirecting || typeof window === "undefined") return;
   isRedirecting = true;
-  
-  // Clear tokens and reset store
+
+  Cookies.remove("token", { path: "/" });
+  Cookies.remove("refreshToken", { path: "/" });
   localStorage.removeItem("token");
   localStorage.removeItem("refreshToken");
   useAuthStore.getState().logout();
-  
-  // Redirect to login (matching the i18n structure in middleware)
+
   const isEn = window.location.pathname.startsWith("/en");
   window.location.replace(isEn ? "/en/login" : "/login");
 };
@@ -43,9 +45,8 @@ const handleLogout = () => {
 // Request interceptor
 axiosInstance.interceptors.request.use(
   async (axiosConfig: InternalAxiosRequestConfig) => {
-    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-    
-    // Add Language header
+    const token = Cookies.get("token");
+
     if (typeof window !== "undefined") {
       const locale = window.location.pathname.startsWith("/en") ? "en" : "vi";
       axiosConfig.headers["Accept-Language"] = locale;
@@ -55,7 +56,6 @@ axiosInstance.interceptors.request.use(
       axiosConfig.headers.Authorization = `Bearer ${token}`;
     }
 
-    // Handle FormData
     if (axiosConfig.data instanceof FormData) {
       delete axiosConfig.headers["Content-Type"];
     }
@@ -65,20 +65,39 @@ axiosInstance.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+// Response type for refresh token endpoint
+interface RefreshTokenData {
+  data?: { token?: string };
+  token?: string;
+}
+
 // Response interceptor
 axiosInstance.interceptors.response.use(
-  (response) => response.data,
-  async (error: AxiosError<any>) => {
+  (response) => {
+    if (response.data && typeof response.data.success === "boolean") {
+      return response.data;
+    }
+    return {
+      success: true,
+      data: response.data,
+      message: (response.data as { message?: string })?.message || "Success",
+    };
+  },
+  async (error: AxiosError<{ error?: string; message?: string }>) => {
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
 
     if (!error.response) {
-      toast.error("Kết nối mạng thất bại"); // Will update with i18n later if needed
-      return Promise.reject(error);
+      toast.error("Kết nối mạng thất bại");
+      return Promise.reject({
+        success: false,
+        error: "Network Error",
+        message: "Kết nối mạng thất bại",
+      } as ApiResponse);
     }
 
     const { status, data } = error.response;
 
-    // Handle 401 - Refresh Token logic
+    // 401 — Refresh Token logic
     if (status === 401 && !originalRequest.url?.includes("/login")) {
       if (originalRequest._retry) {
         handleLogout();
@@ -100,17 +119,17 @@ axiosInstance.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const refreshToken = localStorage.getItem("refreshToken");
+        const refreshToken = Cookies.get("refreshToken") || localStorage.getItem("refreshToken");
         if (!refreshToken) throw new Error("No refresh token");
 
-        const response: any = await axios.post(`${config.api.url}/auth/refresh`, {
+        const response = await axios.post<RefreshTokenData>(`${config.api.url}/auth/refresh`, {
           refreshToken,
         });
 
-        const newToken = response.data?.token;
+        const newToken = response.data?.data?.token || response.data?.token;
         if (!newToken) throw new Error("Refresh failed");
 
-        localStorage.setItem("token", newToken);
+        Cookies.set("token", newToken, { expires: 7, path: "/" });
         processQueue(null, newToken);
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return axiosInstance(originalRequest);
@@ -123,7 +142,6 @@ axiosInstance.interceptors.response.use(
       }
     }
 
-    // Global Error Toasts
     if (status === 403) {
       toast.warning("Bạn không có quyền thực hiện hành động này");
     }
@@ -131,7 +149,13 @@ axiosInstance.interceptors.response.use(
       toast.error("Lỗi hệ thống, vui lòng thử lại sau");
     }
 
-    return Promise.reject(error);
+    const errorResponse: ApiResponse = {
+      success: false,
+      error: data?.error || data?.message || "Unknown Error",
+      message: data?.message || "Đã có lỗi xảy ra",
+    };
+
+    return Promise.reject(errorResponse);
   }
 );
 
@@ -141,9 +165,9 @@ export default axiosInstance;
  * Type-safe API helper methods
  */
 export const api = {
-  get: <T>(url: string, params?: object) => axiosInstance.get<any, T>(url, { params }),
-  post: <T>(url: string, data?: any) => axiosInstance.post<any, T>(url, data),
-  put: <T>(url: string, data?: any) => axiosInstance.put<any, T>(url, data),
-  patch: <T>(url: string, data?: any) => axiosInstance.patch<any, T>(url, data),
-  delete: <T>(url: string) => axiosInstance.delete<any, T>(url),
+  get:    <T>(url: string, params?: object) => axiosInstance.get<T, ApiResponse<T>>(url, { params }),
+  post:   <T>(url: string, data?: unknown)  => axiosInstance.post<T, ApiResponse<T>>(url, data),
+  put:    <T>(url: string, data?: unknown)  => axiosInstance.put<T, ApiResponse<T>>(url, data),
+  patch:  <T>(url: string, data?: unknown)  => axiosInstance.patch<T, ApiResponse<T>>(url, data),
+  delete: <T>(url: string)                  => axiosInstance.delete<T, ApiResponse<T>>(url),
 };

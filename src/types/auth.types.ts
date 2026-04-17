@@ -26,6 +26,8 @@ export interface RegisterRequest {
 
 export interface RegisterResponse {
   user: User;
+  token?: string;
+  refreshToken?: string;
 }
 
 export type RefreshTokenResponse = LoginResponse;

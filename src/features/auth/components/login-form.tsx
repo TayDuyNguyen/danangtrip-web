@@ -5,8 +5,8 @@ import { useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
 import { IoMailOutline, IoLockClosedOutline } from "react-icons/io5";
 import { useAuth } from "../hooks/use-auth";
-import { authService } from "@/services/auth.service";
 import { Input } from "@/components/ui";
+
 import { useFieldFocus } from "@/hooks/use-field-focus";
 
 interface LoginFormProps {

@@ -43,7 +43,7 @@ export const validatePassword = (password: string): ValidationResult => {
 };
 
 // Required field validation
-export const validateRequired = (value: any, fieldName: string = "Trường này"): ValidationResult => {
+export const validateRequired = (value: unknown): ValidationResult => {
   if (value === undefined || value === null || value === "") {
     return { isValid: false, error: ERROR_MESSAGES.REQUIRED };
   }

@@ -65,7 +65,7 @@ const Testimonials = () => {
               </div>
 
               <p className="mb-8 text-lg italic text-gray-700 leading-relaxed relative z-10">
-                "{review.content}"
+                &ldquo;{review.content}&rdquo;
               </p>
 
               <div className="mt-auto flex items-center gap-4">

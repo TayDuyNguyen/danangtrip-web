@@ -15,15 +15,15 @@ const LanguageSwitcher = ({ isScrolled }: { isScrolled: boolean }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const languages = [
-    { 
-      code: "vi", 
-      name: t("language.vi"), 
-      flag: "/images/lang/vi.png" 
+    {
+      code: "vi",
+      name: t("language.vi"),
+      flag: "/images/lang/vi.png"
     },
-    { 
-      code: "en", 
-      name: t("language.en"), 
-      flag: "/images/lang/en.png" 
+    {
+      code: "en",
+      name: t("language.en"),
+      flag: "/images/lang/en.png"
     },
   ];
 
@@ -34,10 +34,9 @@ const LanguageSwitcher = ({ isScrolled }: { isScrolled: boolean }) => {
       setIsOpen(false);
       return;
     }
-    
+
     setIsOpen(false);
     startTransition(() => {
-      // @ts-ignore - navigation helper handles locale
       router.replace(pathname, { locale: nextLocale });
     });
   };
@@ -46,20 +45,19 @@ const LanguageSwitcher = ({ isScrolled }: { isScrolled: boolean }) => {
     <div className="relative">
       {/* Overlay to close dropdown when clicking outside */}
       {isOpen && (
-        <div 
-          className="fixed inset-0 z-40" 
-          onClick={() => setIsOpen(false)} 
+        <div
+          className="fixed inset-0 z-40"
+          onClick={() => setIsOpen(false)}
         />
       )}
 
       <button
         onClick={() => setIsOpen(!isOpen)}
         disabled={isPending}
-        className={`flex items-center gap-2.5 px-3 py-1.5 rounded-full transition-all duration-300 border ${
-          isScrolled
+        className={`flex items-center gap-2.5 px-3 py-1.5 rounded-full transition-all duration-300 border ${isScrolled
             ? "border-gray-100 bg-gray-50 text-gray-700 hover:border-cyan-500/30 hover:bg-cyan-50/50"
             : "border-white/10 bg-white/10 text-white hover:border-white/30 hover:bg-white/20"
-        } ${isPending ? "opacity-50 cursor-not-allowed" : ""} group z-50`}
+          } ${isPending ? "opacity-50 cursor-not-allowed" : ""} group z-50`}
       >
         <div className="relative w-5 h-5 rounded-full overflow-hidden border border-white/20 shadow-sm">
           <Image
@@ -71,10 +69,9 @@ const LanguageSwitcher = ({ isScrolled }: { isScrolled: boolean }) => {
           />
         </div>
         <span className="text-xs font-bold uppercase tracking-wider">{locale}</span>
-        <IoChevronDownOutline 
-          className={`text-xs transition-transform duration-300 ${
-            isOpen ? "rotate-180" : ""
-          } ${isScrolled ? "text-gray-400" : "text-white/60"}`} 
+        <IoChevronDownOutline
+          className={`text-xs transition-transform duration-300 ${isOpen ? "rotate-180" : ""
+            } ${isScrolled ? "text-gray-400" : "text-white/60"}`}
         />
       </button>
 
@@ -85,17 +82,16 @@ const LanguageSwitcher = ({ isScrolled }: { isScrolled: boolean }) => {
               {t("language.select")}
             </span>
           </div>
-          
+
           <div className="px-1 flex flex-col gap-0.5">
             {languages.map((lang) => (
               <button
                 key={lang.code}
                 onClick={() => onSelectChange(lang.code)}
-                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 group/item ${
-                  locale === lang.code
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 group/item ${locale === lang.code
                     ? "bg-cyan-50 text-cyan-600 font-bold"
                     : "text-gray-700 hover:bg-gray-50"
-                }`}
+                  }`}
               >
                 <div className="relative w-6 h-6 rounded-full overflow-hidden shadow-sm group-hover/item:scale-110 transition-transform">
                   <Image

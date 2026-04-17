@@ -13,7 +13,7 @@ export const parseJwtPayload = (token: string) => {
         .join("")
     );
     return JSON.parse(jsonPayload) as { exp?: number };
-  } catch (error) {
+  } catch {
     return null;
   }
 };

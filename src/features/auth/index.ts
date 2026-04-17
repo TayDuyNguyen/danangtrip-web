@@ -1,6 +1,6 @@
 // Auth Feature - Barrel Export
 export { useAuth } from "./hooks/use-auth";
-export { useAuthStore } from "./store/auth.store";
+export { useAuthStore } from "@/store/auth.store";
 export { authService } from "@/services/auth.service";
 export { LoginForm } from "./components/login-form";
 export { RegisterForm } from "./components/register-form";

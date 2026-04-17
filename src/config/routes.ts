@@ -2,17 +2,21 @@
  * Application routes configuration
  */
 
-// Public routes
+// Public routes - Active
 export const PUBLIC_ROUTES = {
   HOME: "/",
   ABOUT: "/about",
+  TOURS: "/tours",
+} as const;
+
+// Public routes - Planned (Pages not yet created)
+export const PLANNED_ROUTES = {
   CONTACT: "/contact",
   TERMS: "/terms",
   PRIVACY: "/privacy",
   DESTINATIONS: "/destinations",
   DINING: "/dining",
   HOTELS: "/hotels",
-  TOURS: "/tours",
   BLOG: "/blog",
   PARTNERS_REGISTER: "/partners/register",
   PARTNERS_ADS: "/partners/ads",
@@ -21,6 +25,7 @@ export const PUBLIC_ROUTES = {
   SITEMAP: "/sitemap",
   HELP: "/help",
 } as const;
+
 // Auth routes
 export const AUTH_ROUTES = {
   LOGIN: "/login",
@@ -60,27 +65,28 @@ export const API_ROUTES = {
 // Legacy compatibility object
 export const ROUTES = {
   ...PUBLIC_ROUTES,
+  ...PLANNED_ROUTES, // Still included for type safety and config, but UI will hide these
   ...AUTH_ROUTES,
   ...PROTECTED_ROUTES,
   DASHBOARD: DASHBOARD_ROUTES.DASHBOARD,
 } as const;
 
-// Navigation links for Header
+// Navigation links for Header - ONLY ACTIVE ROUTES
 export const NAV_LINKS = [
   { name: "Trang chủ", path: PUBLIC_ROUTES.HOME },
+  { name: "Tour du lịch", path: PUBLIC_ROUTES.TOURS },
+  { name: "Về chúng tôi", path: PUBLIC_ROUTES.ABOUT },
 ];
 
-// Quick links for Footer
+// Quick links for Footer - ONLY ACTIVE ROUTES
 export const QUICK_LINKS = [
   { name: "Về chúng tôi", path: PUBLIC_ROUTES.ABOUT },
-  { name: "Điều khoản", path: PUBLIC_ROUTES.TERMS },
-  { name: "Chính sách", path: PUBLIC_ROUTES.PRIVACY },
-  { name: "Liên hệ", path: PUBLIC_ROUTES.CONTACT },
+  { name: "Tour du lịch", path: PUBLIC_ROUTES.TOURS },
 ];
 
 // Route helpers
 export const isPublicRoute = (path: string): boolean => {
-  return Object.values(PUBLIC_ROUTES).some((route) => 
+  return [...Object.values(PUBLIC_ROUTES), ...Object.values(PLANNED_ROUTES)].some((route) => 
     typeof route === "string" ? route === path : false
   );
 };
@@ -100,3 +106,4 @@ export const isProtectedRoute = (path: string): boolean => {
 export const isDashboardRoute = (path: string): boolean => {
   return path.startsWith("/dashboard");
 };
+

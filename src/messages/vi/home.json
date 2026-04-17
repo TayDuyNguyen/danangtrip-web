@@ -4,6 +4,19 @@
   "search_placeholder": "Bạn muốn đi đâu?",
   "select_date": "Chọn ngày...",
   "book_now": "Đặt ngay",
+  "categories": {
+    "dining": "Ăn uống",
+    "hotels": "Khách sạn",
+    "travel": "Du lịch",
+    "shopping": "Mua sắm",
+    "entertainment": "Giải trí",
+    "spa_gym": "Spa & Gym",
+    "places_suffix": "CHỖ",
+    "tours_suffix": "TOUR",
+    "shops_suffix": "SHOP",
+    "points_suffix": "ĐIỂM",
+    "facilities_suffix": "CƠ SỞ"
+  },
   "explore_danang": "Khám Phá Đà Nẵng",
   "explore_danang_desc": "Những địa điểm không thể bỏ qua khi đến thành phố đáng sống.",
   "popular_tours": "Tour Phổ Biến",
@@ -11,6 +24,21 @@
   "view_all": "Xem tất cả",
   "testimonials": "Cảm Nhận Du Khách",
   "testimonials_desc": "Những chia sẻ thật lòng từ những người đã trải nghiệm cùng chúng tôi.",
+  "hot_tours": {
+    "title": "Tour Hot 🔥",
+    "subtitle": "Được đặt nhiều nhất tuần này",
+    "cta": "Săn ưu đãi ngay"
+  },
+  "blog": {
+    "title": "Cẩm nang Du lịch",
+    "cta": "Khám phá blog",
+    "article1_title": "Top 10 món ngon \"nhất định phải thử\" khi đến Đà Nẵng",
+    "article1_desc": "Cùng khám phá thiên đường ẩm thực từ Mì Quảng, Bánh tráng cuốn thịt heo đến vô vàn hải sản tươi ngon...",
+    "article2_title": "Lịch trình khám phá Đà Nẵng 3 ngày 2 đêm siêu tiết kiệm",
+    "article2_desc": "Hướng dẫn chi tiết cách di chuyển, chỗ ở và các điểm vui chơi không thể bỏ lỡ trong 3 ngày tại thành phố biển...",
+    "article3_title": "Top 5 quán cà phê view cực \"chill\" ngắm trọn vẹn sông Hàn",
+    "article3_desc": "Lưu lại ngay những địa chỉ cà phê có không gian đẹp và đồ uống độc đáo nhất định phải ghé qua..."
+  },
   "tour_duration": "{{days}} ngày {{nights}} đêm",
   "tour_price": "Từ {{price}}",
   "tour_rating": "{{count}} đánh giá"

@@ -35,7 +35,7 @@ export function RegisterForm({ onSuccess, redirectUrl }: RegisterFormProps) {
     }
 
     const result = await register({
-      username: formData.name, // Using name as username
+      username: formData.name,
       email: formData.email,
       password: formData.password,
       password_confirmation: formData.confirmPassword,
@@ -50,6 +50,7 @@ export function RegisterForm({ onSuccess, redirectUrl }: RegisterFormProps) {
       }
     }
   };
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({

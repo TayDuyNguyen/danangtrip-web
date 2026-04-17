@@ -5,22 +5,25 @@ import {
   LoginResponse, 
   RefreshTokenResponse, 
   RegisterRequest, 
-  RegisterResponse 
+  RegisterResponse,
+  ApiResponse,
+  User
 } from "@/types";
 
 export const authService = {
-  login: (data: LoginRequest): Promise<LoginResponse> =>
+  login: (data: LoginRequest): Promise<ApiResponse<LoginResponse>> =>
     axiosInstance.post(API_ENDPOINTS.AUTH.LOGIN, data),
 
-  register: (data: RegisterRequest): Promise<RegisterResponse> =>
+  register: (data: RegisterRequest): Promise<ApiResponse<RegisterResponse>> =>
     axiosInstance.post(API_ENDPOINTS.AUTH.REGISTER, data),
 
-  logout: (): Promise<any> =>
+  logout: (): Promise<ApiResponse<unknown>> =>
     axiosInstance.post(API_ENDPOINTS.AUTH.LOGOUT),
 
-  refreshToken: (refreshToken: string): Promise<RefreshTokenResponse> =>
+  refreshToken: (refreshToken: string): Promise<ApiResponse<RefreshTokenResponse>> =>
     axiosInstance.post(API_ENDPOINTS.AUTH.REFRESH_TOKEN, { refreshToken }),
     
-  getMe: (): Promise<any> =>
+  getMe: (): Promise<ApiResponse<User>> =>
     axiosInstance.get(API_ENDPOINTS.AUTH.ME),
 };
+

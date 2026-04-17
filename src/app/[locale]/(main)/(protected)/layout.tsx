@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter, usePathname } from "next/navigation";
-import { useAuthStore } from "@/features/auth";
+import { usePathname, useRouter } from "@/i18n/navigation";
+import { useAuthStore } from "@/store/auth.store";
 
 export default function ProtectedLayout({
   children,
@@ -23,7 +23,7 @@ export default function ProtectedLayout({
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
       </div>
     );
   }
@@ -41,3 +41,4 @@ export default function ProtectedLayout({
     </div>
   );
 }
+

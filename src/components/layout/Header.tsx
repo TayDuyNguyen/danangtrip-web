@@ -10,7 +10,7 @@ import {
   IoChevronForward,
 } from "react-icons/io5";
 import { useAuthStore } from "@/store/auth.store";
-import { ROUTES, NAV_LINKS } from "@/config";
+import { ROUTES } from "@/config";
 import LanguageSwitcher from "./LanguageSwitcher";
 
 const Header = () => {
@@ -21,15 +21,13 @@ const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Map translations to navigation links
+  // Map translations to navigation links - ONLY ACTIVE ROUTES
   const translatedNavLinks = [
     { name: t("nav.home"), path: ROUTES.HOME },
-    { name: t("nav.destinations"), path: ROUTES.DESTINATIONS },
-    { name: t("nav.dining"), path: ROUTES.DINING },
-    { name: t("nav.hotels"), path: ROUTES.HOTELS },
     { name: t("nav.travel"), path: ROUTES.TOURS },
-    { name: t("nav.blog"), path: ROUTES.BLOG },
+    { name: t("nav.about_us"), path: ROUTES.ABOUT },
   ];
+
 
   // Handle scroll for glassmorphism effect
   useEffect(() => {
@@ -44,11 +42,10 @@ const Header = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
-        isScrolled
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${isScrolled
           ? "bg-white/80 backdrop-blur-lg shadow-sm py-3"
           : "bg-transparent py-5"
-      }`}
+        }`}
     >
       <div className="container mx-auto px-4 flex items-center justify-between">
         {/* Logo */}
@@ -60,11 +57,10 @@ const Header = () => {
             <span className="text-xl font-bold">D</span>
           </div>
           <span
-            className={`text-xl font-bold tracking-tight transition-colors duration-300 ${
-              isScrolled
+            className={`text-xl font-bold tracking-tight transition-colors duration-300 ${isScrolled
                 ? "text-gray-900"
                 : "text-white md:text-gray-900 lg:text-white"
-            }`}
+              }`}
           >
             Đà Nẵng <span className="text-cyan-500">Trip</span>
           </span>
@@ -76,19 +72,17 @@ const Header = () => {
             <Link
               key={link.path}
               href={link.path}
-              className={`text-sm font-medium transition-all duration-300 hover:text-cyan-500 relative group ${
-                isActive(link.path)
+              className={`text-sm font-medium transition-all duration-300 hover:text-cyan-500 relative group ${isActive(link.path)
                   ? "text-cyan-500"
                   : isScrolled
-                  ? "text-gray-700"
-                  : "text-white"
-              }`}
+                    ? "text-gray-700"
+                    : "text-white"
+                }`}
             >
               {link.name}
               <span
-                className={`absolute -bottom-1 left-0 h-0.5 bg-cyan-500 transition-all duration-300 ${
-                  isActive(link.path) ? "w-full" : "w-0 group-hover:w-full"
-                }`}
+                className={`absolute -bottom-1 left-0 h-0.5 bg-cyan-500 transition-all duration-300 ${isActive(link.path) ? "w-full" : "w-0 group-hover:w-full"
+                  }`}
               />
             </Link>
           ))}
@@ -97,14 +91,13 @@ const Header = () => {
         {/* Actions */}
         <div className="flex items-center gap-4">
           <LanguageSwitcher isScrolled={isScrolled} />
-          
+
           {/* Auth Button */}
           {isAuthenticated ? (
             <div className="relative group/user">
               <button
-                className={`w-10 h-10 rounded-full bg-cyan-500/10 flex items-center justify-center border transition-all ${
-                  isScrolled ? "border-cyan-500/20" : "border-white/20"
-                } hover:bg-cyan-500 hover:text-white`}
+                className={`w-10 h-10 rounded-full bg-cyan-500/10 flex items-center justify-center border transition-all ${isScrolled ? "border-cyan-500/20" : "border-white/20"
+                  } hover:bg-cyan-500 hover:text-white`}
               >
                 <IoPersonOutline className="text-xl" />
               </button>
@@ -134,11 +127,10 @@ const Header = () => {
           ) : (
             <Link
               href={ROUTES.LOGIN}
-              className={`px-6 py-2 rounded-xl font-semibold text-sm transition-all duration-300 ${
-                isScrolled
+              className={`px-6 py-2 rounded-xl font-semibold text-sm transition-all duration-300 ${isScrolled
                   ? "bg-cyan-500 text-white shadow-lg hover:shadow-cyan-500/40"
                   : "bg-white text-cyan-500 hover:bg-gray-50"
-              }`}
+                }`}
             >
               {t("auth.login")}
             </Link>
@@ -146,9 +138,8 @@ const Header = () => {
 
           {/* Mobile Menu Toggle */}
           <button
-            className={`p-4 -mr-4 lg:hidden text-3xl transition-colors ${
-              isScrolled ? "text-gray-900" : "text-white"
-            }`}
+            className={`p-4 -mr-4 lg:hidden text-3xl transition-colors ${isScrolled ? "text-gray-900" : "text-white"
+              }`}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
           >
@@ -182,11 +173,10 @@ const Header = () => {
                   key={link.path}
                   href={link.path}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={`group flex items-center gap-4 p-4 rounded-xl transition-all duration-200 ${
-                    isActive(link.path)
+                  className={`group flex items-center gap-4 p-4 rounded-xl transition-all duration-200 ${isActive(link.path)
                       ? "bg-cyan-500/10 text-cyan-500"
                       : "text-gray-700 hover:bg-gray-50"
-                  }`}
+                    }`}
                   style={{ animationDelay: `${index * 50}ms` }}
                 >
                   <span className="text-lg font-medium">{link.name}</span>
