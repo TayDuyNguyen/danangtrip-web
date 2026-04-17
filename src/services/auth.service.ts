@@ -1,49 +1,29 @@
-import { api } from "./api";
-import type { User } from "@/types/user.type";
-import type { ApiResponse } from "@/types/api";
-
-export interface LoginCredentials {
-  email: string;
-  password: string;
-}
-
-export interface RegisterCredentials {
-  email: string;
-  password: string;
-  name: string;
-}
-
-export interface AuthResponse {
-  user: User;
-  token: string;
-}
+import { API_ENDPOINTS } from "@/config";
+import axiosInstance from "@/lib/axios";
+import { 
+  LoginRequest, 
+  LoginResponse, 
+  RefreshTokenResponse, 
+  RegisterRequest, 
+  RegisterResponse,
+  ApiResponse,
+  User
+} from "@/types";
 
 export const authService = {
-  login: (credentials: LoginCredentials): Promise<ApiResponse<AuthResponse>> => {
-    return api.post<AuthResponse>("/auth/login", credentials);
-  },
+  login: (data: LoginRequest): Promise<ApiResponse<LoginResponse>> =>
+    axiosInstance.post(API_ENDPOINTS.AUTH.LOGIN, data),
 
-  register: (credentials: RegisterCredentials): Promise<ApiResponse<AuthResponse>> => {
-    return api.post<AuthResponse>("/auth/register", credentials);
-  },
+  register: (data: RegisterRequest): Promise<ApiResponse<RegisterResponse>> =>
+    axiosInstance.post(API_ENDPOINTS.AUTH.REGISTER, data),
 
-  logout: (): Promise<ApiResponse<void>> => {
-    return api.post<void>("/auth/logout");
-  },
+  logout: (): Promise<ApiResponse<unknown>> =>
+    axiosInstance.post(API_ENDPOINTS.AUTH.LOGOUT),
 
-  getCurrentUser: (): Promise<ApiResponse<User>> => {
-    return api.get<User>("/auth/me");
-  },
-
-  refreshToken: (): Promise<ApiResponse<{ token: string }>> => {
-    return api.post<{ token: string }>("/auth/refresh");
-  },
-
-  forgotPassword: (email: string): Promise<ApiResponse<void>> => {
-    return api.post<void>("/auth/forgot-password", { email });
-  },
-
-  resetPassword: (token: string, password: string): Promise<ApiResponse<void>> => {
-    return api.post<void>("/auth/reset-password", { token, password });
-  },
+  refreshToken: (refreshToken: string): Promise<ApiResponse<RefreshTokenResponse>> =>
+    axiosInstance.post(API_ENDPOINTS.AUTH.REFRESH_TOKEN, { refreshToken }),
+    
+  getMe: (): Promise<ApiResponse<User>> =>
+    axiosInstance.get(API_ENDPOINTS.AUTH.ME),
 };
+

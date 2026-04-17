@@ -39,7 +39,7 @@ export const parseJson = <T>(json: string, fallback?: T): T => {
   }
 };
 
-export const isEmpty = (value: any): boolean => {
+export const isEmpty = (value: unknown): boolean => {
   return (
     value === undefined ||
     value === null ||

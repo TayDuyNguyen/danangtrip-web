@@ -6,8 +6,6 @@ import { useAppStore } from "@/store/app.store";
 const menuItems = [
   { label: "Dashboard", href: "/dashboard" },
   { label: "Users", href: "/dashboard/users" },
-  { label: "Tours", href: "/dashboard/tours" },
-  { label: "Bookings", href: "/dashboard/bookings" },
   { label: "Settings", href: "/dashboard/settings" },
 ];
 

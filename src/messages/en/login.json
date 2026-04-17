@@ -1,0 +1,31 @@
+{
+  "welcome_title": "Welcome Back!",
+  "welcome_subtitle": "Log in to discover Da Nang today.",
+  "title": "Login",
+  "email_label": "Email",
+  "email_placeholder": "Enter your email",
+  "password_label": "Password",
+  "password_placeholder": "Enter your password",
+  "remember_me": "Remember me",
+  "forgot_password": "Forgot password?",
+  "logging_in": "Logging in...",
+  "login_button": "LOGIN",
+  "or_login_with": "Or login with",
+  "no_account": "Don't have an account?",
+  "register_now": "Register now",
+  "incorrect_credentials": "Incorrect email or password.",
+  "account_banned": "Account has been banned. Please contact admin.",
+  "network_error": "Cannot connect to server. Please check your network.",
+  "server_error": "Server error. Please try again later.",
+  "general_error": "An error occurred. Please try again.",
+  "login_success": "Login successful",
+  "login_error": "Login failed",
+  "check_again": "Please check your information.",
+  "account_inactive": "Account is inactive. Please contact admin.",
+  "validation": {
+    "email_required": "Email is required",
+    "email_invalid": "Invalid email address",
+    "password_required": "Password is required",
+    "password_min": "Password must be at least 6 characters"
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "nav": {
+    "home": "Trang chủ",
+    "destinations": "Điểm đến",
+    "travel": "Tour du lịch",
+    "hotels": "Khách sạn",
+    "dining": "Ẩm thực",
+    "blog": "Blog",
+    "contact": "Liên hệ",
+    "about_us": "Về chúng tôi"
+  },
+  "footer": {
+    "description": "Nền tảng du lịch năng động nhất Đà Nẵng, mang đến cho bạn những trải nghiệm độc bản, sôi động và đầy hứng khởi tại thành phố đáng sống nhất Việt Nam.",
+    "quick_links": "Khám phá",
+    "about_us": "Về chúng tôi",
+    "terms": "Điều khoản dịch vụ",
+    "privacy": "Chính sách bảo mật",
+    "contact": "Liên hệ",
+    "for_partners": "Hỗ trợ",
+    "partner_register": "Đăng ký đối tác",
+    "advertise": "Hợp tác quảng cáo",
+    "support": "Trung tâm hỗ trợ",
+    "news": "Tin tức",
+    "newsletter": "Đăng ký nhận tin",
+    "newsletter_desc": "Nhận những ưu đãi du lịch mới nhất qua email của bạn.",
+    "subscribe": "Đăng ký",
+    "copyright": "© 2026 Đà Nẵng Trip",
+    "privacy_policy": "Quyền riêng tư",
+    "tos": "Điều khoản",
+    "cookies": "Cookies",
+    "coming_soon": "Sắp ra mắt"
+  },
+  "auth": {
+    "login": "Đăng nhập",
+    "register": "Đăng ký",
+    "logout": "Đăng xuất",
+    "profile": "Tài khoản"
+  },
+  "language": {
+    "vi": "Tiếng Việt",
+    "en": "English",
+    "select": "Chọn ngôn ngữ"
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page",
+    "of": "of",
+    "items_per_page": "Items per page",
+    "go_to": "Go to",
+    "showing": "Showing",
+    "to": "to",
+    "results": "results"
+  }
+}

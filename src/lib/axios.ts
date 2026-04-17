@@ -1,97 +1,173 @@
-import axios from "axios";
-import { config } from "@/configs/env";
+import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
+import { config } from "@/config";
+import { toast } from "sonner";
+import { useAuthStore } from "@/store/auth.store";
+import Cookies from "js-cookie";
+import type { ApiResponse } from "@/types";
 
-// Create axios instance
+/**
+ * Enhanced Axios instance with cookie-based auth and standardized ApiResponse contract.
+ */
 const axiosInstance = axios.create({
   baseURL: config.api.url,
-  timeout: 30000,
+  timeout: 15000,
   headers: {
     "Content-Type": "application/json",
   },
 });
 
+let isRefreshing = false;
+let failedQueue: Array<{
+  resolve: (token: string | null) => void;
+  reject: (e: unknown) => void;
+}> = [];
+let isRedirecting = false;
+
+const processQueue = (error: Error | null, token: string | null = null) => {
+  failedQueue.forEach((prom) => (error ? prom.reject(error) : prom.resolve(token)));
+  failedQueue = [];
+};
+
+const handleLogout = () => {
+  if (isRedirecting || typeof window === "undefined") return;
+  isRedirecting = true;
+
+  Cookies.remove("token", { path: "/" });
+  Cookies.remove("refreshToken", { path: "/" });
+  localStorage.removeItem("token");
+  localStorage.removeItem("refreshToken");
+  useAuthStore.getState().logout();
+
+  const isEn = window.location.pathname.startsWith("/en");
+  window.location.replace(isEn ? "/en/login" : "/login");
+};
+
 // Request interceptor
 axiosInstance.interceptors.request.use(
-  (config) => {
-    // Get token from localStorage
-    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-    
-    if (token && config.headers) {
-      config.headers.Authorization = `Bearer ${token}`;
+  async (axiosConfig: InternalAxiosRequestConfig) => {
+    const token = Cookies.get("token");
+
+    if (typeof window !== "undefined") {
+      const locale = window.location.pathname.startsWith("/en") ? "en" : "vi";
+      axiosConfig.headers["Accept-Language"] = locale;
     }
 
-    return config;
+    if (token) {
+      axiosConfig.headers.Authorization = `Bearer ${token}`;
+    }
+
+    if (axiosConfig.data instanceof FormData) {
+      delete axiosConfig.headers["Content-Type"];
+    }
+
+    return axiosConfig;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
+
+// Response type for refresh token endpoint
+interface RefreshTokenData {
+  data?: { token?: string };
+  token?: string;
+}
 
 // Response interceptor
 axiosInstance.interceptors.response.use(
   (response) => {
-    return response;
+    if (response.data && typeof response.data.success === "boolean") {
+      return response.data;
+    }
+    return {
+      success: true,
+      data: response.data,
+      message: (response.data as { message?: string })?.message || "Success",
+    };
   },
-  async (error) => {
-    const originalRequest = error.config;
+  async (error: AxiosError<{ error?: string; message?: string }>) => {
+    const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
 
-    // Handle token expiration
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (!error.response) {
+      toast.error("Kết nối mạng thất bại");
+      return Promise.reject({
+        success: false,
+        error: "Network Error",
+        message: "Kết nối mạng thất bại",
+      } as ApiResponse);
+    }
+
+    const { status, data } = error.response;
+
+    // 401 — Refresh Token logic
+    if (status === 401 && !originalRequest.url?.includes("/login")) {
+      if (originalRequest._retry) {
+        handleLogout();
+        return Promise.reject(error);
+      }
+
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        })
+          .then((token) => {
+            originalRequest.headers.Authorization = `Bearer ${token}`;
+            return axiosInstance(originalRequest);
+          })
+          .catch((err) => Promise.reject(err));
+      }
+
       originalRequest._retry = true;
+      isRefreshing = true;
 
       try {
-        // Try to refresh token
-        const refreshToken = localStorage.getItem("refreshToken");
-        if (refreshToken) {
-          const response = await axios.post(`${config.api.url}/auth/refresh`, {
-            refreshToken,
-          });
+        const refreshToken = Cookies.get("refreshToken") || localStorage.getItem("refreshToken");
+        if (!refreshToken) throw new Error("No refresh token");
 
-          const { token } = response.data;
-          localStorage.setItem("token", token);
+        const response = await axios.post<RefreshTokenData>(`${config.api.url}/auth/refresh`, {
+          refreshToken,
+        });
 
-          // Retry original request with new token
-          originalRequest.headers.Authorization = `Bearer ${token}`;
-          return axiosInstance(originalRequest);
-        }
+        const newToken = response.data?.data?.token || response.data?.token;
+        if (!newToken) throw new Error("Refresh failed");
+
+        Cookies.set("token", newToken, { expires: 7, path: "/" });
+        processQueue(null, newToken);
+        originalRequest.headers.Authorization = `Bearer ${newToken}`;
+        return axiosInstance(originalRequest);
       } catch (refreshError) {
-        // Refresh failed, redirect to login
-        if (typeof window !== "undefined") {
-          localStorage.removeItem("token");
-          localStorage.removeItem("refreshToken");
-          window.location.href = "/login";
-        }
+        processQueue(refreshError as Error, null);
+        handleLogout();
+        return Promise.reject(error);
+      } finally {
+        isRefreshing = false;
       }
     }
 
-    return Promise.reject(error);
+    if (status === 403) {
+      toast.warning("Bạn không có quyền thực hiện hành động này");
+    }
+    if (status >= 500) {
+      toast.error("Lỗi hệ thống, vui lòng thử lại sau");
+    }
+
+    const errorResponse: ApiResponse = {
+      success: false,
+      error: data?.error || data?.message || "Unknown Error",
+      message: data?.message || "Đã có lỗi xảy ra",
+    };
+
+    return Promise.reject(errorResponse);
   }
 );
 
 export default axiosInstance;
 
-// Helper functions for common HTTP methods
-export const apiGet = async <T>(url: string, params?: Record<string, any>) => {
-  const response = await axiosInstance.get<T>(url, { params });
-  return response.data;
-};
-
-export const apiPost = async <T>(url: string, data?: any) => {
-  const response = await axiosInstance.post<T>(url, data);
-  return response.data;
-};
-
-export const apiPut = async <T>(url: string, data?: any) => {
-  const response = await axiosInstance.put<T>(url, data);
-  return response.data;
-};
-
-export const apiPatch = async <T>(url: string, data?: any) => {
-  const response = await axiosInstance.patch<T>(url, data);
-  return response.data;
-};
-
-export const apiDelete = async <T>(url: string) => {
-  const response = await axiosInstance.delete<T>(url);
-  return response.data;
+/**
+ * Type-safe API helper methods
+ */
+export const api = {
+  get:    <T>(url: string, params?: object) => axiosInstance.get<T, ApiResponse<T>>(url, { params }),
+  post:   <T>(url: string, data?: unknown)  => axiosInstance.post<T, ApiResponse<T>>(url, data),
+  put:    <T>(url: string, data?: unknown)  => axiosInstance.put<T, ApiResponse<T>>(url, data),
+  patch:  <T>(url: string, data?: unknown)  => axiosInstance.patch<T, ApiResponse<T>>(url, data),
+  delete: <T>(url: string)                  => axiosInstance.delete<T, ApiResponse<T>>(url),
 };

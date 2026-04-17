@@ -29,7 +29,6 @@
       "@/utils/*": ["./src/utils/*"],
       "@/middleware/*": ["./src/middleware/*"],
       "@/config/*": ["./src/config/*"],
-      "@/configs/*": ["./src/configs/*"],
       "@/store/*": ["./src/store/*"],
       "@/public/*": ["./public/*"]
     }
