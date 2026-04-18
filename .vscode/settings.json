@@ -7,9 +7,13 @@
   "i18n-ally.displayLanguage": "vi",
   "i18n-ally.enabledFrameworks": ["next-intl"],
   "i18n-ally.namespace": true,
-  "i18n-ally.defaultNamespace": "common",
   "i18n-ally.pathMatcher": "{locale}/{namespace}.json",
+  "i18n-ally.preferredDelimiter": ".",
   "i18n-ally.sortKeys": true,
+  "i18n-ally.includeLocales": ["vi", "en"],
+  "i18n-ally.extract.path": "src/messages/{locale}/{namespace}.json",
+  "i18n-ally.translate.engines": ["google"],
+  "i18n-ally.translate.fallbackLanguage": "vi",
 
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
@@ -49,5 +53,6 @@
     "**/out": true
   },
 
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "css.lint.unknownAtRules": "ignore"
 }

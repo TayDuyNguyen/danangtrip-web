@@ -27,13 +27,13 @@ export function useFetch<T>(
   const { immediate = true, onSuccess, onError } = options;
 
   const [data, setData] = useState<T | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(immediate);
   const [error, setError] = useState<string | null>(null);
   const [storedArgs, setStoredArgs] = useState<unknown[]>([]);
 
   const execute = useCallback(
     async (...newArgs: unknown[]): Promise<ApiResponse<T>> => {
-      setIsLoading(true);
+      if (!isLoading) setIsLoading(true);
       setError(null);
 
       try {
@@ -57,7 +57,7 @@ export function useFetch<T>(
         setIsLoading(false);
       }
     },
-    [fetchFn, onSuccess, onError]
+    [fetchFn, onSuccess, onError, isLoading]
   );
 
   const refetch = useCallback(async () => {
@@ -66,7 +66,10 @@ export function useFetch<T>(
 
   useEffect(() => {
     if (immediate) {
-      execute();
+      // Use microtask to avoid synchronous state update in effect
+      queueMicrotask(() => {
+        execute();
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

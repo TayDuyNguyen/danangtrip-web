@@ -36,6 +36,12 @@ const steps = [
     fix:     'Open IDE and fix TypeScript errors shown in the Problems panel',
   },
   {
+    name:    '🧭 Routes — Active Route Integrity',
+    command: 'npm',
+    args:    ['run', 'check:routes'],
+    fix:     'Update src/config/routes.ts or create the missing route pages',
+  },
+  {
     name:    '🏗️  Next.js — Production Build',
     command: 'npx',
     args:    ['cross-env', "NODE_OPTIONS='--max-old-space-size=4096'", 'npm', 'run', 'build'],

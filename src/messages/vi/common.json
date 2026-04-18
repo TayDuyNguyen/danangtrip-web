@@ -42,14 +42,26 @@
     "select": "Chọn ngôn ngữ"
   },
   "pagination": {
-    "previous": "Previous",
-    "next": "Next",
-    "page": "Page",
-    "of": "of",
-    "items_per_page": "Items per page",
-    "go_to": "Go to",
-    "showing": "Showing",
-    "to": "to",
-    "results": "results"
+    "previous": "Trước",
+    "next": "Tiếp theo",
+    "page": "Trang",
+    "of": "của",
+    "items_per_page": "Bản ghi mỗi trang",
+    "go_to": "Đến trang",
+    "showing": "Hiển thị",
+    "to": "đến",
+    "results": "kết quả"
+  },
+  "tour": {
+    "price_from": "Giá từ",
+    "see_all": "Xem tất cả",
+    "book_now": "Đặt ngay",
+    "slots": "khách",
+    "rating_count": "{count} đánh giá"
+  },
+  "favorite": {
+    "add_success": "Đã thêm vào danh sách yêu thích",
+    "login_required": "Vui lòng đăng nhập để lưu địa điểm yêu thích",
+    "error": "Không thể lưu yêu thích lúc này"
   }
-}
+}

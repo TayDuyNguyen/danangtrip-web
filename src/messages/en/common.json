@@ -10,15 +10,15 @@
     "about_us": "About Us"
   },
   "footer": {
-    "description": "Da Nang's most dynamic travel platform, bringing you unique, vibrant, and exciting experiences in the most livable city in Vietnam.",
+    "description": "The most dynamic travel platform in Da Nang, bringing you unique, vibrant, and exciting experiences in Vietnam's most livable city.",
     "quick_links": "Discovery",
     "about_us": "About Us",
     "terms": "Terms of Service",
     "privacy": "Privacy Policy",
     "contact": "Contact",
     "for_partners": "Support",
-    "partner_register": "Partner registration",
-    "advertise": "Advertising cooperation",
+    "partner_register": "Partner Registration",
+    "advertise": "Advertisement",
     "support": "Support Center",
     "news": "News",
     "newsletter": "Newsletter",
@@ -28,7 +28,7 @@
     "privacy_policy": "Privacy",
     "tos": "Terms",
     "cookies": "Cookies",
-    "coming_soon": "Coming soon"
+    "coming_soon": "Coming Soon"
   },
   "auth": {
     "login": "Login",
@@ -39,7 +39,7 @@
   "language": {
     "vi": "Tiếng Việt",
     "en": "English",
-    "select": "Select language"
+    "select": "Select Language"
   },
   "pagination": {
     "previous": "Previous",
@@ -51,5 +51,17 @@
     "showing": "Showing",
     "to": "to",
     "results": "results"
+  },
+  "tour": {
+    "price_from": "From",
+    "see_all": "See all",
+    "book_now": "Book now",
+    "slots": "guests",
+    "rating_count": "{count} reviews"
+  },
+  "favorite": {
+    "add_success": "Added to favorites",
+    "login_required": "Please login to save favorites",
+    "error": "Cannot save favorite at this time"
   }
-}
+}

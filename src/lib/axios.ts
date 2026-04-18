@@ -74,9 +74,19 @@ interface RefreshTokenData {
 // Response interceptor
 axiosInstance.interceptors.response.use(
   (response) => {
+    // If backend returns { code: 200, data: ... }
+    if (response.data && response.data.code === 200 && response.data.data !== undefined) {
+      return {
+        success: true,
+        data: response.data.data,
+        message: response.data.message || "Success",
+      };
+    }
+    
     if (response.data && typeof response.data.success === "boolean") {
       return response.data;
     }
+    
     return {
       success: true,
       data: response.data,

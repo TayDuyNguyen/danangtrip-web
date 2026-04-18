@@ -5,102 +5,88 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import {
   IoLocationOutline,
-  IoCalendarOutline,
-  IoSearchOutline,
-  IoRestaurantOutline,
-  IoBedOutline,
-  IoMapOutline,
-  IoCartOutline,
-  IoGameControllerOutline,
-  IoFitnessOutline
 } from "react-icons/io5";
+import { useWeather } from "../hooks/use-weather";
 
 const Hero = () => {
-  const t = useTranslations("home");
+  const { weather } = useWeather();
+  const t = useTranslations();
 
   return (
-    <section className="relative h-[80vh] min-h-[600px] flex items-center justify-center overflow-hidden">
+    <section className="relative w-full h-[600px] md:h-[700px] flex items-center justify-center overflow-hidden font-sans border-b border-white/10">
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
         <Image
           src="/images/hero-bg.png"
           alt="Da Nang Hero"
           fill
-          className="object-cover"
+          className="object-cover scale-105"
           sizes="100vw"
           priority
         />
-        <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
+        <div className="absolute inset-0 bg-linear-to-b from-black/60 via-black/20 to-dark/10" />
       </div>
 
       {/* Content */}
-      <div className="container relative z-10 px-4 text-center text-white">
-        <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight drop-shadow-lg">
-          {t("hero_title")}
-        </h1>
-        <p className="text-lg md:text-xl mb-10 max-w-2xl mx-auto text-white/90 drop-shadow-md">
-          {t("hero_subtitle")}
-        </p>
+      <div className="container relative z-10 px-4 text-center mt-[-40px] reveal-up">
+        <div className="mb-10">
+          <p className="text-[14px] md:text-[16px] font-bold text-white tracking-[0.4em] mb-4 uppercase drop-shadow-lg opacity-90">
+            {t("home.hero_tagline_premium")}
+          </p>
+          <h1 className="text-[48px] md:text-[64px] font-bold text-white mb-4 leading-tight drop-shadow-xl">
+            {t("home.hero_title")}
+          </h1>
+          <p className="text-[18px] md:text-[20px] text-white/90 font-medium max-w-2xl mx-auto">
+            {t("home.hero_subtitle")}
+          </p>
+        </div>
 
-        {/* Search Bar (Glassmorphism) */}
-        <div className="max-w-4xl mx-auto bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 shadow-2xl flex flex-col md:flex-row gap-4 items-center transition-all duration-300 hover:bg-white/15 mb-16">
-          {/* Location */}
-          <div className="flex-1 w-full flex items-center gap-3 px-4 py-3 bg-white/10 rounded-xl border border-white/10 group transition-all duration-300 focus-within:bg-white/20">
-            <IoLocationOutline className="w-5 h-5 text-cyan-400" />
+        {/* Search Box - Glassmorphism */}
+        <div className="max-w-4xl mx-auto flex flex-col md:flex-row shadow-2xl rounded-[32px] overflow-hidden backdrop-blur-xl bg-white/20 border border-white/30 p-2">
+          <div className="flex-1 flex items-center px-6 py-4 border-b md:border-b-0 md:border-r border-white/20">
+            <IoLocationOutline className="text-2xl text-white mr-3" />
             <input
               type="text"
-              placeholder={t("search_placeholder")}
-              className="bg-transparent border-none outline-none w-full text-white placeholder:text-white/60 text-sm"
+              id="hero-search-input"
+              placeholder={t("home.search_placeholder")}
+              className="w-full text-lg outline-none text-white placeholder-white/70 font-medium bg-transparent"
             />
           </div>
-
-          {/* Date */}
-          <div className="flex-1 w-full flex items-center gap-3 px-4 py-3 bg-white/10 rounded-xl border border-white/10 group transition-all duration-300 focus-within:bg-white/20">
-            <IoCalendarOutline className="w-5 h-5 text-cyan-400" />
-            <span className="text-sm text-white/60 cursor-pointer">
-              {t("select_date")}
-            </span>
+          <div className="w-full md:w-1/4 flex items-center px-6 py-4 border-b md:border-b-0 md:border-r border-white/20">
+            <select
+              id="hero-search-type"
+              className="w-full text-lg outline-none text-white bg-transparent font-medium cursor-pointer appearance-none"
+              style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'white\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M19 9l-7 7-7-7\'/%3E%3C/svg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right center', backgroundSize: '1.2em' }}
+            >
+              <option value="location" className="text-gray-900">{t("home.search_type_location")}</option>
+              <option value="tour" className="text-gray-900">{t("home.search_type_tour")}</option>
+            </select>
           </div>
-
-          {/* Search Button */}
-          <button className="w-full md:w-auto px-10 py-4 bg-cyan-500 hover:bg-cyan-600 text-white font-semibold rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-cyan-500/40 active:scale-95 group">
-            <IoSearchOutline className="text-xl" />
-            {t("book_now")}
+          <button
+            onClick={() => {
+              const q = (document.getElementById('hero-search-input') as HTMLInputElement)?.value;
+              const type = (document.getElementById('hero-search-type') as HTMLSelectElement)?.value;
+              window.location.href = `/search?q=${encodeURIComponent(q)}&type=${type}`;
+            }}
+            className="px-8 py-4 bg-white hover:bg-white/90 transition-all text-azure text-lg font-bold flex items-center justify-center gap-2 rounded-[24px] mt-2 md:mt-0 shadow-lg active:scale-95"
+          >
+            {t("home.search_button")}
           </button>
         </div>
-
-        {/* Categories Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 max-w-6xl mx-auto animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-300">
-          {[
-            { key: "dining", icon: IoRestaurantOutline, count: "120+", suffix: "places_suffix" },
-            { key: "hotels", icon: IoBedOutline, count: "80+", suffix: "places_suffix" },
-            { key: "travel", icon: IoMapOutline, count: "50+", suffix: "tours_suffix" },
-            { key: "shopping", icon: IoCartOutline, count: "100+", suffix: "shops_suffix" },
-            { key: "entertainment", icon: IoGameControllerOutline, count: "60+", suffix: "points_suffix" },
-            { key: "spa_gym", icon: IoFitnessOutline, count: "30+", suffix: "facilities_suffix" },
-          ].map((cat) => {
-            const Icon = cat.icon;
-            return (
-              <div
-                key={cat.key}
-                className="bg-white/10 backdrop-blur-sm border border-white/10 rounded-2xl p-6 flex flex-col items-center gap-3 transition-all duration-500 hover:bg-cyan-500 hover:scale-105 hover:shadow-2xl hover:shadow-cyan-500/40 cursor-pointer group"
-              >
-                <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center group-hover:bg-white/20 transition-colors">
-                  <Icon className="text-2xl text-cyan-400 group-hover:text-white" />
-                </div>
-                <div className="text-center">
-                  <h3 className="text-sm font-bold uppercase tracking-wider mb-1 group-hover:text-white">
-                    {t(`categories.${cat.key}`)}
-                  </h3>
-                  <p className="text-[10px] text-white/60 font-medium group-hover:text-white/80">
-                    {cat.count} {t(`categories.${cat.suffix}`)}
-                  </p>
-                </div>
-              </div>
-            );
-          })}
-        </div>
       </div>
+
+      {/* Weather Widget */}
+      {weather && (
+        <div
+          className="absolute bottom-10 right-10 z-30 flex items-center gap-3 backdrop-blur-md rounded-[20px] px-[16px] py-[10px] border border-white/30 shadow-2xl reveal-up reveal-delay-400"
+          style={{ backgroundColor: "rgba(255,255,255,0.15)" }}
+        >
+          <div className="text-2xl text-white drop-shadow-md">{weather.icon || "☀️"}</div>
+          <span className="text-white font-bold text-[14px] drop-shadow-lg tracking-wide">
+            {weather.temp}°C · {t(`home.weather.${weather.condition}`)}
+          </span>
+        </div>
+      )}
     </section>
   );
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import { memo } from "react";
+import { memo, useState, useEffect } from "react";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import type { IconType } from "react-icons";
@@ -8,27 +8,33 @@ import {
   IoLogoFacebook,
   IoLogoInstagram,
   IoLogoYoutube,
-  IoMailOutline,
-  IoArrowForward,
   IoEarthOutline,
 } from "react-icons/io5";
-import { ROUTES } from "@/config";
+import { ROUTES, QUICK_LINKS } from "@/config";
+import { getAppConfig } from "@/services/config.service";
+import type { Config } from "@/types";
 
 const Footer = () => {
   const t = useTranslations("common");
+  const [siteConfig, setSiteConfig] = useState<Config | null>(null);
+
+  useEffect(() => {
+    const fetchConfig = async () => {
+      try {
+        const data = await getAppConfig();
+        if (data) setSiteConfig(data);
+      } catch (error) {
+        console.error("Failed to load config", error);
+      }
+    };
+    fetchConfig();
+  }, []);
   const socialLinks: { icon: IconType; color: string; path: string }[] = [
-    { icon: IoLogoFacebook, color: "hover:bg-[#1877F2]", path: "#" },
-    { icon: IoLogoInstagram, color: "hover:bg-[#E4405F]", path: "#" },
+    { icon: IoLogoFacebook, color: "hover:bg-[#1877F2]", path: siteConfig?.social_links?.facebook || "#" },
+    { icon: IoLogoInstagram, color: "hover:bg-[#E4405F]", path: siteConfig?.social_links?.instagram || "#" },
     { icon: IoLogoYoutube, color: "hover:bg-[#FF0000]", path: "#" },
     { icon: IoEarthOutline, color: "hover:bg-cyan-500", path: "#" },
   ];
-
-  const quickLinks = [
-    { name: t("footer.about_us"), path: ROUTES.ABOUT },
-    { name: t("nav.travel"), path: ROUTES.TOURS },
-  ];
-
-  const partnerLinks: { name: string; path: string }[] = [];
 
   return (
     <footer className="bg-gray-900 text-white pt-24 pb-12 overflow-hidden relative border-t border-gray-800">
@@ -47,7 +53,7 @@ const Footer = () => {
               </span>
             </Link>
             <p className="text-gray-400 text-sm leading-relaxed max-w-xs mx-auto md:mx-0">
-              {t("footer.description")}
+              {t("footer.description") || "Khám phá vẻ đẹp tuyệt vời của Đà Nẵng cùng chúng tôi. Trải nghiệm những tour du lịch độc đáo và địa điểm hấp dẫn nhất."}
             </p>
             <div className="flex items-center justify-center md:justify-start gap-4">
               {socialLinks.map((social, idx) => {
@@ -65,13 +71,13 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Quick Links */}
+          {/* Quick Links / Explore */}
           <div className="text-center md:text-left">
             <h4 className="text-lg font-bold mb-6 text-white uppercase tracking-wider">
-              {t("footer.quick_links")}
+              Khám phá
             </h4>
             <ul className="space-y-4">
-              {quickLinks.map((link: { name: string; path: string }) => (
+              {QUICK_LINKS.map((link) => (
                 <li key={link.path}>
                   <Link
                     href={link.path}
@@ -84,65 +90,45 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Partnership */}
+          {/* Support */}
           <div className="text-center md:text-left">
             <h4 className="text-lg font-bold mb-6 text-white uppercase tracking-wider">
-              {t("footer.for_partners")}
+              Hỗ trợ
             </h4>
             <ul className="space-y-4">
-              {partnerLinks.length > 0 ? (
-                partnerLinks.map((link: { name: string; path: string }) => (
-                  <li key={link.path}>
-                    <Link
-                      href={link.path}
-                      className="text-gray-400 hover:text-cyan-400 transition-all duration-300 flex items-center justify-center md:justify-start gap-2 text-sm"
-                    >
-                      {link.name}
-                    </Link>
-                  </li>
-                ))
-              ) : (
-                <li className="text-gray-500 text-sm italic">{t("footer.coming_soon") || "Coming soon"}</li>
-              )}
+              <li><Link href={ROUTES.CONTACT} className="text-gray-400 hover:text-cyan-400 transition-all duration-300 text-sm">Liên hệ</Link></li>
+              <li><Link href="#" className="text-gray-400 hover:text-cyan-400 transition-all duration-300 text-sm">Câu hỏi thường gặp</Link></li>
+              <li><Link href="#" className="text-gray-400 hover:text-cyan-400 transition-all duration-300 text-sm">Điều khoản dịch vụ</Link></li>
+              <li><Link href="#" className="text-gray-400 hover:text-cyan-400 transition-all duration-300 text-sm">Chính sách bảo mật</Link></li>
             </ul>
           </div>
 
-          {/* Newsletter */}
+          {/* Contact Information */}
           <div className="text-center md:text-left">
             <h4 className="text-lg font-bold mb-6 text-white uppercase tracking-wider">
-              {t("footer.newsletter")}
+              Liên hệ
             </h4>
-            <p className="text-gray-400 text-sm mb-6 max-w-xs mx-auto md:mx-0">
-              {t("footer.newsletter_desc")}
-            </p>
-            <form
-              className="relative group max-w-xs mx-auto md:mx-0"
-              onSubmit={(e) => e.preventDefault()}
-            >
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
-                <IoMailOutline className="text-gray-500 group-focus-within:text-cyan-500 transition-colors text-lg" />
-              </div>
-              <input
-                type="email"
-                required
-                placeholder="Email..."
-                className="w-full bg-gray-800/50 border border-white/5 rounded-xl py-4 pl-12 pr-12 text-sm focus:ring-2 focus:ring-cyan-500/50 transition-all placeholder-gray-600 h-14 text-white"
-              />
-              <button
-                type="submit"
-                className="absolute right-2 top-2 bottom-2 bg-cyan-500 text-white px-4 rounded-lg text-sm font-semibold hover:bg-cyan-600 transition-all flex items-center gap-2 group/btn active:scale-95 shadow-lg shadow-cyan-500/20"
-                aria-label={t("footer.subscribe")}
-              >
-                <IoArrowForward className="group-hover/btn:translate-x-1 transition-transform" />
-              </button>
-            </form>
+            <ul className="space-y-4 text-sm text-gray-400">
+              <li className="flex items-center justify-center md:justify-start gap-3">
+                <span className="text-cyan-500">Hotline:</span>
+                <a href={`tel:${siteConfig?.hotline || "0123456789"}`} className="hover:text-cyan-400 transition-colors">{siteConfig?.hotline || "0123 456 789"}</a>
+              </li>
+              <li className="flex items-center justify-center md:justify-start gap-3">
+                <span className="text-cyan-500">Email:</span>
+                <a href={`mailto:${siteConfig?.email || "info@danangtrip.com"}`} className="hover:text-cyan-400 transition-colors">{siteConfig?.email || "info@danangtrip.com"}</a>
+              </li>
+              <li className="flex items-start justify-center md:justify-start gap-3">
+                <span className="text-cyan-500 shrink-0">Địa chỉ:</span>
+                <span>{siteConfig?.address || "99 Phố Tiếp, Quận Thanh Khê, Đà Nẵng"}</span>
+              </li>
+            </ul>
           </div>
         </div>
 
         {/* Bottom Bar */}
         <div className="pt-12 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center gap-6">
           <p className="text-gray-500 text-xs tracking-wide">
-            {t("footer.copyright")}
+            © {new Date().getFullYear()} Đà Nẵng Trip. All rights reserved.
           </p>
           <div className="flex items-center gap-8 text-xs text-gray-500 font-medium">
             {/* Commented out non-existent privacy/terms/cookies pages */}

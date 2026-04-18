@@ -5,8 +5,11 @@
 // Public routes - Active
 export const PUBLIC_ROUTES = {
   HOME: "/",
-  ABOUT: "/about",
+  LOCATIONS: "/locations",
   TOURS: "/tours",
+  BLOG: "/blog",
+  CONTACT: "/contact",
+  ABOUT: "/about",
 } as const;
 
 // Public routes - Planned (Pages not yet created)
@@ -74,14 +77,18 @@ export const ROUTES = {
 // Navigation links for Header - ONLY ACTIVE ROUTES
 export const NAV_LINKS = [
   { name: "Trang chủ", path: PUBLIC_ROUTES.HOME },
+  { name: "Địa điểm", path: PUBLIC_ROUTES.LOCATIONS },
   { name: "Tour du lịch", path: PUBLIC_ROUTES.TOURS },
-  { name: "Về chúng tôi", path: PUBLIC_ROUTES.ABOUT },
+  { name: "Blog", path: PUBLIC_ROUTES.BLOG },
+  { name: "Liên hệ", path: PUBLIC_ROUTES.CONTACT },
 ];
 
 // Quick links for Footer - ONLY ACTIVE ROUTES
 export const QUICK_LINKS = [
-  { name: "Về chúng tôi", path: PUBLIC_ROUTES.ABOUT },
+  { name: "Địa điểm", path: PUBLIC_ROUTES.LOCATIONS },
   { name: "Tour du lịch", path: PUBLIC_ROUTES.TOURS },
+  { name: "Blog", path: PUBLIC_ROUTES.BLOG },
+  { name: "Liên hệ", path: PUBLIC_ROUTES.CONTACT },
 ];
 
 // Route helpers

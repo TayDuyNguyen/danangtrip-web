@@ -18,11 +18,11 @@ export interface PaginationParams {
 }
 
 export interface PaginatedResponse<T> {
-  items: T[];
+  data: T[];
   total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
+  current_page: number;
+  per_page: number;
+  last_page: number;
 }
 
 export type RequestMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";

@@ -10,7 +10,7 @@ import {
   IoChevronForward,
 } from "react-icons/io5";
 import { useAuthStore } from "@/store/auth.store";
-import { ROUTES } from "@/config";
+import { ROUTES, NAV_LINKS } from "@/config";
 import LanguageSwitcher from "./LanguageSwitcher";
 
 const Header = () => {
@@ -20,13 +20,6 @@ const Header = () => {
 
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  // Map translations to navigation links - ONLY ACTIVE ROUTES
-  const translatedNavLinks = [
-    { name: t("nav.home"), path: ROUTES.HOME },
-    { name: t("nav.travel"), path: ROUTES.TOURS },
-    { name: t("nav.about_us"), path: ROUTES.ABOUT },
-  ];
 
 
   // Handle scroll for glassmorphism effect
@@ -67,12 +60,12 @@ const Header = () => {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center gap-8">
-          {translatedNavLinks.map((link: { name: string; path: string }) => (
+        <nav className="hidden lg:flex items-center gap-6">
+          {NAV_LINKS.map((link) => (
             <Link
               key={link.path}
               href={link.path}
-              className={`text-sm font-medium transition-all duration-300 hover:text-cyan-500 relative group ${isActive(link.path)
+              className={`text-[14px] font-medium transition-all duration-300 hover:text-cyan-500 relative group truncate ${isActive(link.path)
                   ? "text-cyan-500"
                   : isScrolled
                     ? "text-gray-700"
@@ -88,9 +81,12 @@ const Header = () => {
           ))}
         </nav>
 
+
         {/* Actions */}
-        <div className="flex items-center gap-4">
-          <LanguageSwitcher isScrolled={isScrolled} />
+        <div className="flex items-center gap-3">
+          <div className="hidden sm:block">
+            <LanguageSwitcher isScrolled={isScrolled} />
+          </div>
 
           {/* Auth Button */}
           {isAuthenticated ? (
@@ -125,15 +121,26 @@ const Header = () => {
               </div>
             </div>
           ) : (
-            <Link
-              href={ROUTES.LOGIN}
-              className={`px-6 py-2 rounded-xl font-semibold text-sm transition-all duration-300 ${isScrolled
-                  ? "bg-cyan-500 text-white shadow-lg hover:shadow-cyan-500/40"
-                  : "bg-white text-cyan-500 hover:bg-gray-50"
-                }`}
-            >
-              {t("auth.login")}
-            </Link>
+            <div className="flex items-center gap-2">
+              <Link
+                href={ROUTES.LOGIN}
+                className={`px-4 py-2 rounded-xl font-semibold text-sm transition-all duration-300 ${isScrolled
+                    ? "text-gray-900 hover:bg-gray-100"
+                    : "text-white hover:bg-white/10"
+                  }`}
+              >
+                {t("auth.login")}
+              </Link>
+              <Link
+                href={ROUTES.REGISTER || "/register"}
+                className={`px-6 py-2 rounded-xl font-semibold text-sm transition-all duration-300 ${isScrolled
+                    ? "bg-cyan-500 text-white shadow-lg hover:shadow-cyan-500/40"
+                    : "bg-white text-cyan-500 hover:bg-gray-50"
+                  }`}
+              >
+                Đăng ký
+              </Link>
+            </div>
           )}
 
           {/* Mobile Menu Toggle */}
@@ -168,7 +175,7 @@ const Header = () => {
             </div>
 
             <nav className="flex flex-col p-6 gap-2">
-              {translatedNavLinks.map((link: { name: string; path: string }, index: number) => (
+              {NAV_LINKS.map((link, index: number) => (
                 <Link
                   key={link.path}
                   href={link.path}

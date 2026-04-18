@@ -1,288 +1,207 @@
 # Antigravity Kit Architecture
 
-> Comprehensive AI Agent Capability Expansion Toolkit
+> Local agent, skill, workflow, and validation inventory for this repository.
 
 ---
 
-## 📋 Overview
+## Overview
 
-Antigravity Kit is a modular system consisting of:
+The `.agent` directory is a local assistance layer for this repository. It provides:
+- Specialist agent profiles in `.agent/agents`
+- Reusable skills in `.agent/skills`
+- Reusable workflows in `.agent/workflows`
+- Repository rules in `.agent/rules`
+- Validation scripts in `.agent/scripts` and skill `scripts/` folders
 
-- **20 Specialist Agents** - Role-based AI personas
-- **36 Skills** - Domain-specific knowledge modules
-- **11 Workflows** - Slash command procedures
+This file must describe what actually exists in the repository, not a generic template.
 
 ---
 
-## 🏗️ Directory Structure
+## Directory Structure
 
-```plaintext
+```text
 .agent/
-├── ARCHITECTURE.md          # This file
-├── agents/                  # 20 Specialist Agents
-├── skills/                  # 36 Skills
-├── workflows/               # 11 Slash Commands
-├── rules/                   # Global Rules
-└── scripts/                 # Master Validation Scripts
+|-- ARCHITECTURE.md
+|-- agents/
+|-- skills/
+|-- workflows/
+|-- rules/
+|-- scripts/
+`-- .shared/
 ```
 
 ---
 
-## 🤖 Agents (20)
+## Agents
 
-Specialist AI personas for different domains.
+Current agent files under `.agent/agents`:
 
-| Agent                    | Focus                      | Skills Used                                              |
-| ------------------------ | -------------------------- | -------------------------------------------------------- |
-| `orchestrator`           | Multi-agent coordination   | parallel-agents, behavioral-modes                        |
-| `project-planner`        | Discovery, task planning   | brainstorming, plan-writing, architecture                |
-| `frontend-specialist`    | Web UI/UX                  | frontend-design, react-best-practices, tailwind-patterns |
-| `backend-specialist`     | API, business logic        | api-patterns, nodejs-best-practices, database-design     |
-| `database-architect`     | Schema, SQL                | database-design, prisma-expert                           |
-| `mobile-developer`       | iOS, Android, RN           | mobile-design                                            |
-| `game-developer`         | Game logic, mechanics      | game-development                                         |
-| `devops-engineer`        | CI/CD, Docker              | deployment-procedures, docker-expert                     |
-| `security-auditor`       | Security compliance        | vulnerability-scanner, red-team-tactics                  |
-| `penetration-tester`     | Offensive security         | red-team-tactics                                         |
-| `test-engineer`          | Testing strategies         | testing-patterns, tdd-workflow, webapp-testing           |
-| `debugger`               | Root cause analysis        | systematic-debugging                                     |
-| `performance-optimizer`  | Speed, Web Vitals          | performance-profiling                                    |
-| `seo-specialist`         | Ranking, visibility        | seo-fundamentals, geo-fundamentals                       |
-| `documentation-writer`   | Manuals, docs              | documentation-templates                                  |
-| `product-manager`        | Requirements, user stories | plan-writing, brainstorming                              |
-| `product-owner`          | Strategy, backlog, MVP     | plan-writing, brainstorming                              |
-| `qa-automation-engineer` | E2E testing, CI pipelines  | webapp-testing, testing-patterns                         |
-| `code-archaeologist`     | Legacy code, refactoring   | clean-code, code-review-checklist                        |
-| `explorer-agent`         | Codebase analysis          | -                                                        |
-
----
-
-## 🧩 Skills (36)
-
-Modular knowledge domains that agents can load on-demand. based on task context.
-
-### Frontend & UI
-
-| Skill                   | Description                                                           |
-| ----------------------- | --------------------------------------------------------------------- |
-| `react-best-practices`  | React & Next.js performance optimization (Vercel - 57 rules)          |
-| `web-design-guidelines` | Web UI audit - 100+ rules for accessibility, UX, performance (Vercel) |
-| `tailwind-patterns`     | Tailwind CSS v4 utilities                                             |
-| `frontend-design`       | UI/UX patterns, design systems                                        |
-| `ui-ux-pro-max`         | 50 styles, 21 palettes, 50 fonts                                      |
-
-### Backend & API
-
-| Skill                   | Description                    |
-| ----------------------- | ------------------------------ |
-| `api-patterns`          | REST, GraphQL, tRPC            |
-| `nestjs-expert`         | NestJS modules, DI, decorators |
-| `nodejs-best-practices` | Node.js async, modules         |
-| `python-patterns`       | Python standards, FastAPI      |
-
-### Database
-
-| Skill             | Description                 |
-| ----------------- | --------------------------- |
-| `database-design` | Schema design, optimization |
-| `prisma-expert`   | Prisma ORM, migrations      |
-
-### TypeScript/JavaScript
-
-| Skill               | Description                         |
-| ------------------- | ----------------------------------- |
-| `typescript-expert` | Type-level programming, performance |
-
-### Cloud & Infrastructure
-
-| Skill                   | Description               |
-| ----------------------- | ------------------------- |
-| `docker-expert`         | Containerization, Compose |
-| `deployment-procedures` | CI/CD, deploy workflows   |
-| `server-management`     | Infrastructure management |
-
-### Testing & Quality
-
-| Skill                   | Description              |
-| ----------------------- | ------------------------ |
-| `testing-patterns`      | Jest, Vitest, strategies |
-| `webapp-testing`        | E2E, Playwright          |
-| `tdd-workflow`          | Test-driven development  |
-| `code-review-checklist` | Code review standards    |
-| `lint-and-validate`     | Linting, validation      |
-
-### Security
-
-| Skill                   | Description              |
-| ----------------------- | ------------------------ |
-| `vulnerability-scanner` | Security auditing, OWASP |
-| `red-team-tactics`      | Offensive security       |
-
-### Architecture & Planning
-
-| Skill           | Description                |
-| --------------- | -------------------------- |
-| `app-builder`   | Full-stack app scaffolding |
-| `architecture`  | System design patterns     |
-| `plan-writing`  | Task planning, breakdown   |
-| `brainstorming` | Socratic questioning       |
-
-### Mobile
-
-| Skill           | Description           |
-| --------------- | --------------------- |
-| `mobile-design` | Mobile UI/UX patterns |
-
-### Game Development
-
-| Skill              | Description           |
-| ------------------ | --------------------- |
-| `game-development` | Game logic, mechanics |
-
-### SEO & Growth
-
-| Skill              | Description                   |
-| ------------------ | ----------------------------- |
-| `seo-fundamentals` | SEO, E-E-A-T, Core Web Vitals |
-| `geo-fundamentals` | GenAI optimization            |
-
-### Shell/CLI
-
-| Skill                | Description               |
-| -------------------- | ------------------------- |
-| `bash-linux`         | Linux commands, scripting |
-| `powershell-windows` | Windows PowerShell        |
-
-### Other
-
-| Skill                     | Description               |
-| ------------------------- | ------------------------- |
-| `clean-code`              | Coding standards (Global) |
-| `behavioral-modes`        | Agent personas            |
-| `parallel-agents`         | Multi-agent patterns      |
-| `mcp-builder`             | Model Context Protocol    |
-| `documentation-templates` | Doc formats               |
-| `i18n-localization`       | Internationalization      |
-| `performance-profiling`   | Web Vitals, optimization  |
-| `systematic-debugging`    | Troubleshooting           |
+| Agent | Focus |
+| --- | --- |
+| `backend-specialist` | API and business logic work |
+| `code-archaeologist` | Legacy understanding and refactor review |
+| `database-architect` | Schema and persistence design |
+| `debugger` | Root-cause analysis |
+| `devops-engineer` | Delivery and infrastructure guidance |
+| `documentation-writer` | Docs and written guidance |
+| `explorer-agent` | Codebase exploration |
+| `frontend-specialist` | UI and frontend implementation |
+| `game-developer` | Game-specific work |
+| `mobile-developer` | Mobile-specific work |
+| `orchestrator` | Coordination and routing |
+| `penetration-tester` | Offensive security perspective |
+| `performance-optimizer` | Performance and profiling |
+| `product-manager` | Requirement shaping |
+| `product-owner` | Product scope and prioritization |
+| `project-planner` | Planning and task structuring |
+| `qa-automation-engineer` | QA automation |
+| `security-auditor` | Security review |
+| `seo-specialist` | SEO and discoverability |
+| `test-engineer` | Testing strategy and validation |
 
 ---
 
-## 🔄 Workflows (11)
+## Skills
 
-Slash command procedures. Invoke with `/command`.
+Only reference skills that exist under `.agent/skills`.
 
-| Command          | Description              |
-| ---------------- | ------------------------ |
-| `/brainstorm`    | Socratic discovery       |
-| `/create`        | Create new features      |
-| `/debug`         | Debug issues             |
-| `/deploy`        | Deploy application       |
-| `/enhance`       | Improve existing code    |
-| `/orchestrate`   | Multi-agent coordination |
-| `/plan`          | Task breakdown           |
-| `/preview`       | Preview changes          |
-| `/status`        | Check project status     |
-| `/test`          | Run tests                |
-| `/ui-ux-pro-max` | Design with 50 styles    |
+### Application Architecture
 
----
+| Skill | Purpose |
+| --- | --- |
+| `architecture` | System design patterns and trade-offs |
+| `app-builder` | Application scaffolding and creation flows |
+| `nextjs-project-rules` | Repository-specific Next.js operating rules |
+| `nextjs-react-expert` | Next.js and React implementation guidance |
 
-## 🎯 Skill Loading Protocol
+### Frontend and UX
 
-```plaintext
-User Request → Skill Description Match → Load SKILL.md
-                                            ↓
-                                    Read references/
-                                            ↓
-                                    Read scripts/
-```
+| Skill | Purpose |
+| --- | --- |
+| `frontend-design` | UI and UX guidance |
+| `tailwind-patterns` | Tailwind CSS patterns |
+| `web-design-guidelines` | Web UI review heuristics |
+| `i18n-localization` | Translation and locale consistency |
 
-### Skill Structure
+### Backend and Platform
 
-```plaintext
-skill-name/
-├── SKILL.md           # (Required) Metadata & instructions
-├── scripts/           # (Optional) Python/Bash scripts
-├── references/        # (Optional) Templates, docs
-└── assets/            # (Optional) Images, logos
-```
+| Skill | Purpose |
+| --- | --- |
+| `api-patterns` | API design and service patterns |
+| `nodejs-best-practices` | Node.js implementation practices |
+| `database-design` | Database and schema design |
+| `server-management` | Server and environment management |
+| `deployment-procedures` | Delivery and deployment practices |
 
-### Enhanced Skills (with scripts/references)
+### Quality and Validation
 
-| Skill               | Files | Coverage                            |
-| ------------------- | ----- | ----------------------------------- |
-| `ui-ux-pro-max`     | 27    | 50 styles, 21 palettes, 50 fonts    |
-| `app-builder`       | 20    | Full-stack scaffolding              |
+| Skill | Purpose |
+| --- | --- |
+| `clean-code` | Clean-code rules and editing discipline |
+| `code-review-checklist` | Review heuristics |
+| `lint-and-validate` | Validation helpers |
+| `testing-patterns` | Automated testing patterns |
+| `tdd-workflow` | Test-driven workflow guidance |
+| `webapp-testing` | Browser and E2E testing |
+| `systematic-debugging` | Structured debugging |
+| `performance-profiling` | Performance analysis |
+| `vulnerability-scanner` | Security scanning |
+| `red-team-tactics` | Offensive-security mindset |
+| `seo-fundamentals` | SEO checks |
+| `geo-fundamentals` | GEO and AI-citation checks |
 
----
+### Planning and Coordination
 
-## � Scripts (2)
+| Skill | Purpose |
+| --- | --- |
+| `brainstorming` | Discovery and questioning |
+| `plan-writing` | Plans and task breakdowns |
+| `parallel-agents` | Agent coordination patterns |
+| `behavioral-modes` | Mode guidance |
+| `intelligent-routing` | Routing requests to suitable expertise |
+| `documentation-templates` | Documentation structure |
+| `mcp-builder` | MCP-related guidance |
 
-Master validation scripts that orchestrate skill-level scripts.
+### Environment and Language Specific
 
-### Master Scripts
-
-| Script          | Purpose                                 | When to Use              |
-| --------------- | --------------------------------------- | ------------------------ |
-| `checklist.py`  | Priority-based validation (Core checks) | Development, pre-commit  |
-| `verify_all.py` | Comprehensive verification (All checks) | Pre-deployment, releases |
-
-### Usage
-
-```bash
-# Quick validation during development
-python .agent/scripts/checklist.py .
-
-# Full verification before deployment
-python .agent/scripts/verify_all.py . --url http://localhost:3000
-```
-
-### What They Check
-
-**checklist.py** (Core checks):
-
-- Security (vulnerabilities, secrets)
-- Code Quality (lint, types)
-- Schema Validation
-- Test Suite
-- UX Audit
-- SEO Check
-
-**verify_all.py** (Full suite):
-
-- Everything in checklist.py PLUS:
-- Lighthouse (Core Web Vitals)
-- Playwright E2E
-- Bundle Analysis
-- Mobile Audit
-- i18n Check
-
-For details, see [scripts/README.md](scripts/README.md)
+| Skill | Purpose |
+| --- | --- |
+| `powershell-windows` | Windows shell guidance |
+| `bash-linux` | Linux shell guidance |
+| `python-patterns` | Python implementation practices |
+| `rust-pro` | Rust guidance |
+| `mobile-design` | Mobile UI and product guidance |
+| `game-development` | Game development guidance |
 
 ---
 
-## 📊 Statistics
+## Workflows
 
-| Metric              | Value                         |
-| ------------------- | ----------------------------- |
-| **Total Agents**    | 20                            |
-| **Total Skills**    | 36                            |
-| **Total Workflows** | 11                            |
-| **Total Scripts**   | 2 (master) + 18 (skill-level) |
-| **Coverage**        | ~90% web/mobile development   |
+Current workflow files under `.agent/workflows`:
+
+| Workflow | Purpose |
+| --- | --- |
+| `brainstorm.md` | Discovery flow |
+| `create.md` | Creation flow |
+| `debug.md` | Debug flow |
+| `deploy.md` | Deployment flow |
+| `enhance.md` | Improvement flow |
+| `orchestrate.md` | Coordination flow |
+| `plan.md` | Planning flow |
+| `preview.md` | Preview flow |
+| `status.md` | Status flow |
+| `test.md` | Testing flow |
+| `ui-ux-pro-max.md` | UI/UX-heavy workflow |
 
 ---
 
-## 🔗 Quick Reference
+## Validation Scripts
 
-| Need     | Agent                 | Skills                                |
-| -------- | --------------------- | ------------------------------------- |
-| Web App  | `frontend-specialist` | react-best-practices, frontend-design |
-| API      | `backend-specialist`  | api-patterns, nodejs-best-practices   |
-| Mobile   | `mobile-developer`    | mobile-design                         |
-| Database | `database-architect`  | database-design, prisma-expert        |
-| Security | `security-auditor`    | vulnerability-scanner                 |
-| Testing  | `test-engineer`       | testing-patterns, webapp-testing      |
-| Debug    | `debugger`            | systematic-debugging                  |
-| Plan     | `project-planner`     | brainstorming, plan-writing           |
+### Repository-Level Scripts
+
+| Script | Purpose |
+| --- | --- |
+| `.agent/scripts/checklist.py` | Priority-based validation orchestration |
+| `.agent/scripts/verify_all.py` | Broader validation suite |
+
+### Common Skill-Level Scripts Used in This Repo
+
+| Script | Purpose |
+| --- | --- |
+| `.agent/skills/i18n-localization/scripts/i18n_checker.py` | Locale consistency and hardcoded-string audit |
+| `.agent/skills/frontend-design/scripts/ux_audit.py` | UX-focused audit |
+| `.agent/skills/frontend-design/scripts/accessibility_checker.py` | Accessibility audit |
+| `.agent/skills/lint-and-validate/scripts/lint_runner.py` | Lint runner |
+| `.agent/skills/lint-and-validate/scripts/type_coverage.py` | Type coverage helper |
+| `.agent/skills/testing-patterns/scripts/test_runner.py` | Test runner helper |
+| `.agent/skills/webapp-testing/scripts/playwright_runner.py` | Playwright-based web checks |
+| `.agent/skills/vulnerability-scanner/scripts/security_scan.py` | Security scan |
+| `.agent/skills/database-design/scripts/schema_validator.py` | Schema validation |
+| `.agent/skills/performance-profiling/scripts/lighthouse_audit.py` | Lighthouse audit |
+
+Important:
+- Some orchestration docs historically referenced scripts that do not exist.
+- When documenting validation, only cite scripts present in the repository.
+
+---
+
+## Operating Rules
+
+When using `.agent` assets:
+- Read the specific `SKILL.md` before substantial implementation.
+- Prefer repository-specific rules over generic templates.
+- Do not cite missing skills, scripts, or workflows.
+- Keep documentation synchronized when skills or scripts are added or removed.
+
+---
+
+## Maintenance Contract
+
+Update this file whenever any of the following changes:
+- a skill is added, removed, or renamed
+- an agent is added, removed, or renamed
+- a workflow is added, removed, or renamed
+- a validation script is added, removed, or renamed
+- repository guidance changes enough to invalidate descriptions here
+
+If this file drifts from the actual `.agent` contents, fix the file first.
