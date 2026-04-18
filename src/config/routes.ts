@@ -76,19 +76,19 @@ export const ROUTES = {
 
 // Navigation links for Header - ONLY ACTIVE ROUTES
 export const NAV_LINKS = [
-  { name: "Trang chủ", path: PUBLIC_ROUTES.HOME },
-  { name: "Địa điểm", path: PUBLIC_ROUTES.LOCATIONS },
-  { name: "Tour du lịch", path: PUBLIC_ROUTES.TOURS },
-  { name: "Blog", path: PUBLIC_ROUTES.BLOG },
-  { name: "Liên hệ", path: PUBLIC_ROUTES.CONTACT },
+  { name: "nav.home", path: PUBLIC_ROUTES.HOME },
+  { name: "nav.locations", path: PUBLIC_ROUTES.LOCATIONS },
+  { name: "nav.travel", path: PUBLIC_ROUTES.TOURS },
+  { name: "nav.blog", path: PUBLIC_ROUTES.BLOG },
+  { name: "nav.contact", path: PUBLIC_ROUTES.CONTACT },
 ];
 
 // Quick links for Footer - ONLY ACTIVE ROUTES
 export const QUICK_LINKS = [
-  { name: "Địa điểm", path: PUBLIC_ROUTES.LOCATIONS },
-  { name: "Tour du lịch", path: PUBLIC_ROUTES.TOURS },
-  { name: "Blog", path: PUBLIC_ROUTES.BLOG },
-  { name: "Liên hệ", path: PUBLIC_ROUTES.CONTACT },
+  { name: "nav.locations", path: PUBLIC_ROUTES.LOCATIONS },
+  { name: "nav.travel", path: PUBLIC_ROUTES.TOURS },
+  { name: "nav.blog", path: PUBLIC_ROUTES.BLOG },
+  { name: "nav.contact", path: PUBLIC_ROUTES.CONTACT },
 ];
 
 // Route helpers

@@ -1,3 +1,4 @@
+"use client";
 import React, {
   type ReactNode,
   type InputHTMLAttributes,
@@ -37,15 +38,14 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <div className={cn("w-full group", className)}>
-        {/* Floating label - hiện khi focus hoặc có error */}
         {label && (
           <label
             className={cn(
               "block text-xs font-semibold mb-1 uppercase tracking-wider transition-all duration-300 transform",
-              isFocused
-                ? "text-cyan-400 translate-y-0 opacity-100"
+              isFocused || error
+                ? "translate-y-0 opacity-100"
                 : "text-transparent -translate-y-1 opacity-0",
-              error && "text-red-500 opacity-100 translate-y-0"
+              error ? "text-red-500" : isFocused ? "text-cyan-400" : ""
             )}
           >
             {label}

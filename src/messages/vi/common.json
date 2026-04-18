@@ -7,7 +7,29 @@
     "dining": "Ẩm thực",
     "blog": "Blog",
     "contact": "Liên hệ",
-    "about_us": "Về chúng tôi"
+    "about_us": "Về chúng tôi",
+    "locations": "Địa điểm"
+  },
+  "common": {
+    "admin_panel": "Bảng quản trị",
+    "menu": "Menu",
+    "loading": "Đang tải...",
+    "error": "Có lỗi",
+    "phone": "Số điện thoại",
+    "not_updated": "Chưa cập nhật",
+    "role": "Vai trò",
+    "joined_date": "Ngày tham gia",
+    "no_data": "Không có dữ liệu",
+    "no_data_desc": "Hiện tại chưa có dữ liệu nào."
+  },
+  "error": {
+    "not_found_title": "Không tìm thấy trang",
+    "not_found_desc": "Xin lỗi, trang bạn đang tìm kiếm không tồn tại hoặc đã được di chuyển.",
+    "go_home": "Về trang chủ",
+    "back": "Quay lại",
+    "title": "Đã có lỗi xảy ra",
+    "desc": "Chúng tôi đang gặp sự cố khi xử lý yêu cầu của bạn.",
+    "retry": "Thử lại"
   },
   "footer": {
     "description": "Nền tảng du lịch năng động nhất Đà Nẵng, mang đến cho bạn những trải nghiệm độc bản, sôi động và đầy hứng khởi tại thành phố đáng sống nhất Việt Nam.",
@@ -34,7 +56,8 @@
     "login": "Đăng nhập",
     "register": "Đăng ký",
     "logout": "Đăng xuất",
-    "profile": "Tài khoản"
+    "profile": "Tài khoản",
+    "profile_info": "Thông tin cá nhân"
   },
   "language": {
     "vi": "Tiếng Việt",
@@ -57,7 +80,23 @@
     "see_all": "Xem tất cả",
     "book_now": "Đặt ngay",
     "slots": "khách",
-    "rating_count": "{count} đánh giá"
+    "rating_count": "{count} đánh giá",
+    "list_title": "Danh sách tour",
+    "list_subtitle": "Khám phá các tour du lịch tuyệt vời tại Đà Nẵng"
+  },
+  "about": {
+    "title": "Về chúng tôi",
+    "subtitle": "DaNangTrip - Nền tảng đặt tour du lịch hàng đầu tại Đà Nẵng"
+  },
+  "dashboard": {
+    "title": "Bảng điều khiển",
+    "welcome": "Chào mừng",
+    "personal_page_desc": "Đây là trang cá nhân của bạn.",
+    "updating_desc": "Hệ thống đang được cập nhật thêm các tính năng mới. Vui lòng quay lại sau!",
+    "account_status": "Trạng thái tài khoản",
+    "active": "Đang hoạt động",
+    "account_type": "Loại tài khoản",
+    "member": "Thành viên"
   },
   "favorite": {
     "add_success": "Đã thêm vào danh sách yêu thích",

@@ -2,7 +2,8 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { statisticsService } from "@/services/statistics.service";
-import type { Statistics } from "@/types";
+import type { Statistics, ApiResponse } from "@/types";
+import { shouldRetryQuery } from "@/lib/react-query";
 
 /**
  * Enhanced useStatistics hook using TanStack Query.
@@ -14,10 +15,10 @@ export const useStatistics = () => {
     queryFn: async () => {
       const res = await statisticsService.getStatistics();
       if (res.success && res.data) return res.data;
-      throw new Error(res.message || "Failed to fetch statistics");
+      throw res;
     },
-    staleTime: 30 * 60 * 1000, 
-    retry: 1,
+    staleTime: 30 * 60 * 1000,
+    retry: shouldRetryQuery,
   });
 
   const stats: Statistics | null = query.data || null;
@@ -25,7 +26,7 @@ export const useStatistics = () => {
   return {
     stats,
     isLoading: query.isLoading,
-    error: query.error ? (query.error as Error).message : null,
+    error: query.error ? ((query.error as ApiResponse).error || (query.error as ApiResponse).message || "Statistics load failed") : null,
     refresh: () => query.refetch(),
   };
 };

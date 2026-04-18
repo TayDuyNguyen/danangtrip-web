@@ -3,12 +3,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { tourService } from "@/services/tour.service";
 import type { Tour, TourCategory } from "@/types";
+import { shouldRetryQuery } from "@/lib/react-query";
 
-/**
- * Enhanced useTours hook using TanStack Query for deduplication and caching.
- * Resolves the performance bottleneck by ensuring multiple components using this hook
- * only trigger a single set of network requests.
- */
 export const useTours = () => {
   // 1. Query for Featured Tours
   const featuredQuery = useQuery({
@@ -16,10 +12,10 @@ export const useTours = () => {
     queryFn: async () => {
       const res = await tourService.getFeatured(8);
       if (res.success && res.data) return res.data;
-      throw new Error(res.message || "Failed to fetch featured tours");
+      throw res;
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
-    retry: 1,
+    retry: shouldRetryQuery,
   });
 
   // 2. Query for Hot Tours
@@ -28,10 +24,10 @@ export const useTours = () => {
     queryFn: async () => {
       const res = await tourService.getHot(8);
       if (res.success && res.data) return res.data;
-      throw new Error(res.message || "Failed to fetch hot tours");
+      throw res;
     },
     staleTime: 5 * 60 * 1000,
-    retry: 1,
+    retry: shouldRetryQuery,
   });
 
   // 3. Query for Tour Categories
@@ -40,10 +36,10 @@ export const useTours = () => {
     queryFn: async () => {
       const res = await tourService.getCategories();
       if (res.success && res.data) return res.data;
-      throw new Error(res.message || "Failed to fetch categories");
+      throw res;
     },
     staleTime: 10 * 60 * 1000, // 10 minutes
-    retry: 1,
+    retry: shouldRetryQuery,
   });
 
   // Mock Fallbacks if API fails

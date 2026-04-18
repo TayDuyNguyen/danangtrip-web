@@ -7,7 +7,29 @@
     "dining": "Dining",
     "blog": "Blog",
     "contact": "Contact",
-    "about_us": "About Us"
+    "about_us": "About Us",
+    "locations": "Locations"
+  },
+  "common": {
+    "admin_panel": "Admin Panel",
+    "menu": "Menu",
+    "loading": "Loading...",
+    "error": "Error",
+    "phone": "Phone Number",
+    "not_updated": "Not updated",
+    "role": "Role",
+    "joined_date": "Joined Date",
+    "no_data": "No data found",
+    "no_data_desc": "There is currently no data to display."
+  },
+  "error": {
+    "not_found_title": "Page Not Found",
+    "not_found_desc": "Sorry, the page you are looking for doesn't exist or has been moved.",
+    "go_home": "Go Home",
+    "back": "Go Back",
+    "title": "Something went wrong",
+    "desc": "We are having trouble processing your request.",
+    "retry": "Try again"
   },
   "footer": {
     "description": "The most dynamic travel platform in Da Nang, bringing you unique, vibrant, and exciting experiences in Vietnam's most livable city.",
@@ -34,7 +56,8 @@
     "login": "Login",
     "register": "Register",
     "logout": "Logout",
-    "profile": "Profile"
+    "profile": "Profile",
+    "profile_info": "Personal Information"
   },
   "language": {
     "vi": "Tiếng Việt",
@@ -57,7 +80,23 @@
     "see_all": "See all",
     "book_now": "Book now",
     "slots": "guests",
-    "rating_count": "{count} reviews"
+    "rating_count": "{count} reviews",
+    "list_title": "Tour List",
+    "list_subtitle": "Explore amazing tours in Da Nang"
+  },
+  "about": {
+    "title": "About Us",
+    "subtitle": "DaNangTrip - The leading tour booking platform in Da Nang"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome",
+    "personal_page_desc": "This is your personal dashboard.",
+    "updating_desc": "The system is being updated with new features. Please come back later!",
+    "account_status": "Account Status",
+    "active": "Active",
+    "account_type": "Account Type",
+    "member": "Member"
   },
   "favorite": {
     "add_success": "Added to favorites",

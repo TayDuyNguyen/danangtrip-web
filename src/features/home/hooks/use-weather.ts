@@ -2,7 +2,8 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { weatherService } from "@/services/weather.service";
-import type { Weather } from "@/types";
+import type { ApiResponse, Weather } from "@/types";
+import { shouldRetryQuery } from "@/lib/react-query";
 
 /**
  * Enhanced useWeather hook using TanStack Query.
@@ -14,10 +15,10 @@ export const useWeather = () => {
     queryFn: async () => {
       const res = await weatherService.getWeather();
       if (res.success && res.data) return res.data;
-      throw new Error(res.message || "Failed to fetch weather");
+      throw res;
     },
-    staleTime: 15 * 60 * 1000, 
-    retry: 1,
+    staleTime: 15 * 60 * 1000,
+    retry: shouldRetryQuery,
   });
 
   const weather: Weather | null = query.data || null;
@@ -25,7 +26,7 @@ export const useWeather = () => {
   return {
     weather,
     isLoading: query.isLoading,
-    error: query.error ? (query.error as Error).message : null,
+    error: query.error ? ((query.error as ApiResponse).error || (query.error as ApiResponse).message || "Weather load failed") : null,
     refresh: () => query.refetch(),
   };
 };

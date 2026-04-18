@@ -49,6 +49,7 @@ const HotTours = () => {
                   src={tour.thumbnail || "/images/placeholder.png"}
                   alt={tour.name}
                   fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-110"
                 />
                 <div className="absolute top-[16px] right-[16px] bg-sun text-white font-bold text-[12px] rounded-full px-[12px] py-[4px] shadow-lg">

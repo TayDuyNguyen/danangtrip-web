@@ -40,6 +40,7 @@ const FeaturedTours = () => {
                   src={tour.thumbnail || "/images/placeholder.png"}
                   alt={tour.name}
                   fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-110"
                 />
                 <div className="absolute top-[12px] left-[12px] bg-[#EFF6FF] text-azure font-bold text-[11px] rounded-full px-[8px] py-[3px]">

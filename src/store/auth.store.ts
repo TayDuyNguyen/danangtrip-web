@@ -46,7 +46,6 @@ export const useAuthStore = create<AuthState>()(
         // Clear tokens from localStorage for extra safety
         if (typeof window !== "undefined") {
           localStorage.removeItem("token");
-          localStorage.removeItem("refreshToken");
         }
         set({
           user: null,
