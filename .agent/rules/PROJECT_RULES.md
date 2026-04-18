@@ -1,136 +1,291 @@
 ---
-description: "Project rules and architecture guide for DanangTrip Web (Next.js) — mandatory reference before code generation."
+description: "DanangTrip Web repository rules for architecture, code quality, delivery gates, and review discipline."
 ---
 
-# DanangTrip Web — Project Rules & Architecture
+# DanangTrip Web - Repository Rules
 
-This document is the primary operating guide for AI when working in this repository. Use it with `AGENTS.md` and `.agent/rules/GEMINI.md`.
+This is the repository operating contract for AI and contributors working in this codebase.
+Use this file together with `AGENTS.md`.
 
----
-
-## 1) Tech Stack
-
-| Layer | Technology |
-| --- | --- |
-| Framework | Next.js 16 (App Router), React 19, TypeScript strict |
-| Styling | Tailwind CSS 4 |
-| i18n | `next-intl` (locale prefix `as-needed`) |
-| Server State | `@tanstack/react-query` |
-| Client State | `zustand` (+ persist middleware) |
-| HTTP Client | `axios` with interceptors |
-| Notifications | `sonner` |
-| Validation | Custom validators + optional schema-based validation |
+Goals:
+- Keep architecture consistent.
+- Reduce regressions in routes, i18n, auth, and UI behavior.
+- Prefer rules that are observable and enforceable.
 
 ---
 
-## 2) Repository Structure
+## 1. Scope
 
-```
+These rules apply to:
+- `src/app`
+- `src/components`
+- `src/features`
+- `src/services`
+- `src/store`
+- `src/hooks`
+- `src/i18n`
+- `src/messages`
+- `src/config`
+- `src/lib`
+- `src/utils`
+
+Priority:
+1. Correctness and safety
+2. Existing architecture consistency
+3. Simplicity and maintainability
+4. Performance and UX polish
+
+---
+
+## 2. Core Principles
+
+### Must
+- Prefer the smallest change that fully solves the problem.
+- Preserve existing architecture unless the task explicitly requires refactor.
+- Keep behavior explicit and local; avoid hidden side effects.
+- Leave touched code cleaner than before.
+
+### Should
+- Favor composition over large multipurpose modules.
+- Favor predictable patterns over clever abstractions.
+- Optimize for readability by the next maintainer.
+
+### Avoid
+- Template-driven code that does not match this repository.
+- New abstractions without at least two real consumers.
+- Large cross-layer edits without clear justification.
+
+---
+
+## 3. Repository Shape
+
+Canonical structure:
+
+```text
 src/
-├── app/                  # App Router pages/layouts by locale
-├── components/           # Shared UI/layout/common components
-├── features/             # Feature modules (auth, home, ...)
-├── services/             # API service wrappers
-├── lib/                  # axios instance, firebase, shared libs
-├── store/                # Global zustand stores
-├── hooks/                # Reusable hooks
-├── i18n/                 # next-intl routing/navigation/request config
-├── messages/             # Locale dictionaries (vi, en)
-├── config/               # env, routes, api endpoints
-├── types/                # Shared TypeScript types
-└── utils/                # Utilities and helpers
+|-- app/          # routes, layouts, metadata, error boundaries
+|-- components/   # shared UI and layout primitives
+|-- features/     # feature-specific UI, hooks, validators, types
+|-- services/     # API calls and service wrappers
+|-- store/        # global client state only
+|-- hooks/        # reusable cross-feature hooks
+|-- i18n/         # routing and request config
+|-- messages/     # locale dictionaries
+|-- config/       # env, endpoints, routes, app config
+|-- lib/          # low-level integrations and shared clients
+|-- types/        # shared cross-feature types
+|-- utils/        # stable generic helpers
 ```
 
----
-
-## 3) Decision Gate (Think Before Code)
-
-Apply this process for non-trivial requests:
-
-1. Impact scan: identify touched layers (`app` / `features` / `services` / `store` / `i18n`).
-2. Clarify only when needed: ask focused questions on auth flow, locale behavior, API contract, or UX states.
-3. Confirm before high-impact refactors (auth architecture, route strategy, i18n structure).
-
-For small, clear requests, proceed directly after a quick impact scan.
+Placement rules:
+- Put feature-specific code under `src/features/<feature>/...`.
+- Put shared UI primitives under `src/components/ui`.
+- Put app shell and route layout concerns under `src/app` and `src/components/layout`.
+- Put transport logic in `src/services`, not directly in UI components.
+- **Feature Isolation**: Features must not import components from sibling features. Shared logic must be moved to `src/components/common`, `src/hooks`, or `src/services`.
+- Do not create new top-level directories unless the current structure is clearly insufficient.
 
 ---
 
-## 4) Target Data Flow
+## 4. Change Intake Rules
 
-Use this architecture for all new code and touched modules:
+Before non-trivial changes, perform an impact scan:
+- Which layers are touched?
+- Is the change local, cross-feature, or architectural?
+- Does it affect routes, auth, i18n, shared UI, or data fetching?
 
-1. UI/Page (`src/app`, `src/components`, `src/features/*/components`)
-2. Hook (`src/hooks` or `src/features/*/hooks`) for async/control logic
-3. Service (`src/services`) for API operations
-4. Axios client (`src/lib/axios.ts`) for auth headers, refresh, global error handling
+Ask for confirmation before:
+- Auth strategy changes
+- Route structure changes
+- Locale strategy changes
+- Store ownership changes
+- Shared component API changes with broad impact
+
+Proceed without stopping for:
+- Small bug fixes
+- Copy changes
+- Styling tweaks
+- Isolated component updates
+
+---
+
+## 5. Architecture Boundaries
+
+Preferred flow for client-driven features:
+1. UI in `app`, `components`, or `features/*/components`
+2. Control/data hook in `hooks` or `features/*/hooks`
+3. API/service access in `services`
+4. Shared client/integration in `lib`
 
 Rules:
-- Prefer calling hooks/services from UI; avoid ad-hoc API logic inside components.
-- Keep services thin; move business branching to hooks or feature layer.
+- Components should not contain ad-hoc HTTP logic when a service layer exists.
+- Services should stay thin and transport-oriented.
+- Business branching belongs in feature hooks or feature modules, not in low-level clients.
+- Global store is for cross-page client state, not for all fetched server data by default.
 
 ---
 
-## 5) Next.js App Router Rules
+## 6. Next.js App Router Rules
 
-1. Follow App Router conventions (`layout.tsx`, `page.tsx`, route groups).
-2. Respect server/client boundaries:
-   - Add `"use client"` only when required (state/effects/browser APIs).
-   - Keep server components pure where possible.
-3. Use `@/i18n/navigation` for locale-aware navigation in app UI.
-4. Keep metadata in layout/page where appropriate, not scattered in components.
+### Must
+- Follow App Router conventions for `layout.tsx`, `page.tsx`, `error.tsx`, and `not-found.tsx`.
+- Respect server/client boundaries.
+- Add `"use client"` only when state, effects, event handlers, or browser APIs are required.
+- Keep page metadata at route level where possible.
 
----
+### Should
+- Prefer server rendering when the UI does not require client interactivity.
+- Keep client components focused and lightweight.
 
-## 6) i18n Rules (Mandatory)
-
-1. No hardcoded user-facing text in reusable UI; use translation keys.
-2. Keep `src/messages/vi` and `src/messages/en` synchronized.
-3. Namespace by feature (`common`, `home`, `login`, `register`, ...).
-4. When adding/removing keys, update both locales in the same task.
+### Avoid
+- Converting whole route trees to client components for convenience.
+- Scattering metadata and route concerns into reusable presentation components.
 
 ---
 
-## 7) Auth & Security Rules
+## 7. State and Data Fetching
 
-1. Single source of truth for auth store (no duplicated auth stores).
-2. Keep auth strategy consistent across:
-   - middleware/proxy checks
-   - client storage strategy
-   - axios refresh/logout behavior
-3. Never expose secrets in source code or commits.
-4. Do not commit `.env*` with real credentials; update `.env.example` when adding new env vars.
+Use the simplest fitting mechanism:
+- Server-rendered route data: route or server component
+- Reusable client async logic: TanStack Query (via feature hooks)
+- Cross-page client state: zustand store
+- API transport and normalization: service layer
 
----
-
-## 8) TypeScript & Code Quality
-
-1. No `any` in new/edited code (except strongly justified interop boundaries).
-2. Use `import type` for type-only imports.
-3. Keep function signatures explicit and side effects localized.
-4. Prefer small, composable utilities over repeated inline logic.
-5. Comments explain why, not what.
+Rules:
+- **TanStack Query** is the default for all client-side data fetching to ensure deduplication and caching.
+- Do not duplicate the same source of truth across store, hook state, and storage without a clear ownership model.
+- Prefer one ownership path for auth state.
+- If local persistence is used, define what is persisted and why.
+- Avoid fetching the same data in multiple sibling client components; rely on shared Query Keys to handle deduplication automatically.
 
 ---
 
-## 9) Routes & Navigation Integrity
+## 8. Routes and Navigation
 
-1. Route constants in `src/config/routes.ts` must reflect real pages in `src/app`.
-2. Do not leave primary nav links pointing to non-existing pages.
-3. Protected routes must preserve locale and callback URL behavior.
+### Must
+- `src/config/routes.ts` must reflect real, current application routes.
+- Navigation used in visible UI must only point to existing pages.
+- Locale-aware app navigation should use the i18n navigation helpers where appropriate.
+
+### Planned Routes Policy
+- Planned or future routes must be clearly separated from active routes.
+- Planned routes must not be exported in a way that makes them look safe for current UI navigation.
+- Do not link users to placeholder or missing pages from primary navigation, cards, CTAs, or dashboards.
+
+### Protected Routes
+- Preserve locale behavior.
+- Preserve redirect or callback behavior when auth is required.
 
 ---
 
-## 10) Validation & Error Handling
+## 9. i18n Rules
 
-1. Validate form input at UI boundary.
-2. Normalize API error messages before displaying to users.
-3. Keep global toast behavior centralized (axios/interceptor or shared helpers).
+### Must
+- No hardcoded user-facing text in shared or reusable UI.
+- Keep `src/messages/vi` and `src/messages/en` synchronized in the same task.
+- Namespace translations by feature or domain.
+- **Strict Full Paths**: Always use fully qualified translation paths (e.g., `t('home.feature.key')`) with an unscoped `useTranslations()` hook to ensure compatibility with i18n Ally.
+
+### Should
+- Keep translation keys stable and descriptive.
+- Prefer adding keys close to the feature namespace instead of dumping into a catch-all file.
+
+### Avoid
+- Mixing translated and hardcoded text in the same reusable component.
+- Adding one locale without updating the other.
 
 ---
 
-## 11) Validation Loop (Before Done)
+## 10. Auth and Security
 
-Run and report:
+### Must
+- Maintain a single source of truth for auth state (Zustand).
+- **Auth Sync**: Auth state (tokens) must be synchronized with **Cookies** (`js-cookie`) to enable Middleware and Server Side Rendering (SSR) access.
+- Keep middleware or proxy behavior, client persistence, and logout behavior aligned.
+- Never commit real secrets or credentials.
+- Update `.env.example` when adding required environment variables.
+
+### Should
+- Minimize token exposure in browser-accessible storage.
+- Be explicit about cookie, storage, and refresh responsibilities.
+
+### Avoid
+- Duplicated auth stores
+- Mixed token strategies without a defined ownership model
+- Silent auth behavior changes without reviewing affected layers
+
+---
+
+## 11. TypeScript and Code Quality
+
+### Must
+- Keep `strict` TypeScript compatibility.
+- Avoid `any` in new or modified code except justified boundaries.
+- Use `import type` for type-only imports where applicable.
+- Keep function signatures clear and side effects localized.
+
+### Should
+- Prefer narrow types and explicit return shapes.
+- Extract repeated logic when duplication is real, not hypothetical.
+- Keep helpers generic only when they are reused.
+
+### Avoid
+- God components
+- Shared utility dumping grounds
+- Large functions mixing rendering, transformation, and transport logic
+
+---
+
+## 12. UI, Accessibility, and UX
+
+### Must
+- Preserve semantic HTML where practical.
+- Keep interactive elements accessible by keyboard and screen reader basics.
+- Handle loading, empty, error, and success states for user-critical flows.
+- **Skeleton Pattern**: Prefer Skeleton screens over full-page loaders or "null" returns to prevent Cumulative Layout Shift (CLS).
+
+### Should
+- Reuse shared UI primitives before inventing new variants.
+- Keep visual language consistent with the existing product surface.
+
+### Avoid
+- Hardcoded one-off visual tokens repeated across multiple components
+- Toasts and error messaging scattered with inconsistent wording
+- Decorative UI that obscures primary task completion
+
+---
+
+## 13. Validation and Error Handling
+
+### Must
+- Validate user input at the boundary where it enters the system.
+- Normalize API errors before surfacing them in UI.
+- Keep user-facing failure states actionable and non-ambiguous.
+
+### Should
+- Centralize repeated error formatting or toast behavior.
+- Distinguish validation errors from network or server failures.
+
+### Avoid
+- Raw backend errors directly shown to users
+- Silent catches without fallback behavior or logging path
+
+---
+
+## 14. Testing and Verification
+
+Testing expectations:
+- Bug fix: verify the failing path and the corrected path.
+- UI change: verify rendering and basic interaction.
+- Logic change: add or update automated tests when test infrastructure exists for the touched area.
+- Cross-cutting change: run the broader validation loop.
+
+Current repository baseline:
+- This repository may not yet have complete automated test coverage.
+- Lack of tests is not a reason to skip verification.
+- When tests do not exist, report the verification you performed and the remaining risk.
+
+Core quality gates before calling work complete:
 
 ```bash
 npm run lint
@@ -138,55 +293,136 @@ npx tsc --noEmit
 npm run build
 ```
 
-If UI or i18n changed, also run relevant `.agent` checks when available:
+Additional checks when relevant:
 
 ```bash
 python .agent/skills/i18n-localization/scripts/i18n_checker.py .
 python .agent/skills/frontend-design/scripts/ux_audit.py .
+python .agent/skills/frontend-design/scripts/accessibility_checker.py .
+python .agent/scripts/checklist.py .
 ```
 
-Fallback policy:
-- If optional `.agent` scripts fail due to environment/dependencies, report the exact failure.
-- Core gates (`lint`, `tsc`, `build`) remain mandatory.
+Reporting rule:
+- If a check is skipped, say why.
+- If a script fails because of environment or missing dependency, report the exact failure.
+- Do not claim completion without stating validation status.
 
 ---
 
-## 12) Git & Commit Rules
+## 15. Skill Routing Policy
 
-1. Conventional commits: `type(scope): subject`.
-2. Keep subject concise and meaningful.
-3. Do not mix unrelated refactor + feature in one commit.
-4. Review diff and ensure validation loop passes before commit.
+Use only skills that exist in this repository and match the task.
 
----
+Recommended mapping:
 
-## 13) Skill Routing (.agent/skills)
+| Task | Primary Skill | Support Skills |
+| --- | --- | --- |
+| Next.js structure and rendering | `nextjs-react-expert` | `architecture`, `nextjs-project-rules` |
+| UI implementation | `frontend-design` | `tailwind-patterns`, `web-design-guidelines` |
+| API and service work | `api-patterns` | `nodejs-best-practices`, `vulnerability-scanner` |
+| i18n changes | `i18n-localization` | `nextjs-project-rules` |
+| Debugging | `systematic-debugging` | `code-review-checklist` |
+| Testing and validation | `testing-patterns` | `tdd-workflow`, `lint-and-validate` |
 
-Pick skills intentionally by task:
-
-| Task Type | Primary Skills |
-| --- | --- |
-| Next.js architecture/layout/refactor | `architecture`, `nextjs-react-expert` |
-| API and auth integration | `api-patterns`, `nodejs-best-practices`, `vulnerability-scanner` |
-| UI work with Tailwind | `frontend-design`, `tailwind-patterns`, `web-design-guidelines` |
-| i18n and locale consistency | `i18n-localization` |
-| Debug and bug isolation | `systematic-debugging` |
-| Testing and reliability | `testing-patterns`, `tdd-workflow`, `webapp-testing` |
-| Lint/type/build quality gate | `lint-and-validate` |
-
-Protocol:
-1. Read selected skill `SKILL.md` first.
-2. Use one primary skill, others as support.
-3. Reflect applied skill guidance in implementation and reporting.
+Rules:
+- Read the selected `SKILL.md` before substantial implementation.
+- Use one primary skill and only the support skills that materially help.
+- Do not reference skills that are not present under `.agent/skills`.
 
 ---
 
-## 14) Definition of Done
+## 16. Review Checklist
 
-A task is considered complete only when:
+Every meaningful change should be reviewed against:
+- Correctness
+- Edge cases
+- Route integrity
+- i18n consistency
+- Auth consistency
+- Accessibility basics
+- Type safety
+- Validation status
 
-1. Behavior is correct (including edge cases).
-2. Locale flow and translations are not regressed.
-3. `lint`, `tsc --noEmit`, and `build` pass (or user approves known risk).
-4. Final report includes changed files, validation status, and residual risks.
+For reviews, prioritize:
+1. Bugs and regressions
+2. Security and data integrity risks
+3. Architectural drift
+4. Missing tests or verification
+5. Style and polish
 
+---
+
+## 17. Git and Delivery Discipline
+
+### Must
+- Keep commits focused.
+- Use conventional commit style when creating commits.
+- Separate refactor work from feature work unless tightly coupled.
+
+### Should
+- Review the diff before commit.
+- Mention residual risk when validation is partial.
+
+### Avoid
+- Bundling unrelated cleanup into the same change
+- Declaring "done" while known blockers remain unstated
+
+---
+
+## 18. Definition of Done
+
+Work is done only when:
+1. The requested behavior works.
+2. Touched code follows repository boundaries.
+3. Routes, auth, and locale behavior are not knowingly regressed.
+4. Required translation files are synchronized when text changes.
+5. Validation status is reported honestly.
+6. Residual risks or skipped checks are stated explicitly.
+
+---
+
+## 19. Anti-Patterns for This Repository
+
+Do not:
+- Add visible links to non-existent routes.
+- Hardcode reusable UI text that should be localized.
+- Duplicate auth state ownership.
+- Put API calls directly into many sibling components.
+- Introduce broad abstractions to solve a one-off case.
+- Keep stale template documentation that does not match the repository.
+
+---
+
+## 20. Rule Maintenance
+
+This file must stay aligned with the actual repository.
+
+When the codebase changes materially, update this file if any of the following become outdated:
+- stack choices
+- directory ownership
+- route policy
+- auth strategy
+- validation commands
+- skill references
+
+If a rule is not realistic or not enforceable, rewrite it to be practical instead of aspirational.
+
+---
+
+## 21. Data Integrity & High-Performance Fetching
+
+### Component Deduplication & Caching
+- **Universal Caching**: Use TanStack Query to gộp yêu cầu (deduplication). Even if 10 components require the same Tour data, only one network request should be sent.
+- **Query Key Strategy**: Use hierarchical keys: `["feature", "resource", "type/id"]` (e.g., `["home", "tours", "featured"]`).
+- **Cache Policy**: Set reasonable `staleTime` (e.g., 5-30 mins) for non-volatile data to maximize performance and minimize server load.
+
+### Strict Data Policy
+- **Empty States Over Mocks**: Components should **hide their entire section** or show a clean empty state if the database is empty. 
+- **No Invisible Mocks**: Hardcoded fake data (e.g., "15k users") is forbidden in production-ready components. The UI must accurately reflect the Backend database.
+- **Graceful Error Handling**: If an API fails, provide appropriate error feedback or hide the affected section silently.
+
+### Premium Visual Standards
+- **Entrance Animations**: Use `reveal-up` CSS classes with staggered `reveal-delay-X` for all top-level sections to create a premium reveal effect.
+- **Animation Rhythm**: Stagger delays must follow **100ms increments** (e.g., 100, 200, 300) to maintain a cohesive motion rhythm across the platform.
+- **Aesthetic Tokens**: Use consistent Design Tokens (Glassmorphism, Azure primary color, soft shadows) to maintain "WOW" factor.
+- **Interactive Feedback**: Always implement hover effects, active scales, and responsive loading/error feedback for a polished UX.

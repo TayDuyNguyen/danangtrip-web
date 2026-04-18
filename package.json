@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
+    "check:routes": "node scripts/check-routes.mjs",
     "typecheck": "tsc --noEmit",
     "prepush:check": "node scripts/prepush-check.mjs",
     "prepare": "husky || true"

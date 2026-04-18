@@ -1,13 +1,25 @@
-import { Hero, Discovery, Testimonials, HotTours, TravelBlog } from "@/features/home";
+import {
+  Hero,
+  StatsBar,
+  CategoryGrid,
+  FeaturedLocations,
+  TourCategories,
+  FeaturedTours,
+  HotTours,
+  TravelBlog
+} from "@/features/home";
 
 export default function Home() {
   return (
     <main className="flex flex-col flex-1">
       <Hero />
-      <Discovery />
+      <StatsBar />
+      <CategoryGrid />
+      <FeaturedLocations />
+      <TourCategories />
+      <FeaturedTours />
       <HotTours />
       <TravelBlog />
-      <Testimonials />
     </main>
   );
 }

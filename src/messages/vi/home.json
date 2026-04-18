@@ -1,45 +1,64 @@
 {
-  "hero_title": "Khám Phá Đà Nẵng Đẹp Nhất",
-  "hero_subtitle": "Trải nghiệm những chuyến đi tuyệt vời cùng Đà Nẵng Trip. Từ Bà Nà Hills rực rỡ đến Cầu Rồng huyền ảo.",
+  "hero_tagline_premium": "Khám phá vẻ đẹp bất tận",
+  "hero_title": "Khám phá Đà Nẵng",
+  "hero_tagline": "Thành phố đáng sống",
+  "hero_subtitle": "Tìm kiếm địa điểm và tour du lịch tuyệt vời để bắt đầu chuyến hành trình của bạn",
   "search_placeholder": "Bạn muốn đi đâu?",
-  "select_date": "Chọn ngày...",
-  "book_now": "Đặt ngay",
-  "categories": {
-    "dining": "Ăn uống",
-    "hotels": "Khách sạn",
-    "travel": "Du lịch",
-    "shopping": "Mua sắm",
-    "entertainment": "Giải trí",
-    "spa_gym": "Spa & Gym",
-    "places_suffix": "CHỖ",
-    "tours_suffix": "TOUR",
-    "shops_suffix": "SHOP",
-    "points_suffix": "ĐIỂM",
-    "facilities_suffix": "CƠ SỞ"
+  "search_type_location": "Địa điểm",
+  "search_type_tour": "Tour",
+  "search_button": "Tìm kiếm",
+  "trending": "Xu hướng",
+  "stats": {
+    "users": "Khách hàng",
+    "locations": "Địa điểm",
+    "tours": "Tour du lịch",
+    "ratings": "Đánh giá",
+    "views": "Lượt xem",
+    "blog_posts": "Bài viết"
   },
-  "explore_danang": "Khám Phá Đà Nẵng",
-  "explore_danang_desc": "Những địa điểm không thể bỏ qua khi đến thành phố đáng sống.",
-  "popular_tours": "Tour Phổ Biến",
-  "popular_tours_desc": "Những hành trình được yêu thích nhất bởi du khách.",
-  "view_all": "Xem tất cả",
-  "testimonials": "Cảm Nhận Du Khách",
-  "testimonials_desc": "Những chia sẻ thật lòng từ những người đã trải nghiệm cùng chúng tôi.",
+  "weather": {
+    "sunny": "Nắng đẹp",
+    "cloudy": "Nhiều mây",
+    "rainy": "Có mưa"
+  },
+  "categories_title": "Bạn muốn khám phá gì?",
+  "categories_title_prefix": "Khám phá theo",
+  "categories_title_highlight": "Danh mục",
+  "categories_subtitle": "Dễ dàng tìm thấy hành trình phù hợp với sở thích của bạn qua các chủ đề du lịch đặc sắc",
+  "featured_locations": {
+    "tagline": "Khám phá Đà Nẵng",
+    "title_prefix": "Địa điểm",
+    "title_highlight": "Nổi bật",
+    "subtitle": "Những địa danh mang tính biểu tượng và hấp dẫn nhất mà bạn không thể bỏ lỡ khi đến với Đà Nẵng."
+  },
+  "filters": {
+    "all": "Tất cả",
+    "beach": "Bãi biển",
+    "culture": "Văn hóa",
+    "food": "Ẩm thực",
+    "entertainment": "Giải trí"
+  },
+  "tour_categories": {
+    "title": "Danh mục Tour",
+    "cta": "Khám phá ngay"
+  },
+  "featured_tours": {
+    "title": "Tour Nổi bật",
+    "special_tour": "Tour Đặc biệt"
+  },
   "hot_tours": {
-    "title": "Tour Hot 🔥",
-    "subtitle": "Được đặt nhiều nhất tuần này",
-    "cta": "Săn ưu đãi ngay"
+    "tagline": "Trending Now",
+    "title": "Tour Hot Nhất Tuần",
+    "subtitle": "Đừng bỏ lỡ những hành trình đang được săn đón nhất với mức giá ưu đãi cực sốc.",
+    "cta": "Săn ưu đãi ngay",
+    "explore_more": "Khám phá thêm"
   },
   "blog": {
-    "title": "Cẩm nang Du lịch",
-    "cta": "Khám phá blog",
-    "article1_title": "Top 10 món ngon \"nhất định phải thử\" khi đến Đà Nẵng",
-    "article1_desc": "Cùng khám phá thiên đường ẩm thực từ Mì Quảng, Bánh tráng cuốn thịt heo đến vô vàn hải sản tươi ngon...",
-    "article2_title": "Lịch trình khám phá Đà Nẵng 3 ngày 2 đêm siêu tiết kiệm",
-    "article2_desc": "Hướng dẫn chi tiết cách di chuyển, chỗ ở và các điểm vui chơi không thể bỏ lỡ trong 3 ngày tại thành phố biển...",
-    "article3_title": "Top 5 quán cà phê view cực \"chill\" ngắm trọn vẹn sông Hàn",
-    "article3_desc": "Lưu lại ngay những địa chỉ cà phê có không gian đẹp và đồ uống độc đáo nhất định phải ghé qua..."
-  },
-  "tour_duration": "{{days}} ngày {{nights}} đêm",
-  "tour_price": "Từ {{price}}",
-  "tour_rating": "{{count}} đánh giá"
+    "tagline": "Cập nhật mới nhất",
+    "title_prefix": "Cẩm nang",
+    "title_highlight": "Du lịch",
+    "subtitle": "Khám phá những câu chuyện, kinh nghiệm và bí kíp du lịch Đà Nẵng từ những chuyên gia hành trình.",
+    "see_all": "Tất cả bài viết",
+    "read_more": "Đọc thêm"
+  }
 }
