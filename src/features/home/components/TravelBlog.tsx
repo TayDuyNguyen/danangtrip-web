@@ -15,32 +15,35 @@ const TravelBlog = () => {
   if (blogs.length === 0) return null;
 
   return (
-    <section className="py-[100px] bg-[#F8FAFC] font-sans">
+    <section className="py-[120px] bg-surface font-sans overflow-hidden">
       <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6 reveal-up">
-          <div className="max-w-2xl">
-            <span className="text-azure font-bold text-[14px] tracking-[0.3em] uppercase mb-4 block">
-              {t("home.blog.tagline")}
-            </span>
-            <h2 className="text-[36px] md:text-[48px] font-black leading-[1.1]">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8 reveal-up">
+          <div className="max-w-2xl px-4">
+            <div className="flex items-center gap-3 mb-4">
+              <span className="w-8 h-[2px] bg-azure/40" />
+              <span className="text-azure font-black text-[12px] tracking-[0.4em] uppercase">
+                {t("home.blog.tagline")}
+              </span>
+            </div>
+            <h2 className="text-[36px] md:text-[48px] font-black leading-[1.1] text-dark">
               {t("home.blog.title_prefix")} <span className="text-azure underline decoration-azure/30 underline-offset-8">{t("home.blog.title_highlight")}</span>
             </h2>
           </div>
           <Link
             href={ROUTES.BLOG}
-            className="flex items-center gap-2 text-azure font-black hover:gap-4 transition-all group"
+            className="px-6 py-3 bg-white text-azure text-[14px] font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center group mb-2"
           >
-            {t("home.blog.see_all")} <IoArrowForwardOutline size={20} className="transition-transform" />
+            {t("home.blog.see_all")} <IoArrowForwardOutline className="ml-2 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
 
         {/* Blog Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {blogs.map((post, index) => (
             <article
               key={post.id}
-              className="group bg-white rounded-[40px] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 reveal-up"
+              className="group bg-surface-container-lowest rounded-[24px] overflow-hidden shadow-[0_15px_35px_rgba(23,28,31,0.05)] hover:shadow-2xl hover:shadow-azure/5 transition-all duration-500 reveal-up hover:-translate-y-2"
               style={{ animationDelay: `${(index + 1) * 200}ms` }}
             >
               <Link href={`${ROUTES.BLOG}/${post.slug}`}>
@@ -52,26 +55,26 @@ const TravelBlog = () => {
                     sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     className="object-cover transition-transform duration-700 group-hover:scale-110"
                   />
-                  <div className="absolute top-6 left-6 flex gap-2">
+                  <div className="absolute top-6 left-6 flex gap-2 z-10">
                     {post.categories?.slice(0, 1).map((cat) => (
-                      <span key={cat.id} className="bg-white/90 backdrop-blur-md text-azure text-[11px] font-bold px-4 py-2 rounded-full shadow-sm">
+                      <span key={cat.id} className="bg-white/90 backdrop-blur-md text-azure text-[10px] font-black tracking-wider uppercase px-4 py-2 rounded-full shadow-sm">
                         {cat.name}
                       </span>
                     ))}
                   </div>
                 </div>
 
-                <div className="p-10">
+                <div className="p-8">
                   <div className="flex items-center gap-3 text-slate-400 text-[13px] font-medium mb-4">
-                    <IoCalendarOutline size={16} className="text-azure" />
+                    <IoCalendarOutline size={16} className="text-azure/60" />
                     {post.created_at ? new Date(post.created_at).toLocaleDateString('vi-VN') : "18/04/2026"}
                   </div>
-                  <h3 className="text-[22px] font-black text-dark mb-6 leading-tight group-hover:text-azure transition-colors line-clamp-2 min-h-[54px]">
+                  <h3 className="text-[20px] font-bold text-dark mb-6 leading-snug group-hover:text-azure transition-colors line-clamp-2 min-h-[54px]">
                     {post.title}
                   </h3>
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between mt-auto">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-slate-100 overflow-hidden border border-slate-100 relative">
+                      <div className="w-10 h-10 rounded-full bg-surface-container overflow-hidden relative">
                         {post.author?.avatar ? (
                           <Image src={post.author.avatar} alt={post.author.full_name} fill className="object-cover" />
                         ) : (
@@ -80,9 +83,9 @@ const TravelBlog = () => {
                           </div>
                         )}
                       </div>
-                      <span className="text-[13px] font-black text-slate-600">{post.author?.full_name || "Admin"}</span>
+                      <span className="text-[14px] font-bold text-slate-600 group-hover:text-dark transition-colors">{post.author?.full_name || "Admin"}</span>
                     </div>
-                    <span className="text-azure font-black text-[14px] flex items-center gap-2 group-hover:gap-3 transition-all">
+                    <span className="text-azure font-black text-[13px] flex items-center gap-2 group-hover:gap-3 transition-all uppercase tracking-wider">
                       {t("home.blog.read_more")} <IoArrowForwardOutline />
                     </span>
                   </div>
@@ -97,3 +100,4 @@ const TravelBlog = () => {
 };
 
 export default memo(TravelBlog);
+
