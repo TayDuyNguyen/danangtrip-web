@@ -1,66 +1,69 @@
 @import "tailwindcss";
 
 :root {
+  /* Brand Constants - Coastal Curated */
   --background: #F6FAFE;
   --foreground: #171C1F;
+  --primary-color: #004E9F;
+  --secondary-color: #AB3500;
+  --azure-color: #0066CC;
+  --sun-color: #FF6B35;
+  --outline-color: rgba(114, 119, 132, 0.15);
+  --radius-value: 0.75rem;
 }
 
 @theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  
   --font-sans: "Inter", var(--font-geist-sans), sans-serif;
   --font-mono: var(--font-geist-mono);
   
-  /* Brand Colors - Coastal Curated */
-  --color-primary: #004E9F;
-  --color-primary-container: #0066CC;
+  /* Brand Mapping */
+  --color-primary: var(--primary-color);
   --color-on-primary: #FFFFFF;
   
-  --color-secondary: #AB3500;
-  --color-secondary-container: #FF6B35;
+  --color-secondary: var(--secondary-color);
   --color-on-secondary: #FFFFFF;
 
-  /* Surface Tiers - The "Layering" Principle */
-  --color-surface: #F6FAFE;
-  --color-on-surface: #171C1F;
+  --color-azure: var(--azure-color);
+  --color-sun: var(--sun-color);
+  --color-dark: var(--foreground);
+
+  /* Functional Layout Mapping */
+  --color-surface: var(--background);
+  --color-on-surface: var(--foreground);
   --color-surface-container-lowest: #FFFFFF;
   --color-surface-container-low: #F0F4F8;
   --color-surface-container: #EAEEF2;
   --color-surface-container-high: #E4E9ED;
   --color-surface-container-highest: #DFE3E7;
 
-  /* Support Colors */
-  --color-azure: #0066CC; /* Alias for primary-container */
-  --color-sun: #FF6B35;   /* Alias for secondary-container */
-  --color-dark: #171C1F;  /* Alias for on-surface */
-  --color-outline-variant: rgba(114, 119, 132, 0.15); /* Ghost Border */
-}
+  /* UI Essentials - Fixing the "Missing Gray" issues */
+  --color-border: var(--outline-color);
+  --color-input: var(--outline-color);
+  --color-ring: var(--azure-color);
+  --color-outline-variant: var(--outline-color);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0B1C30;
-    --foreground: #F6FAFE;
+  /* Radii */
+  --radius-xl: var(--radius-value);
+  --radius-lg: calc(var(--radius-value) - 2px);
+  --radius-md: calc(var(--radius-value) - 4px);
+  --radius-sm: calc(var(--radius-value) - 6px);
+
+  /* Animations */
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+  --animate-reveal-up: reveal-up 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+
+  @keyframes accordion-down {
+    from { height: 0; }
+    to { height: var(--radix-accordion-content-height); }
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans);
-  overflow-x: hidden;
-}
-
-
-@layer utilities {
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
+  @keyframes accordion-up {
+    from { height: var(--radix-accordion-content-height); }
+    to { height: 0; }
   }
-  .no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-
-  /* Reveal Animations */
   @keyframes revealUp {
     from {
       opacity: 0;
@@ -71,9 +74,41 @@ body {
       transform: translateY(0);
     }
   }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0B1C30;
+    --foreground: #F6FAFE;
+    --outline-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+@layer base {
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+  }
+
+  /* Standard Border Application */
+  * {
+    @apply border-border;
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 
   .reveal-up {
-    animation: revealUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    @apply animate-reveal-up;
   }
 
   .reveal-delay-100 { animation-delay: 100ms; }

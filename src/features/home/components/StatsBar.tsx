@@ -35,7 +35,7 @@ const StatsBar = () => {
 
   return (
     <div className="container mx-auto px-4 relative z-20 reveal-up">
-      <div className="flex flex-wrap justify-between items-center gap-10 p-10 bg-surface-container-lowest shadow-[0_20px_40px_rgba(23,28,31,0.06)] rounded-[24px] -mt-16 mb-12">
+      <div className="flex flex-wrap justify-between items-center gap-10 p-10 bg-white/80 backdrop-blur-xl border border-outline-variant shadow-[0_20px_50px_rgba(23,28,31,0.12)] rounded-[24px] -mt-16 mb-12">
         {statItems.map((item, index) => (
           <div key={index} className="flex items-center gap-5 group flex-1 min-w-[200px]">
             <div className="w-16 h-16 rounded-2xl bg-surface-container flex items-center justify-center group-hover:bg-surface-container-high transition-colors duration-500">
