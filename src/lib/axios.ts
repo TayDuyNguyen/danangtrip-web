@@ -1,8 +1,8 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
-import { config } from "@/config";
-import { toast } from "sonner";
-import { useAuthStore } from "@/store/auth.store";
 import Cookies from "js-cookie";
+import { toast } from "sonner";
+import { config } from "@/config";
+import { useAuthStore } from "@/store/auth.store";
 import type { ApiResponse } from "@/types";
 
 /**
@@ -10,42 +10,83 @@ import type { ApiResponse } from "@/types";
  */
 const axiosInstance = axios.create({
   baseURL: config.api.url,
-  timeout: 15000,
+  timeout: 60000,
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },
 });
 
 let isRefreshing = false;
+let isRedirecting = false;
 let failedQueue: Array<{
   resolve: (token: string | null) => void;
-  reject: (e: unknown) => void;
+  reject: (error: unknown) => void;
 }> = [];
-let isRedirecting = false;
+
+const AUTH_BYPASS_PATHS = [
+  "/auth/login",
+  "/auth/register",
+  "/auth/refresh",
+  "/auth/forgot-password",
+  "/auth/reset-password",
+];
 
 const processQueue = (error: Error | null, token: string | null = null) => {
-  failedQueue.forEach((prom) => (error ? prom.reject(error) : prom.resolve(token)));
+  failedQueue.forEach((item) => {
+    if (error) {
+      item.reject(error);
+      return;
+    }
+
+    item.resolve(token);
+  });
+
   failedQueue = [];
 };
 
+const getAccessToken = () => {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  return Cookies.get("token") || localStorage.getItem("token");
+};
+
 const handleLogout = () => {
-  if (isRedirecting || typeof window === "undefined") return;
+  if (isRedirecting || typeof window === "undefined") {
+    return;
+  }
+
   isRedirecting = true;
 
   Cookies.remove("token", { path: "/" });
-  Cookies.remove("refreshToken", { path: "/" });
   localStorage.removeItem("token");
-  localStorage.removeItem("refreshToken");
   useAuthStore.getState().logout();
 
-  const isEn = window.location.pathname.startsWith("/en");
-  window.location.replace(isEn ? "/en/login" : "/login");
+  const isEnglishPath = window.location.pathname.startsWith("/en");
+  window.location.replace(isEnglishPath ? "/en/login" : "/login");
+};
+
+const shouldRefreshToken = (
+  status: number,
+  originalRequest: (InternalAxiosRequestConfig & { _retry?: boolean }) | undefined
+) => {
+  if (status !== 401 || !originalRequest?.url || originalRequest._retry) {
+    return false;
+  }
+
+  if (AUTH_BYPASS_PATHS.some((path) => originalRequest.url?.includes(path))) {
+    return false;
+  }
+
+  return Boolean(getAccessToken());
 };
 
 // Request interceptor
 axiosInstance.interceptors.request.use(
   async (axiosConfig: InternalAxiosRequestConfig) => {
-    const token = Cookies.get("token");
+    const token = getAccessToken();
 
     if (typeof window !== "undefined") {
       const locale = window.location.pathname.startsWith("/en") ? "en" : "vi";
@@ -65,7 +106,6 @@ axiosInstance.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Response type for refresh token endpoint
 interface RefreshTokenData {
   data?: { token?: string };
   token?: string;
@@ -74,7 +114,6 @@ interface RefreshTokenData {
 // Response interceptor
 axiosInstance.interceptors.response.use(
   (response) => {
-    // If backend returns { code: 200, data: ... }
     if (response.data && response.data.code === 200 && response.data.data !== undefined) {
       return {
         success: true,
@@ -82,11 +121,11 @@ axiosInstance.interceptors.response.use(
         message: response.data.message || "Success",
       };
     }
-    
+
     if (response.data && typeof response.data.success === "boolean") {
       return response.data;
     }
-    
+
     return {
       success: true,
       data: response.data,
@@ -97,23 +136,18 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
 
     if (!error.response) {
-      toast.error("Kết nối mạng thất bại");
+      toast.error("Network connection failed");
       return Promise.reject({
         success: false,
         error: "Network Error",
-        message: "Kết nối mạng thất bại",
+        message: "Network connection failed",
+        status: 0,
       } as ApiResponse);
     }
 
     const { status, data } = error.response;
 
-    // 401 — Refresh Token logic
-    if (status === 401 && !originalRequest.url?.includes("/login")) {
-      if (originalRequest._retry) {
-        handleLogout();
-        return Promise.reject(error);
-      }
-
+    if (shouldRefreshToken(status, originalRequest)) {
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
@@ -122,22 +156,23 @@ axiosInstance.interceptors.response.use(
             originalRequest.headers.Authorization = `Bearer ${token}`;
             return axiosInstance(originalRequest);
           })
-          .catch((err) => Promise.reject(err));
+          .catch((refreshError) => Promise.reject(refreshError));
       }
 
       originalRequest._retry = true;
       isRefreshing = true;
 
       try {
-        const refreshToken = Cookies.get("refreshToken") || localStorage.getItem("refreshToken");
-        if (!refreshToken) throw new Error("No refresh token");
-
-        const response = await axios.post<RefreshTokenData>(`${config.api.url}/auth/refresh`, {
-          refreshToken,
-        });
+        const response = await axios.post<RefreshTokenData>(
+          `${config.api.url}/auth/refresh`,
+          {},
+          { withCredentials: true }
+        );
 
         const newToken = response.data?.data?.token || response.data?.token;
-        if (!newToken) throw new Error("Refresh failed");
+        if (!newToken) {
+          throw new Error("Refresh failed");
+        }
 
         Cookies.set("token", newToken, { expires: 7, path: "/" });
         processQueue(null, newToken);
@@ -146,23 +181,34 @@ axiosInstance.interceptors.response.use(
       } catch (refreshError) {
         processQueue(refreshError as Error, null);
         handleLogout();
-        return Promise.reject(error);
+        return Promise.reject({
+          success: false,
+          error: "Auth Error",
+          message: "Session expired",
+          status: 401,
+        } as ApiResponse);
       } finally {
         isRefreshing = false;
       }
     }
 
-    if (status === 403) {
-      toast.warning("Bạn không có quyền thực hiện hành động này");
+    if (status === 401 && getAccessToken()) {
+      handleLogout();
     }
+
+    if (status === 403) {
+      toast.warning("You do not have permission to perform this action");
+    }
+
     if (status >= 500) {
-      toast.error("Lỗi hệ thống, vui lòng thử lại sau");
+      toast.error("System error, please try again later");
     }
 
     const errorResponse: ApiResponse = {
       success: false,
       error: data?.error || data?.message || "Unknown Error",
-      message: data?.message || "Đã có lỗi xảy ra",
+      message: data?.message || "An unexpected error occurred",
+      status,
     };
 
     return Promise.reject(errorResponse);
@@ -175,9 +221,9 @@ export default axiosInstance;
  * Type-safe API helper methods
  */
 export const api = {
-  get:    <T>(url: string, params?: object) => axiosInstance.get<T, ApiResponse<T>>(url, { params }),
-  post:   <T>(url: string, data?: unknown)  => axiosInstance.post<T, ApiResponse<T>>(url, data),
-  put:    <T>(url: string, data?: unknown)  => axiosInstance.put<T, ApiResponse<T>>(url, data),
-  patch:  <T>(url: string, data?: unknown)  => axiosInstance.patch<T, ApiResponse<T>>(url, data),
-  delete: <T>(url: string)                  => axiosInstance.delete<T, ApiResponse<T>>(url),
+  get: <T>(url: string, params?: object) => axiosInstance.get<T, ApiResponse<T>>(url, { params }),
+  post: <T>(url: string, data?: unknown) => axiosInstance.post<T, ApiResponse<T>>(url, data),
+  put: <T>(url: string, data?: unknown) => axiosInstance.put<T, ApiResponse<T>>(url, data),
+  patch: <T>(url: string, data?: unknown) => axiosInstance.patch<T, ApiResponse<T>>(url, data),
+  delete: <T>(url: string) => axiosInstance.delete<T, ApiResponse<T>>(url),
 };

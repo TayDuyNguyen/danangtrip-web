@@ -72,7 +72,8 @@ const Header = () => {
                     : "text-white"
                 }`}
             >
-              {link.name}
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+              {t(link.name as any)}
               <span
                 className={`absolute -bottom-1 left-0 h-0.5 bg-cyan-500 transition-all duration-300 ${isActive(link.path) ? "w-full" : "w-0 group-hover:w-full"
                   }`}
@@ -138,7 +139,7 @@ const Header = () => {
                     : "bg-white text-cyan-500 hover:bg-gray-50"
                   }`}
               >
-                Đăng ký
+                {t("auth.register")}
               </Link>
             </div>
           )}
@@ -165,7 +166,7 @@ const Header = () => {
 
           <div className="lg:hidden fixed inset-y-0 right-0 w-4/5 max-w-sm bg-white/95 backdrop-blur-md z-50 shadow-2xl animate-in slide-in-from-right duration-300">
             <div className="flex items-center justify-between p-6 border-b border-gray-100">
-              <span className="text-lg font-bold text-gray-900">Menu</span>
+              <span className="text-lg font-bold text-gray-900">{t("common.menu")}</span>
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="p-2 rounded-full hover:bg-gray-100 transition-colors"
@@ -186,7 +187,8 @@ const Header = () => {
                     }`}
                   style={{ animationDelay: `${index * 50}ms` }}
                 >
-                  <span className="text-lg font-medium">{link.name}</span>
+                  {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                  <span className="text-lg font-medium">{t(link.name as any)}</span>
                   {isActive(link.path) && (
                     <IoChevronForward className="ml-auto text-cyan-500" />
                   )}

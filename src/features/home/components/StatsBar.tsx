@@ -35,28 +35,26 @@ const StatsBar = () => {
 
   return (
     <div className="container mx-auto px-4 relative z-20 reveal-up">
-      <div className="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-16 py-8 px-10 bg-white shadow-[0_20px_50px_rgba(0,0,0,0.1)] rounded-[32px] -mt-12 mb-12 border border-blue-50/50">
+      <div className="flex flex-wrap justify-between items-center gap-10 p-10 bg-surface-container-lowest shadow-[0_20px_40px_rgba(23,28,31,0.06)] rounded-[24px] -mt-16 mb-12">
         {statItems.map((item, index) => (
-          <div key={index} className="flex items-center gap-4 group">
-            <div className="p-3 rounded-2xl bg-slate-50 group-hover:bg-blue-50 transition-colors duration-300">
+          <div key={index} className="flex items-center gap-5 group flex-1 min-w-[200px]">
+            <div className="w-16 h-16 rounded-2xl bg-surface-container flex items-center justify-center group-hover:bg-surface-container-high transition-colors duration-500">
               {item.icon}
             </div>
-            <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-3">
-              <span className="text-[32px] font-black text-azure leading-none tracking-tight">
+            <div className="flex flex-col">
+              <span className="text-[32px] font-black text-azure leading-none tracking-tighter mb-1">
                 {item.value}
               </span>
-              <span className="text-[12px] md:text-[13px] text-[#64748B] font-bold tracking-widest uppercase opacity-80">
+              <span className="text-[12px] text-dark font-black tracking-[0.2em] uppercase opacity-60">
                 {item.label}
               </span>
             </div>
-            {index < statItems.length - 1 && (
-              <div className="hidden md:block w-px h-12 bg-gray-100 mx-4" />
-            )}
           </div>
         ))}
       </div>
     </div>
   );
+
 };
 
 export default memo(StatsBar);

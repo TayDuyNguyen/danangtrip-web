@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 interface EmptyStateProps {
   title?: string;
   description?: string;
@@ -9,12 +11,16 @@ interface EmptyStateProps {
 }
 
 export function EmptyState({
-  title = "Không có dữ liệu",
-  description = "Hiện tại chưa có dữ liệu nào.",
+  title,
+  description,
   icon,
   action,
   className = "",
 }: EmptyStateProps) {
+  const t = useTranslations("common");
+  const displayTitle = title || t("common.no_data");
+  const displayDescription = description || t("common.no_data_desc");
+
   return (
     <div
       className={`flex flex-col items-center justify-center py-12 px-4 text-center ${className}`}
@@ -38,8 +44,8 @@ export function EmptyState({
           </svg>
         </div>
       )}
-      <h3 className="text-lg font-medium text-gray-900 mb-2">{title}</h3>
-      <p className="text-sm text-gray-500 max-w-sm mb-6">{description}</p>
+      <h3 className="text-lg font-medium text-gray-900 mb-2">{displayTitle}</h3>
+      <p className="text-sm text-gray-500 max-w-sm mb-6">{displayDescription}</p>
       {action && <div>{action}</div>}
     </div>
   );

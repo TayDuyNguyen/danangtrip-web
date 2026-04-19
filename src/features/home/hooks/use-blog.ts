@@ -2,7 +2,8 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { blogService } from "@/services/blog.service";
-import type { BlogPost, PaginatedResponse } from "@/types";
+import type { BlogPost } from "@/types";
+import { shouldRetryQuery } from "@/lib/react-query";
 
 /**
  * Enhanced useBlog hook using TanStack Query for deduplication and caching.
@@ -13,12 +14,12 @@ export const useBlog = () => {
     queryFn: async () => {
       const response = await blogService.getLatest(1, 3);
       if (response.success && response.data) {
-        return (response.data as PaginatedResponse<BlogPost>).data || [];
+        return response.data.data || [];
       }
-      throw new Error("Failed to fetch blog posts");
+      throw response;
     },
     staleTime: 10 * 60 * 1000, // 10 minutes
-    retry: 1,
+    retry: shouldRetryQuery,
   });
 
   const latestBlogs: BlogPost[] = query.data || [];

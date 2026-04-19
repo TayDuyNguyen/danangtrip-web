@@ -1,6 +1,7 @@
 "use client";
 
 import { memo } from "react";
+import { useTranslations } from "next-intl";
 import { 
   IoShieldCheckmarkOutline, 
   IoFlashOutline, 
@@ -8,7 +9,10 @@ import {
   IoWalletOutline 
 } from "react-icons/io5";
 
+
 const Discovery = () => {
+  const t = useTranslations();
+
   const features = [
     {
       id: 1,
@@ -41,35 +45,39 @@ const Discovery = () => {
   ];
 
   return (
-    <section className="py-[120px] bg-white reveal-up">
+    <section className="py-[120px] bg-surface reveal-up">
       <div className="container px-4 mx-auto">
-        <div className="text-center max-w-3xl mx-auto mb-20">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <span className="w-12 h-[2px] bg-azure" />
-            <span className="text-azure font-black text-[14px] tracking-[0.3em] uppercase">Tại sao chọn chúng tôi</span>
-            <span className="w-12 h-[2px] bg-azure" />
+        <div className="text-center max-w-3xl mx-auto mb-20 px-4">
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <span className="w-12 h-[2px] bg-azure/30" />
+            <span className="text-azure font-black text-[12px] tracking-[0.4em] uppercase">{t("home.discovery.tagline")}</span>
+            <span className="w-12 h-[2px] bg-azure/30" />
           </div>
-          <h2 className="text-[32px] md:text-[48px] font-black text-[#1E293B] leading-tight mb-6">
-            Trải nghiệm Đà Nẵng trọn vẹn cùng Đà Nẵng Trip
+          <h2 className="text-[32px] md:text-[48px] font-black text-dark leading-tight mb-8">
+            {t("home.discovery.title")}
           </h2>
-          <p className="text-[16px] md:text-lg text-gray-500 font-medium">
-            Chúng tôi tự hào mang đến những dịch vụ du lịch chất lượng, minh bạch và tận tâm nhất dành cho du khách.
+          <p className="text-[16px] md:text-lg text-slate-500 font-medium leading-relaxed">
+            {t("home.discovery.subtitle")}
           </p>
         </div>
+
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {features.map((feature) => (
             <div
               key={feature.id}
-              className="group p-10 bg-white rounded-[40px] border border-slate-100 shadow-xl shadow-slate-200/40 hover:shadow-2xl hover:shadow-blue-900/10 transition-all duration-500 hover:-translate-y-2 flex flex-col items-center text-center"
+              className="group p-10 bg-surface-container-lowest rounded-[24px] shadow-[0_15px_30px_rgba(23,28,31,0.04)] hover:shadow-2xl hover:shadow-azure/10 transition-all duration-700 hover:-translate-y-3 flex flex-col items-center text-center relative overflow-hidden"
             >
-              <div className={`w-20 h-20 rounded-3xl ${feature.bg} flex items-center justify-center mb-8 transform transition-transform duration-500 group-hover:rotate-12 shadow-sm`}>
+              <div className="absolute top-0 right-0 w-24 h-24 bg-azure/5 rounded-bl-full -mr-10 -mt-10 group-hover:bg-azure/10 transition-colors duration-700" />
+              
+              <div className="w-20 h-20 rounded-2xl bg-surface-container flex items-center justify-center mb-10 transform transition-all duration-700 group-hover:rotate-15 group-hover:scale-110 shadow-sm relative z-10">
+
                 {feature.icon}
               </div>
-              <h3 className="text-[20px] font-bold text-[#1E293B] mb-4 group-hover:text-azure transition-colors uppercase tracking-tight">
+              <h3 className="text-[20px] font-bold text-dark mb-5 group-hover:text-azure transition-colors uppercase tracking-tight relative z-10">
                 {feature.title}
               </h3>
-              <p className="text-[14px] md:text-[15px] text-gray-500 leading-relaxed font-medium capitalize">
+              <p className="text-[14px] md:text-[15px] text-slate-500 leading-relaxed font-medium relative z-10">
                 {feature.desc}
               </p>
             </div>
@@ -77,6 +85,7 @@ const Discovery = () => {
         </div>
       </div>
     </section>
+
   );
 };
 

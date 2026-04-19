@@ -20,8 +20,8 @@ export const authService = {
   logout: (): Promise<ApiResponse<unknown>> =>
     axiosInstance.post(API_ENDPOINTS.AUTH.LOGOUT),
 
-  refreshToken: (refreshToken: string): Promise<ApiResponse<RefreshTokenResponse>> =>
-    axiosInstance.post(API_ENDPOINTS.AUTH.REFRESH_TOKEN, { refreshToken }),
+  refreshToken: (): Promise<ApiResponse<RefreshTokenResponse>> =>
+    axiosInstance.post(API_ENDPOINTS.AUTH.REFRESH_TOKEN, {}),
     
   getMe: (): Promise<ApiResponse<User>> =>
     axiosInstance.get(API_ENDPOINTS.AUTH.ME),

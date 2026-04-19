@@ -4,10 +4,10 @@ import type { Tour, TourCategory, ApiResponse } from "@/types";
 
 export const tourService = {
   getFeatured: (limit: number = 8): Promise<ApiResponse<Tour[]>> =>
-    axiosInstance.get(`${API_ENDPOINTS.TOURS.FEATURED}?limit=${limit}`),
+    axiosInstance.get(API_ENDPOINTS.TOURS.FEATURED, { params: { limit } }),
 
   getHot: (limit: number = 8): Promise<ApiResponse<Tour[]>> =>
-    axiosInstance.get(`${API_ENDPOINTS.TOURS.HOT}?limit=${limit}`),
+    axiosInstance.get(API_ENDPOINTS.TOURS.HOT, { params: { limit } }),
 
   getCategories: (): Promise<ApiResponse<TourCategory[]>> =>
     axiosInstance.get(API_ENDPOINTS.TOURS.CATEGORIES),

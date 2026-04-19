@@ -11,7 +11,6 @@ export interface LoginRequest {
 
 export interface LoginResponse {
   token: string;
-  refreshToken?: string;
   user: User;
 }
 
@@ -27,7 +26,6 @@ export interface RegisterRequest {
 export interface RegisterResponse {
   user: User;
   token?: string;
-  refreshToken?: string;
 }
 
 export type RefreshTokenResponse = LoginResponse;

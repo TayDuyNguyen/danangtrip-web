@@ -4,7 +4,7 @@ import type { Location, ApiResponse } from "@/types";
 
 export const locationService = {
   getFeatured: (limit: number = 8): Promise<ApiResponse<Location[]>> =>
-    axiosInstance.get(`${API_ENDPOINTS.LOCATIONS.FEATURED}?limit=${limit}`),
+    axiosInstance.get(API_ENDPOINTS.LOCATIONS.FEATURED, { params: { limit } }),
 
   getByCategory: (categorySlug: string): Promise<ApiResponse<Location[]>> =>
     axiosInstance.get(`/categories/${categorySlug}/locations`),

@@ -3,7 +3,7 @@
 import { useCallback, useEffect } from "react";
 import { useAuthStore } from "@/store/auth.store";
 import { authService } from "@/services/auth.service";
-import type { LoginRequest, RegisterRequest } from "@/types";
+import type { LoginRequest, RegisterRequest, ApiResponse } from "@/types";
 import Cookies from "js-cookie";
 
 export const useAuth = () => {
@@ -26,24 +26,21 @@ export const useAuth = () => {
 
       try {
         const response = await authService.login(credentials);
-        
+
         if (response.success && response.data) {
-          const { user: userData, token: userToken, refreshToken } = response.data;
+          const { user: userData, token: userToken } = response.data;
 
           if (userToken && userData) {
             storeLogin(userData, userToken);
-            // Cookies are also handled in storeLogin, but we can set refreshToken here
-            if (refreshToken) {
-              Cookies.set("refreshToken", refreshToken, { expires: 30, path: "/" });
-            }
             return { success: true };
           }
         }
-        
+
         setError(response.message || "Login failed");
         return { success: false, error: response.message };
       } catch (err) {
-        const message = err instanceof Error ? err.message : "An error occurred";
+        const apiError = err as ApiResponse;
+        const message = apiError.message || apiError.error || "Login failed";
         setError(message);
         return { success: false, error: message };
       } finally {
@@ -60,7 +57,7 @@ export const useAuth = () => {
 
       try {
         const response = await authService.register(credentials);
-        
+
         if (response.success && response.data) {
           const { user: userData, token: userToken } = response.data;
           if (userData) {
@@ -70,11 +67,12 @@ export const useAuth = () => {
             return { success: true };
           }
         }
-        
+
         setError(response.message || "Registration failed");
         return { success: false, error: response.message };
       } catch (err) {
-        const message = err instanceof Error ? err.message : "An error occurred";
+        const apiError = err as ApiResponse;
+        const message = apiError.message || apiError.error || "Registration failed";
         setError(message);
         return { success: false, error: message };
       } finally {
@@ -90,9 +88,7 @@ export const useAuth = () => {
     } finally {
       storeLogout();
       Cookies.remove("token", { path: "/" });
-      Cookies.remove("refreshToken", { path: "/" });
       localStorage.removeItem("token");
-      localStorage.removeItem("refreshToken");
     }
   }, [storeLogout]);
 
@@ -106,22 +102,35 @@ export const useAuth = () => {
       if (response.success && response.data) {
         storeLogin(response.data, token);
       } else {
-        storeLogout();
+        // Only logout on definitive 401 Unauthorized
+        if (response.status === 401) {
+          storeLogout();
+          Cookies.remove("token", { path: "/" });
+          localStorage.removeItem("token");
+        }
       }
-    } catch {
-      storeLogout();
+      } catch (err) {
+      const apiError = err as ApiResponse;
+      // Only logout on definitive 401 Unauthorized from the interceptor
+      if (apiError.status === 401) {
+        storeLogout();
+        Cookies.remove("token", { path: "/" });
+        localStorage.removeItem("token");
+      }
+      // Network failures or 5xx errors should not revoke the session
     } finally {
       setLoading(false);
     }
   }, [storeLogin, storeLogout, setLoading]);
 
   useEffect(() => {
-    // Only check auth if we have a token but aren't authenticated in state
+    // Re-verify session on mount if a token exists
     const token = Cookies.get("token") || localStorage.getItem("token");
-    if (token && !isAuthenticated) {
+    if (token && !isLoading) {
       checkAuth();
     }
-  }, [checkAuth, isAuthenticated]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Run only on mount
 
   return {
     user,
@@ -135,4 +144,3 @@ export const useAuth = () => {
     clearError,
   };
 };
-

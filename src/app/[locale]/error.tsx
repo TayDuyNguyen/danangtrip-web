@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect } from "react";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
+import { IoAlertCircleOutline, IoRefreshOutline, IoHomeOutline } from "react-icons/io5";
 
 interface ErrorPageProps {
   error: Error & { digest?: string };
@@ -9,36 +11,51 @@ interface ErrorPageProps {
 }
 
 export default function Error({ error, reset }: ErrorPageProps) {
+  const t = useTranslations("common");
+
   useEffect(() => {
     // Log the error to an error reporting service
     console.error("Application error:", error);
   }, [error]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="text-center px-4">
-        <h1 className="text-6xl font-bold text-red-600 mb-4">Lỗi</h1>
-        <h2 className="text-2xl font-semibold text-gray-700 mb-4">
-          Đã xảy ra lỗi
-        </h2>
-        <p className="text-gray-500 mb-8 max-w-md mx-auto">
-          {error.message ||
-            "Đã xảy ra lỗi không mong muốn. Vui lòng thử lại sau."}
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+      <div className="text-center max-w-lg w-full bg-white p-12 rounded-[2.5rem] shadow-xl shadow-gray-200/50 border border-gray-100 animate-in fade-in zoom-in duration-500">
+        <div className="w-24 h-24 bg-red-50 rounded-3xl flex items-center justify-center mx-auto mb-8 animate-bounce">
+          <IoAlertCircleOutline className="text-5xl text-red-500" />
+        </div>
+        
+        <h1 className="text-4xl font-black text-gray-900 mb-4 tracking-tight">
+          {t("error.title")}
+        </h1>
+        
+        <p className="text-gray-500 mb-10 text-lg leading-relaxed">
+          {error.message || t("error.desc")}
         </p>
-        <div className="flex gap-4 justify-center">
+
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <button
             onClick={reset}
-            className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 border border-transparent text-base font-bold rounded-2xl text-white bg-cyan-500 hover:bg-cyan-600 shadow-lg shadow-cyan-500/25 transition-all duration-300 hover:-translate-y-1 active:scale-95"
           >
-            Thử lại
+            <IoRefreshOutline className="text-xl" />
+            {t("error.retry")}
           </button>
+          
           <Link
             href="/"
-            className="inline-flex items-center px-4 py-2 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 border border-gray-200 text-base font-bold rounded-2xl text-gray-700 bg-white hover:bg-gray-50 transition-all duration-300 hover:border-cyan-500/30"
           >
-            Quay về trang chủ
+            <IoHomeOutline className="text-xl" />
+            {t("error.go_home")}
           </Link>
         </div>
+        
+        {error.digest && (
+          <p className="mt-8 text-xs text-gray-400 font-mono tracking-wider">
+            ID: {error.digest}
+          </p>
+        )}
       </div>
     </div>
   );

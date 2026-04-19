@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { locationService } from "@/services/location.service";
 import { categoryService } from "@/services/category.service";
 import type { Location, Category } from "@/types";
+import { shouldRetryQuery } from "@/lib/react-query";
 
 /**
  * Enhanced useLocations hook using TanStack Query for deduplication and caching.
@@ -15,10 +16,10 @@ export const useLocations = () => {
     queryFn: async () => {
       const res = await locationService.getFeatured(8);
       if (res.success && res.data) return res.data;
-      throw new Error(res.message || "Failed to fetch featured locations");
+      throw res;
     },
     staleTime: 5 * 60 * 1000,
-    retry: 1,
+    retry: shouldRetryQuery,
   });
 
   // 2. Query for Categories
@@ -27,10 +28,10 @@ export const useLocations = () => {
     queryFn: async () => {
       const res = await categoryService.getAll();
       if (res.success && res.data) return res.data;
-      throw new Error(res.message || "Failed to fetch categories");
+      throw res;
     },
     staleTime: 10 * 60 * 1000,
-    retry: 1,
+    retry: shouldRetryQuery,
   });
 
   const featuredLocations: Location[] = featuredQuery.data || [];

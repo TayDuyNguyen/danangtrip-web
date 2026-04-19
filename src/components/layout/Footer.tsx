@@ -74,7 +74,7 @@ const Footer = () => {
           {/* Quick Links / Explore */}
           <div className="text-center md:text-left">
             <h4 className="text-lg font-bold mb-6 text-white uppercase tracking-wider">
-              Khám phá
+              {t("footer.quick_links")}
             </h4>
             <ul className="space-y-4">
               {QUICK_LINKS.map((link) => (
@@ -83,7 +83,8 @@ const Footer = () => {
                     href={link.path}
                     className="text-gray-400 hover:text-cyan-400 transition-all duration-300 flex items-center justify-center md:justify-start gap-2 text-sm"
                   >
-                    {link.name}
+                    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                    {t(link.name as any)}
                   </Link>
                 </li>
               ))}
@@ -93,20 +94,20 @@ const Footer = () => {
           {/* Support */}
           <div className="text-center md:text-left">
             <h4 className="text-lg font-bold mb-6 text-white uppercase tracking-wider">
-              Hỗ trợ
+              {t("footer.for_partners")}
             </h4>
             <ul className="space-y-4">
-              <li><Link href={ROUTES.CONTACT} className="text-gray-400 hover:text-cyan-400 transition-all duration-300 text-sm">Liên hệ</Link></li>
-              <li><Link href="#" className="text-gray-400 hover:text-cyan-400 transition-all duration-300 text-sm">Câu hỏi thường gặp</Link></li>
-              <li><Link href="#" className="text-gray-400 hover:text-cyan-400 transition-all duration-300 text-sm">Điều khoản dịch vụ</Link></li>
-              <li><Link href="#" className="text-gray-400 hover:text-cyan-400 transition-all duration-300 text-sm">Chính sách bảo mật</Link></li>
+              <li><Link href={ROUTES.CONTACT} className="text-gray-400 hover:text-cyan-400 transition-all duration-300 text-sm">{t("footer.contact")}</Link></li>
+              <li><Link href="#" className="text-gray-400 hover:text-cyan-400 transition-all duration-300 text-sm">{t("footer.support")}</Link></li>
+              <li><Link href="#" className="text-gray-400 hover:text-cyan-400 transition-all duration-300 text-sm">{t("footer.terms")}</Link></li>
+              <li><Link href="#" className="text-gray-400 hover:text-cyan-400 transition-all duration-300 text-sm">{t("footer.privacy")}</Link></li>
             </ul>
           </div>
 
           {/* Contact Information */}
           <div className="text-center md:text-left">
             <h4 className="text-lg font-bold mb-6 text-white uppercase tracking-wider">
-              Liên hệ
+              {t("footer.contact")}
             </h4>
             <ul className="space-y-4 text-sm text-gray-400">
               <li className="flex items-center justify-center md:justify-start gap-3">
@@ -128,7 +129,7 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="pt-12 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center gap-6">
           <p className="text-gray-500 text-xs tracking-wide">
-            © {new Date().getFullYear()} Đà Nẵng Trip. All rights reserved.
+            © {new Date().getFullYear()} {t("footer.copyright").replace("© 2026 ", "")}
           </p>
           <div className="flex items-center gap-8 text-xs text-gray-500 font-medium">
             {/* Commented out non-existent privacy/terms/cookies pages */}

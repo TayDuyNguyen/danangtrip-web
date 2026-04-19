@@ -53,7 +53,6 @@ export const setAccessToken = (token: string) => {
 export const clearTokens = () => {
   if (typeof window === "undefined") return;
   localStorage.removeItem("token");
-  localStorage.removeItem("refreshToken");
 };
 
 export const getLanguage = () => {

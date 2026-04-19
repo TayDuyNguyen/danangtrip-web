@@ -33,12 +33,12 @@ const FeaturedLocations = () => {
   const handleFavoriteClick = async (e: React.MouseEvent, locId: number) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     if (!isAuthenticated) {
       toast.error(t("common.favorite.login_required"));
       return;
     }
-    
+
     try {
       const res = await favoriteService.addFavorite(locId);
       if (res.success) {
@@ -64,45 +64,31 @@ const FeaturedLocations = () => {
   if (locations.length === 0) return null;
 
   return (
-    <section className="py-[100px] bg-white text-dark font-sans overflow-hidden">
+    <section className="py-[120px] bg-surface font-sans overflow-hidden">
       <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6 reveal-up">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8 reveal-up">
           <div className="max-w-2xl">
-            <span className="text-azure font-bold text-[14px] tracking-[0.3em] uppercase mb-4 block">
-              {t("home.featured_locations.tagline")}
-            </span>
-            <h2 className="text-[36px] md:text-[48px] font-black leading-[1.1] mb-6">
+            <div className="flex items-center gap-3 mb-4">
+              <span className="w-8 h-[2px] bg-azure/40" />
+              <span className="text-azure font-black text-[12px] tracking-[0.4em] uppercase">
+                {t("home.featured_locations.tagline")}
+              </span>
+            </div>
+            <h2 className="text-[36px] md:text-[48px] font-black leading-[1.1] mb-8 text-dark">
               {t("home.featured_locations.title_prefix")} <span className="text-azure underline decoration-azure/30 underline-offset-8">{t("home.featured_locations.title_highlight")}</span>
             </h2>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <button
-              onClick={scrollLeft}
-              className="w-14 h-14 rounded-full border-2 border-slate-100 flex items-center justify-center text-slate-400 hover:border-azure hover:text-azure transition-all active:scale-90"
-              aria-label="Previous"
-            >
-              <IoChevronBackOutline size={24} />
-            </button>
-            <button
-              onClick={scrollRight}
-              className="w-14 h-14 rounded-full border-2 border-slate-100 flex items-center justify-center text-slate-400 hover:border-azure hover:text-azure transition-all active:scale-90 shadow-sm"
-              aria-label="Next"
-            >
-              <IoChevronForwardOutline size={24} />
-            </button>
           </div>
         </div>
 
         {/* Categories / Tabs */}
-        <div className="flex gap-4 mb-10 overflow-x-auto pb-4 no-scrollbar reveal-up reveal-delay-200">
+        <div className="flex gap-4 mb-12 overflow-x-auto pb-4 no-scrollbar reveal-up reveal-delay-200">
           {categoryFilters.map((cat) => (
             <button
               key={cat.key}
               className={`px-8 py-3 rounded-full text-[14px] font-bold transition-all whitespace-nowrap shadow-sm hover:shadow-md ${cat.key === "all"
-                  ? "bg-azure text-white shadow-azure/20"
-                  : "bg-slate-50 text-slate-500 border border-slate-100 hover:bg-white"
+                ? "bg-azure text-white shadow-azure/20"
+                : "bg-surface-container text-slate-500 border border-outline-variant hover:bg-surface-container-high transition-colors"
                 }`}
             >
               {cat.label}
@@ -110,50 +96,70 @@ const FeaturedLocations = () => {
           ))}
         </div>
 
-        {/* Scrollable Container */}
-        <div
-          id="featured-locations-scroll"
-          className="flex gap-6 overflow-x-auto no-scrollbar scroll-smooth pb-10 reveal-up reveal-delay-400"
-        >
-          {locations.map((loc) => (
-            <div
-              key={loc.id}
-              className="min-w-[300px] md:min-w-[380px] group cursor-pointer"
-            >
-              <Link href={`${ROUTES.LOCATIONS}/${loc.slug}`}>
-                <div className="relative aspect-3/4 rounded-[40px] overflow-hidden mb-6 shadow-xl active:scale-[0.98] transition-all">
-                  <Image
-                    src={loc.thumbnail || "/images/placeholder.png"}
-                    alt={loc.name}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-110"
-                    sizes="(max-width: 768px) 300px, 380px"
-                  />
-                  <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-80" />
+        {/* Scrollable Container Wrapper */}
+        <div className="relative group/nav reveal-up reveal-delay-400">
+          {/* Navigation Buttons - Absolute Sides */}
+          <button
+            onClick={scrollLeft}
+            className="absolute left-0 top-[40%] -translate-y-1/2 -translate-x-1/2 z-30 w-14 h-14 rounded-full bg-white/90 backdrop-blur-md border border-outline-variant items-center justify-center text-dark hover:bg-white hover:text-azure shadow-xl transition-all opacity-0 group-hover/nav:opacity-100 hidden lg:flex active:scale-90"
+            aria-label="Previous"
+          >
 
-                  {/* Favorite Button */}
-                  <button
-                     onClick={(e) => handleFavoriteClick(e, loc.id)}
-                     className="absolute top-6 right-6 w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white border border-white/30 hover:bg-white hover:text-red-500 transition-all z-20 group/fav active:scale-90"
-                  >
-                     <IoHeartOutline className="text-2xl group-hover/fav:hidden" />
-                     <IoHeart className="text-2xl hidden group-hover/fav:block" />
-                  </button>
+            <IoChevronBackOutline size={24} />
+          </button>
 
-                  {/* Info */}
-                  <div className="absolute inset-0 flex flex-col justify-end p-8 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                    <div className="flex items-center gap-2 text-white/80 text-[13px] font-medium mb-2">
-                      <IoLocationOutline className="text-azure text-lg" />
-                      {loc.address || "Đà Nẵng"}
+          <button
+            onClick={scrollRight}
+            className="absolute right-0 top-[40%] -translate-y-1/2 translate-x-1/2 z-30 w-14 h-14 rounded-full bg-white/90 backdrop-blur-md border border-slate-200 items-center justify-center text-slate-600 hover:bg-white hover:text-azure shadow-xl transition-all opacity-0 group-hover/nav:opacity-100 hidden lg:flex active:scale-90"
+            aria-label="Next"
+          >
+            <IoChevronForwardOutline size={24} />
+          </button>
+
+          <div
+            id="featured-locations-scroll"
+            className="flex gap-6 overflow-x-auto no-scrollbar scroll-smooth pb-4"
+          >
+            {locations.map((loc) => (
+              <div
+                key={loc.id}
+                className="min-w-[300px] md:min-w-[380px] group cursor-pointer"
+              >
+                <Link href={`${ROUTES.LOCATIONS}/${loc.slug}`}>
+                  <div className="relative aspect-3/4 rounded-[40px] overflow-hidden mb-6 shadow-xl active:scale-[0.98] transition-all">
+                    <Image
+                      src={loc.thumbnail || "/images/placeholder.png"}
+                      alt={loc.name}
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-110"
+                      sizes="(max-width: 768px) 300px, 380px"
+                    />
+                    <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-80" />
+
+                    {/* Favorite Button */}
+                    <button
+                      onClick={(e) => handleFavoriteClick(e, loc.id)}
+                      className="absolute top-6 right-6 w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white border border-white/30 hover:bg-white hover:text-red-500 transition-all z-20 group/fav active:scale-90"
+                    >
+                      <IoHeartOutline className="text-2xl group-hover/fav:hidden" />
+                      <IoHeart className="text-2xl hidden group-hover/fav:block" />
+                    </button>
+
+                    {/* Info */}
+                    <div className="absolute inset-0 flex flex-col justify-end p-8 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                      <div className="flex items-center gap-2 text-white/80 text-[13px] font-medium mb-2">
+                        <IoLocationOutline className="text-azure text-lg" />
+                        {loc.address || "Đà Nẵng"}
+                      </div>
+                      <h3 className="text-white text-[24px] font-black leading-tight mb-2 drop-shadow-lg">
+                        {loc.name}
+                      </h3>
                     </div>
-                    <h3 className="text-white text-[24px] font-black leading-tight mb-2 drop-shadow-lg">
-                      {loc.name}
-                    </h3>
                   </div>
-                </div>
-              </Link>
-            </div>
-          ))}
+                </Link>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

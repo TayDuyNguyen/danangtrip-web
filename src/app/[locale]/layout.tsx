@@ -38,6 +38,11 @@ export const metadata: Metadata = {
     locale: "vi_VN",
     type: "website",
   },
+  icons: {
+    icon: "/favicon.png",
+    shortcut: "/favicon.png",
+    apple: "/favicon.png",
+  },
 };
 
 export default async function RootLayout({
