@@ -11,6 +11,7 @@
     "locations": "Địa điểm"
   },
   "common": {
+    "brand_name": "Đà Nẵng Trip",
     "admin_panel": "Bảng quản trị",
     "menu": "Menu",
     "loading": "Đang tải...",
@@ -20,7 +21,19 @@
     "role": "Vai trò",
     "joined_date": "Ngày tham gia",
     "no_data": "Không có dữ liệu",
-    "no_data_desc": "Hiện tại chưa có dữ liệu nào."
+    "no_data_desc": "Hiện tại chưa có dữ liệu nào.",
+    "select_placeholder": "Chọn..."
+  },
+  "accessibility": {
+    "close_menu": "Đóng menu",
+    "open_menu": "Mở menu",
+    "previous": "Trước",
+    "next": "Tiếp theo",
+    "show_password": "Hiện mật khẩu",
+    "hide_password": "Ẩn mật khẩu",
+    "image_alt": {
+      "hero": "Đà Nẵng Trip Hero"
+    }
   },
   "error": {
     "not_found_title": "Không tìm thấy trang",
@@ -29,7 +42,33 @@
     "back": "Quay lại",
     "title": "Đã có lỗi xảy ra",
     "desc": "Chúng tôi đang gặp sự cố khi xử lý yêu cầu của bạn.",
-    "retry": "Thử lại"
+    "retry": "Thử lại",
+    "required": "Trường này là bắt buộc",
+    "invalid_email": "Email không hợp lệ",
+    "invalid_phone": "Số điện thoại không hợp lệ",
+    "invalid_password": "Mật khẩu phải có ít nhất 8 ký tự, 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt",
+    "min_length": "Phải có ít nhất {min} ký tự",
+    "max_length": "Không được quá {max} ký tự",
+    "file_too_large": "Kích thước file không được vượt quá {size}MB",
+    "invalid_file_type": "Định dạng file không hỗ trợ",
+    "network_error": "Lỗi kết nối mạng. Vui lòng thử lại sau",
+    "server_error": "Lỗi máy chủ. Vui lòng thử lại sau",
+    "unauthorized": "Bạn chưa đăng nhập hoặc phiên đã hết hạn",
+    "forbidden": "Bạn không có quyền truy cập",
+    "url_invalid": "URL không hợp lệ",
+    "password_mismatch": "Mật khẩu không khớp",
+    "range_error": "Giá trị phải từ {min} đến {max}",
+    "terms_required": "Bạn phải đồng ý với điều khoản dịch vụ"
+  },
+  "success": {
+    "login": "Đăng nhập thành công",
+    "register": "Đăng ký thành công",
+    "logout": "Đăng xuất thành công",
+    "update": "Cập nhật thành công",
+    "delete": "Xóa thành công",
+    "create": "Tạo mới thành công",
+    "booking": "Đặt tour thành công",
+    "payment": "Thanh toán thành công"
   },
   "footer": {
     "description": "Nền tảng du lịch năng động nhất Đà Nẵng, mang đến cho bạn những trải nghiệm độc bản, sôi động và đầy hứng khởi tại thành phố đáng sống nhất Việt Nam.",
@@ -46,11 +85,19 @@
     "newsletter": "Đăng ký nhận tin",
     "newsletter_desc": "Nhận những ưu đãi du lịch mới nhất qua email của bạn.",
     "subscribe": "Đăng ký",
-    "copyright": "© 2026 Đà Nẵng Trip",
+    "copyright": "© {year} Đà Nẵng Trip",
     "privacy_policy": "Quyền riêng tư",
     "tos": "Điều khoản",
     "cookies": "Cookies",
-    "coming_soon": "Sắp ra mắt"
+    "coming_soon": "Sắp ra mắt",
+    "contact_info": {
+      "hotline": "Hotline",
+      "email": "Email",
+      "address": "Địa chỉ",
+      "default_hotline": "0123 456 789",
+      "default_email": "info@danangtrip.com",
+      "default_address": "99 Phố Tiếp, Quận Thanh Khê, Đà Nẵng"
+    }
   },
   "auth": {
     "login": "Đăng nhập",
@@ -102,5 +149,26 @@
     "add_success": "Đã thêm vào danh sách yêu thích",
     "login_required": "Vui lòng đăng nhập để lưu địa điểm yêu thích",
     "error": "Không thể lưu yêu thích lúc này"
+  },
+  "locations": {
+    "title": "Địa điểm nổi bật",
+    "subtitle": "Khám phá những điểm đến được yêu thích nhất tại Đà Nẵng."
+  },
+  "contact": {
+    "title": "Liên hệ",
+    "subtitle": "Cần hỗ trợ đặt tour hoặc hợp tác? Hãy liên hệ với Đà Nẵng Trip."
+  },
+  "blog": {
+    "title": "Cẩm nang du lịch",
+    "subtitle": "Tổng hợp bài viết, kinh nghiệm, và gợi ý hành trình cho du khách."
+  },
+  "settings": {
+    "title": "Cài đặt tài khoản",
+    "subtitle": "Khu vực này sẽ quản lý tùy chọn tài khoản và ưu tiên trải nghiệm."
+  },
+  "social": {
+    "facebook": "Facebook",
+    "instagram": "Instagram",
+    "twitter": "Twitter"
   }
 }

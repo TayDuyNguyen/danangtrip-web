@@ -4,22 +4,25 @@ import { memo } from "react";
 import { Link } from "@/i18n/navigation";
 import { ROUTES } from "@/config";
 import Image from "next/image";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { IoTimeOutline, IoPeopleOutline, IoFlame } from "react-icons/io5";
 import { useTours } from "../hooks/use-tours";
 import { formatPriceVND } from "@/utils/format";
+import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 
 const HotTours = () => {
   const { hotTours: tours } = useTours();
   const t = useTranslations();
+  const locale = useLocale();
+  const { elementRef, isVisible } = useScrollReveal(0.1);
 
   if (tours.length === 0) return null;
 
   return (
     <section className="py-[120px] bg-surface font-sans overflow-hidden">
-      <div className="container mx-auto px-4">
-        <div className="flex justify-between items-end mb-16 gap-8 reveal-up">
-          <div>
+      <div className="container mx-auto px-4" ref={elementRef}>
+        <div className={`flex justify-between items-end mb-16 gap-8 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
+          <div className={`transition-all duration-700 delay-100 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
             <div className="flex items-center gap-3 mb-4">
               <IoFlame className="text-sun text-3xl animate-pulse" />
               <span className="text-sun font-black text-[12px] tracking-[0.4em] uppercase">
@@ -30,7 +33,7 @@ const HotTours = () => {
               {t("home.hot_tours.title")}
             </h2>
           </div>
-          <Link href={ROUTES.TOURS} className="px-6 py-3 bg-white text-azure text-[14px] font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center group mb-2">
+          <Link href={String(ROUTES.TOURS)} className={`px-6 py-3 bg-white text-azure text-[14px] font-bold rounded-xl shadow-sm hover:shadow-md flex items-center group mb-2 transition-all duration-700 delay-200 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
             {t("home.hot_tours.explore_more")}
             <span className="ml-2 transition-transform group-hover:translate-x-1">→</span>
           </Link>
@@ -40,8 +43,8 @@ const HotTours = () => {
           {tours.map((tour, index) => (
             <div
               key={tour.id}
-              className="bg-surface-container-lowest rounded-[24px] shadow-[0_15px_35px_rgba(23,28,31,0.05)] transition-all duration-500 hover:shadow-2xl hover:shadow-azure/5 hover:-translate-y-2 relative overflow-hidden flex flex-col group reveal-up"
-              style={{ animationDelay: `${(index + 1) * 100}ms` }}
+              className={`bg-surface-container-lowest rounded-[24px] shadow-[0_15px_35px_rgba(23,28,31,0.05)] hover:shadow-2xl hover:shadow-azure/5 hover:-translate-y-2 relative overflow-hidden flex flex-col group transition-all duration-700`}
+              style={{ transitionDelay: `${(index + 3) * 150}ms`, opacity: isVisible ? 1 : 0, transform: isVisible ? "translateY(0)" : "translateY(30px)" }}
             >
               {/* Thumbnail Area */}
               <div className="w-full h-[240px] relative overflow-hidden">
@@ -53,7 +56,7 @@ const HotTours = () => {
                   className="object-cover transition-transform duration-700 group-hover:scale-110"
                 />
                 <div className="absolute top-[16px] right-[16px] bg-sun text-white font-black text-[10px] tracking-wider uppercase rounded-full px-[12px] py-[6px] shadow-lg z-10">
-                  HOT
+                  {t("search.badges.hot")}
                 </div>
               </div>
 
@@ -80,11 +83,11 @@ const HotTours = () => {
                   <div className="flex flex-col">
                     <span className="text-[11px] text-slate-400 font-bold uppercase tracking-wider mb-1">{t("common.tour.price_from")}</span>
                     <span className="text-[20px] font-black text-azure">
-                      {formatPriceVND(tour.price_adult)}
+                      {formatPriceVND(tour.price_adult, locale === 'vi' ? 'vi-VN' : 'en-US')}
                     </span>
                   </div>
                   <Link
-                    href={`${ROUTES.TOURS}/${tour.slug}`}
+                  href={`${ROUTES.TOURS}/${tour.slug}` as string & {}}
                     className="w-12 h-12 bg-surface-container text-azure rounded-full flex items-center justify-center hover:bg-azure hover:text-white transition-all duration-500 shadow-sm"
                   >
                     <span className="text-xl font-bold">→</span>
@@ -100,4 +103,3 @@ const HotTours = () => {
 };
 
 export default memo(HotTours);
-

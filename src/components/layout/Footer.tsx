@@ -24,11 +24,12 @@ const Footer = () => {
         const data = await getAppConfig();
         if (data) setSiteConfig(data);
       } catch (error) {
-        console.error("Failed to load config", error);
+        console.warn("Using default config due to load failure", error);
       }
     };
     fetchConfig();
   }, []);
+
   const socialLinks: { icon: IconType; color: string; path: string }[] = [
     { icon: IoLogoFacebook, color: "hover:bg-[#1877F2]", path: siteConfig?.social_links?.facebook || "#" },
     { icon: IoLogoInstagram, color: "hover:bg-[#E4405F]", path: siteConfig?.social_links?.instagram || "#" },
@@ -49,11 +50,11 @@ const Footer = () => {
                 <span className="text-2xl font-bold uppercase">D</span>
               </div>
               <span className="text-2xl font-bold tracking-tight uppercase">
-                Đà Nẵng <span className="text-cyan-500">Trip</span>
+                {t("common.brand_name").split(" ")[0]} <span className="text-cyan-500">{t("common.brand_name").split(" ").slice(1).join(" ")}</span>
               </span>
             </Link>
             <p className="text-gray-400 text-sm leading-relaxed max-w-xs mx-auto md:mx-0">
-              {t("footer.description") || "Khám phá vẻ đẹp tuyệt vời của Đà Nẵng cùng chúng tôi. Trải nghiệm những tour du lịch độc đáo và địa điểm hấp dẫn nhất."}
+              {t("footer.description")}
             </p>
             <div className="flex items-center justify-center md:justify-start gap-4">
               {socialLinks.map((social, idx) => {
@@ -111,16 +112,20 @@ const Footer = () => {
             </h4>
             <ul className="space-y-4 text-sm text-gray-400">
               <li className="flex items-center justify-center md:justify-start gap-3">
-                <span className="text-cyan-500">Hotline:</span>
-                <a href={`tel:${siteConfig?.hotline || "0123456789"}`} className="hover:text-cyan-400 transition-colors">{siteConfig?.hotline || "0123 456 789"}</a>
+                <span className="text-cyan-500 font-medium">{t("footer.contact_info.hotline")}:</span>
+                <a href={`tel:${siteConfig?.hotline || t("footer.contact_info.default_hotline")}`} className="hover:text-cyan-400 transition-colors">
+                  {siteConfig?.hotline || t("footer.contact_info.default_hotline")}
+                </a>
               </li>
               <li className="flex items-center justify-center md:justify-start gap-3">
-                <span className="text-cyan-500">Email:</span>
-                <a href={`mailto:${siteConfig?.email || "info@danangtrip.com"}`} className="hover:text-cyan-400 transition-colors">{siteConfig?.email || "info@danangtrip.com"}</a>
+                <span className="text-cyan-500 font-medium">{t("footer.contact_info.email")}:</span>
+                <a href={`mailto:${siteConfig?.email || t("footer.contact_info.default_email")}`} className="hover:text-cyan-400 transition-colors">
+                  {siteConfig?.email || t("footer.contact_info.default_email")}
+                </a>
               </li>
               <li className="flex items-start justify-center md:justify-start gap-3">
-                <span className="text-cyan-500 shrink-0">Địa chỉ:</span>
-                <span>{siteConfig?.address || "99 Phố Tiếp, Quận Thanh Khê, Đà Nẵng"}</span>
+                <span className="text-cyan-500 shrink-0 font-medium">{t("footer.contact_info.address")}:</span>
+                <span>{siteConfig?.address || t("footer.contact_info.default_address")}</span>
               </li>
             </ul>
           </div>
@@ -129,13 +134,10 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="pt-12 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center gap-6">
           <p className="text-gray-500 text-xs tracking-wide">
-            © {new Date().getFullYear()} {t("footer.copyright").replace("© 2026 ", "")}
+            {t("footer.copyright", { year: new Date().getFullYear() })}
           </p>
           <div className="flex items-center gap-8 text-xs text-gray-500 font-medium">
-            {/* Commented out non-existent privacy/terms/cookies pages */}
-            {/* <Link href={ROUTES.PRIVACY} className="hover:text-cyan-500 transition-colors uppercase tracking-widest">{t("footer.privacy_policy")}</Link>
-            <Link href={ROUTES.TERMS} className="hover:text-cyan-500 transition-colors uppercase tracking-widest">{t("footer.tos")}</Link>
-            <Link href={ROUTES.HELP} className="hover:text-cyan-500 transition-colors uppercase tracking-widest">{t("footer.cookies")}</Link> */}
+            {/* Link components can be added here if needed */}
           </div>
         </div>
       </div>

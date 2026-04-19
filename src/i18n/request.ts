@@ -1,8 +1,19 @@
 import { getRequestConfig } from "next-intl/server";
 import { routing } from "./routing";
 
-// Define the namespaces we have (common, home, login, register, translation)
-const namespaces = ["common", "home", "login", "register", "translation"];
+// Define the namespaces we have
+const namespaces = [
+  "common",
+  "home",
+  "login",
+  "register",
+  "translation",
+  "search",
+  "locations",
+  "contact",
+  "blog",
+  "settings",
+];
 
 export default getRequestConfig(async ({ requestLocale }) => {
   let locale = await requestLocale;

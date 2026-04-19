@@ -6,6 +6,7 @@ import React, {
   useState,
 } from "react";
 import { cn } from "@/utils/string";
+import { useTranslations } from "next-intl";
 
 interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "type"> {
   label?: string;
@@ -32,6 +33,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     },
     ref
   ) => {
+    const t = useTranslations("common");
     const [showPassword, setShowPassword] = useState(false);
 
     const inputType = isPassword ? (showPassword ? "text" : "password") : type;
@@ -63,7 +65,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               : isFocused
                 ? "border-azure"
                 : "border-outline-variant",
-            isFocused ? "bg-surface-container-low/30" : "bg-transparent"
+            "bg-transparent"
           )}
         >
           {/* Left Icon */}
@@ -99,7 +101,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               onClick={() => setShowPassword((v) => !v)}
               className="p-2 -mr-2 text-slate-400 hover:text-azure transition-all duration-300 focus:outline-none rounded-full"
               tabIndex={-1}
-              aria-label={showPassword ? "Hide password" : "Show password"}
+              aria-label={showPassword ? t("accessibility.hide_password") : t("accessibility.show_password")}
             >
               {showPassword ? (
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

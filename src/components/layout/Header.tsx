@@ -36,8 +36,8 @@ const Header = () => {
   return (
     <header
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${isScrolled
-          ? "bg-white/80 backdrop-blur-lg shadow-sm py-3"
-          : "bg-transparent py-5"
+          ? "bg-white/90 backdrop-blur-xl shadow-md py-3"
+          : "bg-black/40 backdrop-blur-xl border-b border-white/10 py-5 shadow-2xl"
         }`}
     >
       <div className="container mx-auto px-4 flex items-center justify-between">
@@ -55,7 +55,7 @@ const Header = () => {
                 : "text-white md:text-gray-900 lg:text-white"
               }`}
           >
-            Đà Nẵng <span className="text-cyan-500">Trip</span>
+            {t("common.brand_name").split(" ")[0]} <span className="text-cyan-500">{t("common.brand_name").split(" ").slice(1).join(" ")}</span>
           </span>
         </Link>
 
@@ -65,7 +65,7 @@ const Header = () => {
             <Link
               key={link.path}
               href={link.path}
-              className={`text-[14px] font-medium transition-all duration-300 hover:text-cyan-500 relative group truncate ${isActive(link.path)
+              className={`text-[14px] font-medium transition-all duration-300 hover:text-cyan-500 relative group truncate hover:-translate-y-0.5 ${isActive(link.path)
                   ? "text-cyan-500"
                   : isScrolled
                     ? "text-gray-700"
@@ -149,7 +149,7 @@ const Header = () => {
             className={`p-4 -mr-4 lg:hidden text-3xl transition-colors ${isScrolled ? "text-gray-900" : "text-white"
               }`}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+            aria-label={isMobileMenuOpen ? t("accessibility.close_menu") : t("accessibility.open_menu")}
           >
             {isMobileMenuOpen ? <IoCloseOutline /> : <IoMenuOutline />}
           </button>
@@ -170,6 +170,7 @@ const Header = () => {
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+                aria-label={t("accessibility.close_menu")}
               >
                 <IoCloseOutline className="w-6 h-6 text-gray-600" />
               </button>

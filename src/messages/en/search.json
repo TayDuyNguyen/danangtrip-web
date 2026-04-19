@@ -1,0 +1,63 @@
+{
+  "title": "Search Results",
+  "description": "Find amazing locations and tours in Da Nang",
+  "found_results": "Found {count} results for <strong>{query}</strong>",
+  "tabs": {
+    "all": "All",
+    "tour": "Tours",
+    "location": "Locations"
+  },
+  "filters": {
+    "title": "Filters",
+    "price_range": "Price Range",
+    "rating": "Rating",
+    "category": "Category",
+    "apply": "Apply",
+    "reset": "Reset"
+  },
+  "sort": {
+    "label": "Sort by",
+    "popularity": "Most Popular",
+    "newest": "Newest",
+    "price_low": "Price: Low to High",
+    "price_high": "Price: High to Low",
+    "rating": "Highest Rating"
+  },
+  "badges": {
+    "tour": "Tour",
+    "location": "Location",
+    "hot": "Hot"
+  },
+  "card": {
+    "starting_from": "Starting from",
+    "default_location": "Da Nang, Vietnam"
+  },
+  "empty": {
+    "title": "No results found",
+    "subtitle": "Try searching with different keywords or change the filters"
+  },
+  "trending": {
+    "title": "Trending Searches",
+    "items": {
+      "son_tra": "Son Tra Peninsula",
+      "asia_park": "Asia Park",
+      "fireworks": "Fireworks 2024",
+      "than_tai": "Than Tai Hot Springs"
+    }
+  },
+  "discovery": {
+    "title": "Discover Da Nang",
+    "subtitle": "Suggestions for the best experiences for you"
+  },
+  "suggestions": {
+    "locations_title": "📍 Locations",
+    "tours_title": "🗺 Tours",
+    "view_all": "🔍 View all results for \"{query}\"",
+    "no_results": "No results found",
+    "loading": "Searching...",
+    "min_chars": "Enter at least 2 characters",
+    "error": "Failed to load suggestions, please try again",
+    "views": "{count} views",
+    "bookings": "{count} bookings"
+  }
+}

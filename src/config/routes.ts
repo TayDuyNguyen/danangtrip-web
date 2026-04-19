@@ -10,17 +10,16 @@ export const PUBLIC_ROUTES = {
   BLOG: "/blog",
   CONTACT: "/contact",
   ABOUT: "/about",
+  SEARCH: "/search",
 } as const;
 
-// Public routes - Planned (Pages not yet created)
+// Planned / future pages only — do not merge into ROUTES (see PROJECT_RULES §8).
 export const PLANNED_ROUTES = {
-  CONTACT: "/contact",
   TERMS: "/terms",
   PRIVACY: "/privacy",
   DESTINATIONS: "/destinations",
   DINING: "/dining",
   HOTELS: "/hotels",
-  BLOG: "/blog",
   PARTNERS_REGISTER: "/partners/register",
   PARTNERS_ADS: "/partners/ads",
   SUPPORT: "/support",
@@ -65,10 +64,9 @@ export const API_ROUTES = {
   },
 } as const;
 
-// Legacy compatibility object
+/** Active app paths only (public + auth + protected entry). Use PLANNED_ROUTES for placeholders. */
 export const ROUTES = {
   ...PUBLIC_ROUTES,
-  ...PLANNED_ROUTES, // Still included for type safety and config, but UI will hide these
   ...AUTH_ROUTES,
   ...PROTECTED_ROUTES,
   DASHBOARD: DASHBOARD_ROUTES.DASHBOARD,
@@ -93,7 +91,7 @@ export const QUICK_LINKS = [
 
 // Route helpers
 export const isPublicRoute = (path: string): boolean => {
-  return [...Object.values(PUBLIC_ROUTES), ...Object.values(PLANNED_ROUTES)].some((route) => 
+  return Object.values(PUBLIC_ROUTES).some((route) =>
     typeof route === "string" ? route === path : false
   );
 };

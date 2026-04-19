@@ -61,8 +61,32 @@ export function RegisterForm({ onSuccess, redirectUrl }: RegisterFormProps) {
 
   return (
     <div className="flex min-h-screen bg-gray-900 justify-center items-center p-4 sm:p-8 mt-16 md:mt-0">
-      <div className="flex w-full max-w-md lg:max-w-4xl lg:w-3/4 xl:w-2/3 h-auto lg:h-[700px] rounded-2xl overflow-hidden shadow-2xl">
-        {/* Left panel - form */}
+      <div className="relative flex w-full max-w-md lg:max-w-4xl lg:w-3/4 xl:w-2/3 h-auto lg:h-[700px] shadow-[0_0_40px_rgba(34,211,238,0.1)] rounded-2xl glow-effect">
+        
+        {/* Animated Border Background */}
+        <div className="absolute inset-[-2px] rounded-[18px] overflow-hidden pointer-events-none z-0">
+          <div 
+            className="absolute top-1/2 left-1/2 w-[200%] h-[200%] -translate-x-1/2 -translate-y-1/2 animate-[spin_4s_linear_infinite]" 
+            style={{ backgroundImage: 'conic-gradient(from 0deg, transparent 0 240deg, rgba(34,211,238,0.3) 300deg, #22d3ee 360deg)' }}
+          />
+        </div>
+
+        {/* Main Content Container */}
+        <div className="relative z-10 flex w-full h-full rounded-2xl overflow-hidden bg-gray-900 border border-gray-800/50">
+          {/* Left panel - gradient background */}
+          <div
+            className="hidden lg:flex flex-1 bg-linear-to-br from-cyan-500 to-blue-950 flex-col pt-12 pl-8 pr-16 text-white relative"
+          style={{ clipPath: "polygon(0 0, 100% 0, 60% 100%, 0% 100%)" }}
+        >
+          <h1 className="text-4xl mb-4 font-bold uppercase tracking-wide">
+            {t("welcome_title")}
+          </h1>
+          <p className="text-cyan-100 text-lg">
+            {t("welcome_subtitle")}
+          </p>
+        </div>
+
+        {/* Right panel - form */}
         <div className="flex flex-1 items-center justify-center p-5 sm:p-8 bg-gray-900">
           <div className="w-full max-w-md">
             <h2 className="text-3xl font-bold uppercase text-white mb-8 text-center lg:text-left tracking-tight">
@@ -135,8 +159,8 @@ export function RegisterForm({ onSuccess, redirectUrl }: RegisterFormProps) {
                 {isLoading ? (
                   <>
                     <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                     </svg>
                     {t("registering")}
                   </>
@@ -157,20 +181,9 @@ export function RegisterForm({ onSuccess, redirectUrl }: RegisterFormProps) {
             </p>
           </div>
         </div>
-
-        {/* Right panel - gradient background */}
-        <div
-          className="hidden lg:flex flex-1 bg-linear-to-br from-cyan-500 to-blue-950 flex-col pt-12 pr-8 pl-16 text-white relative text-right items-end"
-          style={{ clipPath: "polygon(40% 0, 100% 0, 100% 100%, 0% 100%)" }}
-        >
-          <h1 className="text-4xl mb-4 font-bold uppercase tracking-wide">
-            {t("welcome_title")}
-          </h1>
-          <p className="text-cyan-100 text-lg">
-            {t("welcome_subtitle")}
-          </p>
-        </div>
+        </div> {/* End of Main Content Container */}
       </div>
     </div>
   );
+
 }
