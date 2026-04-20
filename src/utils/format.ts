@@ -61,9 +61,12 @@ export const formatCurrency = (
   }).format(value);
 };
 
-export const formatPriceVND = (price: string | number): string => {
+export const formatPriceVND = (price: string | number, locale: string = "vi-VN"): string => {
   const value = typeof price === "string" ? parseFloat(price) : price;
-  return new Intl.NumberFormat("vi-VN").format(value) + " đ";
+  return new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: "VND",
+  }).format(value);
 };
 
 // Number formatting

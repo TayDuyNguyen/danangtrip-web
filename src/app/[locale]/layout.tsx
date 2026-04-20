@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { config } from "@/config";
 import { Providers } from "@/providers/providers";
-import { getMessages, setRequestLocale } from "next-intl/server";
+import { getMessages, setRequestLocale, getTranslations } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import { notFound } from "next/navigation";
 import "./globals.css";
@@ -21,29 +21,37 @@ export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
-export const metadata: Metadata = {
-  title: {
-    default: config.app.name,
-    template: `%s | ${config.app.name}`,
-  },
-  description: "Your ultimate tour booking platform in Da Nang",
-  keywords: ["travel", "tour", "da nang", "booking"],
-  authors: [{ name: config.app.name }],
-  creator: config.app.name,
-  openGraph: {
-    title: config.app.name,
-    description: "Your ultimate tour booking platform in Da Nang",
-    url: config.app.url,
-    siteName: config.app.name,
-    locale: "vi_VN",
-    type: "website",
-  },
-  icons: {
-    icon: "/favicon.png",
-    shortcut: "/favicon.png",
-    apple: "/favicon.png",
-  },
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "common" });
+
+  const appName = t("common.brand_name");
+  const description = t("footer.description");
+
+  return {
+    title: {
+      default: appName,
+      template: `%s | ${appName}`,
+    },
+    description: description,
+    keywords: ["travel", "tour", "da nang", "booking"],
+    authors: [{ name: appName }],
+    creator: appName,
+    openGraph: {
+      title: appName,
+      description: description,
+      url: config.app.url,
+      siteName: appName,
+      locale: locale === "vi" ? "vi_VN" : "en_US",
+      type: "website",
+    },
+    icons: {
+      icon: "/favicon.png",
+      shortcut: "/favicon.png",
+      apple: "/favicon.png",
+    },
+  };
+}
 
 export default async function RootLayout({
   children,

@@ -10,7 +10,7 @@ const protectedRoutes = ["/profile", "/bookings", "/settings"];
 // Routes for unauthenticated users only
 const authRoutes = ["/login", "/register", "/forgot-password"];
 
-export default function proxy(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   
   // 1. Run i18n middleware first
@@ -48,13 +48,14 @@ export default function proxy(request: NextRequest) {
   return response;
 }
 
+export default proxy;
+
+// next-intl + localePrefix "as-needed": unprefixed routes (/search, /login, …) must hit
+// this proxy or [locale] wrongly becomes the first path segment → notFound().
 export const config = {
   matcher: [
     "/",
     "/(en|vi)/:path*",
-    "/profile/:path*",
-    "/bookings/:path*",
-    "/login",
-    "/register"
+    "/((?!api|trpc|_next|_next/static|_next/image|_vercel|favicon.ico|robots.txt|sitemap.xml|.*\\..*).*)",
   ],
 };

@@ -4,31 +4,35 @@ import { memo } from "react";
 import { Link } from "@/i18n/navigation";
 import { ROUTES } from "@/config";
 import Image from "next/image";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { IoTimeOutline, IoPeopleOutline } from "react-icons/io5";
 import { useTours } from "../hooks/use-tours";
 import { formatPriceVND } from "@/utils/format";
+import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 
 const FeaturedTours = () => {
   const { featuredTours: tours } = useTours();
   const t = useTranslations();
+  const locale = useLocale();
+  const { elementRef, isVisible } = useScrollReveal(0.1);
 
-  if (tours.length === 0) return null;
+  // Keep layout stable even if tours still loading
+  // if (tours.length === 0) return null;
 
   return (
     <section className="py-[120px] bg-surface font-sans overflow-hidden">
-      <div className="container mx-auto px-4">
-        <div className="flex justify-between items-end mb-[48px] reveal-up">
-          <div>
+      <div className="container mx-auto px-4" ref={elementRef}>
+        <div className={`flex justify-between items-end mb-[48px] transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
+          <div className={`transition-all duration-700 delay-100 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
             <div className="flex items-center gap-3 mb-4">
               <span className="w-8 h-[2px] bg-azure/40" />
-              <span className="text-azure font-black text-[12px] tracking-[0.3em] uppercase">{t("home.featured_tours.badge") || "Khám phá"}</span>
+              <span className="text-azure font-black text-[12px] tracking-[0.3em] uppercase">{t("home.featured_tours.badge")}</span>
             </div>
             <h2 className="text-[32px] md:text-[40px] font-black text-dark leading-tight">
               {t("home.featured_tours.title")}
             </h2>
           </div>
-          <Link href={ROUTES.TOURS} className="px-6 py-3 bg-white text-azure text-[14px] font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center group">
+          <Link href={String(ROUTES.TOURS)} className={`px-6 py-3 bg-white text-azure text-[14px] font-bold rounded-xl shadow-sm hover:shadow-md flex items-center group transition-all duration-700 delay-200 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
             {t("common.tour.see_all")} <span className="ml-2 group-hover:translate-x-1 transition-transform">→</span>
           </Link>
         </div>
@@ -37,8 +41,8 @@ const FeaturedTours = () => {
           {tours.map((tour, index) => (
             <div
               key={tour.id}
-              className="bg-surface-container-lowest rounded-[24px] shadow-[0_15px_35px_rgba(23,28,31,0.05)] transition-all duration-500 relative overflow-hidden flex flex-col group reveal-up hover:-translate-y-2 hover:shadow-2xl hover:shadow-azure/5"
-              style={{ animationDelay: `${(index + 1) * 100}ms` }}
+              className={`bg-surface-container-lowest rounded-[24px] shadow-[0_15px_35px_rgba(23,28,31,0.05)] relative overflow-hidden flex flex-col group hover:-translate-y-2 hover:shadow-2xl hover:shadow-azure/5 transition-all duration-700`}
+              style={{ transitionDelay: `${(index + 3) * 150}ms`, opacity: isVisible ? 1 : 0, transform: isVisible ? "translateY(0)" : "translateY(30px)" }}
             >
               {/* Thumbnail Area */}
               <div className="w-full h-[240px] relative overflow-hidden">
@@ -79,18 +83,21 @@ const FeaturedTours = () => {
                   {/* Tonal Divider Fallback */}
                   <div className="absolute top-0 left-0 right-0 h-px bg-slate-100/50" />
 
-
-                  <div className="text-[13px] font-bold text-sun flex items-center gap-1">
-                    ★ 4.8
-                  </div>
+                  {parseFloat(tour.avg_rating) > 0 && tour.review_count > 0 ? (
+                    <div className="text-[13px] font-bold text-sun flex items-center gap-1">
+                      ★ {parseFloat(tour.avg_rating).toFixed(1)}
+                    </div>
+                  ) : (
+                    <div />
+                  )}
                   <div className="text-[18px] font-black text-azure">
-                    {formatPriceVND(tour.price_adult)}
+                    {formatPriceVND(tour.price_adult, locale === 'vi' ? 'vi-VN' : 'en-US')}
                   </div>
                 </div>
 
                 {/* Button Action */}
                 <Link
-                  href={`${ROUTES.TOURS}/${tour.slug}`}
+                  href={`${ROUTES.TOURS}/${tour.slug}` as string & {}}
                   className="block w-full text-center bg-azure text-white rounded-xl py-4 text-[14px] font-bold mt-6 hover:bg-blue-700 transition-all shadow-[0_10px_20px_rgba(0,102,204,0.1)] hover:shadow-[0_15px_30px_rgba(0,102,204,0.2)] active:scale-[0.98]"
                 >
                   {t("common.tour.book_now")}

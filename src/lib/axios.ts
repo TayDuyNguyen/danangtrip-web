@@ -134,13 +134,32 @@ axiosInstance.interceptors.response.use(
   },
   async (error: AxiosError<{ error?: string; message?: string }>) => {
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+    const locale = typeof window !== "undefined" && window.location.pathname.startsWith("/en") ? "en" : "vi";
+
+    const getSystemMessage = (key: "network" | "forbidden" | "server" | "session_expired") => {
+      const messages = {
+        en: {
+          network: "Network connection failed",
+          forbidden: "You do not have permission to perform this action",
+          server: "System error, please try again later",
+          session_expired: "Session expired",
+        },
+        vi: {
+          network: "Lỗi kết nối mạng",
+          forbidden: "Bạn không có quyền thực hiện hành động này",
+          server: "Lỗi hệ thống, vui lòng thử lại sau",
+          session_expired: "Phiên đăng nhập hết hạn",
+        },
+      };
+      return messages[locale][key];
+    };
 
     if (!error.response) {
-      toast.error("Network connection failed");
+      toast.error(getSystemMessage("network"));
       return Promise.reject({
         success: false,
         error: "Network Error",
-        message: "Network connection failed",
+        message: getSystemMessage("network"),
         status: 0,
       } as ApiResponse);
     }
@@ -184,7 +203,7 @@ axiosInstance.interceptors.response.use(
         return Promise.reject({
           success: false,
           error: "Auth Error",
-          message: "Session expired",
+          message: getSystemMessage("session_expired"),
           status: 401,
         } as ApiResponse);
       } finally {
@@ -197,11 +216,11 @@ axiosInstance.interceptors.response.use(
     }
 
     if (status === 403) {
-      toast.warning("You do not have permission to perform this action");
+      toast.warning(getSystemMessage("forbidden"));
     }
 
     if (status >= 500) {
-      toast.error("System error, please try again later");
+      toast.error(getSystemMessage("server"));
     }
 
     const errorResponse: ApiResponse = {

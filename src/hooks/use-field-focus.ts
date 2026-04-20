@@ -3,7 +3,7 @@
 import { useState, useCallback } from "react";
 
 /**
- * Hook quản lý trạng thái focus cho nhiều field trong một form.
+ * Hook to manage focus state for multiple fields in a form.
  *
  * @example
  * const { isFocused, getFocusProps } = useFieldFocus<'email' | 'password'>();
@@ -19,15 +19,15 @@ export function useFieldFocus<T extends string>() {
   );
 
   /**
-   * Trả về onFocus và onBlur handler cho một field cụ thể.
-   * Truyền trực tiếp vào props của Input component.
+   * Returns onFocus and onBlur handlers for a specific field.
+   * Can be passed directly to the props of an Input component.
    */
   const getFocusProps = useCallback(
     (field: T) => ({
       onFocus: () => setFocusedField(field),
       onBlur: (e: React.FocusEvent<HTMLElement>) => {
         const nextFocused = e.relatedTarget as HTMLElement | null;
-        // chỉ clear focus thực sự rời khỏi form
+        // Only clear focus if it actually leaves the input field tracking
         if (!nextFocused?.closest("[data-form-field]")) {
           setFocusedField((prev) => (prev === field ? null : prev));
         }

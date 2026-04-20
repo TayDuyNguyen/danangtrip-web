@@ -4,22 +4,26 @@ import { memo } from "react";
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { ROUTES } from "@/config";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { IoArrowForwardOutline, IoCalendarOutline } from "react-icons/io5";
 import { useBlog } from "../hooks/use-blog";
+import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 
 const TravelBlog = () => {
   const { latestBlogs: blogs } = useBlog();
   const t = useTranslations();
+  const locale = useLocale();
+  const { elementRef, isVisible } = useScrollReveal(0.1);
 
-  if (blogs.length === 0) return null;
+  // Keep layout stable even if blogs still loading
+  // if (blogs.length === 0) return null;
 
   return (
     <section className="py-[120px] bg-surface font-sans overflow-hidden">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4" ref={elementRef}>
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8 reveal-up">
-          <div className="max-w-2xl px-4">
+        <div className={`flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
+          <div className={`max-w-2xl px-4 transition-all duration-700 delay-100 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
             <div className="flex items-center gap-3 mb-4">
               <span className="w-8 h-[2px] bg-azure/40" />
               <span className="text-azure font-black text-[12px] tracking-[0.4em] uppercase">
@@ -31,8 +35,8 @@ const TravelBlog = () => {
             </h2>
           </div>
           <Link
-            href={ROUTES.BLOG}
-            className="px-6 py-3 bg-white text-azure text-[14px] font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center group mb-2"
+            href={String(ROUTES.BLOG)}
+            className={`px-6 py-3 bg-white text-azure text-[14px] font-bold rounded-xl shadow-sm hover:shadow-md flex items-center group mb-2 transition-all duration-700 delay-200 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
           >
             {t("home.blog.see_all")} <IoArrowForwardOutline className="ml-2 group-hover:translate-x-1 transition-transform" />
           </Link>
@@ -43,10 +47,10 @@ const TravelBlog = () => {
           {blogs.map((post, index) => (
             <article
               key={post.id}
-              className="group bg-surface-container-lowest rounded-[24px] overflow-hidden shadow-[0_15px_35px_rgba(23,28,31,0.05)] hover:shadow-2xl hover:shadow-azure/5 transition-all duration-500 reveal-up hover:-translate-y-2"
-              style={{ animationDelay: `${(index + 1) * 200}ms` }}
+              className={`group bg-surface-container-lowest rounded-[24px] overflow-hidden shadow-[0_15px_35px_rgba(23,28,31,0.05)] hover:shadow-2xl hover:shadow-azure/5 hover:-translate-y-2 transition-all duration-700`}
+              style={{ transitionDelay: `${(index + 3) * 200}ms`, opacity: isVisible ? 1 : 0, transform: isVisible ? "translateY(0)" : "translateY(30px)" }}
             >
-              <Link href={`${ROUTES.BLOG}/${post.slug}`}>
+              <Link href={`${ROUTES.BLOG}/${post.slug}` as string & {}}>
                 <div className="relative aspect-16/10 overflow-hidden">
                   <Image
                     src={post.featured_image || "/images/placeholder.png"}
@@ -67,7 +71,7 @@ const TravelBlog = () => {
                 <div className="p-8">
                   <div className="flex items-center gap-3 text-slate-400 text-[13px] font-medium mb-4">
                     <IoCalendarOutline size={16} className="text-azure/60" />
-                    {post.created_at ? new Date(post.created_at).toLocaleDateString('vi-VN') : "18/04/2026"}
+                    {post.created_at ? new Date(post.created_at).toLocaleDateString(locale === 'vi' ? 'vi-VN' : 'en-US') : "18/04/2026"}
                   </div>
                   <h3 className="text-[20px] font-bold text-dark mb-6 leading-snug group-hover:text-azure transition-colors line-clamp-2 min-h-[54px]">
                     {post.title}
@@ -100,4 +104,3 @@ const TravelBlog = () => {
 };
 
 export default memo(TravelBlog);
-

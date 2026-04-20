@@ -16,31 +16,23 @@ const Discovery = () => {
   const features = [
     {
       id: 1,
-      title: "Tối ưu chi phí",
-      desc: "Cam kết giá tốt nhất với nhiều chương trình ưu đãi hấp dẫn hàng tháng.",
+      key: "cost_optimization",
       icon: <IoWalletOutline className="text-3xl text-sun" />,
-      bg: "bg-orange-50",
     },
     {
       id: 2,
-      title: "Đặt chỗ dễ dàng",
-      desc: "Hệ thống đặt giữ chỗ linh hoạt, xác nhận ngay lập tức qua Email/SMS.",
+      key: "easy_booking",
       icon: <IoFlashOutline className="text-3xl text-[#3B82F6]" />,
-      bg: "bg-blue-50",
     },
     {
       id: 3,
-      title: "Hỗ trợ 24/7",
-      desc: "Đội ngũ nhân viên chuyên nghiệp sẵn sàng hỗ trợ bạn mọi lúc mọi nơi.",
+      key: "support_247",
       icon: <IoHeadsetOutline className="text-3xl text-[#10B981]" />,
-      bg: "bg-green-50",
     },
     {
       id: 4,
-      title: "Dịch vụ uy tín",
-      desc: "Hơn 10 năm kinh nghiệm tổ chức tour và dịch vụ du lịch tại Đà Nẵng.",
+      key: "trusted_service",
       icon: <IoShieldCheckmarkOutline className="text-3xl text-[#F59E0B]" />,
-      bg: "bg-amber-50",
     },
   ];
 
@@ -71,14 +63,13 @@ const Discovery = () => {
               <div className="absolute top-0 right-0 w-24 h-24 bg-azure/5 rounded-bl-full -mr-10 -mt-10 group-hover:bg-azure/10 transition-colors duration-700" />
               
               <div className="w-20 h-20 rounded-2xl bg-surface-container flex items-center justify-center mb-10 transform transition-all duration-700 group-hover:rotate-15 group-hover:scale-110 shadow-sm relative z-10">
-
                 {feature.icon}
               </div>
               <h3 className="text-[20px] font-bold text-dark mb-5 group-hover:text-azure transition-colors uppercase tracking-tight relative z-10">
-                {feature.title}
+                {t(`home.discovery.features.${feature.key}.title`)}
               </h3>
               <p className="text-[14px] md:text-[15px] text-slate-500 leading-relaxed font-medium relative z-10">
-                {feature.desc}
+                {t(`home.discovery.features.${feature.key}.desc`)}
               </p>
             </div>
           ))}

@@ -75,6 +75,8 @@ src/
 |-- lib/          # low-level integrations and shared clients
 |-- types/        # shared cross-feature types
 |-- utils/        # stable generic helpers
+|-- providers/    # app-wide providers (React Query, next-intl shell, etc.)
+|-- proxy.ts      # Next.js 16 network boundary (i18n + auth redirects); matcher must cover unprefixed locales
 ```
 
 Placement rules:
@@ -184,15 +186,20 @@ Rules:
 - No hardcoded user-facing text in shared or reusable UI.
 - Keep `src/messages/vi` and `src/messages/en` synchronized in the same task.
 - Namespace translations by feature or domain.
-- **Strict Full Paths**: Always use fully qualified translation paths (e.g., `t('home.feature.key')`) with an unscoped `useTranslations()` hook to ensure compatibility with i18n Ally.
+- **Namespace Pattern**: Use the pattern that best fits the component's needs:
+  - **Scoped** (`useTranslations("login")`): when a component only needs keys from **one namespace**. Use relative key paths (`t("email_label")`). This is the default recommended by next-intl.
+  - **Unscoped** (`useTranslations()`): when a component needs keys from **multiple namespaces** simultaneously. Use fully qualified paths (`t("home.featured_locations.tagline")`).
+- **No phantom namespaces**: The namespace string passed to `useTranslations()` must correspond to a real key in the loaded messages object (e.g., `"common"`, `"home"`, `"login"`, `"register"`, `"search"`). Sub-objects like `"accessibility"` or `"search.tabs"` are **not valid top-level namespaces**.
 
 ### Should
 - Keep translation keys stable and descriptive.
 - Prefer adding keys close to the feature namespace instead of dumping into a catch-all file.
+- Use scoped namespace as the default; switch to unscoped only when crossing namespace boundaries in the same component.
 
 ### Avoid
 - Mixing translated and hardcoded text in the same reusable component.
 - Adding one locale without updating the other.
+- Passing sub-paths as the scoped namespace (e.g., `useTranslations("search.tabs")` — invalid, use `useTranslations("search")` then `t("tabs.all")`).
 
 ---
 
@@ -228,11 +235,14 @@ Rules:
 - Prefer narrow types and explicit return shapes.
 - Extract repeated logic when duplication is real, not hypothetical.
 - Keep helpers generic only when they are reused.
+- **Utility-first reuse**: Before creating a new helper, search existing utilities in `src/utils/`, feature helpers, and shared hooks to reuse or extend current logic.
+- If an existing helper is 70-80% compatible, extend it with optional parameters and preserve backward compatibility.
 
 ### Avoid
 - God components
 - Shared utility dumping grounds
 - Large functions mixing rendering, transformation, and transport logic
+- Duplicate helpers with overlapping behavior under different names
 
 ---
 
@@ -342,6 +352,12 @@ Every meaningful change should be reviewed against:
 - Accessibility basics
 - Type safety
 - Validation status
+- Utility reuse check (search `src/utils/`, feature helpers, and shared hooks before adding new helper)
+
+Utility checklist before adding a new helper:
+- Search `src/utils/`, feature helpers, and shared hooks for equivalent logic.
+- If an existing helper is close (about 70-80%), extend it instead of creating a new one.
+- If a new helper is still required, document why existing helpers are not suitable.
 
 For reviews, prioritize:
 1. Bugs and regressions

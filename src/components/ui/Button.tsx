@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { cn } from "@/utils/string";
+import { useTranslations } from "next-intl";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "secondary" | "danger";
@@ -21,6 +22,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref
   ) => {
+    const t = useTranslations("common");
     const baseStyles =
       "inline-flex items-center justify-center font-bold rounded-xl transition-all active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg";
 
@@ -67,7 +69,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
               />
             </svg>
-            Loading...
+            {t("loading")}
           </>
         ) : (
           children

@@ -1,20 +1,10 @@
 import { z } from "zod";
+import { ERROR_MESSAGES } from "@/utils/constants";
 
 // Regex patterns
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const PHONE_REGEX = /^(0[3|5|7|8|9])+([0-9]{8})$/;
 const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
-// Error messages
-const ERROR_MESSAGES = {
-  REQUIRED: "Trường này là bắt buộc",
-  INVALID_EMAIL: "Email không hợp lệ",
-  INVALID_PHONE: "Số điện thoại không hợp lệ",
-  INVALID_PASSWORD: "Mật khẩu phải có ít nhất 8 ký tự, 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt",
-  PASSWORD_MISMATCH: "Mật khẩu không khớp",
-  MIN_LENGTH: (min: number) => `Phải có ít nhất ${min} ký tự`,
-  MAX_LENGTH: (max: number) => `Không được quá ${max} ký tự`,
-};
 
 // Login schema
 export const loginSchema = z.object({
@@ -31,8 +21,8 @@ export const registerSchema = z
   .object({
     name: z
       .string()
-      .min(2, ERROR_MESSAGES.MIN_LENGTH(2))
-      .max(50, ERROR_MESSAGES.MAX_LENGTH(50)),
+      .min(2, ERROR_MESSAGES.MIN_LENGTH)
+      .max(50, ERROR_MESSAGES.MAX_LENGTH),
     email: z
       .string()
       .min(1, ERROR_MESSAGES.REQUIRED)
@@ -48,7 +38,7 @@ export const registerSchema = z
       .regex(PASSWORD_REGEX, ERROR_MESSAGES.INVALID_PASSWORD),
     confirmPassword: z.string().min(1, ERROR_MESSAGES.REQUIRED),
     agreeTerms: z.boolean().refine((val) => val === true, {
-      message: "Bạn phải đồng ý với điều khoản",
+      message: "error.terms_required",
     }),
   })
   .refine((data) => data.password === data.confirmPassword, {
