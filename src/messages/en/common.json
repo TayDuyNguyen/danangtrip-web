@@ -1,0 +1,174 @@
+{
+  "nav": {
+    "home": "Home",
+    "destinations": "Destinations",
+    "travel": "Tours",
+    "hotels": "Hotels",
+    "dining": "Dining",
+    "blog": "Blog",
+    "contact": "Contact",
+    "about_us": "About Us",
+    "locations": "Locations"
+  },
+  "common": {
+    "brand_name": "Da Nang Trip",
+    "admin_panel": "Admin Panel",
+    "menu": "Menu",
+    "loading": "Loading...",
+    "error": "Error",
+    "phone": "Phone Number",
+    "not_updated": "Not updated",
+    "role": "Role",
+    "joined_date": "Joined Date",
+    "no_data": "No data found",
+    "no_data_desc": "There is currently no data to display.",
+    "select_placeholder": "Select..."
+  },
+  "accessibility": {
+    "close_menu": "Close menu",
+    "open_menu": "Open menu",
+    "previous": "Previous",
+    "next": "Next",
+    "show_password": "Show password",
+    "hide_password": "Hide password",
+    "image_alt": {
+      "hero": "Da Nang Trip Hero"
+    }
+  },
+  "error": {
+    "not_found_title": "Page Not Found",
+    "not_found_desc": "Sorry, the page you are looking for doesn't exist or has been moved.",
+    "go_home": "Go Home",
+    "back": "Go Back",
+    "title": "Something went wrong",
+    "desc": "We are having trouble processing your request.",
+    "retry": "Try again",
+    "required": "This field is required",
+    "invalid_email": "Invalid email address",
+    "invalid_phone": "Invalid phone number",
+    "invalid_password": "Password must be at least 8 characters, with 1 uppercase, 1 lowercase, 1 number, and 1 special character",
+    "min_length": "Must be at least {min} characters",
+    "max_length": "Cannot exceed {max} characters",
+    "file_too_large": "File size cannot exceed {size}MB",
+    "invalid_file_type": "Unsupported file format",
+    "network_error": "Network error. Please try again later",
+    "server_error": "Server error. Please try again later",
+    "unauthorized": "You are not logged in or your session has expired",
+    "forbidden": "You do not have permission to access",
+    "url_invalid": "Invalid URL",
+    "password_mismatch": "Passwords do not match",
+    "range_error": "Value must be between {min} and {max}",
+    "terms_required": "You must agree to the terms of service"
+  },
+  "success": {
+    "login": "Login success",
+    "register": "Registration success",
+    "logout": "Logout success",
+    "update": "Updated successfully",
+    "delete": "Deleted successfully",
+    "create": "Created successfully",
+    "booking": "Tour booked successfully",
+    "payment": "Payment successful"
+  },
+  "footer": {
+    "description": "The most dynamic travel platform in Da Nang, bringing you unique, vibrant, and exciting experiences in Vietnam's most livable city.",
+    "quick_links": "Discovery",
+    "about_us": "About Us",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "contact": "Contact",
+    "for_partners": "Support",
+    "partner_register": "Partner Registration",
+    "advertise": "Advertisement",
+    "support": "Support Center",
+    "news": "News",
+    "newsletter": "Newsletter",
+    "newsletter_desc": "Get the latest travel deals via your email.",
+    "subscribe": "Subscribe",
+    "copyright": "© {year} Da Nang Trip",
+    "privacy_policy": "Privacy",
+    "tos": "Terms",
+    "cookies": "Cookies",
+    "coming_soon": "Coming Soon",
+    "contact_info": {
+      "hotline": "Hotline",
+      "email": "Email",
+      "address": "Address",
+      "default_hotline": "+84 123 456 789",
+      "default_email": "info@danangtrip.com",
+      "default_address": "99 Pho Tiep, Thanh Khe Dist, Da Nang"
+    }
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "profile": "Profile",
+    "profile_info": "Personal Information"
+  },
+  "language": {
+    "vi": "Tiếng Việt",
+    "en": "English",
+    "select": "Select Language"
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page",
+    "of": "of",
+    "items_per_page": "Items per page",
+    "go_to": "Go to",
+    "showing": "Showing",
+    "to": "to",
+    "results": "results"
+  },
+  "tour": {
+    "price_from": "From",
+    "see_all": "See all",
+    "book_now": "Book now",
+    "slots": "guests",
+    "rating_count": "{count} reviews",
+    "list_title": "Tour List",
+    "list_subtitle": "Explore amazing tours in Da Nang"
+  },
+  "about": {
+    "title": "About Us",
+    "subtitle": "DaNangTrip - The leading tour booking platform in Da Nang"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome",
+    "personal_page_desc": "This is your personal dashboard.",
+    "updating_desc": "The system is being updated with new features. Please come back later!",
+    "account_status": "Account Status",
+    "active": "Active",
+    "account_type": "Account Type",
+    "member": "Member"
+  },
+  "favorite": {
+    "add_success": "Added to favorites",
+    "login_required": "Please login to save favorites",
+    "error": "Cannot save favorite at this time"
+  },
+  "locations": {
+    "title": "Featured Locations",
+    "subtitle": "Discover the most popular destinations in Da Nang."
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "Need help booking a tour or partnership? Contact DaNangTrip."
+  },
+  "blog": {
+    "title": "Travel Blog",
+    "subtitle": "A collection of blog posts, experiences, and itinerary suggestions."
+  },
+  "settings": {
+    "title": "Account Settings",
+    "subtitle": "This area manages your account preferences and experience settings."
+  },
+  "social": {
+    "facebook": "Facebook",
+    "instagram": "Instagram",
+    "twitter": "Twitter"
+  }
+}

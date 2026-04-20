@@ -1,0 +1,110 @@
+{
+  "hero_tagline_premium": "Khám phá vẻ đẹp bất tận",
+  "hero_title": "Khám phá Đà Nẵng",
+  "hero_tagline": "Thành phố đáng sống",
+  "hero_subtitle": "Tìm kiếm địa điểm và tour du lịch tuyệt vời để bắt đầu chuyến hành trình của bạn",
+  "search_placeholder": "Bạn muốn đi đâu?",
+  "search_type_all": "Tất cả",
+  "search_type_location": "Địa điểm",
+  "search_type_tour": "Tour",
+  "search_button": "Tìm kiếm",
+  "trending": "Xu hướng",
+  "stats": {
+    "users": "Khách hàng",
+    "locations": "Địa điểm",
+    "tours": "Tour du lịch",
+    "ratings": "Đánh giá",
+    "views": "Lượt xem",
+    "blog_posts": "Bài viết"
+  },
+  "weather": {
+    "sunny": "Nắng đẹp",
+    "cloudy": "Nhiều mây",
+    "rainy": "Có mưa"
+  },
+  "categories_title": "Bạn muốn khám phá gì?",
+  "categories_title_prefix": "Khám phá theo",
+  "categories_title_highlight": "Danh mục",
+  "categories_subtitle": "Dễ dàng tìm thấy hành trình phù hợp với sở thích của bạn qua các chủ đề du lịch đặc sắc",
+  "featured_locations": {
+    "tagline": "Khám phá Đà Nẵng",
+    "title_prefix": "Địa điểm",
+    "title_highlight": "Nổi bật",
+    "subtitle": "Những địa danh mang tính biểu tượng và hấp dẫn nhất mà bạn không thể bỏ lỡ khi đến với Đà Nẵng.",
+    "no_data": "Chưa có địa điểm nào trong danh mục này",
+    "default_address": "Đà Nẵng"
+  },
+  "filters": {
+    "all": "Tất cả",
+    "beach": "Bãi biển",
+    "culture": "Văn hóa",
+    "food": "Ẩm thực",
+    "entertainment": "Giải trí"
+  },
+  "tour_categories": {
+    "title": "Danh mục Tour",
+    "cta": "Khám phá ngay"
+  },
+  "featured_tours": {
+    "badge": "Khám phá",
+    "title": "Tour Nổi bật",
+    "special_tour": "Tour Đặc biệt"
+  },
+  "hot_tours": {
+    "tagline": "Trending Now",
+    "title": "Tour Hot Nhất Tuần",
+    "subtitle": "Đừng bỏ lỡ những hành trình đang được săn đón nhất với mức giá ưu đãi cực sốc.",
+    "cta": "Săn ưu đãi ngay",
+    "explore_more": "Khám phá thêm"
+  },
+  "blog": {
+    "tagline": "Cập nhật mới nhất",
+    "title_prefix": "Cẩm nang",
+    "title_highlight": "Du lịch",
+    "subtitle": "Khám phá những câu chuyện, kinh nghiệm và bí kíp du lịch Đà Nẵng từ những chuyên gia hành trình.",
+    "see_all": "Tất cả bài viết",
+    "read_more": "Đọc thêm"
+  },
+  "discovery": {
+    "tagline": "Tại sao chọn chúng tôi",
+    "title": "Trải nghiệm Đà Nẵng trọn vẹn",
+    "subtitle": "Chúng tôi tự hào mang đến những dịch vụ du lịch chất lượng, minh bạch và tận tâm nhất dành cho du khách.",
+    "features": {
+      "cost_optimization": {
+        "title": "Tối ưu chi phí",
+        "desc": "Cam kết giá tốt nhất với nhiều chương trình ưu đãi hấp dẫn hàng tháng."
+      },
+      "easy_booking": {
+        "title": "Đặt chỗ dễ dàng",
+        "desc": "Hệ thống đặt giữ chỗ linh hoạt, xác nhận ngay lập tức qua Email/SMS."
+      },
+      "support_247": {
+        "title": "Hỗ trợ 24/7",
+        "desc": "Đội ngũ nhân viên chuyên nghiệp sẵn sàng hỗ trợ bạn mọi lúc mọi nơi."
+      },
+      "trusted_service": {
+        "title": "Dịch vụ uy tín",
+        "desc": "Hơn 10 năm kinh nghiệm tổ chức tour và dịch vụ du lịch tại Đà Nẵng."
+      }
+    }
+  },
+  "testimonials": "Đánh giá của khách hàng",
+  "testimonials_desc": "Những chia sẻ thật lòng từ những du khách đã đồng hành cùng chúng tôi trên hành trình khám phá Đà Nẵng.",
+  "reviews": {
+    "1": {
+      "name": "Nguyễn Văn An",
+      "role": "Khách du lịch từ Hà Nội",
+      "content": "Chuyến đi tuyệt vời! Hướng dẫn viên rất nhiệt tình và chu đáo. Đặc biệt là bữa trưa tại Bà Nà thực sự ngon miệng."
+    },
+    "2": {
+      "name": "Trần Thị Lan",
+      "role": "Khách du lịch từ TP.HCM",
+      "content": "Tôi rất ấn tượng với dịch vụ của Đà Nẵng Trip. Quy trình đặt tour nhanh chóng, xe đưa đón hiện đại và sạch sẽ."
+    },
+    "3": {
+      "name": "James Wilson",
+      "role": "Khách du lịch từ Australia",
+      "content": "Dịch vụ xuất sắc và hướng dẫn viên truyệt vời. Đà Nẵng thật đẹp và đội ngũ đã giúp chúng tôi có một kỳ nghỉ rất thoải mái. Rất đáng trải nghiệm!"
+    }
+  }
+}

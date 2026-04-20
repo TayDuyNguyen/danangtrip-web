@@ -7,6 +7,7 @@ import { REGEX, ERROR_MESSAGES } from "./constants";
 export interface ValidationResult {
   isValid: boolean;
   error?: string;
+  values?: Record<string, unknown>;
 }
 
 // Email validation
@@ -43,7 +44,7 @@ export const validatePassword = (password: string): ValidationResult => {
 };
 
 // Required field validation
-export const validateRequired = (value: any, fieldName: string = "Trường này"): ValidationResult => {
+export const validateRequired = (value: unknown): ValidationResult => {
   if (value === undefined || value === null || value === "") {
     return { isValid: false, error: ERROR_MESSAGES.REQUIRED };
   }
@@ -56,7 +57,11 @@ export const validateMinLength = (value: string, min: number): ValidationResult 
     return { isValid: false, error: ERROR_MESSAGES.REQUIRED };
   }
   if (value.length < min) {
-    return { isValid: false, error: ERROR_MESSAGES.MIN_LENGTH(min) };
+    return { 
+      isValid: false, 
+      error: ERROR_MESSAGES.MIN_LENGTH,
+      values: { min }
+    };
   }
   return { isValid: true };
 };
@@ -67,7 +72,11 @@ export const validateMaxLength = (value: string, max: number): ValidationResult 
     return { isValid: true }; // Not required, just checking max
   }
   if (value.length > max) {
-    return { isValid: false, error: ERROR_MESSAGES.MAX_LENGTH(max) };
+    return { 
+      isValid: false, 
+      error: ERROR_MESSAGES.MAX_LENGTH,
+      values: { max }
+    };
   }
   return { isValid: true };
 };
@@ -78,7 +87,7 @@ export const validateUrl = (url: string): ValidationResult => {
     return { isValid: false, error: ERROR_MESSAGES.REQUIRED };
   }
   if (!REGEX.URL.test(url)) {
-    return { isValid: false, error: "URL không hợp lệ" };
+    return { isValid: false, error: ERROR_MESSAGES.URL_INVALID };
   }
   return { isValid: true };
 };
@@ -100,7 +109,12 @@ export const validateFile = (
   }
 
   if (maxSize && file.size > maxSize) {
-    return { isValid: false, error: ERROR_MESSAGES.FILE_TOO_LARGE };
+    const sizeInMB = maxSize / 1024 / 1024;
+    return { 
+      isValid: false, 
+      error: ERROR_MESSAGES.FILE_TOO_LARGE,
+      values: { size: sizeInMB }
+    };
   }
 
   return { isValid: true };
@@ -112,7 +126,7 @@ export const validatePasswordMatch = (password: string, confirmPassword: string)
     return { isValid: false, error: ERROR_MESSAGES.REQUIRED };
   }
   if (password !== confirmPassword) {
-    return { isValid: false, error: "Mật khẩu không khớp" };
+    return { isValid: false, error: ERROR_MESSAGES.PASSWORD_MISMATCH };
   }
   return { isValid: true };
 };
@@ -129,7 +143,8 @@ export const validateRange = (
   if (value < min || value > max) {
     return {
       isValid: false,
-      error: `Giá trị phải từ ${min} đến ${max}`,
+      error: ERROR_MESSAGES.RANGE_ERROR,
+      values: { min, max }
     };
   }
   return { isValid: true };
@@ -137,7 +152,7 @@ export const validateRange = (
 
 // Form validation helper
 export interface FormErrors {
-  [key: string]: string;
+  [key: string]: { key: string; values?: Record<string, unknown> };
 }
 
 export const validateForm = (
@@ -148,7 +163,10 @@ export const validateForm = (
 
   Object.entries(fields).forEach(([field, result]) => {
     if (!result.isValid) {
-      errors[field] = result.error || ERROR_MESSAGES.REQUIRED;
+      errors[field] = { 
+        key: result.error || ERROR_MESSAGES.REQUIRED,
+        values: result.values 
+      };
       isValid = false;
     }
   });

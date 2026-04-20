@@ -50,14 +50,23 @@ export const formatRelativeTime = (date: string | Date, locale: string = "vi-VN"
 
 // Currency formatting
 export const formatCurrency = (
-  amount: number,
+  amount: number | string,
   currency: string = "VND",
   locale: string = "vi-VN"
 ): string => {
+  const value = typeof amount === "string" ? parseFloat(amount) : amount;
   return new Intl.NumberFormat(locale, {
     style: "currency",
     currency,
-  }).format(amount);
+  }).format(value);
+};
+
+export const formatPriceVND = (price: string | number, locale: string = "vi-VN"): string => {
+  const value = typeof price === "string" ? parseFloat(price) : price;
+  return new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: "VND",
+  }).format(value);
 };
 
 // Number formatting

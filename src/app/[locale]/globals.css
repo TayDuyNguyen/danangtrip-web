@@ -1,0 +1,223 @@
+@import "tailwindcss";
+
+:root {
+  /* Brand Constants - Coastal Curated */
+  --background: #F6FAFE;
+  --foreground: #171C1F;
+  --primary-color: #004E9F;
+  --secondary-color: #AB3500;
+  --azure-color: #0066CC;
+  --sun-color: #FF6B35;
+  --lagoon-color: #008080;
+  --outline-color: rgba(114, 119, 132, 0.15);
+  --radius-value: 0.75rem;
+
+  /* Surface Colors */
+  --surface-lowest: #FFFFFF;
+  --surface-low: #F0F4F8;
+  --surface-base: #EAEEF2;
+  --surface-high: #E4E9ED;
+  --surface-highest: #DFE3E7;
+
+  /* Text Variants */
+  --text-on-surface-variant: #454E54;
+  --text-on-surface-subtle: #7A868F;
+}
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --font-sans: "Inter", var(--font-geist-sans), sans-serif;
+  --font-mono: var(--font-geist-mono);
+
+  /* Brand Mapping */
+  --color-primary: var(--primary-color);
+  --color-on-primary: #FFFFFF;
+
+  --color-secondary: var(--secondary-color);
+  --color-on-secondary: #FFFFFF;
+
+  --color-azure: var(--azure-color);
+  --color-sun: var(--sun-color);
+  --color-dark: var(--foreground);
+
+  /* Functional Layout Mapping */
+  --color-surface: var(--background);
+  --color-on-surface: var(--foreground);
+  --color-surface-container-lowest: var(--surface-lowest);
+  --color-surface-container-low: var(--surface-low);
+  --color-surface-container: var(--surface-base);
+  --color-surface-container-high: var(--surface-high);
+  --color-surface-container-highest: var(--surface-highest);
+
+  /* Text & Functional Mapping */
+  --color-on-surface-variant: var(--text-on-surface-variant);
+  --color-on-surface-subtle: var(--text-on-surface-subtle);
+  --color-success: var(--lagoon-color);
+  --color-on-success: #FFFFFF;
+
+  /* UI Essentials - Fixing the "Missing Gray" issues */
+  --color-border: var(--outline-color);
+  --color-input: var(--outline-color);
+  --color-ring: var(--azure-color);
+  --color-outline-variant: var(--outline-color);
+
+  /* Radii */
+  --radius-xl: var(--radius-value);
+  --radius-lg: calc(var(--radius-value) - 2px);
+  --radius-md: calc(var(--radius-value) - 4px);
+  --radius-sm: calc(var(--radius-value) - 6px);
+
+  /* Animations */
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+  --animate-reveal-up: reveal-up 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+
+    to {
+      height: 0;
+    }
+  }
+
+  @keyframes reveal-up {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0B1C30;
+    --foreground: #F6FAFE;
+    --outline-color: rgba(255, 255, 255, 0.1);
+    
+    /* Dark mode surfaces */
+    --surface-lowest: #0F233B;
+    --surface-low: #132A46;
+    --surface-base: #173252;
+    --surface-high: #1B395E;
+    --surface-highest: #1F416A;
+
+    /* Dark mode text variants */
+    --text-on-surface-variant: #A0AEB8;
+    --text-on-surface-subtle: #7A8D9F;
+  }
+}
+
+@layer base {
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+  }
+
+  /* Standard border color for unstyled borders */
+  * {
+    border-color: var(--color-border);
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .reveal-hidden {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .reveal-active {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .animated-border {
+    position: relative;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .animated-border::before {
+    content: '';
+    position: absolute;
+    z-index: -2;
+    left: -50%;
+    top: -50%;
+    width: 200%;
+    height: 200%;
+    background-color: #111827;
+    /* Match gray-900 */
+    background-image: conic-gradient(transparent,
+        rgba(34, 211, 238, 0.3),
+        #22d3ee 50%);
+    animation: rotate-border 4s linear infinite;
+  }
+
+  .animated-border::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    left: 2px;
+    top: 2px;
+    width: calc(100% - 4px);
+    height: calc(100% - 4px);
+    background: inherit;
+    border-radius: inherit;
+  }
+
+  .reveal-up {
+    animation: var(--animate-reveal-up);
+  }
+
+  .reveal-delay-100 {
+    animation-delay: 100ms;
+  }
+
+  .reveal-delay-200 {
+    animation-delay: 200ms;
+  }
+
+  .reveal-delay-300 {
+    animation-delay: 300ms;
+  }
+
+  .reveal-delay-400 {
+    animation-delay: 400ms;
+  }
+}
+
+@keyframes rotate-border {
+  100% {
+    transform: rotate(360deg);
+  }
+}

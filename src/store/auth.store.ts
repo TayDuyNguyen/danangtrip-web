@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import type { User } from "@/types/user.type";
+import type { User } from "@/types";
+import Cookies from "js-cookie";
 
 interface AuthState {
   user: User | null;
@@ -28,21 +29,31 @@ export const useAuthStore = create<AuthState>()(
       isLoading: false,
       error: null,
 
-      login: (user, token) =>
+      login: (user, token) => {
+        // Set cookie for middleware access
+        Cookies.set("token", token, { expires: 7, path: "/" });
         set({
           user,
           token,
           isAuthenticated: true,
           error: null,
-        }),
+        });
+      },
 
-      logout: () =>
+      logout: () => {
+        // Remove cookie
+        Cookies.remove("token", { path: "/" });
+        // Clear tokens from localStorage for extra safety
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("token");
+        }
         set({
           user: null,
           token: null,
           isAuthenticated: false,
           error: null,
-        }),
+        });
+      },
 
       setUser: (user) =>
         set({
@@ -72,3 +83,4 @@ export const useAuthStore = create<AuthState>()(
     }
   )
 );
+

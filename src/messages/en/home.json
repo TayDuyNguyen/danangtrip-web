@@ -1,0 +1,110 @@
+{
+  "hero_tagline_premium": "Discover Endless Beauty",
+  "hero_title": "Explore Da Nang",
+  "hero_tagline": "The Most Livable City",
+  "hero_subtitle": "Find amazing locations and tours to start your journey",
+  "search_placeholder": "Where do you want to go?",
+  "search_type_all": "All",
+  "search_type_location": "Location",
+  "search_type_tour": "Tour",
+  "search_button": "Search",
+  "trending": "Trending",
+  "stats": {
+    "users": "Customers",
+    "locations": "Locations",
+    "tours": "Tours",
+    "ratings": "Ratings",
+    "views": "Views",
+    "blog_posts": "Articles"
+  },
+  "weather": {
+    "sunny": "Sunny",
+    "cloudy": "Cloudy",
+    "rainy": "Rainy"
+  },
+  "categories_title": "What do you want to explore?",
+  "categories_title_prefix": "Explore by",
+  "categories_title_highlight": "Category",
+  "categories_subtitle": "Easily find the right journey for your interests through featured travel themes",
+  "featured_locations": {
+    "tagline": "Explore Da Nang",
+    "title_prefix": "Featured",
+    "title_highlight": "Locations",
+    "subtitle": "The most iconic and attractive landmarks that you cannot miss when coming to Da Nang.",
+    "no_data": "No locations found in this category",
+    "default_address": "Da Nang"
+  },
+  "filters": {
+    "all": "All",
+    "beach": "Beach",
+    "culture": "Culture",
+    "food": "Food",
+    "entertainment": "Entertainment"
+  },
+  "tour_categories": {
+    "title": "Tour Categories",
+    "cta": "Explore now"
+  },
+  "featured_tours": {
+    "badge": "Explore",
+    "title": "Featured Tours",
+    "special_tour": "Special Tour"
+  },
+  "hot_tours": {
+    "tagline": "Trending Now",
+    "title": "Hottest Tours of the Week",
+    "subtitle": "Don't miss the most sought-after journeys with shocking promotional prices.",
+    "cta": "Get deals now",
+    "explore_more": "Explore more"
+  },
+  "blog": {
+    "tagline": "Latest Updates",
+    "title_prefix": "Travel",
+    "title_highlight": "Guide",
+    "subtitle": "Explore stories, experiences and Da Nang travel tips from journey experts.",
+    "see_all": "All posts",
+    "read_more": "Read more"
+  },
+  "discovery": {
+    "tagline": "Why Choose Us",
+    "title": "Complete Da Nang Experience",
+    "subtitle": "We are proud to bring the most quality, transparent and dedicated travel services to visitors.",
+    "features": {
+      "cost_optimization": {
+        "title": "Cost Optimization",
+        "desc": "Best price commitment with many attractive monthly promotion programs."
+      },
+      "easy_booking": {
+        "title": "Easy Booking",
+        "desc": "Flexible booking system, instant confirmation via Email/SMS."
+      },
+      "support_247": {
+        "title": "24/7 Support",
+        "desc": "Professional staff ready to support you anytime, anywhere."
+      },
+      "trusted_service": {
+        "title": "Trusted Service",
+        "desc": "More than 10 years of experience organizing tours and travel services in Da Nang."
+      }
+    }
+  },
+  "testimonials": "Customer Testimonials",
+  "testimonials_desc": "Sincere shares from travelers who have accompanied us on their journey to discover Da Nang.",
+  "reviews": {
+    "1": {
+      "name": "An Nguyen Van",
+      "role": "Traveler from Hanoi",
+      "content": "Excellent trip! The tour guide was very enthusiastic and attentive. Especially the lunch at Ba Na was truly delicious."
+    },
+    "2": {
+      "name": "Lan Tran Thi",
+      "role": "Traveler from HCMC",
+      "content": "I was very impressed with Da Nang Trip's service. The booking process was fast, and the shuttle was modern and clean."
+    },
+    "3": {
+      "name": "James Wilson",
+      "role": "Tourist from Australia",
+      "content": "Excellent service and great tour guides. Da Nang is beautiful and the team made our stay very comfortable. Highly recommend!"
+    }
+  }
+}

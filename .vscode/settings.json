@@ -1,0 +1,58 @@
+{
+  // ── i18n Ally ─────────────────────────────────────────────────────────────
+  // Locale files: src/messages/{locale}/{namespace}.json  (e.g. src/messages/vi/common.json)
+  "i18n-ally.localesPaths": ["src/messages"],
+  "i18n-ally.keystyle": "nested",
+  "i18n-ally.sourceLanguage": "vi",
+  "i18n-ally.displayLanguage": "vi",
+  "i18n-ally.enabledFrameworks": ["next-intl"],
+  "i18n-ally.namespace": true,
+  "i18n-ally.pathMatcher": "{locale}/{namespace}.json",
+  "i18n-ally.preferredDelimiter": ".",
+  "i18n-ally.sortKeys": true,
+  "i18n-ally.includeLocales": ["vi", "en"],
+  "i18n-ally.extract.path": "src/messages/{locale}/{namespace}.json",
+  "i18n-ally.translate.engines": ["google"],
+  "i18n-ally.translate.fallbackLanguage": "vi",
+
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "editor.tabSize": 2,
+
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.expand": false,
+  "explorer.fileNesting.patterns": {
+    "package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml, bun.lockb",
+    "next.config.ts": "next-env.d.ts, eslint.config.mjs, postcss.config.mjs, tsconfig.json",
+    ".env": ".env.local, .env.example, .env.*",
+    "*.tsx": "$(capture).ts, $(capture).test.tsx, $(capture).module.css",
+    "*.ts": "$(capture).test.ts"
+  },
+
+  "tailwindCSS.experimental.classRegex": [
+    ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+    ["cn\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+  ],
+
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    "**/.next": true
+  },
+
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/.next": true,
+    "**/out": true
+  },
+
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "css.lint.unknownAtRules": "ignore"
+}

@@ -1,37 +1,38 @@
-import { api } from "./api";
-import type { User, UpdateUserInput } from "@/types/user.type";
-import type { ApiResponse, PaginatedResponse, PaginationParams } from "@/types/api";
+import axiosInstance from "@/lib/axios";
+import { API_ENDPOINTS } from "@/config";
+import type { User, UpdateUserInput } from "@/types/user.types";
+import type { PaginatedResponse, PaginationParams, ApiResponse } from "@/types";
 
 export const userService = {
   getUsers: (params?: PaginationParams): Promise<ApiResponse<PaginatedResponse<User>>> => {
-    return api.get<PaginatedResponse<User>>("/users", { params });
+    return axiosInstance.get("/users", { params });
   },
 
   getUserById: (id: string): Promise<ApiResponse<User>> => {
-    return api.get<User>(`/users/${id}`);
+    return axiosInstance.get(`/users/${id}`);
   },
 
   updateUser: (id: string, data: UpdateUserInput): Promise<ApiResponse<User>> => {
-    return api.patch<User>(`/users/${id}`, data);
+    return axiosInstance.patch(`/users/${id}`, data);
   },
 
   deleteUser: (id: string): Promise<ApiResponse<void>> => {
-    return api.delete<void>(`/users/${id}`);
+    return axiosInstance.delete(`/users/${id}`);
   },
 
   uploadAvatar: (id: string, file: File): Promise<ApiResponse<{ url: string }>> => {
     const formData = new FormData();
     formData.append("avatar", file);
     
-    return api.post<{ url: string }>(`/users/${id}/avatar`, formData, {
+    return axiosInstance.post(`/users/${id}/avatar`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     });
   },
 
-  changePassword: (id: string, oldPassword: string, newPassword: string): Promise<ApiResponse<void>> => {
-    return api.post<void>(`/users/${id}/change-password`, {
+  changePassword: (oldPassword: string, newPassword: string): Promise<ApiResponse<void>> => {
+    return axiosInstance.post(API_ENDPOINTS.USER.CHANGE_PASSWORD, {
       oldPassword,
       newPassword,
     });

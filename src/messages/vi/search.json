@@ -1,0 +1,63 @@
+{
+  "title": "Kết quả tìm kiếm",
+  "description": "Tìm kiếm các địa điểm và tour du lịch tuyệt vời tại Đà Nẵng",
+  "found_results": "Tìm thấy {count} kết quả cho <strong>{query}</strong>",
+  "tabs": {
+    "all": "Tất cả",
+    "tour": "Tour du lịch",
+    "location": "Địa điểm"
+  },
+  "filters": {
+    "title": "Bộ lọc",
+    "price_range": "Khoảng giá",
+    "rating": "Đánh giá",
+    "category": "Danh mục",
+    "apply": "Áp dụng",
+    "reset": "Đặt lại"
+  },
+  "sort": {
+    "label": "Sắp xếp theo",
+    "popularity": "Phổ biến nhất",
+    "newest": "Mới nhất",
+    "price_low": "Giá: Thấp đến Cao",
+    "price_high": "Giá: Cao đến Thấp",
+    "rating": "Đánh giá cao nhất"
+  },
+  "badges": {
+    "tour": "Tour",
+    "location": "Địa điểm",
+    "hot": "Hot"
+  },
+  "card": {
+    "starting_from": "Chỉ từ",
+    "default_location": "Đà Nẵng, Việt Nam"
+  },
+  "empty": {
+    "title": "Không tìm thấy kết quả",
+    "subtitle": "Hãy thử tìm kiếm với từ khóa khác hoặc thay đổi bộ lọc"
+  },
+  "trending": {
+    "title": "Xu hướng tìm kiếm",
+    "items": {
+      "son_tra": "Bán đảo Sơn Trà",
+      "asia_park": "Asia Park",
+      "fireworks": "Pháo hoa 2024",
+      "than_tai": "Suối khoáng Thần Tài"
+    }
+  },
+  "discovery": {
+    "title": "Khám phá Đà Nẵng",
+    "subtitle": "Gợi ý những trải nghiệm tuyệt vời nhất dành cho bạn"
+  },
+  "suggestions": {
+    "locations_title": "📍 Địa điểm",
+    "tours_title": "🗺 Tour du lịch",
+    "view_all": "🔍 Xem tất cả kết quả cho \"{query}\"",
+    "no_results": "Không tìm thấy kết quả phù hợp",
+    "loading": "Đang tìm kiếm...",
+    "min_chars": "Nhập ít nhất 2 ký tự để tìm gợi ý",
+    "error": "Không tải được gợi ý, vui lòng thử lại",
+    "views": "{count} lượt xem",
+    "bookings": "{count} đặt"
+  }
+}

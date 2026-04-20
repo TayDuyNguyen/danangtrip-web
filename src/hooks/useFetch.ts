@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import type { ApiResponse } from "@/types/api";
+import type { ApiResponse } from "@/types";
 
 interface UseFetchOptions<T> {
   immediate?: boolean;
@@ -13,32 +13,35 @@ interface UseFetchReturn<T> {
   data: T | null;
   isLoading: boolean;
   error: string | null;
-  execute: (...args: any[]) => Promise<ApiResponse<T>>;
+  execute: (...args: unknown[]) => Promise<ApiResponse<T>>;
   refetch: () => Promise<ApiResponse<T>>;
 }
 
+// Internal type: fetchFn needs any[] to accept arbitrary function signatures
+type FetchFn<T> = (...args: unknown[]) => Promise<ApiResponse<T>>;
+
 export function useFetch<T>(
-  fetchFn: (...args: any[]) => Promise<ApiResponse<T>>,
+  fetchFn: FetchFn<T>,
   options: UseFetchOptions<T> = {}
 ): UseFetchReturn<T> {
   const { immediate = true, onSuccess, onError } = options;
 
   const [data, setData] = useState<T | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(immediate);
   const [error, setError] = useState<string | null>(null);
-  const [args, setArgs] = useState<any[]>([]);
+  const [storedArgs, setStoredArgs] = useState<unknown[]>([]);
 
   const execute = useCallback(
-    async (...newArgs: any[]): Promise<ApiResponse<T>> => {
-      setIsLoading(true);
+    async (...newArgs: unknown[]): Promise<ApiResponse<T>> => {
+      if (!isLoading) setIsLoading(true);
       setError(null);
 
       try {
         const response = await fetchFn(...newArgs);
 
         if (response.success && response.data !== undefined) {
-          setData(response.data);
-          onSuccess?.(response.data);
+          setData(response.data as T);
+          onSuccess?.(response.data as T);
         } else {
           setError(response.error || "An error occurred");
           onError?.(response.error || "An error occurred");
@@ -54,25 +57,29 @@ export function useFetch<T>(
         setIsLoading(false);
       }
     },
-    [fetchFn, onSuccess, onError]
+    [fetchFn, onSuccess, onError, isLoading]
   );
 
   const refetch = useCallback(async () => {
-    return execute(...args);
-  }, [execute, args]);
+    return execute(...storedArgs);
+  }, [execute, storedArgs]);
 
   useEffect(() => {
     if (immediate) {
-      execute();
+      // Use microtask to avoid synchronous state update in effect
+      queueMicrotask(() => {
+        execute();
+      });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return {
     data,
     isLoading,
     error,
-    execute: (...newArgs: any[]) => {
-      setArgs(newArgs);
+    execute: (...newArgs: unknown[]) => {
+      setStoredArgs(newArgs);
       return execute(...newArgs);
     },
     refetch,
@@ -80,7 +87,7 @@ export function useFetch<T>(
 }
 
 export function useLazyFetch<T>(
-  fetchFn: (...args: any[]) => Promise<ApiResponse<T>>,
+  fetchFn: FetchFn<T>,
   options: Omit<UseFetchOptions<T>, "immediate"> = {}
 ): UseFetchReturn<T> {
   return useFetch(fetchFn, { ...options, immediate: false });
