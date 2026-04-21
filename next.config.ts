@@ -43,7 +43,10 @@ const nextConfig: NextConfig = {
 
   // Redirects
   redirects: async () => {
-    return [];
+    return [
+      // Browsers request /favicon.ico by default; serve tiny PNG from public/ (avoids RSC/i18n on icon fetch)
+      { source: "/favicon.ico", destination: "/favicon.png", permanent: false },
+    ];
   },
 
   // Rewrites

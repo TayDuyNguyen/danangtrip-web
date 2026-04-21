@@ -1,6 +1,11 @@
 @import "tailwindcss";
 
 :root {
+  /* System fonts only — no build-time fetch (next/font/google breaks offline & locked networks) */
+  --font-geist-sans: ui-sans-serif, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
+    sans-serif;
+  --font-geist-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+
   /* Brand Constants - Coastal Curated */
   --background: #F6FAFE;
   --foreground: #171C1F;
