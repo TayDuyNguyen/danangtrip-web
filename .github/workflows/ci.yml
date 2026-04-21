@@ -50,5 +50,6 @@ jobs:
         with:
           name: dist-${{ github.event.pull_request.number || github.sha }}
           path: .next
+          include-hidden-files: true
           if-no-files-found: warn
           retention-days: 7

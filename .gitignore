@@ -37,6 +37,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# cloudflare wrangler — local dev cache (sqlite locks on Windows if committed)
+.wrangler/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
