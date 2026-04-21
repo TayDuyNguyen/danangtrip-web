@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
 
   // Image optimization
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: "https",
@@ -61,10 +62,6 @@ const nextConfig: NextConfig = {
 
   typescript: {
     ignoreBuildErrors: true,
-  },
-  // @ts-expect-error - These properties exist at runtime but may conflict with strict NextConfig types in this version
-  eslint: {
-    ignoreDuringBuilds: true,
   },
 };
 
