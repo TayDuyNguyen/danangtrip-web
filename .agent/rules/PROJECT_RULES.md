@@ -76,7 +76,7 @@ src/
 |-- types/        # shared cross-feature types
 |-- utils/        # stable generic helpers
 |-- providers/    # app-wide providers (React Query, next-intl shell, etc.)
-|-- proxy.ts      # Next.js 16 network boundary (i18n + auth redirects); matcher must cover unprefixed locales
+|-- middleware.ts # Edge network boundary (i18n + auth); required for Cloudflare OpenNext (Node Proxy unsupported)
 ```
 
 Placement rules:
