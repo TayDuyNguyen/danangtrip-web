@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import { config } from "@/config";
 import { Providers } from "@/providers/providers";
 import { getMessages, setRequestLocale, getTranslations } from "next-intl/server";
@@ -7,15 +6,7 @@ import { routing } from "@/i18n/routing";
 import { notFound } from "next/navigation";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+/** Fonts: use system stack in globals.css — avoids next/font/google network fetch (fails offline / some CI). */
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -73,7 +64,7 @@ export default async function RootLayout({
   const messages = await getMessages();
 
   return (
-    <div className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
+    <div className="h-full antialiased">
       <Providers locale={locale} messages={messages}>
         {children}
       </Providers>
