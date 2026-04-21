@@ -1,59 +1,70 @@
 import { getRequestConfig } from "next-intl/server";
 import { routing } from "./routing";
 
-const namespaces = [
-  "common",
-  "home",
-  "login",
-  "register",
-  "translation",
-  "search",
-  "locations",
-  "contact",
-  "blog",
-  "settings",
-] as const;
+/** Top-level JSON imports only — no import(); Cloudflare Workers bundling can yield undefined .default on async chunks. */
+import viCommon from "../messages/vi/common.json";
+import viHome from "../messages/vi/home.json";
+import viLogin from "../messages/vi/login.json";
+import viRegister from "../messages/vi/register.json";
+import viTranslation from "../messages/vi/translation.json";
+import viSearch from "../messages/vi/search.json";
+import viLocations from "../messages/vi/locations.json";
+import viContact from "../messages/vi/contact.json";
+import viBlog from "../messages/vi/blog.json";
+import viSettings from "../messages/vi/settings.json";
 
-type Namespace = (typeof namespaces)[number];
+import enCommon from "../messages/en/common.json";
+import enHome from "../messages/en/home.json";
+import enLogin from "../messages/en/login.json";
+import enRegister from "../messages/en/register.json";
+import enTranslation from "../messages/en/translation.json";
+import enSearch from "../messages/en/search.json";
+import enLocations from "../messages/en/locations.json";
+import enContact from "../messages/en/contact.json";
+import enBlog from "../messages/en/blog.json";
+import enSettings from "../messages/en/settings.json";
 
-type JsonModule = { default?: Record<string, unknown> } | Record<string, unknown>;
-
-/** Cloudflare / OpenNext: dynamic `import(\`...\${var}...\`)` often omits `default`; use static paths only. */
-function toMessageRecord(mod: JsonModule | undefined): Record<string, unknown> {
-  if (!mod || typeof mod !== "object") return {};
-  if ("default" in mod && mod.default && typeof mod.default === "object") {
-    return mod.default as Record<string, unknown>;
-  }
-  return mod as Record<string, unknown>;
-}
-
-/** Literal import paths so the Worker bundle includes every JSON file. */
-const messageLoaders: Record<"vi" | "en", Record<Namespace, () => Promise<JsonModule>>> = {
+const messagesByLocale = {
   vi: {
-    common: () => import("../messages/vi/common.json"),
-    home: () => import("../messages/vi/home.json"),
-    login: () => import("../messages/vi/login.json"),
-    register: () => import("../messages/vi/register.json"),
-    translation: () => import("../messages/vi/translation.json"),
-    search: () => import("../messages/vi/search.json"),
-    locations: () => import("../messages/vi/locations.json"),
-    contact: () => import("../messages/vi/contact.json"),
-    blog: () => import("../messages/vi/blog.json"),
-    settings: () => import("../messages/vi/settings.json"),
+    common: viCommon,
+    home: viHome,
+    login: viLogin,
+    register: viRegister,
+    translation: viTranslation,
+    search: viSearch,
+    locations: viLocations,
+    contact: viContact,
+    blog: viBlog,
+    settings: viSettings,
   },
   en: {
-    common: () => import("../messages/en/common.json"),
-    home: () => import("../messages/en/home.json"),
-    login: () => import("../messages/en/login.json"),
-    register: () => import("../messages/en/register.json"),
-    translation: () => import("../messages/en/translation.json"),
-    search: () => import("../messages/en/search.json"),
-    locations: () => import("../messages/en/locations.json"),
-    contact: () => import("../messages/en/contact.json"),
-    blog: () => import("../messages/en/blog.json"),
-    settings: () => import("../messages/en/settings.json"),
+    common: enCommon,
+    home: enHome,
+    login: enLogin,
+    register: enRegister,
+    translation: enTranslation,
+    search: enSearch,
+    locations: enLocations,
+    contact: enContact,
+    blog: enBlog,
+    settings: enSettings,
   },
-};
+} as const satisfies Record<
+  "vi" | "en",
+  Record<
+    | "common"
+    | "home"
+    | "login"
+    | "register"
+    | "translation"
+    | "search"
+    | "locations"
+    | "contact"
+    | "blog"
+    | "settings",
+    Record<string, unknown>
+  >
+>;
 
 export default getRequestConfig(async ({ requestLocale }) => {
   let locale = await requestLocale;
@@ -63,20 +74,9 @@ export default getRequestConfig(async ({ requestLocale }) => {
   }
 
   const localeKey: "vi" | "en" = locale === "en" ? "en" : "vi";
-  const loaders = messageLoaders[localeKey];
-
-  const messages: Record<string, Record<string, unknown>> = {};
-
-  await Promise.all(
-    namespaces.map(async (ns) => {
-      try {
-        const mod = await loaders[ns]();
-        messages[ns] = toMessageRecord(mod);
-      } catch {
-        console.warn(`Could not load i18n namespace "${ns}" for locale "${locale}"`);
-      }
-    })
-  );
+  const messages: Record<string, Record<string, unknown>> = {
+    ...messagesByLocale[localeKey],
+  };
 
   return {
     locale,
