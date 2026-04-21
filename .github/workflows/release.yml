@@ -49,6 +49,8 @@ jobs:
         with:
           name: release-dist-${{ github.sha }}
           path: .next
+          # .next is a dot-directory; upload-artifact excludes hidden paths by default
+          include-hidden-files: true
           if-no-files-found: error
           retention-days: 30
 
