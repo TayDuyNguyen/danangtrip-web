@@ -1,10 +1,16 @@
+const primaryApiUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api").trim();
+
 export const config = {
   app: {
     name: process.env.NEXT_PUBLIC_APP_NAME || "DaNangTrip",
     url: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
   },
   api: {
-    url: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api",
+    url: primaryApiUrl,
+    fallbackUrls: (process.env.NEXT_PUBLIC_API_FALLBACK_URLS || "")
+      .split(",")
+      .map((u) => u.trim())
+      .filter((u) => u.length > 0 && u !== primaryApiUrl),
     baseUrl: process.env.API_BASE_URL || "http://localhost:3000",
   },
   env: process.env.NODE_ENV || "development",
