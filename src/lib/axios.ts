@@ -10,12 +10,14 @@ import type { ApiResponse } from "@/types";
  */
 const axiosInstance = axios.create({
   baseURL: config.api.url,
-  timeout: 60000,
+  timeout: 30_000,
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },
 });
+
+let activeBaseUrl = config.api.url;
 
 let isRefreshing = false;
 let isRedirecting = false;
@@ -86,6 +88,9 @@ const shouldRefreshToken = (
 // Request interceptor
 axiosInstance.interceptors.request.use(
   async (axiosConfig: InternalAxiosRequestConfig) => {
+    // Luôn sử dụng base url đang hoạt động (có thể là fallback nếu primary chết)
+    axiosConfig.baseURL = activeBaseUrl;
+
     const token = getAccessToken();
 
     if (typeof window !== "undefined") {
@@ -154,13 +159,33 @@ axiosInstance.interceptors.response.use(
       return messages[locale][key];
     };
 
-    if (!error.response) {
-      toast.error(getSystemMessage("network"));
+    if (!error.response || (error.response.status >= 502 && error.response.status <= 504)) {
+      // Tìm next URL trong danh sách fallback của mảng
+      const currentUrlIndex = config.api.fallbackUrls ? config.api.fallbackUrls.indexOf(activeBaseUrl) : -1;
+      const nextUrlIndex = currentUrlIndex + 1;
+      
+      const nextUrl = currentUrlIndex === -1 && config.api.fallbackUrls && config.api.fallbackUrls.length > 0
+        ? config.api.fallbackUrls[0] 
+        : config.api.fallbackUrls[nextUrlIndex];
+
+      if (nextUrl) {
+        console.warn(`[API Failover] Lỗi kết nối tại ${activeBaseUrl}. Tự động chuyển sang fallback API: ${nextUrl}`);
+        activeBaseUrl = nextUrl;
+        originalRequest.baseURL = activeBaseUrl;
+        
+        // Thử gọi lại request một lần nữa với baseURL mới
+        return axiosInstance.request(originalRequest);
+      }
+
+      // Hết fallback -> reset về primary để request sau không kẹt ở URL đã chết
+      activeBaseUrl = config.api.url;
+      const isNetwork = !error.response;
+      toast.error(getSystemMessage(isNetwork ? "network" : "server"));
       return Promise.reject({
         success: false,
-        error: "Network Error",
-        message: getSystemMessage("network"),
-        status: 0,
+        error: isNetwork ? "Network Error" : "Server Error",
+        message: getSystemMessage(isNetwork ? "network" : "server"),
+        status: isNetwork ? 0 : error.response!.status,
       } as ApiResponse);
     }
 
@@ -183,9 +208,9 @@ axiosInstance.interceptors.response.use(
 
       try {
         const response = await axios.post<RefreshTokenData>(
-          `${config.api.url}/auth/refresh`,
+          `${activeBaseUrl}/auth/refresh`,
           {},
-          { withCredentials: true }
+          { withCredentials: true, timeout: 30_000 }
         );
 
         const newToken = response.data?.data?.token || response.data?.token;
