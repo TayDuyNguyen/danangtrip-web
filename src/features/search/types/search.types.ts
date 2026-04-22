@@ -33,14 +33,41 @@ export interface LocationSearchResult extends SearchResultBase {
 
 export type SearchResult = TourSearchResult | LocationSearchResult;
 
-export interface SearchState {
-  keyword: string;
-  type: "all" | "tour" | "location";
-  sortBy: string;
-  filters: {
-    minPrice?: number;
-    maxPrice?: number;
-    rating?: number;
-    category?: number;
-  };
+export type SearchSortOption = "popular" | "price_asc" | "price_desc" | "rating_desc" | "newest";
+
+export interface SearchFilters {
+  minPrice?: number;
+  maxPrice?: number;
+  rating?: number;
+  category?: number;
+  district?: string;
 }
+
+export interface SearchState {
+  q: string;
+  type: "all" | SearchResultType;
+  sort: SearchSortOption;
+  filters: SearchFilters;
+  page?: number;
+}
+
+export interface SearchRequestParams {
+  q: string;
+  type?: SearchResultType;
+  category_id?: number;
+  tour_category_id?: number;
+  district?: string;
+  price_min?: number;
+  price_max?: number;
+  sort_by?: string;
+  sort_order?: "asc" | "desc";
+  page?: number;
+  per_page?: number;
+  session_id?: string;
+}
+
+export interface SearchSuggestionResponse {
+  q: string;
+  items: string[]; // Adjust if backend returns objects later
+}
+

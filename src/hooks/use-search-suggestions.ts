@@ -1,29 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDebounce } from "@/hooks/useDebounce";
-import { locationService } from "@/services/location.service";
-import { tourService } from "@/services/tour.service";
+import { searchService } from "@/services/search.service";
 import { 
   SearchSuggestionItem, 
   SearchSuggestionsData, 
   SearchSuggestionType 
 } from "@/types/search-suggestion.types";
 import { useLocale } from "next-intl";
-import type { Location, Tour } from "@/types";
-
-export function extractItems<T>(payload: unknown): T[] {
-  if (Array.isArray(payload)) return payload as T[];
-
-  if (
-    payload &&
-    typeof payload === "object" &&
-    "data" in payload &&
-    Array.isArray((payload as { data?: unknown }).data)
-  ) {
-    return (payload as { data: T[] }).data;
-  }
-
-  return [];
-}
+import { extractItems } from "@/features/search/hooks/use-search";
 
 export const useSearchSuggestions = (query: string, type: string) => {
   const locale = useLocale();
@@ -35,70 +19,80 @@ export const useSearchSuggestions = (query: string, type: string) => {
     queryFn: async () => {
       const q = debouncedQuery.trim();
       
-      // Determine what to fetch based on type
-      const fetchLocations = type === "all" || type === "location";
-      const fetchTours = type === "all" || type === "tour";
-      const limit = type === "all" ? 5 : 8;
+      const res = await searchService.getSuggestions(q, 5);
+      const items = extractItems<Record<string, unknown> | string>(res.data);
 
-      const [locationsRes, toursRes] = await Promise.all([
-        fetchLocations 
-          ? locationService.getAll({ 
-              q, 
-              per_page: limit,
-              sort: "view_count",
-              order: "desc"
-            }) 
-          : Promise.resolve({ data: [] }),
-        fetchTours 
-          ? tourService.getAll({ 
-              q, 
-              per_page: limit,
-              sort: "booking_count",
-              order: "desc"
-            }) 
-          : Promise.resolve({ data: [] })
-      ]);
-
-      const locationItems = extractItems<Location>(locationsRes.data);
-      const tourItems = extractItems<Tour>(toursRes.data);
-
-      const locations: SearchSuggestionItem[] = locationItems
-        .map(loc => ({
-          id: loc.id,
+      // Backend có thể trả mảng chuỗi (từ khóa) thay vì entity
+      if (items.length > 0 && typeof items[0] === "string") {
+        const strings = items as string[];
+        const mapped = strings.map((title, i) => ({
+          id: -(i + 1),
           type: "location" as SearchSuggestionType,
-          title: loc.name,
-          slug: loc.slug,
-          subtitle: loc.address,
-          thumbnail: loc.thumbnail,
-          rating: parseFloat(loc.avg_rating || "0"),
-          reviewCount: loc.review_count,
-          viewCount: loc.view_count
-        }))
-        .sort((a, b) => b.viewCount - a.viewCount); // Stable sort fallback
+          title,
+          slug: "",
+          subtitle: "",
+          thumbnail: null as string | null,
+          rating: 0,
+          reviewCount: 0,
+          viewCount: 0,
+        }));
 
-      const tours: SearchSuggestionItem[] = tourItems
-        .map(tour => ({
-          id: tour.id,
+        let locations: SearchSuggestionItem[] = [];
+        let tours: SearchSuggestionItem[] = [];
+        if (type === "location") locations = mapped;
+        else if (type === "tour") {
+          tours = mapped.map((m) => ({ ...m, type: "tour" as SearchSuggestionType }));
+        } else {
+          const half = Math.ceil(mapped.length / 2);
+          locations = mapped.slice(0, half);
+          tours = mapped.slice(half).map((m) => ({ ...m, type: "tour" as SearchSuggestionType }));
+        }
+
+        return {
+          locations,
+          tours,
+          total: locations.length + tours.length,
+        };
+      }
+
+      const locations: SearchSuggestionItem[] = items
+        .filter((item): item is Record<string, unknown> => typeof item === "object" && item !== null && (item as { type?: string }).type === "location")
+        .map((loc) => ({
+          id: Number(loc.id),
+          type: "location" as SearchSuggestionType,
+          title: String(loc.name ?? ""),
+          slug: String(loc.slug ?? ""),
+          subtitle: String(loc.address ?? ""),
+          thumbnail: (loc.thumbnail as string | null) ?? null,
+          rating: parseFloat(String(loc.avg_rating ?? "0")),
+          reviewCount: Number(loc.review_count ?? 0),
+          viewCount: Number(loc.view_count ?? 0),
+        }));
+
+      const tours: SearchSuggestionItem[] = items
+        .filter((item): item is Record<string, unknown> => typeof item === "object" && item !== null && (item as { type?: string }).type === "tour")
+        .map((tour) => ({
+          id: Number(tour.id),
           type: "tour" as SearchSuggestionType,
-          title: tour.name,
-          slug: tour.slug,
-          subtitle: `${new Intl.NumberFormat(locale === 'vi' ? 'vi-VN' : 'en-US', { 
-            style: 'currency', 
-            currency: locale === 'vi' ? 'VND' : 'USD',
-            maximumFractionDigits: 0
-          }).format(parseFloat(tour.price_adult || "0"))}`,
-          thumbnail: tour.thumbnail,
-          rating: parseFloat(tour.avg_rating || "0"),
-          reviewCount: tour.review_count,
-          viewCount: tour.view_count,
-          bookingCount: tour.booking_count
+          title: String(tour.name ?? ""),
+          slug: String(tour.slug ?? ""),
+          subtitle: `${new Intl.NumberFormat(locale === "vi" ? "vi-VN" : "en-US", {
+            style: "currency",
+            currency: locale === "vi" ? "VND" : "USD",
+            maximumFractionDigits: 0,
+          }).format(parseFloat(String(tour.price_adult ?? "0")))}`,
+          thumbnail: (tour.thumbnail as string | null) ?? null,
+          rating: parseFloat(String(tour.avg_rating ?? "0")),
+          reviewCount: Number(tour.review_count ?? 0),
+          viewCount: Number(tour.view_count ?? 0),
+          bookingCount: Number(tour.booking_count ?? 0),
         }))
-        .sort((a, b) => (b.bookingCount || 0) - (a.bookingCount || 0)); // Stable sort fallback
+        .sort((a, b) => (b.bookingCount || 0) - (a.bookingCount || 0));
 
       return {
         locations,
         tours,
-        total: locations.length + tours.length
+        total: locations.length + tours.length,
       };
     },
     enabled: isEnabled,
