@@ -87,7 +87,7 @@ const HotTours = () => {
                     </span>
                   </div>
                   <Link
-                  href={`${ROUTES.TOURS}/${tour.slug}` as string & {}}
+                  href={`${ROUTES.TOURS}?q=${encodeURIComponent(tour.name)}` as string & {}}
                     className="w-12 h-12 bg-surface-container text-azure rounded-full flex items-center justify-center hover:bg-azure hover:text-white transition-all duration-500 shadow-sm"
                   >
                     <span className="text-xl font-bold">→</span>

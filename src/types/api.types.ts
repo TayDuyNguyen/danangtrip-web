@@ -20,10 +20,14 @@ export interface PaginationParams {
 
 export interface PaginatedResponse<T> {
   data: T[];
-  total: number;
   current_page: number;
-  per_page: number;
   last_page: number;
+  per_page: number;
+  total: number;
+  next_page_url: string | null;
+  prev_page_url: string | null;
+  first_page_url: string | null;
+  last_page_url: string | null;
 }
 
 export type RequestMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";

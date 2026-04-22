@@ -7,7 +7,7 @@ import {
   SearchSuggestionType 
 } from "@/types/search-suggestion.types";
 import { useLocale } from "next-intl";
-import { extractItems } from "@/features/search/hooks/use-search";
+import { extractItems } from "@/utils";
 
 export const useSearchSuggestions = (query: string, type: string) => {
   const locale = useLocale();
@@ -87,7 +87,7 @@ export const useSearchSuggestions = (query: string, type: string) => {
           viewCount: Number(tour.view_count ?? 0),
           bookingCount: Number(tour.booking_count ?? 0),
         }))
-        .sort((a, b) => (b.bookingCount || 0) - (a.bookingCount || 0));
+        .sort((a: SearchSuggestionItem, b: SearchSuggestionItem) => (b.bookingCount || 0) - (a.bookingCount || 0));
 
       return {
         locations,

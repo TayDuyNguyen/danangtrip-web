@@ -1,9 +1,9 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
-import Cookies from "js-cookie";
 import { toast } from "sonner";
 import { config } from "@/config";
 import { useAuthStore } from "@/store/auth.store";
 import type { ApiResponse } from "@/types";
+import { clearTokens, getAccessToken, setAccessToken } from "@/utils/auth.helper";
 
 /**
  * Enhanced Axios instance with cookie-based auth and standardized ApiResponse contract.
@@ -47,14 +47,6 @@ const processQueue = (error: Error | null, token: string | null = null) => {
   failedQueue = [];
 };
 
-const getAccessToken = () => {
-  if (typeof window === "undefined") {
-    return null;
-  }
-
-  return Cookies.get("token") || localStorage.getItem("token");
-};
-
 const handleLogout = () => {
   if (isRedirecting || typeof window === "undefined") {
     return;
@@ -62,8 +54,7 @@ const handleLogout = () => {
 
   isRedirecting = true;
 
-  Cookies.remove("token", { path: "/" });
-  localStorage.removeItem("token");
+  clearTokens();
   useAuthStore.getState().logout();
 
   const isEnglishPath = window.location.pathname.startsWith("/en");
@@ -218,7 +209,12 @@ axiosInstance.interceptors.response.use(
           throw new Error("Refresh failed");
         }
 
-        Cookies.set("token", newToken, { expires: 7, path: "/" });
+        setAccessToken(newToken);
+        useAuthStore.setState((state) => ({
+          ...state,
+          token: newToken,
+          isAuthenticated: true,
+        }));
         processQueue(null, newToken);
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return axiosInstance(originalRequest);

@@ -104,7 +104,7 @@ const Header = () => {
                 <div className="px-4 py-2 border-b border-gray-50 mb-1">
                   <p className="text-xs text-gray-500">{t("auth.profile")}</p>
                   <p className="text-sm font-bold truncate text-gray-900">
-                    {user?.name || "User"}
+                    {user?.name || t("auth.profile")}
                   </p>
                 </div>
                 <Link

@@ -4,16 +4,17 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { 
   IoCloseOutline, 
-  IoStar, 
-  IoCheckmarkCircle
+  IoStar
 } from "react-icons/io5";
 import { SearchFilters } from "../types/search.types";
 import { cn } from "@/utils/string";
 import { tourService } from "@/services/tour.service";
-import axiosInstance from "@/lib/axios";
-import { API_ENDPOINTS } from "@/config";
-import type { ApiResponse } from "@/types";
+import { locationService } from "@/services/location.service";
+import { DANANG_DISTRICTS } from "@/utils/constants";
+import { extractItems } from "@/utils";
+import { Select } from "@/components/ui/Select";
 import type { Category } from "@/types";
+
 interface SearchFiltersSheetProps {
   isOpen: boolean;
   onClose: () => void;
@@ -40,16 +41,12 @@ export const SearchFiltersSheet = ({
       setIsLoadingCats(true);
       try {
         if (searchType === "location") {
-          const res = await axiosInstance.get<ApiResponse<Category[]>>(
-            API_ENDPOINTS.LOCATIONS.CATEGORIES
-          );
-          const raw = res.data;
-          const list = Array.isArray(raw) ? raw : [];
+          const res = await locationService.getCategories();
+          const list = extractItems<Category>(res.data);
           setCategories(list.map((c) => ({ id: c.id, name: c.name })));
         } else {
           const res = await tourService.getCategories();
-          const raw = res.data;
-          const list = Array.isArray(raw) ? raw : [];
+          const list = extractItems<Category>(res.data);
           setCategories(list.map((c) => ({ id: c.id, name: c.name })));
         }
       } catch (err) {
@@ -76,11 +73,23 @@ export const SearchFiltersSheet = ({
     });
   };
 
-  const toggleCategory = (id: number) => {
-    setLocalFilters(prev => ({
-      ...prev,
-      category: prev.category === id ? undefined : id
-    }));
+  // Helper to get rating styles and avoid IDE class conflicts
+  const getRatingStyles = (isActive: boolean) => {
+    const activeBg = "bg-linear-to-r from-azure to-azure-dark shadow-xl shadow-azure/30";
+    const inactiveBg = "bg-surface-container-low/40 backdrop-blur-sm hover:bg-surface-container-low";
+    
+    const activeBorder = "border-azure";
+    const inactiveBorder = "border-outline-variant/10 hover:border-outline-variant/30";
+    
+    const activeText = "text-white";
+    const inactiveText = "text-on-surface-variant";
+
+    return cn(
+      "group flex items-center gap-3 px-6 py-4 rounded-2xl font-black transition-all duration-500 scale-100 active:scale-90 border-2",
+      isActive ? activeBg : inactiveBg,
+      isActive ? activeBorder : inactiveBorder,
+      isActive ? activeText : inactiveText
+    );
   };
 
   if (!isOpen) return null;
@@ -111,84 +120,59 @@ export const SearchFiltersSheet = ({
           
           {/* Categories */}
           <div className="space-y-6">
-            <h3 className="text-[13px] font-black text-on-surface-variant uppercase tracking-widest flex items-center justify-between">
+            <h3 className="text-[11px] font-black text-on-surface-variant/50 uppercase tracking-[0.3em] pl-1">
               {t("filters.category")}
               {localFilters.category && (
-                 <button onClick={() => setLocalFilters(p => ({...p, category: undefined}))} className="text-azure normal-case text-xs">
+                 <button onClick={() => setLocalFilters(p => ({...p, category: undefined}))} className="text-azure normal-case text-xs ml-auto">
                    {t("filters.reset")}
                  </button>
               )}
             </h3>
-            <div className="grid grid-cols-1 gap-3">
-              {isLoadingCats ? (
-                Array(4).fill(0).map((_, i) => (
-                  <div key={i} className="h-12 bg-surface-container-low rounded-2xl animate-pulse" />
-                ))
-              ) : (
-                categories.map((cat) => (
-                  <button
-                    key={cat.id}
-                    onClick={() => toggleCategory(cat.id)}
-                    className={cn(
-                      "flex items-center justify-between px-5 py-3.5 rounded-2xl border-2 transition-all duration-300 transform active:scale-95",
-                      localFilters.category === cat.id 
-                        ? "border-azure bg-azure/5 text-azure" 
-                        : "border-surface-container-high text-on-surface hover:border-on-surface-subtle"
-                    )}
-                  >
-                    <span className="font-bold">{cat.name}</span>
-                    {localFilters.category === cat.id && <IoCheckmarkCircle className="text-xl" />}
-                  </button>
-                ))
-              )}
+            <div className="space-y-4">
+              <Select
+                label={t("filters.category")}
+                options={categories.map(cat => ({ value: cat.id, label: cat.name }))}
+                value={localFilters.category ? { value: localFilters.category, label: categories.find(c => c.id === localFilters.category)?.name || "" } : null}
+                onChange={(option) => setLocalFilters(p => ({ ...p, category: option ? (option as { value: number }).value : undefined }))}
+                isClearable
+                isLoading={isLoadingCats}
+                placeholder={t("filters.category")}
+              />
             </div>
           </div>
 
           {/* District — áp dụng khi tìm địa điểm (hoặc tab Tất cả) */}
           {(searchType === "location" || searchType === "all") && (
             <div className="space-y-6">
-              <h3 className="text-[13px] font-black text-on-surface-variant uppercase tracking-widest">{t("filters.district")}</h3>
-              <div className="grid grid-cols-2 gap-2">
-                {[
-                  "Hải Châu", "Thanh Khê", "Liên Chiểu", 
-                  "Sơn Trà", "Ngũ Hành Sơn", "Cẩm Lệ", 
-                  "Hòa Vang"
-                ].map((d) => (
-                  <button
-                    key={d}
-                    onClick={() => setLocalFilters(prev => ({ ...prev, district: prev.district === d ? undefined : d }))}
-                    className={cn(
-                      "flex items-center justify-between px-4 py-3 rounded-2xl border-2 transition-all duration-300",
-                      localFilters.district === d 
-                        ? "border-azure bg-azure/5 text-azure" 
-                        : "border-surface-container-high text-on-surface hover:border-on-surface-subtle"
-                    )}
-                  >
-                    <span className="font-bold text-sm">{d}</span>
-                    {localFilters.district === d && <IoCheckmarkCircle className="text-lg" />}
-                  </button>
-                ))}
-              </div>
+              <h3 className="text-[11px] font-black text-on-surface-variant/50 uppercase tracking-[0.3em] pl-1">{t("filters.district")}</h3>
+              <Select
+                label={t("filters.district")}
+                options={DANANG_DISTRICTS.map(d => ({ value: d.id, label: d.name }))}
+                value={localFilters.district ? { value: DANANG_DISTRICTS.find(d => d.name === localFilters.district)?.id || "", label: localFilters.district } : null}
+                onChange={(option) => setLocalFilters(prev => ({ ...prev, district: option ? (option as { label: string }).label : undefined }))}
+                isClearable
+                placeholder={t("filters.district")}
+              />
             </div>
           )}
 
           {/* Rating */}
           <div className="space-y-6">
-            <h3 className="text-[13px] font-black text-on-surface-variant uppercase tracking-widest">{t("filters.rating")}</h3>
-            <div className="flex flex-wrap gap-2">
+            <h3 className="text-[11px] font-black text-on-surface-variant/50 uppercase tracking-[0.3em] pl-1">
+              {t("filters.rating")}
+            </h3>
+            <div className="flex flex-wrap gap-3">
               {[5, 4, 3, 2, 1].map((star) => (
                 <button
                   key={star}
                   onClick={() => setLocalFilters(prev => ({ ...prev, rating: prev.rating === star ? undefined : star }))}
-                  className={cn(
-                    "flex items-center gap-2 px-5 py-3 rounded-2xl border-2 transition-all duration-300",
-                    localFilters.rating === star 
-                      ? "border-azure bg-azure text-white" 
-                      : "border-surface-container-high text-on-surface-variant hover:border-on-surface-subtle"
-                  )}
+                  className={getRatingStyles(localFilters.rating === star)}
                 >
-                  <span className="font-bold">{star}</span>
-                  <IoStar className={localFilters.rating === star ? "text-white" : "text-amber-500"} />
+                  <span className="text-lg leading-none">{star}</span>
+                  <IoStar className={cn(
+                    "text-lg transition-transform duration-500 group-hover:scale-125",
+                    localFilters.rating === star ? "text-white" : "text-amber-500"
+                  )} />
                 </button>
               ))}
             </div>
@@ -196,32 +180,38 @@ export const SearchFiltersSheet = ({
 
           {/* Price Range */}
           <div className="space-y-6">
-            <h3 className="text-[13px] font-black text-on-surface-variant uppercase tracking-widest">{t("filters.price_range")}</h3>
+            <h3 className="text-[11px] font-black text-on-surface-variant/50 uppercase tracking-[0.3em] pl-1">
+              {t("filters.price_range")}
+            </h3>
             <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-on-surface-subtle ml-2">{t("filters.from")}</label>
-                <div className="relative">
+              <div className="space-y-3">
+                <label className="text-[11px] font-black uppercase tracking-widest text-on-surface-variant/60 ml-1">
+                  {t("filters.from")}
+                </label>
+                <div className="relative group">
                   <input
                     type="number"
                     value={localFilters.minPrice || ""}
                     onChange={(e) => setLocalFilters(prev => ({ ...prev, minPrice: Number(e.target.value) || undefined }))}
                     placeholder="0"
-                    className="w-full bg-surface-container-low border-none rounded-2xl py-4 px-6 font-bold text-foreground outline-none focus:ring-2 focus:ring-azure/20 transition-all"
+                    className="w-full bg-surface-container-low/40 backdrop-blur-sm border-2 border-outline-variant/10 rounded-2xl py-5 px-6 font-bold text-foreground outline-none focus:border-azure/50 focus:ring-4 focus:ring-azure/5 transition-all placeholder:text-on-surface-variant/30"
                   />
-                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-subtle text-xs font-bold">đ</span>
+                  <span className="absolute right-5 top-1/2 -translate-y-1/2 text-on-surface-subtle font-black text-xs">đ</span>
                 </div>
               </div>
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-on-surface-subtle ml-2">{t("filters.to")}</label>
-                <div className="relative">
+              <div className="space-y-3">
+                <label className="text-[11px] font-black uppercase tracking-widest text-on-surface-variant/60 ml-1">
+                  {t("filters.to")}
+                </label>
+                <div className="relative group">
                   <input
                     type="number"
                     value={localFilters.maxPrice || ""}
                     onChange={(e) => setLocalFilters(prev => ({ ...prev, maxPrice: Number(e.target.value) || undefined }))}
-                    placeholder="10,000,000+"
-                    className="w-full bg-surface-container-low border-none rounded-2xl py-4 px-6 font-bold text-foreground outline-none focus:ring-2 focus:ring-azure/20 transition-all"
+                    placeholder="10M+"
+                    className="w-full bg-surface-container-low/40 backdrop-blur-sm border-2 border-outline-variant/10 rounded-2xl py-5 px-6 font-bold text-foreground outline-none focus:border-azure/50 focus:ring-4 focus:ring-azure/5 transition-all placeholder:text-on-surface-variant/30"
                   />
-                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-subtle text-xs font-bold">đ</span>
+                  <span className="absolute right-5 top-1/2 -translate-y-1/2 text-on-surface-subtle font-black text-xs">đ</span>
                 </div>
               </div>
             </div>

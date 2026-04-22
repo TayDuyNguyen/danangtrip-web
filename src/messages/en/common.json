@@ -25,6 +25,7 @@
     "select_placeholder": "Select..."
   },
   "accessibility": {
+    "close": "Close",
     "close_menu": "Close menu",
     "open_menu": "Open menu",
     "previous": "Previous",

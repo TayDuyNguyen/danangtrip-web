@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { searchService } from "@/services/search.service";
@@ -9,19 +10,7 @@ import {
 } from "../types/search.types";
 import { mapSearchStateToParams } from "../utils/search-mapper";
 import type { Tour, Location } from "@/types";
-
-export function extractItems<T>(payload: unknown): T[] {
-  if (Array.isArray(payload)) return payload as T[];
-  if (
-    payload &&
-    typeof payload === "object" &&
-    "data" in payload &&
-    Array.isArray((payload as { data: unknown }).data)
-  ) {
-    return (payload as { data: T[] }).data;
-  }
-  return [];
-}
+import { extractItems } from "@/utils";
 
 export const useSearch = (params: SearchState) => {
   const { q, type } = params;
@@ -30,7 +19,7 @@ export const useSearch = (params: SearchState) => {
   const { data: searchData, isLoading } = useQuery({
     queryKey: ["search", params],
     queryFn: async () => {
-      // Parallel fetch for 'all' or single fetch for specific type
+      // ... same logic
       const fetches = [];
       
       if (type === "all" || type === "tour") {
@@ -56,16 +45,16 @@ export const useSearch = (params: SearchState) => {
           fetchType === "location" ? (extractItems<Location>(payload) as Location[]) : [];
 
         if (fetchType === "tour") {
-          tourCount = payload?.meta?.total ?? tourItems.length;
+          tourCount = payload?.total ?? tourItems.length;
           const transformedTours: TourSearchResult[] = tourItems.map((tour) => ({
             id: tour.id,
             type: "tour" as const,
             title: tour.name,
             slug: tour.slug,
             thumbnail: tour.thumbnail,
-            rating: parseFloat(tour.avg_rating),
+            rating: parseFloat(String(tour.avg_rating ?? 0)),
             reviewCount: tour.review_count,
-            price: parseFloat(tour.price_adult),
+            price: parseFloat(String(tour.price_adult ?? 0)),
             duration: tour.duration,
             categoryName: t("search_type_tour"),
             bookingCount: tour.booking_count,
@@ -74,14 +63,14 @@ export const useSearch = (params: SearchState) => {
           }));
           allItems = [...allItems, ...transformedTours];
         } else {
-          locationCount = payload?.meta?.total ?? locationItems.length;
+          locationCount = payload?.total ?? locationItems.length;
           const transformedLocations: LocationSearchResult[] = locationItems.map((loc) => ({
             id: loc.id,
             type: "location" as const,
             title: loc.name,
             slug: loc.slug,
             thumbnail: loc.thumbnail,
-            rating: parseFloat(loc.avg_rating),
+            rating: parseFloat(String(loc.avg_rating ?? 0)),
             reviewCount: loc.review_count,
             categoryName: t("search_type_location"),
             priceLevel: loc.price_level || 1,
@@ -94,7 +83,6 @@ export const useSearch = (params: SearchState) => {
         }
       });
 
-      // If 'all', sort combined results by relevance/featured then popularity
       if (type === "all") {
         allItems.sort((a, b) => {
           if (a.featured && !b.featured) return -1;
@@ -117,19 +105,18 @@ export const useSearch = (params: SearchState) => {
           tour: tourCount,
           location: locationCount
         },
-        meta: results[0]?.data?.meta,
+        meta: type === "all" ? undefined : results[0]?.data,
       };
     },
-    // Only enabled if we have a query or some filters active
-    enabled: !!(q.trim() || Object.values(params.filters).some(v => v !== undefined)),
+    enabled: !!q.trim(),
     staleTime: 1000 * 60 * 5,
   });
 
-  return {
+  return useMemo(() => ({
     results: searchData?.items || [],
     isLoading,
     counts: searchData?.counts || { all: 0, tour: 0, location: 0 },
     meta: searchData?.meta,
-  };
+  }), [searchData, isLoading]);
 };
 

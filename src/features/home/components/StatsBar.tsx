@@ -18,17 +18,17 @@ const StatsBar = () => {
   const statItems = [
     {
       label: t("home.stats.locations"),
-      value: stats ? `${stats.total_locations}+` : "150+",
+      value: stats ? `${stats.total_locations}+` : "—",
       icon: <IoLocationOutline className="text-2xl text-[#3B82F6]" />
     },
     {
       label: t("home.stats.tours"),
-      value: stats ? `${stats.total_tours}+` : "40+",
+      value: stats ? `${stats.total_tours}+` : "—",
       icon: <IoMapOutline className="text-2xl text-[#10B981]" />
     },
     {
       label: t("home.stats.blog_posts"),
-      value: stats ? `${stats.total_blog_posts}+` : "200+",
+      value: stats ? `${stats.total_blog_posts}+` : "—",
       icon: <IoNewspaperOutline className="text-2xl text-[#F59E0B]" />
     },
   ];

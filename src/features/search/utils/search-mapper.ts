@@ -32,18 +32,22 @@ export const mapSearchStateToParams = (state: SearchState, targetType?: SearchRe
   
   const sortParams = mapSortParams(sort, activeType);
   
-  return {
-    q,
+  const params: SearchRequestParams = {
     type: activeType,
     district: filters.district,
     price_min: filters.minPrice,
     price_max: filters.maxPrice,
-    // Logic for category split
     category_id: activeType === "location" ? filters.category : undefined,
     tour_category_id: activeType === "tour" ? filters.category : undefined,
     ...sortParams,
     page: page || 1,
-    per_page: 12, // Standardize on 12 for UI grid
+    per_page: 12,
     session_id: getOrCreateSessionId(),
   };
+
+  if (q && q.trim()) {
+    params.q = q.trim();
+  }
+
+  return params;
 };

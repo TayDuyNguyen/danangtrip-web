@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { tourService } from "@/services/tour.service";
 import type { Tour, TourCategory } from "@/types";
 import { shouldRetryQuery } from "@/lib/react-query";
+import { extractItems } from "@/utils";
 
 export const useTours = () => {
   // 1. Query for Featured Tours
@@ -11,8 +12,7 @@ export const useTours = () => {
     queryKey: ["home", "tours", "featured"],
     queryFn: async () => {
       const res = await tourService.getFeatured(8);
-      if (res.success && res.data) return res.data;
-      throw res;
+      return extractItems<Tour>(res.data);
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
     retry: shouldRetryQuery,
@@ -23,8 +23,7 @@ export const useTours = () => {
     queryKey: ["home", "tours", "hot"],
     queryFn: async () => {
       const res = await tourService.getHot(8);
-      if (res.success && res.data) return res.data;
-      throw res;
+      return extractItems<Tour>(res.data);
     },
     staleTime: 5 * 60 * 1000,
     retry: shouldRetryQuery,
@@ -35,8 +34,7 @@ export const useTours = () => {
     queryKey: ["home", "tours", "categories"],
     queryFn: async () => {
       const res = await tourService.getCategories();
-      if (res.success && res.data) return res.data;
-      throw res;
+      return extractItems<TourCategory>(res.data);
     },
     staleTime: 10 * 60 * 1000, // 10 minutes
     retry: shouldRetryQuery,

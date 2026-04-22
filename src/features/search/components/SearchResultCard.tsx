@@ -5,6 +5,7 @@ import { Link } from "@/i18n/navigation";
 import { useTranslations, useLocale } from "next-intl";
 import { IoStar, IoLocationOutline, IoTimeOutline, IoChevronForward } from "react-icons/io5";
 import { cn } from "@/utils/string";
+import { ROUTES } from "@/config";
 import { SearchResult, TourSearchResult, LocationSearchResult } from "../types/search.types";
 
 interface SearchResultCardProps {
@@ -18,7 +19,7 @@ export const SearchResultCard = ({ item, isLoading, featured, index }: SearchRes
   const t = useTranslations();
   const locale = useLocale();
   const isTour = item?.type === "tour";
-  const url = isTour ? `/tours/${item?.slug}` : `/locations/${item?.slug}`;
+  const url = `${ROUTES.SEARCH}?q=${encodeURIComponent(item?.title || "")}&type=${isTour ? "tour" : "location"}`;
 
   // Use variables for heights to avoid tailwind-intellisense conflicts in ternary
   const skeletonHeightClass = featured ? "h-[240px] md:h-auto" : "h-[200px]";
