@@ -32,6 +32,7 @@ export const STORAGE_KEYS = {
   THEME: "theme",
   LANGUAGE: "language",
   SIDEBAR_COLLAPSED: "sidebar_collapsed",
+  SEARCH_SESSION_ID: "search_session_id",
 } as const;
 
 // Cookie Keys

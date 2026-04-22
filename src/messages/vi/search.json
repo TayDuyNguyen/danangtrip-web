@@ -8,12 +8,15 @@
     "location": "Địa điểm"
   },
   "filters": {
-    "title": "Bộ lọc",
+    "title": "Bộ lọc nâng cao",
     "price_range": "Khoảng giá",
     "rating": "Đánh giá",
     "category": "Danh mục",
+    "district": "Quận/Huyện",
     "apply": "Áp dụng",
-    "reset": "Đặt lại"
+    "reset": "Đặt lại",
+    "from": "Từ",
+    "to": "Đến"
   },
   "sort": {
     "label": "Sắp xếp theo",
@@ -58,6 +61,7 @@
     "min_chars": "Nhập ít nhất 2 ký tự để tìm gợi ý",
     "error": "Không tải được gợi ý, vui lòng thử lại",
     "views": "{count} lượt xem",
-    "bookings": "{count} đặt"
+    "bookings": "{count} đặt",
+    "search_placeholder": "Nhập từ khóa tìm kiếm..."
   }
 }

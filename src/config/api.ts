@@ -35,4 +35,10 @@ export const API_ENDPOINTS = {
     DETAIL: (slug: string) => `/blog/${slug}`,
   },
   CONFIG: "/config",
+  SEARCH: {
+    LIST: "/search",
+    SUGGESTIONS: "/search/suggestions",
+    POPULAR: "/search/popular",
+    TRENDING: "/search/trending",
+  },
 };
