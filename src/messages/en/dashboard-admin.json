@@ -1,0 +1,10 @@
+{
+  "settings": {
+    "title": "System settings",
+    "description": "This area is for dashboard configuration and admin options."
+  },
+  "users": {
+    "title": "User management",
+    "description": "User listings and admin actions will be added here."
+  }
+}

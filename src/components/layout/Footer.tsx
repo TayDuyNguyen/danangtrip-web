@@ -30,11 +30,11 @@ const Footer = () => {
     fetchConfig();
   }, []);
 
-  const socialLinks: { icon: IconType; color: string; path: string }[] = [
-    { icon: IoLogoFacebook, color: "hover:bg-[#1877F2]", path: siteConfig?.social_links?.facebook || "#" },
-    { icon: IoLogoInstagram, color: "hover:bg-[#E4405F]", path: siteConfig?.social_links?.instagram || "#" },
-    { icon: IoLogoYoutube, color: "hover:bg-[#FF0000]", path: "#" },
-    { icon: IoEarthOutline, color: "hover:bg-cyan-500", path: "#" },
+  const socialLinks: { icon: IconType; color: string; path: string | null }[] = [
+    { icon: IoLogoFacebook, color: "hover:bg-[#1877F2]", path: siteConfig?.social_links?.facebook ?? null },
+    { icon: IoLogoInstagram, color: "hover:bg-[#E4405F]", path: siteConfig?.social_links?.instagram ?? null },
+    { icon: IoLogoYoutube, color: "hover:bg-[#FF0000]", path: siteConfig?.social_links?.youtube ?? null },
+    { icon: IoEarthOutline, color: "hover:bg-cyan-500", path: siteConfig?.social_links?.website ?? ROUTES.CONTACT },
   ];
 
   return (
@@ -59,11 +59,25 @@ const Footer = () => {
             <div className="flex items-center justify-center md:justify-start gap-4">
               {socialLinks.map((social, idx) => {
                 const IconComponent = social.icon;
+                const baseClass = `w-10 h-10 rounded-xl bg-gray-800/50 border border-white/5 flex items-center justify-center text-xl transition-all duration-300 ${social.color} text-gray-400`;
+                if (!social.path) {
+                  return (
+                    <span
+                      key={idx}
+                      className={`${baseClass} opacity-40 cursor-not-allowed`}
+                      aria-hidden
+                    >
+                      <IconComponent className="w-5 h-5" />
+                    </span>
+                  );
+                }
                 return (
                   <a
                     key={idx}
                     href={social.path}
-                    className={`w-10 h-10 rounded-xl bg-gray-800/50 border border-white/5 flex items-center justify-center text-xl transition-all duration-300 hover:scale-110 active:scale-95 ${social.color} hover:text-white text-gray-400`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`${baseClass} hover:scale-110 active:scale-95 hover:text-white`}
                   >
                     <IconComponent className="w-5 h-5" />
                   </a>
@@ -99,9 +113,9 @@ const Footer = () => {
             </h4>
             <ul className="space-y-4">
               <li><Link href={ROUTES.CONTACT} className="text-gray-400 hover:text-cyan-400 transition-all duration-300 text-sm">{t("footer.contact")}</Link></li>
-              <li><Link href="#" className="text-gray-400 hover:text-cyan-400 transition-all duration-300 text-sm">{t("footer.support")}</Link></li>
-              <li><Link href="#" className="text-gray-400 hover:text-cyan-400 transition-all duration-300 text-sm">{t("footer.terms")}</Link></li>
-              <li><Link href="#" className="text-gray-400 hover:text-cyan-400 transition-all duration-300 text-sm">{t("footer.privacy")}</Link></li>
+              <li><Link href={ROUTES.CONTACT} className="text-gray-400 hover:text-cyan-400 transition-all duration-300 text-sm">{t("footer.support")}</Link></li>
+              <li><span className="text-gray-500 text-sm block">{t("footer.terms")} — {t("footer.coming_soon")}</span></li>
+              <li><span className="text-gray-500 text-sm block">{t("footer.privacy")} — {t("footer.coming_soon")}</span></li>
             </ul>
           </div>
 

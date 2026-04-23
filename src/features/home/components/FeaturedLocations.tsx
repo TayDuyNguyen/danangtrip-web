@@ -12,17 +12,15 @@ import {
   IoHeartOutline,
   IoHeart
 } from "react-icons/io5";
-import { favoriteService } from "@/services/favorite.service";
-import { useAuthStore } from "@/store/auth.store";
-import { toast } from "sonner";
 import { useLocations } from "../hooks/use-locations";
+import { useAddFavoriteLocation } from "../hooks/use-add-favorite-location";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 
 const FeaturedLocations = () => {
   const [activeCategoryId, setActiveCategoryId] = useState<number | undefined>(undefined);
   const { featuredLocations: locations, categories, isLoading, isFetching } = useLocations(activeCategoryId);
-  const { isAuthenticated } = useAuthStore();
   const t = useTranslations();
+  const { mutateAsync: addFavorite } = useAddFavoriteLocation();
   const { elementRef, isVisible } = useScrollReveal(0.1);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showLeftBtn, setShowLeftBtn] = useState(false);
@@ -54,21 +52,10 @@ const FeaturedLocations = () => {
   const handleFavoriteClick = async (e: React.MouseEvent, locId: number) => {
     e.preventDefault();
     e.stopPropagation();
-
-    if (!isAuthenticated) {
-      toast.error(t("common.favorite.login_required"));
-      return;
-    }
-
     try {
-      const res = await favoriteService.addFavorite(locId);
-      if (res.success) {
-        toast.success(t("common.favorite.add_success"));
-      } else {
-        toast.error(res.message || t("common.favorite.error"));
-      }
+      await addFavorite(locId);
     } catch {
-      toast.error(t("common.favorite.error"));
+      /* toasts handled in mutation */
     }
   };
 

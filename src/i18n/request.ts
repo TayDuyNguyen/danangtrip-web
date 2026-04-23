@@ -12,6 +12,7 @@ import viLocations from "../messages/vi/locations.json";
 import viContact from "../messages/vi/contact.json";
 import viBlog from "../messages/vi/blog.json";
 import viSettings from "../messages/vi/settings.json";
+import viDashboardAdmin from "../messages/vi/dashboard-admin.json";
 
 import enCommon from "../messages/en/common.json";
 import enHome from "../messages/en/home.json";
@@ -23,6 +24,7 @@ import enLocations from "../messages/en/locations.json";
 import enContact from "../messages/en/contact.json";
 import enBlog from "../messages/en/blog.json";
 import enSettings from "../messages/en/settings.json";
+import enDashboardAdmin from "../messages/en/dashboard-admin.json";
 
 const messagesByLocale = {
   vi: {
@@ -36,6 +38,7 @@ const messagesByLocale = {
     contact: viContact,
     blog: viBlog,
     settings: viSettings,
+    dashboardAdmin: viDashboardAdmin,
   },
   en: {
     common: enCommon,
@@ -48,6 +51,7 @@ const messagesByLocale = {
     contact: enContact,
     blog: enBlog,
     settings: enSettings,
+    dashboardAdmin: enDashboardAdmin,
   },
 } as const satisfies Record<
   "vi" | "en",
@@ -61,7 +65,8 @@ const messagesByLocale = {
     | "locations"
     | "contact"
     | "blog"
-    | "settings",
+    | "settings"
+    | "dashboardAdmin",
     Record<string, unknown>
   >
 >;

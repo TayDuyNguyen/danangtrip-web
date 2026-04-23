@@ -1,0 +1,10 @@
+{
+  "settings": {
+    "title": "Cài đặt hệ thống",
+    "description": "Khu vực này dành cho cấu hình dashboard và các tùy chọn quản trị."
+  },
+  "users": {
+    "title": "Quản lý người dùng",
+    "description": "Danh sách người dùng và thao tác quản trị sẽ được bổ sung tại đây."
+  }
+}
