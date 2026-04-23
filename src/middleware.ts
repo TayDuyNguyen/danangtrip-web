@@ -11,8 +11,8 @@ export const runtime = "experimental-edge";
 
 const i18nMiddleware = createMiddleware(routing);
 
-const protectedRoutes = ["/profile", "/bookings", "/settings"];
-const authRoutes = ["/login", "/register", "/forgot-password"];
+const protectedRoutes = ["/profile", "/settings"];
+const authRoutes = ["/login", "/register"];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;

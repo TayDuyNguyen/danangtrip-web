@@ -4,15 +4,12 @@ import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
-import { useQuery } from "@tanstack/react-query";
-import { tourService } from "@/services/tour.service";
-import { locationService } from "@/services/location.service";
-import type { Tour, Location } from "@/types";
 import { SearchTabs } from "./SearchTabs";
 import { SearchResultHeader } from "./SearchResultHeader";
 import { SearchGrid } from "./SearchGrid";
-import { SearchResultType, SearchSortOption, SearchFilters, TourSearchResult, LocationSearchResult } from "../types/search.types";
+import { SearchResultType, SearchSortOption, SearchFilters } from "../types/search.types";
 import { useSearch } from "../hooks/use-search";
+import { useSearchDiscoveryGrid } from "../hooks/use-search-discovery-grid";
 import { SearchFiltersSheet } from "./SearchFiltersSheet";
 import { Select, type SelectOption } from "@/components/ui/Select";
 import { cn } from "@/utils/string";
@@ -35,7 +32,6 @@ export const SearchResultsClient = ({ initialQuery }: SearchResultsClientProps) 
   const router = useRouter();
   const locale = useLocale();
   const tSearch = useTranslations("search");
-  const tHome = useTranslations("home");
   
   // Drawer State — nonce để remount sheet, tránh setState trong effect khi mở lại
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -117,63 +113,10 @@ export const SearchResultsClient = ({ initialQuery }: SearchResultsClientProps) 
   const totalPages = meta?.last_page || 1;
 
   /** Khi không có q, /search không chạy — lấy featured để lấp grid Khám phá (tránh grid rỗng). */
-  const { data: discoveryGridResults = [], isLoading: isDiscoveryGridLoading } = useQuery({
-    queryKey: ["search", "discovery-grid", locale],
-    queryFn: async () => {
-      const [toursRes, locsRes] = await Promise.all([
-        tourService.getFeatured(6),
-        locationService.getFeatured(6),
-      ]);
-      const tours = Array.isArray(toursRes.data) ? toursRes.data : [];
-      const locs = Array.isArray(locsRes.data) ? locsRes.data : [];
-
-      const mappedTours: TourSearchResult[] = (tours as Tour[]).map((tour) => ({
-        id: tour.id,
-        type: "tour" as const,
-        title: tour.name,
-        slug: tour.slug,
-        thumbnail: tour.thumbnail,
-        rating: parseFloat(String(tour.avg_rating ?? 0)),
-        reviewCount: tour.review_count,
-        price: parseFloat(String(tour.price_adult ?? 0)),
-        duration: tour.duration,
-        categoryName: tHome("search_type_tour"),
-        bookingCount: tour.booking_count,
-        featured: tour.is_featured || tour.is_hot,
-        originalData: tour,
-      }));
-
-      const mappedLocs: LocationSearchResult[] = (locs as Location[]).map((loc) => ({
-        id: loc.id,
-        type: "location" as const,
-        title: loc.name,
-        slug: loc.slug,
-        thumbnail: loc.thumbnail,
-        rating: parseFloat(String(loc.avg_rating ?? 0)),
-        reviewCount: loc.review_count,
-        categoryName: tHome("search_type_location"),
-        priceLevel: loc.price_level || 1,
-        address: loc.address,
-        viewCount: loc.view_count,
-        featured: loc.is_featured,
-        originalData: loc,
-      }));
-
-      const merged = [...mappedTours, ...mappedLocs];
-      merged.sort((a, b) => {
-        if (a.featured && !b.featured) return -1;
-        if (!a.featured && b.featured) return 1;
-        const scoreA =
-          a.type === "tour" ? (a as TourSearchResult).bookingCount : (a as LocationSearchResult).viewCount;
-        const scoreB =
-          b.type === "tour" ? (b as TourSearchResult).bookingCount : (b as LocationSearchResult).viewCount;
-        return scoreB - scoreA;
-      });
-      return merged;
-    },
-    enabled: !q.trim(),
-    staleTime: 1000 * 60 * 5,
-  });
+  const { data: discoveryGridResults = [], isLoading: isDiscoveryGridLoading } = useSearchDiscoveryGrid(
+    !q.trim(),
+    locale
+  );
   const sortOptions: SelectOption[] = [
     { value: "popular", label: tSearch("sort.popularity") },
     { value: "newest", label: tSearch("sort.newest") },

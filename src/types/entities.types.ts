@@ -140,5 +140,7 @@ export interface Config {
     facebook?: string;
     instagram?: string;
     twitter?: string;
+    youtube?: string;
+    website?: string;
   };
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { 
   IoCloseOutline, 
@@ -8,12 +8,9 @@ import {
 } from "react-icons/io5";
 import { SearchFilters } from "../types/search.types";
 import { cn } from "@/utils/string";
-import { tourService } from "@/services/tour.service";
-import { locationService } from "@/services/location.service";
 import { DANANG_DISTRICTS } from "@/utils/constants";
-import { extractItems } from "@/utils";
 import { Select } from "@/components/ui/Select";
-import type { Category } from "@/types";
+import { useSearchFilterCategories } from "../hooks/use-search-filter-categories";
 
 interface SearchFiltersSheetProps {
   isOpen: boolean;
@@ -32,31 +29,7 @@ export const SearchFiltersSheet = ({
 }: SearchFiltersSheetProps) => {
   const t = useTranslations("search");
   const [localFilters, setLocalFilters] = useState<SearchFilters>(initialFilters);
-  const [categories, setCategories] = useState<Array<{ id: number; name: string }>>([]);
-  const [isLoadingCats, setIsLoadingCats] = useState(false);
-
-  // Fetch categories based on type
-  useEffect(() => {
-    const fetchCats = async () => {
-      setIsLoadingCats(true);
-      try {
-        if (searchType === "location") {
-          const res = await locationService.getCategories();
-          const list = extractItems<Category>(res.data);
-          setCategories(list.map((c) => ({ id: c.id, name: c.name })));
-        } else {
-          const res = await tourService.getCategories();
-          const list = extractItems<Category>(res.data);
-          setCategories(list.map((c) => ({ id: c.id, name: c.name })));
-        }
-      } catch (err) {
-        console.error("Failed to fetch categories", err);
-      } finally {
-        setIsLoadingCats(false);
-      }
-    };
-    if (isOpen) fetchCats();
-  }, [isOpen, searchType]);
+  const { data: categories = [], isLoading: isLoadingCats } = useSearchFilterCategories(searchType, isOpen);
 
   const handleApply = () => {
     onApply(localFilters);
