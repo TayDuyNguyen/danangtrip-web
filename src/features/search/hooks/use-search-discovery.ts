@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { searchService } from "@/services/search.service";
-import { extractItems } from "./use-search";
+import { extractItems } from "@/utils";
 
 /**
  * Hook for discovery data (popular and trending searches)

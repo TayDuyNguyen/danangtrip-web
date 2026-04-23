@@ -1,4 +1,47 @@
 {
   "title": "Địa điểm nổi bật",
-  "subtitle": "Khám phá những điểm đến được yêu thích nhất tại Đà Nẵng."
+  "subtitle": "Khám phá những điểm đến được yêu thích nhất tại Đà Nẵng.",
+  "discovery": {
+    "title": "Khám phá Địa điểm Đà Nẵng",
+    "subtitle": "{count} địa điểm du lịch hấp dẫn đang chờ bạn khám phá và trải nghiệm",
+    "search_placeholder": "Tìm kiếm tên địa điểm, khu vực..."
+  },
+  "filters": {
+    "title": "Bộ lọc",
+    "all": "Tất cả",
+    "categories": "Danh mục",
+    "districts": "Quận / Huyện",
+    "price": "Mức giá",
+    "price_level": "Mức giá",
+    "rating": "Đánh giá",
+    "reset": "Đặt lại bộ lọc"
+  },
+  "categories": {
+    "sightseeing": "Tham quan",
+    "nature": "Thiên nhiên",
+    "culture": "Văn hóa",
+    "food": "Ẩm thực",
+    "entertainment": "Giải trí"
+  },
+  "districts": {
+    "hai-chau": "Hải Châu",
+    "thanh-khe": "Thanh Khê",
+    "son-tra": "Sơn Trà",
+    "ngu-hanh-son": "Ngũ Hành Sơn",
+    "lien-chieu": "Liên Chiểu",
+    "cam-le": "Cẩm Lệ",
+    "hoa-vang": "Hòa Vang",
+    "hoang-sa": "Hoàng Sa"
+  },
+  "badges": {
+    "featured": "Nổi bật"
+  },
+  "price": {
+    "from": "Giá từ",
+    "free": "Miễn phí"
+  },
+  "reviews": "đánh giá",
+  "buttons": {
+    "view_details": "Xem chi tiết"
+  }
 }

@@ -1,4 +1,47 @@
 {
-  "title": "Featured locations",
-  "subtitle": "Discover the most loved destinations in Da Nang."
+  "title": "Featured Locations",
+  "subtitle": "Discover the most popular destinations in Da Nang.",
+  "discovery": {
+    "title": "Explore Da Nang Locations",
+    "subtitle": "{count} exciting tourist spots waiting for you to discover and experience",
+    "search_placeholder": "Search for location names, areas..."
+  },
+  "filters": {
+    "title": "Filters",
+    "all": "All",
+    "categories": "Categories",
+    "districts": "Districts",
+    "price": "Price Range",
+    "price_level": "Price Level",
+    "rating": "Rating",
+    "reset": "Reset Filters"
+  },
+  "categories": {
+    "sightseeing": "Sightseeing",
+    "nature": "Nature",
+    "culture": "Culture",
+    "food": "Food",
+    "entertainment": "Entertainment"
+  },
+  "districts": {
+    "hai-chau": "Hai Chau",
+    "thanh-khe": "Thanh Khe",
+    "son-tra": "Son Tra",
+    "ngu-hanh-son": "Ngu Hanh Son",
+    "lien-chieu": "Lien Chieu",
+    "cam-le": "Cam Le",
+    "hoa-vang": "Hoa Vang",
+    "hoang-sa": "Hoang Sa"
+  },
+  "badges": {
+    "featured": "Featured"
+  },
+  "price": {
+    "from": "From",
+    "free": "Free"
+  },
+  "reviews": "reviews",
+  "buttons": {
+    "view_details": "View Details"
+  }
 }

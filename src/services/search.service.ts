@@ -1,25 +1,14 @@
 import { API_ENDPOINTS } from "@/config";
 import axiosInstance from "@/lib/axios";
-import { ApiResponse } from "@/types";
+import { ApiResponse, PaginatedResponse } from "@/types";
 import type { Location, Tour } from "@/types";
 import { SearchRequestParams, SearchSuggestionResponse } from "@/features/search/types/search.types";
-
-/** Payload chuẩn hóa sau interceptor (data + meta pagination). */
-export interface SearchListResponse {
-  data: (Tour | Location)[];
-  meta?: {
-    total?: number;
-    last_page?: number;
-    current_page?: number;
-    per_page?: number;
-  };
-}
 
 export const searchService = {
   /**
    * Main search API
    */
-  search: (params: SearchRequestParams): Promise<ApiResponse<SearchListResponse>> =>
+  search: (params: SearchRequestParams): Promise<ApiResponse<PaginatedResponse<Tour | Location>>> =>
     axiosInstance.get(API_ENDPOINTS.SEARCH.LIST, { params }),
 
   /**

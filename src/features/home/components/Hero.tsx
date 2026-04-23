@@ -58,15 +58,9 @@ const Hero = () => {
 
   const handleSelectSuggestion = (item: SearchSuggestionItem) => {
     setIsDropdownOpen(false);
-    // Gợi ý chỉ là chuỗi từ /search/suggestions — không có slug entity → điều hướng tìm kiếm
-    if (!item.slug) {
-      router.push(
-        `${ROUTES.SEARCH}?q=${encodeURIComponent(item.title)}&type=${searchType.value}`
-      );
-      return;
-    }
-    const detailUrl = (item.type === "location" ? `/locations/${item.slug}` : `/tours/${item.slug}`) as Parameters<typeof router.push>[0];
-    router.push(detailUrl);
+    router.push(
+      `${ROUTES.SEARCH}?q=${encodeURIComponent(item.title)}&type=${item.type}`
+    );
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {

@@ -1,14 +1,26 @@
-import { useTranslations } from "next-intl";
+import { Suspense } from "react";
+import LocationListClient from "@/features/locations/components/LocationListClient";
+import { getTranslations } from "next-intl/server";
 
-export default function LocationsPage() {
-  const t = useTranslations("locations");
-  
+type Props = {
+  params: Promise<{ locale: string }>;
+};
+
+export async function generateMetadata({ params }: Props) {
+  const resolvedParams = await params;
+  const t = await getTranslations({ locale: resolvedParams.locale, namespace: "locations" });
+  return {
+    title: `${t("discovery.title")} | Đà Nẵng Trip`,
+    description: t("discovery.subtitle", { count: 0 }).replace("{count}", ""),
+  };
+}
+
+export default async function LocationsPage() {
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-4xl font-bold mb-6">{t("title")}</h1>
-      <p className="text-lg text-gray-600">
-        {t("subtitle")}
-      </p>
+    <div className="min-h-screen bg-surface">
+      <Suspense fallback={<div className="min-h-screen pt-32 px-12 animate-pulse bg-surface" />}>
+        <LocationListClient />
+      </Suspense>
     </div>
   );
 }

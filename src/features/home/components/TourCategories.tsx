@@ -66,7 +66,7 @@ const TourCategories = () => {
           {categories.slice(0, 6).map((category, index) => (
             <Link
               key={category.id}
-              href={`${ROUTES.TOURS}?category=${category.slug}`}
+              href={`${ROUTES.TOURS}?category=${category.id}`}
               className="group flex flex-col items-center p-[20px] rounded-[24px] bg-[#F8FAFC] hover:bg-white hover:shadow-[0_12px_24px_rgba(0,102,204,0.1)] transition-all duration-300 border border-transparent hover:border-azure/10 reveal-up"
               style={{ animationDelay: `${(index + 1) * 100}ms` }}
             >

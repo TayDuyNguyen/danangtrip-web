@@ -52,7 +52,7 @@ export interface SearchState {
 }
 
 export interface SearchRequestParams {
-  q: string;
+  q?: string;
   type?: SearchResultType;
   category_id?: number;
   tour_category_id?: number;

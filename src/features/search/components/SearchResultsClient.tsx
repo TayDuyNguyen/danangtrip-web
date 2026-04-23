@@ -34,7 +34,7 @@ export const SearchResultsClient = ({ initialQuery }: SearchResultsClientProps) 
   const searchParams = useSearchParams();
   const router = useRouter();
   const locale = useLocale();
-  const t = useTranslations("search");
+  const tSearch = useTranslations("search");
   const tHome = useTranslations("home");
   
   // Drawer State — nonce để remount sheet, tránh setState trong effect khi mở lại
@@ -92,7 +92,7 @@ export const SearchResultsClient = ({ initialQuery }: SearchResultsClientProps) 
     });
   };
 
-  const handleRemoveFilter = (key: keyof SearchFilters) => {
+  const handleRemoveFilter = (key: string) => {
     updateUrl({ [key]: undefined, page: 1 });
   };
 
@@ -113,6 +113,8 @@ export const SearchResultsClient = ({ initialQuery }: SearchResultsClientProps) 
 
   // --- Data Fetching ---
   const { results, isLoading, counts, meta } = useSearch({ q, type, sort, filters, page });
+
+  const totalPages = meta?.last_page || 1;
 
   /** Khi không có q, /search không chạy — lấy featured để lấp grid Khám phá (tránh grid rỗng). */
   const { data: discoveryGridResults = [], isLoading: isDiscoveryGridLoading } = useQuery({
@@ -172,19 +174,12 @@ export const SearchResultsClient = ({ initialQuery }: SearchResultsClientProps) 
     enabled: !q.trim(),
     staleTime: 1000 * 60 * 5,
   });
-
-  const filteredResults = useMemo(() => {
-    if (type === "all") return results;
-    return results.filter(item => item.type === type);
-  }, [results, type]);
-
-  // --- UI Components ---
   const sortOptions: SelectOption[] = [
-    { value: "popular", label: t("sort.popularity") },
-    { value: "newest", label: t("sort.newest") },
-    { value: "price_asc", label: t("sort.price_low") },
-    { value: "price_desc", label: t("sort.price_high") },
-    { value: "rating_desc", label: t("sort.rating") },
+    { value: "popular", label: tSearch("sort.popularity") },
+    { value: "newest", label: tSearch("sort.newest") },
+    { value: "price_asc", label: tSearch("sort.price_low") },
+    { value: "price_desc", label: tSearch("sort.price_high") },
+    { value: "rating_desc", label: tSearch("sort.rating") },
   ];
 
   const currentSortOption = sortOptions.find(opt => opt.value === sort) || sortOptions[0];
@@ -203,12 +198,13 @@ export const SearchResultsClient = ({ initialQuery }: SearchResultsClientProps) 
         activeFilters={filters}
         onRemoveFilter={handleRemoveFilter}
         onClearFilters={clearFilters}
+        isLoading={isLoading}
       />
 
       {/* Main Results Container */}
       {q.trim() ? (
         <div className={cn("transition-all duration-500", q ? "opacity-100" : "opacity-0 h-0 overflow-hidden")}>
-          {filteredResults.length > 0 ? (
+          {results.length > 0 ? (
             <>
               <div className="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <SearchTabs 
@@ -224,25 +220,21 @@ export const SearchResultsClient = ({ initialQuery }: SearchResultsClientProps) 
                      onChange={handleSortChange}
                      containerClassName="bg-surface-container-low rounded-2xl border-none p-0 px-4"
                      className="bg-transparent"
-                     placeholder={t("sort.label")}
+                     placeholder={tSearch("sort.label")}
                    />
                 </div>
               </div>
 
               <SearchGrid 
-                results={filteredResults} 
+                results={results} 
                 isLoading={isLoading} 
               />
 
-              {meta != null && (meta.last_page ?? 0) > 1 && (
-                <div className="mt-16 flex justify-center">
-                  <StandardPagination 
-                    currentPage={page}
-                    totalPages={meta.last_page ?? 1}
-                    onPageChange={handlePageChange}
-                  />
-                </div>
-              )}
+              <StandardPagination 
+                currentPage={page}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
             </>
           ) : !isLoading && (
             /* Empty State (Only if Query exists but no results) */
@@ -250,8 +242,8 @@ export const SearchResultsClient = ({ initialQuery }: SearchResultsClientProps) 
               <div className="w-20 h-20 bg-surface-container-low rounded-full flex items-center justify-center mb-6 text-4xl">
                 🔍
               </div>
-              <h2 className="text-2xl font-bold text-foreground mb-2">{t("empty.title")}</h2>
-              <p className="text-on-surface-subtle max-w-md mx-auto">{t("empty.subtitle")}</p>
+              <h2 className="text-2xl font-bold text-foreground mb-2">{tSearch("empty.title")}</h2>
+              <p className="text-on-surface-subtle max-w-md mx-auto">{tSearch("empty.subtitle")}</p>
             </div>
           )}
         </div>
@@ -264,8 +256,8 @@ export const SearchResultsClient = ({ initialQuery }: SearchResultsClientProps) 
                 <IoStar className="text-xl" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-foreground">{t("discovery.title")}</h2>
-                <p className="text-on-surface-subtle">{t("discovery.subtitle")}</p>
+                <h2 className="text-2xl font-bold text-foreground">{tSearch("discovery.title")}</h2>
+                <p className="text-on-surface-subtle">{tSearch("discovery.subtitle")}</p>
               </div>
             </div>
           </div>

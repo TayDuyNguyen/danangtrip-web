@@ -1,7 +1,7 @@
 "use client";
 import React from 'react';
-import { useTranslations } from 'next-intl';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { IoChevronBack, IoChevronForward } from 'react-icons/io5';
+import { cn } from "@/utils/string";
 
 export interface PaginationProps {
     currentPage: number;
@@ -14,11 +14,10 @@ const StandardPagination: React.FC<PaginationProps> = ({
     totalPages,
     onPageChange
 }) => {
-    const t = useTranslations('common');
 
     const generatePageNumbers = () => {
         const pages: (number | string)[] = [];
-        const delta = 2; // Number of pages to show around current page
+        const delta = 1; // Number of pages to show around current page
 
         for (let i = 1; i <= totalPages; i++) {
             if (
@@ -39,35 +38,36 @@ const StandardPagination: React.FC<PaginationProps> = ({
         return pages.filter((item, index) => pages.indexOf(item) === index);
     };
 
+    if (totalPages <= 1) return null;
+
     return (
-        <div className="flex items-center justify-center gap-2 py-4">
+        <div className="flex items-center justify-center gap-4 py-8">
             {/* Previous Button */}
             <button
                 onClick={() => onPageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-cyan-500 hover:text-cyan-600 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-300 shadow-sm active:scale-95"
+                className="flex items-center justify-center w-12 h-12 rounded-2xl bg-surface-container-low border-2 border-outline-variant/10 text-on-surface-variant hover:border-azure/30 hover:text-azure disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 shadow-sm active:scale-90 group"
             >
-                <ChevronLeft size={16} />
-                <span className="hidden sm:inline text-sm font-bold tracking-tight">
-                    {t('pagination.previous')}
-                </span>
+                <IoChevronBack className="text-xl group-hover:-translate-x-1 transition-transform" />
             </button>
 
             {/* Page Numbers */}
-            <div className="flex items-center gap-1.5 px-2">
+            <div className="flex items-center gap-2 p-1.5 bg-surface-container-low/40 backdrop-blur-md border-2 border-outline-variant/5 rounded-[24px]">
                 {generatePageNumbers().map((page, index) => (
                     <React.Fragment key={index}>
                         {page === '...' ? (
-                            <span className="w-9 h-9 flex items-center justify-center text-slate-400 font-bold select-none">
-                                ...
+                            <span className="w-10 h-10 flex items-center justify-center text-on-surface-variant/40 font-black">
+                                •••
                             </span>
                         ) : (
                             <button
                                 onClick={() => onPageChange(page as number)}
-                                className={`w-9 h-9 rounded-xl font-bold text-sm transition-all duration-300 ${currentPage === page
-                                    ? 'bg-cyan-600 text-white shadow-lg shadow-cyan-600/30 ring-2 ring-cyan-600/20'
-                                    : 'text-slate-600 hover:bg-slate-50 hover:text-cyan-600 hover:border-cyan-200 border border-transparent'
-                                    }`}
+                                className={cn(
+                                    "w-10 h-10 rounded-xl font-black text-sm transition-all duration-500 scale-100 active:scale-90",
+                                    currentPage === page
+                                        ? "bg-azure text-white shadow-lg shadow-azure/30"
+                                        : "text-on-surface-variant hover:bg-surface-container-high hover:text-azure"
+                                )}
                             >
                                 {page}
                             </button>
@@ -80,12 +80,9 @@ const StandardPagination: React.FC<PaginationProps> = ({
             <button
                 onClick={() => onPageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-cyan-500 hover:text-cyan-600 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-300 shadow-sm active:scale-95"
+                className="flex items-center justify-center w-12 h-12 rounded-2xl bg-surface-container-low border-2 border-outline-variant/10 text-on-surface-variant hover:border-azure/30 hover:text-azure disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 shadow-sm active:scale-90 group"
             >
-                <span className="hidden sm:inline text-sm font-bold tracking-tight">
-                    {t('pagination.next')}
-                </span>
-                <ChevronRight size={16} />
+                <IoChevronForward className="text-xl group-hover:translate-x-1 transition-transform" />
             </button>
         </div>
     );
