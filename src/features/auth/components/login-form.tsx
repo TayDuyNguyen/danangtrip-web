@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
+import { ROUTES } from "@/config";
 import { IoMailOutline, IoLockClosedOutline } from "react-icons/io5";
 import { useAuth } from "../hooks/use-auth";
 import { Input } from "@/components/ui";
@@ -140,7 +141,7 @@ export function LoginForm({ onSuccess, redirectUrl }: LoginFormProps) {
                   {t("remember_me")}
                 </label>
                 <Link
-                  href="/forgot-password"
+                  href={ROUTES.CONTACT}
                   className="text-sm text-cyan-400 hover:text-cyan-300 hover:underline transition"
                 >
                   {t("forgot_password")}

@@ -12,8 +12,11 @@
     "price_range": "Price Range",
     "rating": "Rating",
     "category": "Category",
+    "district": "District",
     "apply": "Apply",
-    "reset": "Reset"
+    "reset": "Reset",
+    "from": "From",
+    "to": "To"
   },
   "sort": {
     "label": "Sort by",
@@ -58,6 +61,7 @@
     "min_chars": "Enter at least 2 characters",
     "error": "Failed to load suggestions, please try again",
     "views": "{count} views",
-    "bookings": "{count} bookings"
+    "bookings": "{count} bookings",
+    "search_placeholder": "Search for tours and places..."
   }
 }

@@ -32,6 +32,7 @@ export const STORAGE_KEYS = {
   THEME: "theme",
   LANGUAGE: "language",
   SIDEBAR_COLLAPSED: "sidebar_collapsed",
+  SEARCH_SESSION_ID: "search_session_id",
 } as const;
 
 // Cookie Keys
@@ -118,3 +119,14 @@ export const SUCCESS_MESSAGES = {
   BOOKING_SUCCESS: "success.booking",
   PAYMENT_SUCCESS: "success.payment",
 } as const;
+
+// Location & Geography
+export const DANANG_DISTRICTS = [
+  { id: "hai-chau", name: "Hải Châu" },
+  { id: "thanh-khe", name: "Thanh Khê" },
+  { id: "lien-chieu", name: "Liên Chiểu" },
+  { id: "son-tra", name: "Sơn Trà" },
+  { id: "ngu-hanh-son", name: "Ngũ Hành Sơn" },
+  { id: "cam-le", name: "Cẩm Lệ" },
+  { id: "hoa-vang", name: "Hòa Vang" },
+] as const;

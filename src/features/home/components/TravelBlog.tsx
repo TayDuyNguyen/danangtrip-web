@@ -50,7 +50,7 @@ const TravelBlog = () => {
               className={`group bg-surface-container-lowest rounded-[24px] overflow-hidden shadow-[0_15px_35px_rgba(23,28,31,0.05)] hover:shadow-2xl hover:shadow-azure/5 hover:-translate-y-2 transition-all duration-700`}
               style={{ transitionDelay: `${(index + 3) * 200}ms`, opacity: isVisible ? 1 : 0, transform: isVisible ? "translateY(0)" : "translateY(30px)" }}
             >
-              <Link href={`${ROUTES.BLOG}/${post.slug}` as string & {}}>
+              <Link href={`${ROUTES.BLOG}?q=${encodeURIComponent(post.title)}` as string & {}}>
                 <div className="relative aspect-16/10 overflow-hidden">
                   <Image
                     src={post.featured_image || "/images/placeholder.png"}
@@ -87,7 +87,7 @@ const TravelBlog = () => {
                           </div>
                         )}
                       </div>
-                      <span className="text-[14px] font-bold text-slate-600 group-hover:text-dark transition-colors">{post.author?.full_name || "Admin"}</span>
+                      <span className="text-[14px] font-bold text-slate-600 group-hover:text-dark transition-colors">{post.author?.full_name || t("common.brand_name")}</span>
                     </div>
                     <span className="text-azure font-black text-[13px] flex items-center gap-2 group-hover:gap-3 transition-all uppercase tracking-wider">
                       {t("home.blog.read_more")} <IoArrowForwardOutline />

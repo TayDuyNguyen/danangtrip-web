@@ -97,7 +97,7 @@ const FeaturedTours = () => {
 
                 {/* Button Action */}
                 <Link
-                  href={`${ROUTES.TOURS}/${tour.slug}` as string & {}}
+                  href={`${ROUTES.TOURS}?q=${encodeURIComponent(tour.name)}` as string & {}}
                   className="block w-full text-center bg-azure text-white rounded-xl py-4 text-[14px] font-bold mt-6 hover:bg-blue-700 transition-all shadow-[0_10px_20px_rgba(0,102,204,0.1)] hover:shadow-[0_15px_30px_rgba(0,102,204,0.2)] active:scale-[0.98]"
                 >
                   {t("common.tour.book_now")}

@@ -25,6 +25,7 @@
     "select_placeholder": "Chọn..."
   },
   "accessibility": {
+    "close": "Đóng",
     "close_menu": "Đóng menu",
     "open_menu": "Mở menu",
     "previous": "Trước",

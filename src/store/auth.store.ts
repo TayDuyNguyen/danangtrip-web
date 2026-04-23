@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import type { User } from "@/types";
-import Cookies from "js-cookie";
+import { clearTokens, setAccessToken } from "@/utils/auth.helper";
 
 interface AuthState {
   user: User | null;
@@ -30,8 +30,7 @@ export const useAuthStore = create<AuthState>()(
       error: null,
 
       login: (user, token) => {
-        // Set cookie for middleware access
-        Cookies.set("token", token, { expires: 7, path: "/" });
+        setAccessToken(token);
         set({
           user,
           token,
@@ -41,12 +40,7 @@ export const useAuthStore = create<AuthState>()(
       },
 
       logout: () => {
-        // Remove cookie
-        Cookies.remove("token", { path: "/" });
-        // Clear tokens from localStorage for extra safety
-        if (typeof window !== "undefined") {
-          localStorage.removeItem("token");
-        }
+        clearTokens();
         set({
           user: null,
           token: null,

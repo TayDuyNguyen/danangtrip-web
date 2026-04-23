@@ -4,7 +4,7 @@ import { useCallback, useEffect } from "react";
 import { useAuthStore } from "@/store/auth.store";
 import { authService } from "@/services/auth.service";
 import type { LoginRequest, RegisterRequest, ApiResponse } from "@/types";
-import Cookies from "js-cookie";
+import { clearTokens, getAccessToken } from "@/utils/auth.helper";
 
 export const useAuth = () => {
   const {
@@ -87,13 +87,12 @@ export const useAuth = () => {
       await authService.logout();
     } finally {
       storeLogout();
-      Cookies.remove("token", { path: "/" });
-      localStorage.removeItem("token");
+      clearTokens();
     }
   }, [storeLogout]);
 
   const checkAuth = useCallback(async () => {
-    const token = Cookies.get("token") || localStorage.getItem("token");
+    const token = getAccessToken();
     if (!token) return;
 
     setLoading(true);
@@ -105,8 +104,7 @@ export const useAuth = () => {
         // Only logout on definitive 401 Unauthorized
         if (response.status === 401) {
           storeLogout();
-          Cookies.remove("token", { path: "/" });
-          localStorage.removeItem("token");
+          clearTokens();
         }
       }
       } catch (err) {
@@ -114,8 +112,7 @@ export const useAuth = () => {
       // Only logout on definitive 401 Unauthorized from the interceptor
       if (apiError.status === 401) {
         storeLogout();
-        Cookies.remove("token", { path: "/" });
-        localStorage.removeItem("token");
+        clearTokens();
       }
       // Network failures or 5xx errors should not revoke the session
     } finally {
@@ -125,7 +122,7 @@ export const useAuth = () => {
 
   useEffect(() => {
     // Re-verify session on mount if a token exists
-    const token = Cookies.get("token") || localStorage.getItem("token");
+    const token = getAccessToken();
     if (token && !isLoading) {
       checkAuth();
     }

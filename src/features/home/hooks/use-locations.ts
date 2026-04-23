@@ -5,6 +5,7 @@ import { locationService } from "@/services/location.service";
 import { categoryService } from "@/services/category.service";
 import type { Location, Category } from "@/types";
 import { shouldRetryQuery } from "@/lib/react-query";
+import { extractItems } from "@/utils";
 
 /**
  * Enhanced useLocations hook using TanStack Query for deduplication and caching.
@@ -16,11 +17,7 @@ export const useLocations = (categoryId?: number) => {
     queryKey: ["home", "locations", "categories"],
     queryFn: async () => {
       const res = await categoryService.getAll();
-      if (res.success && res.data) {
-        // Handle both direct array and nested data (if any)
-        return Array.isArray(res.data) ? res.data : (res.data as Record<string, unknown>).data || [];
-      }
-      throw res;
+      return extractItems<Category>(res.data);
     },
     staleTime: 10 * 60 * 1000,
     retry: shouldRetryQuery,
@@ -35,24 +32,14 @@ export const useLocations = (categoryId?: number) => {
         res = await locationService.getFeatured(8);
       } else {
         res = await locationService.getAll({
-          category_id: categoryId,
-          sort: "avg_rating",
-          order: "desc",
+          category_ids: [categoryId],
+          sort_by: "avg_rating",
+          sort_order: "desc",
           per_page: 8,
         });
       }
 
-      if (res.success && res.data) {
-        // Robust data extraction: 
-        // 1. Check if res.data is the array directly (Featured API)
-        // 2. Check if res.data.data is the array (Paginated API)
-        const items = Array.isArray(res.data) 
-          ? res.data 
-          : (res.data as Record<string, unknown>).data;
-        
-        return Array.isArray(items) ? items : [];
-      }
-      throw res;
+      return extractItems<Location>(res.data);
     },
     staleTime: 5 * 60 * 1000,
     retry: shouldRetryQuery,

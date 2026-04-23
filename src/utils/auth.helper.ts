@@ -2,6 +2,10 @@
  * Auth helper utilities ported from source project
  */
 
+import Cookies from "js-cookie";
+
+export const ACCESS_TOKEN_KEY = "token";
+
 export const parseJwtPayload = (token: string) => {
   try {
     const base64Url = token.split(".")[1];
@@ -42,17 +46,19 @@ export const getTokenExpiryMs = (token: string | null): number => {
 
 export const getAccessToken = () => {
   if (typeof window === "undefined") return null;
-  return localStorage.getItem("token");
+  return Cookies.get(ACCESS_TOKEN_KEY) || localStorage.getItem(ACCESS_TOKEN_KEY);
 };
 
 export const setAccessToken = (token: string) => {
   if (typeof window === "undefined") return;
-  localStorage.setItem("token", token);
+  Cookies.set(ACCESS_TOKEN_KEY, token, { expires: 7, path: "/" });
+  localStorage.setItem(ACCESS_TOKEN_KEY, token);
 };
 
 export const clearTokens = () => {
   if (typeof window === "undefined") return;
-  localStorage.removeItem("token");
+  Cookies.remove(ACCESS_TOKEN_KEY, { path: "/" });
+  localStorage.removeItem(ACCESS_TOKEN_KEY);
 };
 
 export const getLanguage = () => {

@@ -5,6 +5,7 @@ import { Link } from "@/i18n/navigation";
 import { useTranslations, useLocale } from "next-intl";
 import { IoStar, IoLocationOutline, IoTimeOutline, IoChevronForward } from "react-icons/io5";
 import { cn } from "@/utils/string";
+import { ROUTES } from "@/config";
 import { SearchResult, TourSearchResult, LocationSearchResult } from "../types/search.types";
 
 interface SearchResultCardProps {
@@ -18,7 +19,7 @@ export const SearchResultCard = ({ item, isLoading, featured, index }: SearchRes
   const t = useTranslations();
   const locale = useLocale();
   const isTour = item?.type === "tour";
-  const url = isTour ? `/tours/${item?.slug}` : `/locations/${item?.slug}`;
+  const url = `${ROUTES.SEARCH}?q=${encodeURIComponent(item?.title || "")}&type=${isTour ? "tour" : "location"}`;
 
   // Use variables for heights to avoid tailwind-intellisense conflicts in ternary
   const skeletonHeightClass = featured ? "h-[240px] md:h-auto" : "h-[200px]";
@@ -39,12 +40,15 @@ export const SearchResultCard = ({ item, isLoading, featured, index }: SearchRes
           <div className="h-4 bg-surface-container-high rounded-full w-1/4" />
           <div className="h-6 bg-surface-container-high rounded-full w-3/4" />
           <div className="h-4 bg-surface-container-high rounded-full w-1/2" />
-          <div className="pt-4 border-t border-border flex justify-between items-center">
-            <div className="h-6 bg-surface-container-high rounded-full w-1/3" />
-            <div className="h-8 bg-surface-container-high rounded-lg w-1/4" />
+        <div className="pt-4 flex items-center justify-between">
+          <div className="space-y-1">
+            <div className="h-3 bg-surface-container-high rounded-full w-16" />
+            <div className="h-8 bg-surface-container-high rounded-lg w-24" />
           </div>
+          <div className="h-10 w-10 bg-surface-container-high rounded-full" />
         </div>
       </div>
+    </div>
     );
   }
 
@@ -52,7 +56,7 @@ export const SearchResultCard = ({ item, isLoading, featured, index }: SearchRes
     <Link 
       href={url as string & {}}
       className={cn(
-        "group bg-surface-container-lowest rounded-[32px] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 reveal-up flex flex-col",
+        "group bg-surface-container-lowest rounded-[32px] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 reveal-up flex flex-col scale-100 active:scale-[0.98]",
         featured && "md:col-span-2 md:row-span-1 md:flex-row"
       )}
       style={{ animationDelay: `${index * 100}ms` }}
@@ -88,7 +92,7 @@ export const SearchResultCard = ({ item, isLoading, featured, index }: SearchRes
       </div>
 
       {/* Content Section */}
-      <div className="p-6 flex-1 flex flex-col justify-between">
+      <div className="p-8 flex-1 flex flex-col justify-between">
         <div>
           <div className="flex items-center gap-1 mb-3">
             {item.rating > 0 && item.reviewCount > 0 && (
@@ -107,32 +111,32 @@ export const SearchResultCard = ({ item, isLoading, featured, index }: SearchRes
           </div>
 
           <h3 className={cn(
-            "font-bold text-foreground group-hover:text-azure transition-colors line-clamp-2",
-            featured ? "text-xl md:text-2xl mb-3" : "text-lg mb-2"
+            "font-bold text-foreground group-hover:text-azure transition-colors line-clamp-2 leading-tight",
+            featured ? "text-2xl md:text-3xl mb-4" : "text-xl mb-3"
           )}>
             {item.title}
           </h3>
 
-          <div className="flex items-center gap-1.5 text-on-surface text-sm mb-4 font-medium">
-            <IoLocationOutline className="text-azure shrink-0" />
+          <div className="flex items-center gap-2 text-on-surface-subtle text-sm mb-4 font-medium">
+            <IoLocationOutline className="text-azure shrink-0 text-lg" />
             <span className="line-clamp-1">
               {isTour ? t("search.card.default_location") : (item as LocationSearchResult).address}
             </span>
           </div>
 
           {isTour && (item as TourSearchResult).duration && (
-            <div className="flex items-center gap-1.5 text-on-surface text-sm mb-4 font-medium">
-              <IoTimeOutline className="text-azure shrink-0" />
+            <div className="flex items-center gap-2 text-on-surface-subtle text-sm mb-4 font-medium">
+              <IoTimeOutline className="text-azure shrink-0 text-lg" />
               <span>{(item as TourSearchResult).duration}</span>
             </div>
           )}
         </div>
 
-        <div className="pt-5 border-t border-border flex items-center justify-between">
+        <div className="pt-4 flex items-center justify-between">
           <div>
             {isTour ? (
               <div className="flex flex-col">
-                <span className="text-[12px] text-on-surface-variant font-bold uppercase tracking-tight">{t("search.card.starting_from")}</span>
+                <span className="text-[11px] text-on-surface-variant font-black uppercase tracking-wider">{t("search.card.starting_from")}</span>
                 <span className="text-2xl font-black text-azure">
                   {new Intl.NumberFormat(locale === 'vi' ? 'vi-VN' : 'en-US', { 
                     style: 'currency', 
@@ -146,7 +150,7 @@ export const SearchResultCard = ({ item, isLoading, featured, index }: SearchRes
                   <span 
                     key={level}
                     className={cn(
-                      "text-lg font-bold",
+                      "text-lg font-black",
                       level <= ((item as LocationSearchResult).priceLevel || 1) ? "text-success" : "text-surface-container-high"
                     )}
                   >
@@ -157,11 +161,12 @@ export const SearchResultCard = ({ item, isLoading, featured, index }: SearchRes
             )}
           </div>
 
-          <div className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-foreground group-hover:bg-azure group-hover:text-white transition-all transform group-hover:translate-x-1 shadow-sm">
-            <IoChevronForward className="text-xl" />
+          <div className="w-12 h-12 rounded-2xl bg-surface-container-low flex items-center justify-center text-foreground group-hover:bg-azure group-hover:text-white transition-all transform group-hover:translate-x-1 shadow-sm group-hover:shadow-azure/20">
+            <IoChevronForward className="text-2xl" />
           </div>
         </div>
       </div>
+
     </Link>
   );
 };

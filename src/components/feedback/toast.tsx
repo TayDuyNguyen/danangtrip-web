@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 
 interface ToastProps {
   message: string;
@@ -16,6 +17,7 @@ export function Toast({
   onClose,
 }: ToastProps) {
   const [isVisible, setIsVisible] = useState(true);
+  const t = useTranslations("common");
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -45,7 +47,7 @@ export function Toast({
         <button
           onClick={() => setIsVisible(false)}
           className="ml-2 text-sm hover:opacity-70"
-          aria-label="Close"
+          aria-label={t("accessibility.close")}
         >
           ×
         </button>

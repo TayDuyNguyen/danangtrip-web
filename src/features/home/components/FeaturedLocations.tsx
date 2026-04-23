@@ -162,7 +162,7 @@ const FeaturedLocations = () => {
                   className="min-w-[300px] md:min-w-[380px] group cursor-pointer animate-reveal-up snap-start"
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
-                  <Link href={`${ROUTES.LOCATIONS}/${loc.slug}`}>
+                  <Link href={`${ROUTES.LOCATIONS}?q=${encodeURIComponent(loc.name)}`}>
                     <div className="relative aspect-3/4 rounded-[40px] overflow-hidden mb-6 shadow-[0_20px_40px_rgba(0,0,0,0.1)] active:scale-[0.98] transition-all duration-500 hover:shadow-[0_30px_60px_rgba(0,102,204,0.15)]">
                       <Image
                         src={loc.thumbnail || "/images/placeholder.png"}
