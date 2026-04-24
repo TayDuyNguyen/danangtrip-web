@@ -148,6 +148,7 @@
   },
   "favorite": {
     "add_success": "Added to favorites",
+    "remove_success": "Removed from favorites",
     "login_required": "Please login to save favorites",
     "error": "Cannot save favorite at this time"
   },

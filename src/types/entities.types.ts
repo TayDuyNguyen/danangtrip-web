@@ -27,6 +27,30 @@ export interface Category {
   subcategories: SubCategory[];
 }
 
+export interface LocationAmenity {
+  id: string | number;
+  name: string;
+  icon?: string;
+  category: string;
+}
+
+export interface LocationReview {
+  id: string;
+  userId: string;
+  userName: string;
+  userAvatar?: string;
+  rating: number;
+  comment: string;
+  images?: string[];
+  createdAt: string;
+  helpfulCount?: number;
+}
+
+/** Weekly schedule as stored in API JSON (`opening_hours` column). */
+export type LocationOpeningHoursMap = Partial<
+  Record<'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun', string>
+>;
+
 export interface Location {
   id: number;
   name: string;
@@ -43,7 +67,7 @@ export interface Location {
   phone: string | null;
   email: string | null;
   website: string | null;
-  opening_hours: string | null;
+  opening_hours: string | LocationOpeningHoursMap | null;
   price_min: number | null;
   price_max: number | null;
   price_level: number | null;  // 1-4
@@ -58,6 +82,12 @@ export interface Location {
   review_count: number;
   created_at: string;
   updated_at: string;
+  /** Present on some detail API payloads */
+  content?: string;
+  amenities?: LocationAmenity[];
+  reviews?: LocationReview[];
+  /** Resolved category label when API includes it */
+  category?: string;
 }
 
 export interface TourCategory {
