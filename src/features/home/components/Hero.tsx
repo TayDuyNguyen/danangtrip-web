@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 import {
   IoLocationOutline,
 } from "react-icons/io5";
-import { useWeather } from "../hooks/use-weather";
+import { useWeather } from "@/hooks/use-weather";
 import { useEffect, useState } from "react";
 import { useRouter } from "@/i18n/navigation";
 import { ROUTES } from "@/config";

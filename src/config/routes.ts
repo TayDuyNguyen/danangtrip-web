@@ -6,6 +6,7 @@
 export const PUBLIC_ROUTES = {
   HOME: "/",
   LOCATIONS: "/locations",
+  LOCATION_DETAIL: (slug: string) => `/locations/${slug}`,
   TOURS: "/tours",
   BLOG: "/blog",
   CONTACT: "/contact",

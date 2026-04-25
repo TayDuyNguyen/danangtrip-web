@@ -73,7 +73,7 @@ export default function LocationListClient() {
       params.set("page", "1");
     }
 
-    router.push(`${pathname}?${params.toString()}`);
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
   }, [pathname, router, searchParams]);
 
   const handleSearch = debounce((value: string) => {
