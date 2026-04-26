@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
-import { IoAlertCircleOutline, IoRefreshOutline, IoHomeOutline } from "react-icons/io5";
+import { IoAlertCircleOutline, IoRefreshOutline, IoHomeOutline } from "@/components/icons/solar";
 
 interface ErrorPageProps {
   error: Error & { digest?: string };

@@ -3,6 +3,7 @@ import React, {
   type ReactNode,
   type InputHTMLAttributes,
   type HTMLInputTypeAttribute,
+  useId,
   useState,
 } from "react";
 import { cn } from "@/utils/string";
@@ -29,11 +30,14 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       isPassword = false,
       isFocused = false,
       type = "text",
+      id: idProp,
       ...props
     },
     ref
   ) => {
     const t = useTranslations("common");
+    const autoId = useId();
+    const inputId = idProp ?? `input-${autoId.replace(/:/g, "")}`;
     const [showPassword, setShowPassword] = useState(false);
 
     const inputType = isPassword ? (showPassword ? "text" : "password") : type;
@@ -42,12 +46,13 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       <div className={cn("w-full group", className)}>
         {label && (
           <label
+            htmlFor={inputId}
             className={cn(
               "block text-[11px] font-bold mb-1 uppercase tracking-[0.2em] transition-all duration-300 transform",
               isFocused || error
                 ? "translate-y-0 opacity-100"
                 : "text-transparent -translate-y-1 opacity-0",
-              isFocused ? "text-[#8b6a55]" : (error ? "text-red-400" : "")
+              isFocused ? "text-primary" : (error ? "text-red-400" : "")
 
 
             )}
@@ -63,8 +68,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             error
               ? "border-red-500"
               : isFocused
-                ? "border-[#8b6a55]"
-                : "border-[#262626]",
+                ? "border-primary"
+                : "border-border",
             "bg-transparent"
           )}
         >
@@ -73,7 +78,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             <span
               className={cn(
                 "text-xl transition-colors duration-300",
-                isFocused ? "text-[#8b6a55]" : "text-[#737373]"
+                isFocused ? "text-primary" : "text-on-surface-variant"
               )}
             >
               {leftIcon}
@@ -83,9 +88,10 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           {/* Input field */}
           <input
             ref={ref}
+            id={inputId}
             type={inputType}
             className={cn(
-              "w-full py-3 bg-transparent outline-none placeholder-[#737373]",
+              "w-full py-3 bg-transparent outline-none placeholder:text-on-surface-variant",
               "transition-all duration-300 focus:placeholder-transparent",
               "text-sm sm:text-base text-white font-medium",
               leftIcon ? "pl-0" : "",
@@ -99,7 +105,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             <button
               type="button"
               onClick={() => setShowPassword((v) => !v)}
-              className="p-2 -mr-2 text-[#737373] hover:text-[#8b6a55] transition-all duration-300 focus:outline-none rounded-full"
+              className="p-2 -mr-2 text-on-surface-variant hover:text-primary transition-all duration-300 focus:outline-none rounded-full"
               tabIndex={-1}
               aria-label={showPassword ? t("accessibility.hide_password") : t("accessibility.show_password")}
             >
@@ -128,7 +134,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
         {/* Helper text */}
         {helperText && !error && (
-          <p className="text-[#737373] text-sm mt-1">{helperText}</p>
+          <p className="text-on-surface-variant text-sm mt-1">{helperText}</p>
         )}
 
       </div>

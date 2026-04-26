@@ -1,7 +1,7 @@
 "use client";
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "@/components/icons/solar";
 
 export interface DetailedPaginationProps {
     currentPage: number;
@@ -23,6 +23,8 @@ const DetailedPagination = ({
     pageSizeOptions = [10, 20, 50, 100]
 }: DetailedPaginationProps) => {
     const t = useTranslations('common');
+    const pageSizeSelectId = useId().replace(/:/g, '');
+    const jumpInputId = useId().replace(/:/g, '');
     const [jumpToPage, setJumpToPage] = useState<string>('');
 
     const startItem = (currentPage - 1) * pageSize + 1;
@@ -38,21 +40,22 @@ const DetailedPagination = ({
     };
 
     return (
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-6 py-6 border-t border-[#262626] mt-4">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-6 py-6 border-t border-border mt-4">
             {/* Left: Summary and Page Size */}
             <div className="flex flex-col sm:flex-row items-center gap-6 w-full lg:w-auto">
-                <p className="text-sm font-semibold text-[#a3a3a3] whitespace-nowrap">
-                    {t('pagination.showing')} <span className="text-[#8b6a55]">{startItem}</span> {t('pagination.to')} <span className="text-[#8b6a55]">{endItem}</span> {t('pagination.of')} <span className="text-white">{totalItems}</span> {t('pagination.results')}
+                <p className="text-sm font-semibold text-on-surface-subtle whitespace-nowrap">
+                    {t('pagination.showing')} <span className="text-primary">{startItem}</span> {t('pagination.to')} <span className="text-primary">{endItem}</span> {t('pagination.of')} <span className="text-on-surface">{totalItems}</span> {t('pagination.results')}
                 </p>
 
                 <div className="flex items-center gap-3">
-                    <span className="text-sm font-semibold text-[#a3a3a3] whitespace-nowrap">
+                    <label htmlFor={pageSizeSelectId} className="text-sm font-semibold text-on-surface-subtle whitespace-nowrap">
                         {t('pagination.items_per_page')}:
-                    </span>
+                    </label>
                     <select
+                        id={pageSizeSelectId}
                         value={pageSize}
                         onChange={(e) => onPageSizeChange(Number(e.target.value))}
-                        className="bg-[#080808] border border-[#262626] text-[#d4d4d4] text-sm font-semibold rounded-lg focus:ring-[#8b6a55] focus:border-[#8b6a55] block w-full p-2 outline-none transition-all duration-300"
+                        className="bg-surface border border-border text-on-surface-subtle text-sm font-semibold rounded-lg focus:ring-primary focus:border-primary block w-full p-2 outline-none transition-all duration-300"
                     >
                         {pageSizeOptions.map((option) => (
                             <option key={option} value={option}>
@@ -68,7 +71,7 @@ const DetailedPagination = ({
                 <button
                     onClick={() => onPageChange(1)}
                     disabled={currentPage === 1}
-                    className="p-2 rounded-lg border border-transparent text-[#737373] hover:bg-[#171717] hover:text-[#8b6a55] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                    className="p-2 rounded-lg border border-transparent text-on-surface-variant hover:bg-surface-container-high hover:text-primary disabled:opacity-30 disabled:cursor-not-allowed transition-all"
                     title={t('pagination.first_page')}
                 >
                     <ChevronsLeft size={18} />
@@ -77,7 +80,7 @@ const DetailedPagination = ({
                 <button
                     onClick={() => onPageChange(currentPage - 1)}
                     disabled={currentPage === 1}
-                    className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg border border-[#262626] text-[#d4d4d4] hover:bg-[#171717] hover:border-[#8b6a55] hover:text-[#8b6a55] disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-300 active:scale-95 mx-1"
+                    className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg border border-border text-on-surface-subtle hover:bg-surface-container-high hover:border-primary hover:text-primary disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-300 active:scale-95 mx-1"
                 >
                     <ChevronLeft size={16} />
                     <span className="hidden sm:inline text-sm font-bold tracking-tight">
@@ -98,10 +101,10 @@ const DetailedPagination = ({
                             <button
                                 key={pageNum}
                                 onClick={() => onPageChange(pageNum)}
-                                className={`w-9 h-9 rounded-xl font-bold text-sm transition-all duration-300 ${
+                                className={`w-9 h-9 rounded-lg font-bold text-sm transition-all duration-300 ${
                                     currentPage === pageNum
-                                        ? 'bg-[#171717] text-white ring-1 ring-[#8b6a55]'
-                                        : 'text-[#d4d4d4] hover:bg-[#171717] hover:text-[#8b6a55]'
+                                        ? 'bg-surface-container-high text-on-surface ring-1 ring-primary'
+                                        : 'text-on-surface-subtle hover:bg-surface-container-high hover:text-primary'
                                 }`}
                             >
                                 {pageNum}
@@ -113,7 +116,7 @@ const DetailedPagination = ({
                 <button
                     onClick={() => onPageChange(currentPage + 1)}
                     disabled={currentPage === totalPages}
-                    className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg border border-[#262626] text-[#d4d4d4] hover:bg-[#171717] hover:border-[#8b6a55] hover:text-[#8b6a55] disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-300 active:scale-95 mx-1"
+                    className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg border border-border text-on-surface-subtle hover:bg-surface-container-high hover:border-primary hover:text-primary disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-300 active:scale-95 mx-1"
                 >
                     <span className="hidden sm:inline text-sm font-bold tracking-tight">
                         {t('pagination.next')}
@@ -124,7 +127,7 @@ const DetailedPagination = ({
                 <button
                     onClick={() => onPageChange(totalPages)}
                     disabled={currentPage === totalPages}
-                    className="p-2 rounded-lg border border-transparent text-[#737373] hover:bg-[#171717] hover:text-[#8b6a55] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                    className="p-2 rounded-lg border border-transparent text-on-surface-variant hover:bg-surface-container-high hover:text-primary disabled:opacity-30 disabled:cursor-not-allowed transition-all"
                     title={t('pagination.last_page')}
                 >
                     <ChevronsRight size={18} />
@@ -133,20 +136,21 @@ const DetailedPagination = ({
 
             {/* Right: Quick Jump */}
             <form onSubmit={handleJumpToPage} className="flex items-center gap-2 w-full lg:w-auto justify-end">
-                <span className="text-sm font-semibold text-[#a3a3a3] whitespace-nowrap">
+                <label htmlFor={jumpInputId} className="text-sm font-semibold text-on-surface-subtle whitespace-nowrap">
                     {t('pagination.go_to')}:
-                </span>
+                </label>
                 <input
+                    id={jumpInputId}
                     type="number"
                     min="1"
                     max={totalPages}
                     value={jumpToPage}
                     onChange={(e) => setJumpToPage(e.target.value)}
-                    className="w-16 p-2 bg-[#080808] border border-[#262626] rounded-lg text-center text-sm font-semibold text-[#d4d4d4] focus:ring-[#8b6a55] focus:border-[#8b6a55] outline-none transition-all"
+                    className="w-16 p-2 bg-surface border border-border rounded-lg text-center text-sm font-semibold text-on-surface-subtle focus:ring-primary focus:border-primary outline-none transition-all"
                 />
                 <button
                     type="submit"
-                    className="p-2 bg-[#171717] text-[#8b6a55] rounded-lg hover:bg-[#8b6a55] hover:text-white font-semibold text-xs uppercase tracking-wider transition-all duration-300"
+                    className="p-2 bg-surface-container-high text-primary rounded-lg hover:bg-primary hover:text-on-primary font-semibold text-xs uppercase tracking-wider transition-all duration-300"
                 >
                     OK
                 </button>

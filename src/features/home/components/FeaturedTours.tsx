@@ -5,7 +5,7 @@ import { Link } from "@/i18n/navigation";
 import { ROUTES } from "@/config";
 import Image from "next/image";
 import { useTranslations, useLocale } from "next-intl";
-import { IoTimeOutline, IoPeopleOutline } from "react-icons/io5";
+import { IoTimeOutline, IoPeopleOutline } from "@/components/icons/solar";
 import { useTours } from "../hooks/use-tours";
 import { formatPriceVND } from "@/utils/format";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
@@ -14,13 +14,13 @@ const FeaturedTours = () => {
   const { featuredTours: tours } = useTours();
   const t = useTranslations();
   const locale = useLocale();
-  const { elementRef, isVisible } = useScrollReveal(0.1);
+  const { elementRef, isVisible } = useScrollReveal();
 
   // Keep layout stable even if tours still loading
   // if (tours.length === 0) return null;
 
   return (
-    <section className="py-[120px] bg-surface font-sans overflow-hidden">
+    <section className="py-[120px] bg-surface/12 backdrop-blur-[1px] font-sans overflow-hidden">
       <div className="design-container" ref={elementRef}>
         <div className={`flex justify-between items-end mb-[48px] transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
           <div className={`transition-all duration-700 delay-100 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
@@ -97,7 +97,7 @@ const FeaturedTours = () => {
 
                 {/* Button Action */}
                 <Link
-                  href={`${ROUTES.TOURS}?q=${encodeURIComponent(tour.name)}` as string & {}}
+                  href={ROUTES.TOUR_DETAIL(tour.slug)}
                   className="block w-full text-center bg-[#171717] border border-[#262626] text-white rounded-xl py-4 text-[14px] font-bold mt-6 hover:border-[#8b6a55] hover:text-[#8b6a55] transition-all shadow-[0_10px_20px_rgba(0,0,0,0.25)] active:scale-[0.98]"
                 >
                   {t("common.tour.book_now")}

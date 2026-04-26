@@ -1,6 +1,9 @@
 {
   "title": "Địa điểm nổi bật",
   "subtitle": "Khám phá những điểm đến được yêu thích nhất tại Đà Nẵng.",
+  "grid": {
+    "empty_title": "Không tìm thấy địa điểm nào phù hợp"
+  },
   "discovery": {
     "title": "Khám phá Địa điểm Đà Nẵng",
     "subtitle": "{count} địa điểm du lịch hấp dẫn đang chờ bạn khám phá và trải nghiệm",

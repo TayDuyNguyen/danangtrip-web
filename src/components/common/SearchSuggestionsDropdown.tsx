@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { IoStar, IoSearchOutline } from "react-icons/io5";
+import { IoStar, IoSearchOutline } from "@/components/icons/solar";
 import { cn } from "@/utils/string";
 import { SearchSuggestionsData, SearchSuggestionItem } from "@/types/search-suggestion.types";
 

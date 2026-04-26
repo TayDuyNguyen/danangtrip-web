@@ -1,6 +1,7 @@
 import { API_ENDPOINTS } from "@/config";
 import axiosInstance from "@/lib/axios";
 import type { Tour, TourCategory, ApiResponse } from "@/types";
+import type { TourFilterParams } from "@/features/tour/types";
 
 export const tourService = {
   getFeatured: (limit: number = 8): Promise<ApiResponse<Tour[]>> =>
@@ -12,13 +13,7 @@ export const tourService = {
   getCategories: (): Promise<ApiResponse<TourCategory[]>> =>
     axiosInstance.get(API_ENDPOINTS.TOURS.CATEGORIES),
 
-  getAll: (params?: {
-    q?: string;
-    tour_category_id?: number;
-    sort?: string;
-    order?: "asc" | "desc";
-    per_page?: number;
-  }): Promise<ApiResponse<Tour[]>> =>
+  getAll: (params?: TourFilterParams): Promise<ApiResponse<Tour[]>> =>
     axiosInstance.get(API_ENDPOINTS.TOURS.LIST, { params }),
 
   getDetail: (slug: string): Promise<ApiResponse<Tour>> =>

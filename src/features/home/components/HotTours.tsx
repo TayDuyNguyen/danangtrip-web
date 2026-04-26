@@ -5,7 +5,7 @@ import { Link } from "@/i18n/navigation";
 import { ROUTES } from "@/config";
 import Image from "next/image";
 import { useTranslations, useLocale } from "next-intl";
-import { IoTimeOutline, IoPeopleOutline, IoFlame } from "react-icons/io5";
+import { IoTimeOutline, IoPeopleOutline, IoFlame } from "@/components/icons/solar";
 import { useTours } from "../hooks/use-tours";
 import { formatPriceVND } from "@/utils/format";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
@@ -14,12 +14,12 @@ const HotTours = () => {
   const { hotTours: tours } = useTours();
   const t = useTranslations();
   const locale = useLocale();
-  const { elementRef, isVisible } = useScrollReveal(0.1);
+  const { elementRef, isVisible } = useScrollReveal();
 
   if (tours.length === 0) return null;
 
   return (
-    <section className="py-[120px] bg-surface font-sans overflow-hidden">
+    <section className="py-[120px] bg-surface/12 backdrop-blur-[1px] font-sans overflow-hidden">
       <div className="design-container" ref={elementRef}>
         <div className={`flex justify-between items-end mb-16 gap-8 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
           <div className={`transition-all duration-700 delay-100 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
@@ -87,7 +87,7 @@ const HotTours = () => {
                     </span>
                   </div>
                   <Link
-                  href={`${ROUTES.TOURS}?q=${encodeURIComponent(tour.name)}` as string & {}}
+                    href={ROUTES.TOUR_DETAIL(tour.slug)}
                     className="w-12 h-12 bg-[#171717] border border-[#262626] text-[#8b6a55] rounded-full flex items-center justify-center hover:border-[#8b6a55] hover:text-white transition-all duration-500 shadow-sm"
                   >
                     <span className="text-xl font-bold">→</span>

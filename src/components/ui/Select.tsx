@@ -9,7 +9,7 @@ import ReactSelect, {
   type DropdownIndicatorProps
 } from "react-select";
 import { cn } from "@/utils/string";
-import { ChevronDown } from "lucide-react";
+import { UilAngleDown } from "@iconscout/react-unicons";
 import { useTranslations } from "next-intl";
 
 export interface SelectOption {
@@ -23,7 +23,7 @@ interface SelectProps extends Omit<ReactSelectProps<SelectOption, false, GroupBa
   helperText?: string;
   containerClassName?: string;
   isFocused?: boolean;
-  variant?: "default" | "glass";
+  variant?: "default" | "glass" | "minimal";
   menuPortalTarget?: HTMLElement | null;
   menuPosition?: "absolute" | "fixed";
 }
@@ -32,11 +32,14 @@ const DropdownIndicator = (props: DropdownIndicatorProps<SelectOption, false>) =
   const variant = (props.selectProps as SelectProps).variant;
   return (
     <components.DropdownIndicator {...props}>
-      <ChevronDown className={cn(
-        "w-4 h-4 transition-transform duration-300",
-        props.selectProps.menuIsOpen && "rotate-180",
-        variant === "glass" ? "text-white" : "text-on-surface-subtle"
-      )} />
+      <UilAngleDown
+        size={16}
+        className={cn(
+          "transition-transform duration-300",
+          props.selectProps.menuIsOpen && "rotate-180",
+          variant === "glass" ? "text-white" : "text-on-surface-subtle"
+        )}
+      />
     </components.DropdownIndicator>
   );
 };
@@ -60,10 +63,12 @@ export const Select = ({
 }: SelectProps) => {
   const t = useTranslations("common");
   const reactId = useId();
+  const selectInputId = `${reactId.replace(/:/g, "")}-select-input`;
   const [internalFocused, setInternalFocused] = useState(false);
   const isFocused = externalFocused || internalFocused;
 
   const isGlass = variant === "glass";
+  const isMinimal = variant === "minimal";
 
   const defaultPlaceholder = t("common.select_placeholder");
   const finalPlaceholder = placeholder || defaultPlaceholder;
@@ -72,22 +77,22 @@ export const Select = ({
     control: (provided) => ({
       ...provided,
       minHeight: "unset",
-      height: isGlass ? "auto" : "56px",
+      height: isMinimal ? "40px" : isGlass ? "auto" : "56px",
       backgroundColor: isGlass
         ? "transparent"
         : isFocused ? "rgba(var(--surface-container-low), 0.3)" : "transparent",
       border: "none",
-      borderBottom: isGlass
+      borderBottom: isGlass || isMinimal
         ? "none"
         : `1px solid ${error ? "#ef4444" : isFocused ? "#8b6a55" : "#262626"}`,
-      borderRadius: "0",
+      borderRadius: isMinimal ? "8px" : "0",
       boxShadow: "none",
       padding: "0",
       transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
       cursor: "pointer",
       position: "relative", // Required for absolute indicatorsContainer
       "&:hover": {
-        backgroundColor: isGlass ? "transparent" : "rgba(var(--surface-container-low), 0.1)",
+        backgroundColor: isGlass || isMinimal ? "transparent" : "rgba(var(--surface-container-low), 0.1)",
       },
     }),
     valueContainer: (provided) => ({
@@ -111,8 +116,8 @@ export const Select = ({
       ...provided,
       margin: "0",
       color: isGlass ? "white" : "var(--color-foreground)",
-      fontSize: "16px",
-      fontWeight: "500",
+      fontSize: isMinimal ? "14px" : "16px",
+      fontWeight: isMinimal ? "700" : "500",
       width: "100%",
       textAlign: isGlass ? "center" : "left",
     }),
@@ -180,14 +185,15 @@ export const Select = ({
 
   return (
     <div className={cn("w-full group", containerClassName)}>
-      {label && (
+      {label && !isMinimal && (
         <label
+          htmlFor={selectInputId}
           className={cn(
             "block text-xs font-bold mb-1 uppercase tracking-widest transition-all duration-300 transform",
             isFocused || error || value
               ? "translate-y-0 opacity-100"
               : "text-transparent -translate-y-1 opacity-0",
-            isFocused ? "text-[#8b6a55]" : (error ? "text-red-500" : "text-[#737373]")
+            isFocused ? "text-primary" : (error ? "text-red-500" : "text-on-surface-variant")
           )}
         >
           {label}
@@ -196,6 +202,8 @@ export const Select = ({
 
       <ReactSelect
         instanceId={props.instanceId || reactId}
+        inputId={selectInputId}
+        aria-label={isMinimal && !label ? String(finalPlaceholder) : undefined}
         components={{ DropdownIndicator }}
         onFocus={() => setInternalFocused(true)}
         onBlur={() => setInternalFocused(false)}
@@ -220,7 +228,7 @@ export const Select = ({
       </div>
 
       {helperText && !error && (
-        <p className="text-[#737373] text-sm mt-1">{helperText}</p>
+        <p className="text-on-surface-variant text-sm mt-1">{helperText}</p>
       )}
     </div>
   );

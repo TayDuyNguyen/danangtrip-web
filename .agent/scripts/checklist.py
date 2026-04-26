@@ -159,7 +159,18 @@ def print_summary(results: List[dict]):
         print_success("All checks PASSED ✨")
         return True
 
+def _configure_stdio_encoding() -> None:
+    """Avoid UnicodeEncodeError on Windows consoles (e.g. cp1252) when printing symbols."""
+    for stream in (getattr(sys, "stdout", None), getattr(sys, "stderr", None)):
+        if stream is not None and hasattr(stream, "reconfigure"):
+            try:
+                stream.reconfigure(encoding="utf-8", errors="replace")
+            except (OSError, ValueError, AttributeError):
+                pass
+
+
 def main():
+    _configure_stdio_encoding()
     parser = argparse.ArgumentParser(
         description="Run Antigravity Kit validation checklist",
         formatter_class=argparse.RawDescriptionHelpFormatter,

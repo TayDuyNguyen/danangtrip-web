@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useTranslations } from 'next-intl';
-import { Cloud } from 'lucide-react';
+import { Cloud } from "@/components/icons/solar";
 import { useWeather } from '@/hooks/use-weather';
 
 function translateCondition(conditionKey: string, t: (key: string) => string): string {
@@ -53,16 +53,16 @@ export default function WeatherWidget() {
   const conditionLabel = translateCondition(weather.condition, t);
 
   return (
-    <div className="rounded-3xl border border-border bg-surface-container-low p-6 shadow-sm reveal-up reveal-delay-300">
+    <div className="rounded-xl border border-border bg-surface-container-low p-6 shadow-sm reveal-up reveal-delay-300">
       <div className="mb-4 flex items-center justify-between">
         <h3 className="text-lg font-bold text-foreground">{tLoc('detail.weather_title')}</h3>
-        <span className="rounded-full bg-surface-container-lowest px-2 py-1 text-xs font-medium text-[#00A19D] shadow-sm">
+        <span className="rounded-full bg-surface-container-lowest px-2 py-1 text-xs font-medium text-success shadow-sm">
           {tLoc('detail.weather_city')}
         </span>
       </div>
 
       <div className="mb-2 flex items-center gap-4">
-        <div className="rounded-2xl bg-surface-container-lowest p-3 text-3xl shadow-sm" aria-hidden>
+        <div className="rounded-xl bg-surface-container-lowest p-3 text-3xl shadow-sm" aria-hidden>
           {weather.icon ? <span>{weather.icon}</span> : <Cloud className="h-10 w-10 text-yellow-500" />}
         </div>
         <div>

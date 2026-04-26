@@ -3,7 +3,7 @@
 import React, { useMemo, useState } from 'react';
 import Image from 'next/image';
 import { RatingStars, Button } from '@/components/ui';
-import { MessageSquare, ThumbsUp } from 'lucide-react';
+import { MessageSquare, ThumbsUp } from "@/components/icons/solar";
 import type { LocationReview } from '@/types';
 import { format } from 'date-fns';
 import { vi, enUS } from 'date-fns/locale';
@@ -158,9 +158,9 @@ const LocationReviews: React.FC<LocationReviewsProps> = ({
           <p className="mt-2 text-on-surface-variant">{t('detail.reviews_count', { count: totalReviews })}</p>
         </div>
 
-        <div className="flex w-full flex-col gap-4 rounded-2xl border border-border bg-surface-container-lowest p-6 shadow-sm md:w-auto md:flex-row md:items-center md:gap-6">
+        <div className="flex w-full flex-col gap-4 rounded-xl border border-border bg-surface-container-lowest p-6 shadow-sm md:w-auto md:flex-row md:items-center md:gap-6">
           <div className="text-center">
-            <p className="text-4xl font-extrabold text-[#FF5A5F]">{safeAverage.toFixed(1)}</p>
+            <p className="text-4xl font-extrabold text-primary">{safeAverage.toFixed(1)}</p>
             <RatingStars rating={safeAverage} size="md" className="mt-1" />
           </div>
           {distribution.length > 0 ? (
@@ -176,7 +176,7 @@ const LocationReviews: React.FC<LocationReviewsProps> = ({
                   <span className="w-3 font-medium text-on-surface-variant">{star}</span>
                   <div className="h-2 flex-1 overflow-hidden rounded-full bg-surface-container-low">
                     <div
-                      className="h-full rounded-full bg-[#FF5A5F]/80 transition-all"
+                      className="h-full rounded-full bg-primary/80 transition-all"
                       style={{ width: `${pct}%` }}
                     />
                   </div>
@@ -189,7 +189,7 @@ const LocationReviews: React.FC<LocationReviewsProps> = ({
             <Button
               type="button"
               variant="primary"
-              className="shadow-[#FF5A5F]/20 shadow-lg bg-[#FF5A5F] hover:bg-[#FF5A5F]/90"
+              className="shadow-lg shadow-primary/20"
               disabled={hasRated}
               onClick={openWriteModal}
             >
@@ -205,7 +205,7 @@ const LocationReviews: React.FC<LocationReviewsProps> = ({
       {ratingsQuery.isLoading ? (
         <div className="grid gap-4">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-40 animate-pulse rounded-2xl bg-surface-container-low" />
+            <div key={i} className="h-40 animate-pulse rounded-xl bg-surface-container-low" />
           ))}
         </div>
       ) : null}
@@ -222,7 +222,7 @@ const LocationReviews: React.FC<LocationReviewsProps> = ({
               className="group relative rounded-2xl border border-transparent bg-surface-container-lowest p-6 transition-all duration-300 hover:border-border hover:shadow-xl"
             >
               <div className="flex items-start gap-4">
-                <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full ring-2 ring-[#00A19D]/10 ring-offset-2 ring-offset-background">
+                <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full ring-2 ring-success/20 ring-offset-2 ring-offset-background">
                   <Image
                     src={review.userAvatar || '/images/testimonials/avatar-1.png'}
                     alt={review.userName}

@@ -13,7 +13,7 @@ import { useSearchDiscoveryGrid } from "../hooks/use-search-discovery-grid";
 import { SearchFiltersSheet } from "./SearchFiltersSheet";
 import { Select, type SelectOption } from "@/components/ui/Select";
 import { cn } from "@/utils/string";
-import { IoStar } from "react-icons/io5";
+import { IoStar } from "@/components/icons/solar";
 import StandardPagination from "@/components/ui/pagination/StandardPagination";
 
 interface SearchResultsClientProps {

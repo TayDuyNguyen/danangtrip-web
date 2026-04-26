@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Star, X } from "lucide-react";
+import { Star, X } from "@/components/icons/solar";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";

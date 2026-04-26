@@ -12,7 +12,7 @@ import {
   IoStar,
   IoCloseOutline,
   IoChevronDownOutline
-} from "react-icons/io5";
+} from "@/components/icons/solar";
 import { cn } from "@/utils/string";
 
 interface LocationFiltersProps {

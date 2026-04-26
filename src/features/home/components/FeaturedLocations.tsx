@@ -11,7 +11,7 @@ import {
   IoLocationOutline,
   IoHeartOutline,
   IoHeart
-} from "react-icons/io5";
+} from "@/components/icons/solar";
 import { useLocations } from "../hooks/use-locations";
 import { useAddFavoriteLocation } from "../hooks/use-add-favorite-location";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
@@ -21,7 +21,7 @@ const FeaturedLocations = () => {
   const { featuredLocations: locations, categories, isLoading, isFetching } = useLocations(activeCategoryId);
   const t = useTranslations();
   const { mutateAsync: addFavorite } = useAddFavoriteLocation();
-  const { elementRef, isVisible } = useScrollReveal(0.1);
+  const { elementRef, isVisible } = useScrollReveal();
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showLeftBtn, setShowLeftBtn] = useState(false);
   const [showRightBtn, setShowRightBtn] = useState(true);
@@ -60,7 +60,7 @@ const FeaturedLocations = () => {
   };
 
   return (
-    <section className="py-[120px] bg-surface font-sans overflow-hidden">
+    <section className="py-[120px] bg-surface/12 backdrop-blur-[1px] font-sans overflow-hidden">
       <div className="container mx-auto px-4" ref={elementRef}>
         {/* Header */}
         <div className={`flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>

@@ -12,8 +12,9 @@ import {
   IoFlashOutline,
   IoCompassOutline,
   IoWalkOutline
-} from "react-icons/io5";
+} from "@/components/icons/solar";
 import { useTours } from "../hooks/use-tours";
+import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 
 const IconMapper = ({ icon, className }: { icon: string; className?: string }) => {
   if (icon.startsWith("/") || icon.startsWith("http")) {
@@ -47,13 +48,16 @@ const IconMapper = ({ icon, className }: { icon: string; className?: string }) =
 const TourCategories = () => {
   const { tourCategories: categories } = useTours();
   const t = useTranslations();
+  const { elementRef, isVisible } = useScrollReveal();
 
   if (categories.length === 0) return null;
 
   return (
-    <section className="py-[60px] bg-[#080808] font-sans">
-      <div className="design-container">
-        <div className="flex justify-between items-center mb-[24px] reveal-up">
+    <section className="py-[60px] bg-[#080808]/12 backdrop-blur-[1px] font-sans">
+      <div className="design-container" ref={elementRef}>
+        <div
+          className={`flex justify-between items-center mb-[24px] transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
+        >
           <h2 className="text-[24px] font-bold text-white">
             {t("home.tour_categories.title")}
           </h2>
@@ -66,9 +70,9 @@ const TourCategories = () => {
           {categories.slice(0, 6).map((category, index) => (
             <Link
               key={category.id}
-              href={`${ROUTES.TOURS}?category=${category.id}`}
-              className="group flex flex-col items-center p-[20px] rounded-xl bg-[#080808] hover:bg-[#111111] hover:shadow-[0_12px_24px_rgba(0,0,0,0.35)] transition-all duration-300 border border-[#262626] hover:border-[#8b6a55]/30 reveal-up"
-              style={{ animationDelay: `${(index + 1) * 100}ms` }}
+              href={`${ROUTES.TOURS}?tour_category_id=${category.id}`}
+              className={`group flex flex-col items-center p-[20px] rounded-xl bg-[#080808] hover:bg-[#111111] hover:shadow-[0_12px_24px_rgba(0,0,0,0.35)] transition-all duration-500 border border-[#262626] hover:border-[#8b6a55]/30 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}
+              style={{ transitionDelay: isVisible ? `${index * 70}ms` : "0ms" }}
             >
               <div className="w-[64px] h-[64px] flex items-center justify-center mb-[12px] p-[16px] bg-[#171717] rounded-lg border border-[#262626] transition-all relative">
                 <IconMapper icon={category.icon} />

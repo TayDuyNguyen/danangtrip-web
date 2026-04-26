@@ -1,7 +1,7 @@
 ---
 version: "alpha"
-name: "Faraway — Strategic Card Game"
-description: "Faraway Strategic Feature Section is designed for highlighting product capabilities and value points. Key features include reusable structure, responsive behavior, and production-ready presentation. It is suitable for component libraries and responsive product interfaces."
+name: "DanangTrip — Web Experience"
+description: "Design tokens and UI guidance for the DanangTrip public web app (tours, locations, search, auth). Use this file with implementation in src/app/[locale]/globals.css and shared UI primitives."
 colors:
   primary: "#8B6A55"
   secondary: "#5C3822"

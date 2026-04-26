@@ -2,7 +2,7 @@
 
 import { useAuthStore } from "@/features/auth";
 import { useTranslations } from "next-intl";
-import { IoShieldCheckmarkOutline, IoFingerPrintOutline, IoRocketOutline } from "react-icons/io5";
+import { IoShieldCheckmarkOutline, IoFingerPrintOutline, IoRocketOutline } from "@/components/icons/solar";
 
 export default function DashboardPage() {
   const { user } = useAuthStore();

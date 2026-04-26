@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Star, StarHalf } from 'lucide-react';
+import { Star, StarHalf } from "@/components/icons/solar";
 import { cn } from '@/lib/utils';
 
 interface RatingStarsProps {

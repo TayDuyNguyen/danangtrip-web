@@ -16,7 +16,7 @@ import {
   IoCompassOutline,
   IoChevronBackOutline,
   IoChevronForwardOutline,
-} from "react-icons/io5";
+} from "@/components/icons/solar";
 
 const getCategoryTheme = (slug: string) => {
   // Mapping based on common categories and Stitch design audit
@@ -79,7 +79,7 @@ const getCategoryTheme = (slug: string) => {
 const CategoryGrid = () => {
   const { categories } = useLocations();
   const t = useTranslations();
-  const { elementRef, isVisible } = useScrollReveal(0.1);
+  const { elementRef, isVisible } = useScrollReveal();
 
   const scrollLeft = () => {
     const el = document.getElementById("categories-scroll");
@@ -95,7 +95,7 @@ const CategoryGrid = () => {
   // if (categories.length === 0) return null;
 
   return (
-    <section className="py-[120px] bg-surface font-sans overflow-hidden">
+    <section className="py-[120px] bg-surface/12 backdrop-blur-[1px] font-sans overflow-hidden">
       <div className="design-container" ref={elementRef}>
         {/* Header */}
         <div className={`text-center mb-20 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
@@ -146,7 +146,7 @@ const CategoryGrid = () => {
               return (
                 <Link
                   key={category.id}
-                  href={`${ROUTES.LOCATIONS}?category=${category.id}`}
+                  href={`${ROUTES.LOCATIONS}?categories=${category.id}`}
                   className="group flex flex-col items-center gap-6 shrink-0"
                   style={{ animationDelay: `${(index + 1) * 100}ms` }}
                 >
