@@ -4,21 +4,21 @@ import { useTranslations } from "next-intl";
 export function Header() {
   const t = useTranslations("common");
   return (
-    <header className="bg-white shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <header className="bg-[#080808] border-b border-[#262626]">
+      <div className="design-container">
         <div className="flex justify-between items-center h-16">
-          <Link href="/" className="text-xl font-bold text-blue-600">
+          <Link href="/" className="text-xl font-bold text-[#8b6a55]">
             {t("common.brand_name")}
           </Link>
           
           <nav className="flex gap-6">
-            <Link href="/about" className="text-gray-600 hover:text-gray-900">
+            <Link href="/about" className="text-[#a3a3a3] hover:text-white">
               {t("nav.about_us")}
             </Link>
-            <Link href="/tours" className="text-gray-600 hover:text-gray-900">
+            <Link href="/tours" className="text-[#a3a3a3] hover:text-white">
               {t("nav.travel")}
             </Link>
-            <Link href="/login" className="text-blue-600 hover:text-blue-800">
+            <Link href="/login" className="text-[#8b6a55] hover:text-[#c59a5f]">
               {t("auth.login")}
             </Link>
           </nav>

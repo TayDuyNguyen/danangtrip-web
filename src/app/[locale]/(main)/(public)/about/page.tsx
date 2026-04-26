@@ -6,11 +6,15 @@ export default function AboutPage() {
   const t = useTranslations("common");
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-4xl font-bold mb-6">{t("about.title")}</h1>
-      <p className="text-lg text-gray-600">
-        {t("about.subtitle")}
-      </p>
+    <div className="design-page design-container design-section reveal-up">
+      <div className="design-content prose-content glass-shell">
+        <section className="glass-surface glass-inner rounded-lg p-8">
+          <h1 className="text-4xl font-semibold mb-6 text-white">{t("about.title")}</h1>
+          <p className="text-lg text-[#a3a3a3]">
+            {t("about.subtitle")}
+          </p>
+        </section>
+      </div>
     </div>
   );
 }

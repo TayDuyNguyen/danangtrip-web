@@ -1,4 +1,4 @@
-import React from 'react';
+import type { ReactNode } from "react";
 import { Star, StarHalf } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -11,19 +11,19 @@ interface RatingStarsProps {
   count?: number;
 }
 
-const RatingStars: React.FC<RatingStarsProps> = ({
+const RatingStars = ({
   rating,
   maxRating = 5,
   size = 'md',
   className,
   showText = false,
   count,
-}) => {
+}: RatingStarsProps) => {
   const safeRating = Math.min(
     maxRating,
     Math.max(0, Number.isFinite(rating) ? rating : 0)
   );
-  const stars = [];
+  const stars: ReactNode[] = [];
   const fullStars = Math.floor(safeRating);
   const hasHalfStar = safeRating % 1 >= 0.5;
 
@@ -52,7 +52,7 @@ const RatingStars: React.FC<RatingStarsProps> = ({
       stars.push(
         <Star
           key={i}
-          className={cn('text-gray-300', sizes[size])}
+          className={cn('text-[#404040]', sizes[size])}
         />
       );
     }
@@ -62,10 +62,10 @@ const RatingStars: React.FC<RatingStarsProps> = ({
     <div className={cn('flex items-center gap-1', className)}>
       <div className="flex items-center">{stars}</div>
       {showText && (
-        <span className={cn('font-medium text-gray-700', size === 'sm' ? 'text-xs' : 'text-sm')}>
+        <span className={cn('font-medium text-on-surface', size === 'sm' ? 'text-xs' : 'text-sm')}>
           {safeRating.toFixed(1)}
           {count !== undefined && (
-            <span className="ml-1 text-gray-500 font-normal">
+            <span className="ml-1 text-on-surface-subtle font-normal">
               ({count})
             </span>
           )}

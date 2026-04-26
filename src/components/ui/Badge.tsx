@@ -1,41 +1,41 @@
-import React from 'react';
+import type { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 
 interface BadgeProps {
-  children: React.ReactNode;
+  children: ReactNode;
   variant?: 'primary' | 'secondary' | 'outline' | 'success' | 'warning' | 'error' | 'ghost';
   size?: 'sm' | 'md' | 'lg';
   className?: string;
-  icon?: React.ReactNode;
+  icon?: ReactNode;
 }
 
-const Badge: React.FC<BadgeProps> = ({
+const Badge = ({
   children,
   variant = 'primary',
   size = 'md',
   className,
   icon,
-}) => {
+}: BadgeProps) => {
   const variants = {
-    primary: 'bg-blue-100 text-blue-700 border-blue-200',
-    secondary: 'bg-gray-100 text-gray-700 border-gray-200',
-    outline: 'bg-transparent text-gray-700 border-gray-300 border',
-    success: 'bg-green-100 text-green-700 border-green-200',
-    warning: 'bg-yellow-100 text-yellow-700 border-yellow-200',
-    error: 'bg-red-100 text-red-700 border-red-200',
-    ghost: 'bg-white/10 backdrop-blur-md text-white border-white/20',
+    primary: 'bg-[#171717] text-white border-[#262626]',
+    secondary: 'bg-[#080808] text-[#737373] border-[#262626]',
+    outline: 'bg-transparent text-[#737373] border-[#404040] border',
+    success: 'bg-[#1a1f14] text-[#929852] border-[#2f3b25]',
+    warning: 'bg-[#2b1f14] text-[#c59a5f] border-[#5c3822]',
+    error: 'bg-[#2a1616] text-[#d88484] border-[#5f2f2f]',
+    ghost: 'bg-[#080808]/70 backdrop-blur-[12px] text-white border-[#262626]',
   };
 
   const sizes = {
-    sm: 'px-2 py-0.5 text-xs',
-    md: 'px-3 py-1 text-sm',
-    lg: 'px-4 py-1.5 text-base',
+    sm: 'px-2 py-0.5 text-[11px]',
+    md: 'px-3 py-1 text-xs',
+    lg: 'px-4 py-1.5 text-sm',
   };
 
   return (
     <span
       className={cn(
-        'inline-flex items-center justify-center rounded-full font-medium transition-all duration-300',
+        'inline-flex items-center justify-center rounded-full border font-medium transition-all duration-300',
         variants[variant],
         sizes[size],
         className

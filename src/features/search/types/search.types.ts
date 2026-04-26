@@ -1,4 +1,5 @@
 import { Tour, Location } from "@/types";
+import type { SearchRequestParams, SearchSuggestionResponse } from "@/types/search.types";
 
 export type SearchResultType = "tour" | "location";
 
@@ -51,23 +52,5 @@ export interface SearchState {
   page?: number;
 }
 
-export interface SearchRequestParams {
-  q?: string;
-  type?: SearchResultType;
-  category_id?: number;
-  tour_category_id?: number;
-  district?: string;
-  price_min?: number;
-  price_max?: number;
-  sort_by?: string;
-  sort_order?: "asc" | "desc";
-  page?: number;
-  per_page?: number;
-  session_id?: string;
-}
-
-export interface SearchSuggestionResponse {
-  q: string;
-  items: string[]; // Adjust if backend returns objects later
-}
+export type { SearchRequestParams, SearchSuggestionResponse };
 

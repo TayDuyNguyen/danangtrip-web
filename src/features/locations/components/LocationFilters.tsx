@@ -50,7 +50,7 @@ const SectionHeader = ({ title, isExpanded, onToggle }: SectionHeaderProps) => (
     onClick={onToggle}
     className="w-full flex items-center justify-between group pl-1 mb-6 transition-colors"
   >
-    <h4 className="text-[11px] font-black uppercase tracking-[0.3em] text-on-surface-variant/50 group-hover:text-azure transition-colors">
+    <h4 className="text-[11px] font-black uppercase tracking-[0.3em] text-on-surface-variant/50 group-hover:text-[#8b6a55] transition-colors">
       {title}
     </h4>
     <IoChevronDownOutline className={cn(
@@ -101,7 +101,7 @@ export default function LocationFilters({
   };
 
   return (
-    <div className="bg-surface-container-lowest rounded-[32px] p-8 shadow-xl shadow-azure/5 border border-outline-variant/10 space-y-10">
+    <div className="bg-surface-container-lowest rounded-xl p-8 shadow-xl shadow-black/30 border border-[#262626] space-y-10">
       {/* Categories */}
       <div>
         <SectionHeader 
@@ -121,7 +121,7 @@ export default function LocationFilters({
                   type="checkbox"
                   checked={activeCategories.length === 0}
                   onChange={() => onCategoriesChange([])}
-                  className="peer appearance-none w-6 h-6 rounded-lg border-2 border-outline-variant/30 checked:bg-azure checked:border-azure transition-all duration-300"
+                  className="peer appearance-none w-6 h-6 rounded-lg border-2 border-outline-variant/30 checked:bg-[#8b6a55] checked:border-[#8b6a55] transition-all duration-300"
                 />
                 <svg className="absolute w-4 h-4 text-white opacity-0 peer-checked:opacity-100 left-1 pointer-events-none transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="4">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -129,7 +129,7 @@ export default function LocationFilters({
               </div>
               <span className={cn(
                 "text-[15px] font-bold transition-colors",
-                activeCategories.length === 0 ? "text-azure" : "text-on-surface"
+                activeCategories.length === 0 ? "text-[#8b6a55]" : "text-on-surface"
               )}>
                 {t("filters.all")}
               </span>
@@ -147,7 +147,7 @@ export default function LocationFilters({
                     type="checkbox"
                     checked={activeCategories.includes(cat.id)}
                     onChange={() => toggleCategory(cat.id)}
-                    className="peer appearance-none w-6 h-6 rounded-lg border-2 border-outline-variant/30 checked:bg-azure checked:border-azure transition-all duration-300"
+                    className="peer appearance-none w-6 h-6 rounded-lg border-2 border-outline-variant/30 checked:bg-[#8b6a55] checked:border-[#8b6a55] transition-all duration-300"
                   />
                   <svg className="absolute w-4 h-4 text-white opacity-0 peer-checked:opacity-100 left-1 pointer-events-none transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="4">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -155,13 +155,13 @@ export default function LocationFilters({
                 </div>
                 <div className={cn(
                   "w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300",
-                  activeCategories.includes(cat.id) ? "bg-azure/10 text-azure" : "bg-surface-container-low text-on-surface-variant/50"
+                  activeCategories.includes(cat.id) ? "bg-[#171717] text-[#8b6a55]" : "bg-surface-container-low text-on-surface-variant/50"
                 )}>
                   <CategoryIcon icon={cat.icon} className="text-xl" />
                 </div>
                 <span className={cn(
                   "text-[15px] font-bold transition-colors",
-                  activeCategories.includes(cat.id) ? "text-azure" : "text-on-surface"
+                  activeCategories.includes(cat.id) ? "text-[#8b6a55]" : "text-on-surface"
                 )}>
                   {cat.name}
                 </span>
@@ -193,7 +193,7 @@ export default function LocationFilters({
                   type="checkbox"
                   checked={activeDistricts.length === 0}
                   onChange={() => onDistrictsChange([])}
-                  className="peer appearance-none w-6 h-6 rounded-lg border-2 border-outline-variant/30 checked:bg-azure checked:border-azure transition-all duration-300"
+                  className="peer appearance-none w-6 h-6 rounded-lg border-2 border-outline-variant/30 checked:bg-[#8b6a55] checked:border-[#8b6a55] transition-all duration-300"
                 />
                 <svg className="absolute w-4 h-4 text-white opacity-0 peer-checked:opacity-100 left-1 pointer-events-none transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="4">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -201,7 +201,7 @@ export default function LocationFilters({
               </div>
               <span className={cn(
                 "text-[15px] font-bold transition-colors",
-                activeDistricts.length === 0 ? "text-azure" : "text-on-surface"
+                activeDistricts.length === 0 ? "text-[#8b6a55]" : "text-on-surface"
               )}>
                 {t("filters.all")}
               </span>
@@ -219,7 +219,7 @@ export default function LocationFilters({
                     type="checkbox"
                     checked={activeDistricts.includes(dist.name)}
                     onChange={() => toggleDistrict(dist.name)}
-                    className="peer appearance-none w-6 h-6 rounded-lg border-2 border-outline-variant/30 checked:bg-azure checked:border-azure transition-all duration-300"
+                    className="peer appearance-none w-6 h-6 rounded-lg border-2 border-outline-variant/30 checked:bg-[#8b6a55] checked:border-[#8b6a55] transition-all duration-300"
                   />
                   <svg className="absolute w-4 h-4 text-white opacity-0 peer-checked:opacity-100 left-1 pointer-events-none transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="4">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -227,7 +227,7 @@ export default function LocationFilters({
                 </div>
                 <span className={cn(
                   "text-[15px] font-bold transition-colors",
-                  activeDistricts.includes(dist.name) ? "text-azure" : "text-on-surface"
+                  activeDistricts.includes(dist.name) ? "text-[#8b6a55]" : "text-on-surface"
                 )}>
                   {dist.name}
                 </span>
@@ -254,8 +254,8 @@ export default function LocationFilters({
           {[
             { value: undefined, label: t("filters.all") },
             { value: 1, label: t("price.free") },
-            { value: 2, label: "Bình dân ($)" },
-            { value: 3, label: "Trung cấp ($$)" },
+            { value: 2, label: t("price.budget") },
+            { value: 3, label: t("price.mid_range") },
           ].map((option) => (
             <label 
               key={String(option.value)}
@@ -267,13 +267,13 @@ export default function LocationFilters({
                   name="price_level"
                   checked={activePriceLevel === option.value}
                   onChange={() => onPriceLevelChange(option.value)}
-                  className="peer appearance-none w-6 h-6 rounded-full border-2 border-outline-variant/30 checked:border-azure transition-all duration-300"
+                  className="peer appearance-none w-6 h-6 rounded-full border-2 border-outline-variant/30 checked:border-[#8b6a55] transition-all duration-300"
                 />
-                <div className="absolute w-3 h-3 bg-azure rounded-full opacity-0 peer-checked:opacity-100 left-1.5 transition-opacity" />
+                <div className="absolute w-3 h-3 bg-[#8b6a55] rounded-full opacity-0 peer-checked:opacity-100 left-1.5 transition-opacity" />
               </div>
               <span className={cn(
                 "text-[15px] font-bold transition-colors",
-                activePriceLevel === option.value ? "text-azure" : "text-on-surface"
+                activePriceLevel === option.value ? "text-[#8b6a55]" : "text-on-surface"
               )}>
                 {option.label}
               </span>
@@ -295,8 +295,8 @@ export default function LocationFilters({
         )}>
           {[
             { value: undefined, label: t("filters.all") },
-            { value: 4, label: "4+ sao" },
-            { value: 3, label: "3+ sao" },
+            { value: 4, label: t("filters.rating_4_plus") },
+            { value: 3, label: t("filters.rating_3_plus") },
           ].map((option) => (
             <label 
               key={String(option.value)}
@@ -308,14 +308,14 @@ export default function LocationFilters({
                   name="rating"
                   checked={activeRating === option.value}
                   onChange={() => onRatingChange(option.value)}
-                  className="peer appearance-none w-6 h-6 rounded-full border-2 border-outline-variant/30 checked:border-azure transition-all duration-300"
+                  className="peer appearance-none w-6 h-6 rounded-full border-2 border-outline-variant/30 checked:border-[#8b6a55] transition-all duration-300"
                 />
-                <div className="absolute w-3 h-3 bg-azure rounded-full opacity-0 peer-checked:opacity-100 left-1.5 transition-opacity" />
+                <div className="absolute w-3 h-3 bg-[#8b6a55] rounded-full opacity-0 peer-checked:opacity-100 left-1.5 transition-opacity" />
               </div>
               <div className="flex items-center gap-2">
                 <span className={cn(
                   "text-[15px] font-bold transition-colors",
-                  activeRating === option.value ? "text-azure" : "text-on-surface"
+                  activeRating === option.value ? "text-[#8b6a55]" : "text-on-surface"
                 )}>
                   {option.label}
                 </span>
@@ -335,7 +335,7 @@ export default function LocationFilters({
       {/* Reset Button */}
       <button
         onClick={onReset}
-        className="w-full py-5 px-6 bg-surface-container-low hover:bg-surface-container-high text-on-surface font-black rounded-2xl transition-all active:scale-95 flex items-center justify-center gap-3 border border-outline-variant/10 group mt-4"
+        className="w-full py-5 px-6 bg-surface-container-low hover:bg-surface-container-high text-on-surface font-black rounded-xl transition-all active:scale-95 flex items-center justify-center gap-3 border border-[#262626] group mt-4"
       >
         <IoCloseOutline className="text-2xl group-hover:rotate-180 transition-transform duration-500" />
         {t("filters.reset")}

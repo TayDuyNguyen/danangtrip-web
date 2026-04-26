@@ -48,17 +48,17 @@ export const SearchFiltersSheet = ({
 
   // Helper to get rating styles and avoid IDE class conflicts
   const getRatingStyles = (isActive: boolean) => {
-    const activeBg = "bg-linear-to-r from-azure to-azure-dark shadow-xl shadow-azure/30";
+    const activeBg = "bg-[#8b6a55] shadow-xl shadow-[#8b6a55]/30";
     const inactiveBg = "bg-surface-container-low/40 backdrop-blur-sm hover:bg-surface-container-low";
     
-    const activeBorder = "border-azure";
+    const activeBorder = "border-[#8b6a55]";
     const inactiveBorder = "border-outline-variant/10 hover:border-outline-variant/30";
     
     const activeText = "text-white";
     const inactiveText = "text-on-surface-variant";
 
     return cn(
-      "group flex items-center gap-3 px-6 py-4 rounded-2xl font-black transition-all duration-500 scale-100 active:scale-90 border-2",
+      "group flex items-center gap-3 px-6 py-4 rounded-xl font-black transition-all duration-500 scale-100 active:scale-90 border-2",
       isActive ? activeBg : inactiveBg,
       isActive ? activeBorder : inactiveBorder,
       isActive ? activeText : inactiveText
@@ -96,7 +96,7 @@ export const SearchFiltersSheet = ({
             <h3 className="text-[11px] font-black text-on-surface-variant/50 uppercase tracking-[0.3em] pl-1">
               {t("filters.category")}
               {localFilters.category && (
-                 <button onClick={() => setLocalFilters(p => ({...p, category: undefined}))} className="text-azure normal-case text-xs ml-auto">
+                 <button onClick={() => setLocalFilters(p => ({...p, category: undefined}))} className="text-[#8b6a55] normal-case text-xs ml-auto">
                    {t("filters.reset")}
                  </button>
               )}
@@ -167,7 +167,7 @@ export const SearchFiltersSheet = ({
                     value={localFilters.minPrice || ""}
                     onChange={(e) => setLocalFilters(prev => ({ ...prev, minPrice: Number(e.target.value) || undefined }))}
                     placeholder="0"
-                    className="w-full bg-surface-container-low/40 backdrop-blur-sm border-2 border-outline-variant/10 rounded-2xl py-5 px-6 font-bold text-foreground outline-none focus:border-azure/50 focus:ring-4 focus:ring-azure/5 transition-all placeholder:text-on-surface-variant/30"
+                    className="w-full bg-surface-container-low/40 backdrop-blur-sm border-2 border-outline-variant/10 rounded-xl py-5 px-6 font-bold text-foreground outline-none focus:border-[#8b6a55]/50 focus:ring-4 focus:ring-[#8b6a55]/5 transition-all placeholder:text-on-surface-variant/30"
                   />
                   <span className="absolute right-5 top-1/2 -translate-y-1/2 text-on-surface-subtle font-black text-xs">đ</span>
                 </div>
@@ -182,7 +182,7 @@ export const SearchFiltersSheet = ({
                     value={localFilters.maxPrice || ""}
                     onChange={(e) => setLocalFilters(prev => ({ ...prev, maxPrice: Number(e.target.value) || undefined }))}
                     placeholder="10M+"
-                    className="w-full bg-surface-container-low/40 backdrop-blur-sm border-2 border-outline-variant/10 rounded-2xl py-5 px-6 font-bold text-foreground outline-none focus:border-azure/50 focus:ring-4 focus:ring-azure/5 transition-all placeholder:text-on-surface-variant/30"
+                    className="w-full bg-surface-container-low/40 backdrop-blur-sm border-2 border-outline-variant/10 rounded-xl py-5 px-6 font-bold text-foreground outline-none focus:border-[#8b6a55]/50 focus:ring-4 focus:ring-[#8b6a55]/5 transition-all placeholder:text-on-surface-variant/30"
                   />
                   <span className="absolute right-5 top-1/2 -translate-y-1/2 text-on-surface-subtle font-black text-xs">đ</span>
                 </div>
@@ -195,13 +195,13 @@ export const SearchFiltersSheet = ({
         <div className="p-8 border-t border-surface-container-high bg-surface-container-lowest grid grid-cols-2 gap-4">
           <button
             onClick={handleReset}
-            className="py-4 rounded-2xl border-2 border-surface-container-high text-on-surface font-black hover:bg-surface-container-low transition-all active:scale-95"
+            className="py-4 rounded-xl border-2 border-surface-container-high text-on-surface font-black hover:bg-surface-container-low transition-all active:scale-95"
           >
             {t("filters.reset")}
           </button>
           <button
             onClick={handleApply}
-            className="py-4 rounded-2xl bg-azure text-white font-black shadow-lg shadow-azure/20 hover:bg-azure-dark transition-all active:scale-95"
+            className="py-4 rounded-xl bg-[#8b6a55] text-white font-black shadow-lg shadow-[#8b6a55]/20 hover:bg-[#5c3822] transition-all active:scale-95"
           >
             {t("filters.apply")}
           </button>

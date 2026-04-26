@@ -161,7 +161,7 @@ export const SearchResultsClient = ({ initialQuery }: SearchResultsClientProps) 
                      options={sortOptions}
                      value={currentSortOption}
                      onChange={handleSortChange}
-                     containerClassName="bg-surface-container-low rounded-2xl border-none p-0 px-4"
+                     containerClassName="bg-surface-container-low rounded-xl border border-[#262626] p-0 px-4"
                      className="bg-transparent"
                      placeholder={tSearch("sort.label")}
                    />
@@ -181,7 +181,7 @@ export const SearchResultsClient = ({ initialQuery }: SearchResultsClientProps) 
             </>
           ) : !isLoading && (
             /* Empty State (Only if Query exists but no results) */
-            <div className="flex flex-col items-center justify-center py-20 text-center bg-surface-container-lowest rounded-[32px] shadow-ambient">
+            <div className="flex flex-col items-center justify-center py-20 text-center bg-surface-container-lowest rounded-xl shadow-ambient border border-[#262626]">
               <div className="w-20 h-20 bg-surface-container-low rounded-full flex items-center justify-center mb-6 text-4xl">
                 🔍
               </div>
@@ -195,7 +195,7 @@ export const SearchResultsClient = ({ initialQuery }: SearchResultsClientProps) 
         <div className="space-y-12 py-6">
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-surface-container-low flex items-center justify-center text-azure">
+              <div className="w-10 h-10 rounded-2xl bg-surface-container-low flex items-center justify-center text-[#8b6a55]">
                 <IoStar className="text-xl" />
               </div>
               <div>

@@ -21,12 +21,16 @@ export default async function SearchPage({ searchParams }: Props) {
   const query = resolvedSearchParams.q || "";
 
   return (
-    <main className="min-h-screen pt-24 pb-20 bg-surface">
-      <div className="container px-4 mx-auto">
+    <main className="design-page min-h-screen pb-20">
+      <div className="design-container pt-8">
         <Suspense
-          fallback={<div className="min-h-[50vh] animate-pulse rounded-2xl bg-surface-container" aria-hidden />}
+          fallback={<div className="min-h-[50vh] animate-pulse rounded-lg bg-surface-container" aria-hidden />}
         >
-          <SearchResultsClient initialQuery={query} />
+          <div className="glass-shell reveal-up">
+            <div className="glass-surface glass-inner rounded-lg p-4 sm:p-6">
+              <SearchResultsClient initialQuery={query} />
+            </div>
+          </div>
         </Suspense>
       </div>
     </main>

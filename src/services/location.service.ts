@@ -2,7 +2,7 @@ import { API_ENDPOINTS } from "@/config";
 import axiosInstance from "@/lib/axios";
 import type { Location, ApiResponse, PaginatedResponse, Category } from "@/types";
 import { BackendLocationQueryParams } from "@/features/locations/utils/location-query-mapper";
-import type { LocationRatingListItem } from "@/features/locations/types/rating.types";
+import type { LocationRatingListItem } from "@/types/location-rating.types";
 
 export const locationService = {
   getFeatured: (limit: number = 8): Promise<ApiResponse<Location[]>> =>

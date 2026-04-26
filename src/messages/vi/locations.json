@@ -14,6 +14,8 @@
     "price": "Mức giá",
     "price_level": "Mức giá",
     "rating": "Đánh giá",
+    "rating_4_plus": "4+ sao",
+    "rating_3_plus": "3+ sao",
     "reset": "Đặt lại bộ lọc"
   },
   "categories": {
@@ -38,7 +40,9 @@
   },
   "price": {
     "from": "Giá từ",
-    "free": "Miễn phí"
+    "free": "Miễn phí",
+    "budget": "Bình dân ($)",
+    "mid_range": "Trung cấp ($$)"
   },
   "reviews": "đánh giá",
   "buttons": {

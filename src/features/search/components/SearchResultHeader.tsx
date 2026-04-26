@@ -99,7 +99,7 @@ export const SearchResultHeader = ({
             <IoOptionsOutline className="text-xl" />
             {tSearch("filters.title")}
             {hasActiveFilters && (
-              <span className="w-5 h-5 rounded-full bg-azure text-white text-[10px] flex items-center justify-center">
+              <span className="w-5 h-5 rounded-full bg-[#8b6a55] text-white text-[10px] flex items-center justify-center">
                 !
               </span>
             )}
@@ -143,7 +143,7 @@ export const SearchResultHeader = ({
 
           <button
             onClick={onClearFilters}
-            className="text-sm font-black text-azure border-b-2 border-transparent hover:border-azure transition-all py-1 px-2"
+            className="text-sm font-black text-[#8b6a55] border-b-2 border-transparent hover:border-[#8b6a55] transition-all py-1 px-2"
           >
             {tSearch("filters.reset")}
           </button>
@@ -155,7 +155,7 @@ export const SearchResultHeader = ({
       <div className="pt-6">
         <div className="flex flex-wrap items-center gap-3">
           <span className="text-sm font-black text-on-surface-subtle uppercase tracking-widest mr-2 flex items-center gap-2">
-            <IoTrendingUp className="text-azure text-xl" />
+            <IoTrendingUp className="text-[#8b6a55] text-xl" />
             {tSearch("trending.title")}:
           </span>
 
@@ -172,7 +172,7 @@ export const SearchResultHeader = ({
                 className={cn(
                   "flex items-center gap-2 px-5 py-2 rounded-2xl text-sm font-black transition-all duration-300 scale-100 hover:scale-105",
                   isSelected
-                    ? "bg-azure shadow-azure/20"
+                    ? "bg-[#8b6a55] shadow-black/30"
                     : "bg-surface-container-low text-on-surface-subtle hover:bg-surface-container-high"
                 )}
               >
@@ -193,7 +193,7 @@ interface TagProps {
 }
 
 const Tag = ({ label, onRemove }: TagProps) => (
-  <div className="flex items-center gap-2 px-4 py-2 bg-azure/10 text-azure rounded-xl text-sm font-black border border-azure/20 shadow-sm transition-all hover:bg-azure/20">
+  <div className="flex items-center gap-2 px-4 py-2 bg-[#8b6a55]/10 text-[#8b6a55] rounded-xl text-sm font-black border border-[#8b6a55]/20 shadow-sm transition-all hover:bg-[#8b6a55]/20">
     <span>{label}</span>
     <button onClick={onRemove} className="hover:rotate-90 transition-transform">
       <IoCloseOutline className="text-lg" />

@@ -107,7 +107,7 @@ const Hero = () => {
           sizes="100vw"
           priority
         />
-        <div className="absolute inset-0 bg-linear-to-b from-black/80 via-black/20 to-dark/10" />
+        <div className="absolute inset-0 bg-linear-to-b from-black/80 via-black/20 to-[#080808]/20" />
       </div>
 
       {/* Content */}
@@ -127,9 +127,9 @@ const Hero = () => {
         {/* Search Box - Glassmorphism */}
         <div 
           ref={searchContainerRef}
-          className={`relative z-30 max-w-4xl mx-auto flex flex-col md:flex-row shadow-2xl rounded-[32px] backdrop-blur-xl bg-white/20 border border-white/30 p-2 transition-all duration-1000 delay-600 ${isVisible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-10 scale-95"}`}
+          className={`relative z-30 max-w-4xl mx-auto flex flex-col md:flex-row shadow-2xl rounded-xl backdrop-blur-md bg-[#111111]/70 border border-[#262626] p-2 transition-all duration-1000 delay-600 ${isVisible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-10 scale-95"}`}
         >
-          <div className="flex-1 flex items-center px-6 py-4 border-b md:border-b-0 md:border-r border-white/20">
+          <div className="flex-1 flex items-center px-6 py-4 border-b md:border-b-0 md:border-r border-[#262626]">
             <IoLocationOutline className="text-2xl text-white mr-3" />
             <input
               type="text"
@@ -154,7 +154,7 @@ const Hero = () => {
               className="w-full text-lg outline-none text-white placeholder-white/70 font-medium bg-transparent"
             />
           </div>
-          <div className="w-full md:w-1/4 flex items-center mt-4 border-b md:border-b-0 md:border-r border-white/20">
+          <div className="w-full md:w-1/4 flex items-center mt-4 border-b md:border-b-0 md:border-r border-[#262626]">
             <Select
               variant="glass"
               options={searchOptions}
@@ -171,7 +171,7 @@ const Hero = () => {
           </div>
           <button
             onClick={handleSearch}
-            className="px-8 py-4 bg-white hover:bg-white/90 transition-all text-azure text-lg font-bold flex items-center justify-center gap-2 rounded-[24px] mt-2 md:mt-0 shadow-lg active:scale-95"
+            className="px-8 py-4 bg-[#171717] hover:bg-[#1f1f1f] transition-all text-[#8b6a55] text-lg font-bold flex items-center justify-center gap-2 rounded-xl border border-[#262626] mt-2 md:mt-0 shadow-lg active:scale-95"
           >
             {t("home.search_button")}
           </button>
@@ -193,8 +193,7 @@ const Hero = () => {
       {/* Weather Widget */}
       {weather && (
         <div
-          className={`absolute bottom-10 right-10 z-30 flex items-center gap-3 backdrop-blur-md rounded-[20px] px-[16px] py-[10px] border border-white/30 shadow-2xl transition-all duration-1000 delay-1000 ${isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-10"}`}
-          style={{ backgroundColor: "rgba(255,255,255,0.15)" }}
+          className={`absolute bottom-10 right-10 z-30 flex items-center gap-3 backdrop-blur-md rounded-xl px-[16px] py-[10px] border border-[#262626] bg-[#111111]/80 shadow-2xl transition-all duration-1000 delay-1000 ${isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-10"}`}
         >
           <div className="text-2xl text-white drop-shadow-md">{weather.icon || "☀️"}</div>
           <span className="text-white font-bold text-[14px] drop-shadow-lg tracking-wide">

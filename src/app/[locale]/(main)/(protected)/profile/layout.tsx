@@ -9,7 +9,7 @@ export default function ProfileLayout({
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-gray-50">{children}</main>
+      <main className="min-h-screen bg-[#080808]">{children}</main>
       <Footer />
     </>
   );
