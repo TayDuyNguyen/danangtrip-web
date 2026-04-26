@@ -26,52 +26,52 @@ const getCategoryTheme = (slug: string) => {
     case "food":
       return {
         icon: <IoRestaurantOutline className="w-8 h-8" />,
-        bgColor: "bg-orange-100",
-        textColor: "text-orange-600",
+        bgColor: "bg-[#2b1f14]",
+        textColor: "text-[#c59a5f]",
       };
     case "luu-tru":
     case "hotel":
     case "stay":
       return {
         icon: <IoBedOutline className="w-8 h-8" />,
-        bgColor: "bg-blue-100",
-        textColor: "text-blue-600",
+        bgColor: "bg-[#171717]",
+        textColor: "text-[#8b6a55]",
       };
     case "tham-quan":
     case "tour":
     case "discovery":
       return {
         icon: <IoMapOutline className="w-8 h-8" />,
-        bgColor: "bg-green-100",
-        textColor: "text-green-600",
+        bgColor: "bg-[#1a1f14]",
+        textColor: "text-[#929852]",
       };
     case "mua-sam":
     case "shopping":
       return {
         icon: <IoBagHandleOutline className="w-8 h-8" />,
-        bgColor: "bg-pink-100",
-        textColor: "text-pink-600",
+        bgColor: "bg-[#2a1616]",
+        textColor: "text-[#d88484]",
       };
     case "van-hoa":
     case "culture":
     case "shrine":
       return {
         icon: <IoLibraryOutline className="w-8 h-8" />,
-        bgColor: "bg-amber-100",
-        textColor: "text-amber-800",
+        bgColor: "bg-[#2b1f14]",
+        textColor: "text-[#c59a5f]",
       };
     case "giai-tri":
     case "entertainment":
       return {
         icon: <IoGameControllerOutline className="w-8 h-8" />,
-        bgColor: "bg-purple-100",
-        textColor: "text-purple-600",
+        bgColor: "bg-[#171717]",
+        textColor: "text-[#8b6a55]",
       };
     default:
       return {
         icon: <IoCompassOutline className="w-8 h-8" />,
-        bgColor: "bg-slate-100",
-        textColor: "text-slate-600",
+        bgColor: "bg-[#171717]",
+        textColor: "text-[#737373]",
       };
   }
 };
@@ -96,23 +96,23 @@ const CategoryGrid = () => {
 
   return (
     <section className="py-[120px] bg-surface font-sans overflow-hidden">
-      <div className="container mx-auto px-4" ref={elementRef}>
+      <div className="design-container" ref={elementRef}>
         {/* Header */}
         <div className={`text-center mb-20 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
           <div className={`flex items-center justify-center gap-4 mb-6 transition-all duration-700 delay-100 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
-            <span className="w-12 h-[2px] bg-azure/30" />
-            <span className="text-azure font-black text-[12px] tracking-[0.4em] uppercase">
+            <span className="w-12 h-[2px] bg-[#8b6a55]/30" />
+            <span className="text-[#8b6a55] font-black text-[12px] tracking-[0.4em] uppercase">
               {t("home.hero_tagline_premium")}
             </span>
-            <span className="w-12 h-[2px] bg-azure/30" />
+            <span className="w-12 h-[2px] bg-[#8b6a55]/30" />
           </div>
-          <h2 className={`text-[36px] md:text-[48px] font-black leading-[1.1] mb-8 text-dark transition-all duration-700 delay-200 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
+          <h2 className={`text-[36px] md:text-[48px] font-black leading-[1.1] mb-8 text-white transition-all duration-700 delay-200 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
             {t("home.categories_title_prefix")}{" "}
-            <span className="text-azure underline decoration-azure/30 underline-offset-8">
+            <span className="text-[#8b6a55] underline decoration-[#8b6a55]/30 underline-offset-8">
               {t("home.categories_title_highlight")}
             </span>
           </h2>
-          <p className={`text-slate-500 text-[18px] max-w-2xl mx-auto font-medium leading-relaxed transition-all duration-700 delay-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
+          <p className={`text-[#a3a3a3] text-[18px] max-w-2xl mx-auto font-medium leading-relaxed transition-all duration-700 delay-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
             {t("home.categories_subtitle")}
           </p>
         </div>
@@ -122,7 +122,7 @@ const CategoryGrid = () => {
           {/* Navigation Buttons */}
           <button
             onClick={scrollLeft}
-            className="absolute left-0 top-[45%] -translate-y-1/2 -translate-x-1/2 z-30 w-12 h-12 rounded-full bg-white border border-outline-variant items-center justify-center text-dark hover:bg-white hover:text-azure shadow-xl transition-all opacity-0 group-hover/nav:opacity-100 hidden lg:flex active:scale-90"
+            className="absolute left-0 top-[45%] -translate-y-1/2 -translate-x-1/2 z-30 w-12 h-12 rounded-full bg-[#171717] border border-[#262626] items-center justify-center text-[#d4d4d4] hover:border-[#8b6a55] hover:text-[#8b6a55] shadow-xl transition-all opacity-0 group-hover/nav:opacity-100 hidden lg:flex active:scale-90"
             aria-label={t("common.accessibility.previous")}
           >
             <IoChevronBackOutline size={20} />
@@ -130,7 +130,7 @@ const CategoryGrid = () => {
 
           <button
             onClick={scrollRight}
-            className="absolute right-0 top-[45%] -translate-y-1/2 translate-x-1/2 z-30 w-12 h-12 rounded-full bg-white border border-outline-variant items-center justify-center text-dark hover:bg-white hover:text-azure shadow-xl transition-all opacity-0 group-hover/nav:opacity-100 hidden lg:flex active:scale-90"
+            className="absolute right-0 top-[45%] -translate-y-1/2 translate-x-1/2 z-30 w-12 h-12 rounded-full bg-[#171717] border border-[#262626] items-center justify-center text-[#d4d4d4] hover:border-[#8b6a55] hover:text-[#8b6a55] shadow-xl transition-all opacity-0 group-hover/nav:opacity-100 hidden lg:flex active:scale-90"
             aria-label={t("common.accessibility.next")}
           >
             <IoChevronForwardOutline size={20} />
@@ -161,10 +161,10 @@ const CategoryGrid = () => {
 
                   {/* Name */}
                   <div className="text-center">
-                    <h3 className="text-[16px] md:text-[18px] font-black text-dark group-hover:text-azure transition-colors uppercase tracking-wider">
+                    <h3 className="text-[16px] md:text-[18px] font-black text-white group-hover:text-[#8b6a55] transition-colors uppercase tracking-wider">
                       {category.name}
                     </h3>
-                    <div className="h-1 w-0 bg-azure mx-auto mt-2 transition-all duration-300 group-hover:w-full rounded-full" />
+                    <div className="h-1 w-0 bg-[#8b6a55] mx-auto mt-2 transition-all duration-300 group-hover:w-full rounded-full" />
                   </div>
                 </Link>
               );

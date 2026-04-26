@@ -20,23 +20,23 @@ const TravelBlog = () => {
 
   return (
     <section className="py-[120px] bg-surface font-sans overflow-hidden">
-      <div className="container mx-auto px-4" ref={elementRef}>
+      <div className="design-container" ref={elementRef}>
         {/* Header */}
         <div className={`flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
           <div className={`max-w-2xl px-4 transition-all duration-700 delay-100 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
             <div className="flex items-center gap-3 mb-4">
-              <span className="w-8 h-[2px] bg-azure/40" />
-              <span className="text-azure font-black text-[12px] tracking-[0.4em] uppercase">
+              <span className="w-8 h-[2px] bg-[#8b6a55]/40" />
+              <span className="text-[#8b6a55] font-black text-[12px] tracking-[0.4em] uppercase">
                 {t("home.blog.tagline")}
               </span>
             </div>
-            <h2 className="text-[36px] md:text-[48px] font-black leading-[1.1] text-dark">
-              {t("home.blog.title_prefix")} <span className="text-azure underline decoration-azure/30 underline-offset-8">{t("home.blog.title_highlight")}</span>
+            <h2 className="text-[36px] md:text-[48px] font-black leading-[1.1] text-white">
+              {t("home.blog.title_prefix")} <span className="text-[#8b6a55] underline decoration-[#8b6a55]/30 underline-offset-8">{t("home.blog.title_highlight")}</span>
             </h2>
           </div>
           <Link
             href={String(ROUTES.BLOG)}
-            className={`px-6 py-3 bg-white text-azure text-[14px] font-bold rounded-xl shadow-sm hover:shadow-md flex items-center group mb-2 transition-all duration-700 delay-200 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
+            className={`px-6 py-3 bg-[#171717] border border-[#262626] text-[#8b6a55] text-[14px] font-bold rounded-xl shadow-sm hover:border-[#8b6a55] hover:text-white flex items-center group mb-2 transition-all duration-700 delay-200 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
           >
             {t("home.blog.see_all")} <IoArrowForwardOutline className="ml-2 group-hover:translate-x-1 transition-transform" />
           </Link>
@@ -47,7 +47,7 @@ const TravelBlog = () => {
           {blogs.map((post, index) => (
             <article
               key={post.id}
-              className={`group bg-surface-container-lowest rounded-[24px] overflow-hidden shadow-[0_15px_35px_rgba(23,28,31,0.05)] hover:shadow-2xl hover:shadow-azure/5 hover:-translate-y-2 transition-all duration-700`}
+              className={`group bg-surface-container-lowest rounded-xl border border-[#262626] overflow-hidden shadow-[0_15px_35px_rgba(0,0,0,0.25)] hover:shadow-2xl hover:shadow-[#8b6a55]/10 hover:-translate-y-2 transition-all duration-700`}
               style={{ transitionDelay: `${(index + 3) * 200}ms`, opacity: isVisible ? 1 : 0, transform: isVisible ? "translateY(0)" : "translateY(30px)" }}
             >
               <Link href={`${ROUTES.BLOG}?q=${encodeURIComponent(post.title)}` as string & {}}>
@@ -61,7 +61,7 @@ const TravelBlog = () => {
                   />
                   <div className="absolute top-6 left-6 flex gap-2 z-10">
                     {post.categories?.slice(0, 1).map((cat) => (
-                      <span key={cat.id} className="bg-white/90 backdrop-blur-md text-azure text-[10px] font-black tracking-wider uppercase px-4 py-2 rounded-full shadow-sm">
+                      <span key={cat.id} className="bg-[#171717]/90 backdrop-blur-md text-[#8b6a55] text-[10px] font-black tracking-wider uppercase px-4 py-2 rounded-full shadow-sm border border-[#262626]">
                         {cat.name}
                       </span>
                     ))}
@@ -69,11 +69,11 @@ const TravelBlog = () => {
                 </div>
 
                 <div className="p-8">
-                  <div className="flex items-center gap-3 text-slate-400 text-[13px] font-medium mb-4">
-                    <IoCalendarOutline size={16} className="text-azure/60" />
+                  <div className="flex items-center gap-3 text-[#a3a3a3] text-[13px] font-medium mb-4">
+                    <IoCalendarOutline size={16} className="text-[#8b6a55]/60" />
                     {post.created_at ? new Date(post.created_at).toLocaleDateString(locale === 'vi' ? 'vi-VN' : 'en-US') : "18/04/2026"}
                   </div>
-                  <h3 className="text-[20px] font-bold text-dark mb-6 leading-snug group-hover:text-azure transition-colors line-clamp-2 min-h-[54px]">
+                  <h3 className="text-[20px] font-bold text-white mb-6 leading-snug group-hover:text-[#8b6a55] transition-colors line-clamp-2 min-h-[54px]">
                     {post.title}
                   </h3>
                   <div className="flex items-center justify-between mt-auto">
@@ -82,14 +82,14 @@ const TravelBlog = () => {
                         {post.author?.avatar ? (
                           <Image src={post.author.avatar} alt={post.author.full_name} fill className="object-cover" />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center text-azure font-bold text-[12px]">
+                          <div className="w-full h-full flex items-center justify-center text-[#8b6a55] font-bold text-[12px]">
                             DT
                           </div>
                         )}
                       </div>
-                      <span className="text-[14px] font-bold text-slate-600 group-hover:text-dark transition-colors">{post.author?.full_name || t("common.brand_name")}</span>
+                      <span className="text-[14px] font-bold text-[#a3a3a3] group-hover:text-white transition-colors">{post.author?.full_name || t("common.brand_name")}</span>
                     </div>
-                    <span className="text-azure font-black text-[13px] flex items-center gap-2 group-hover:gap-3 transition-all uppercase tracking-wider">
+                    <span className="text-[#8b6a55] font-black text-[13px] flex items-center gap-2 group-hover:gap-3 transition-all uppercase tracking-wider">
                       {t("home.blog.read_more")} <IoArrowForwardOutline />
                     </span>
                   </div>

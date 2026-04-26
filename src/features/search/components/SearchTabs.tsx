@@ -32,7 +32,7 @@ export const SearchTabs = ({ activeType, onChange, counts }: SearchTabsProps) =>
           className={cn(
             "relative px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300",
             activeType === tab.id
-              ? "bg-surface-container-lowest text-azure shadow-sm scale-100"
+              ? "bg-surface-container-lowest text-[#8b6a55] shadow-sm scale-100"
               : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high/40 scale-95"
           )}
         >
@@ -40,7 +40,7 @@ export const SearchTabs = ({ activeType, onChange, counts }: SearchTabsProps) =>
             <span>{tab.label}</span>
             <span className={cn(
               "px-1.5 py-0.5 rounded-md text-[10px] font-bold transition-colors",
-              activeType === tab.id ? "bg-azure/10 text-azure" : "bg-surface-container-high text-on-surface-subtle"
+              activeType === tab.id ? "bg-[#8b6a55]/10 text-[#8b6a55]" : "bg-surface-container-high text-on-surface-subtle"
             )}>
               {tab.count}
             </span>

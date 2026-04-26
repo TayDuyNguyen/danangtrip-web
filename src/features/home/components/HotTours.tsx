@@ -20,7 +20,7 @@ const HotTours = () => {
 
   return (
     <section className="py-[120px] bg-surface font-sans overflow-hidden">
-      <div className="container mx-auto px-4" ref={elementRef}>
+      <div className="design-container" ref={elementRef}>
         <div className={`flex justify-between items-end mb-16 gap-8 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
           <div className={`transition-all duration-700 delay-100 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
             <div className="flex items-center gap-3 mb-4">
@@ -29,11 +29,11 @@ const HotTours = () => {
                 {t("home.hot_tours.tagline")}
               </span>
             </div>
-            <h2 className="text-[32px] md:text-[48px] font-black text-dark leading-tight">
+            <h2 className="text-[32px] md:text-[48px] font-black text-white leading-tight">
               {t("home.hot_tours.title")}
             </h2>
           </div>
-          <Link href={String(ROUTES.TOURS)} className={`px-6 py-3 bg-white text-azure text-[14px] font-bold rounded-xl shadow-sm hover:shadow-md flex items-center group mb-2 transition-all duration-700 delay-200 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
+          <Link href={String(ROUTES.TOURS)} className={`px-6 py-3 bg-[#171717] border border-[#262626] text-[#8b6a55] text-[14px] font-bold rounded-xl shadow-sm hover:border-[#8b6a55] hover:text-white flex items-center group mb-2 transition-all duration-700 delay-200 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
             {t("home.hot_tours.explore_more")}
             <span className="ml-2 transition-transform group-hover:translate-x-1">→</span>
           </Link>
@@ -43,7 +43,7 @@ const HotTours = () => {
           {tours.map((tour, index) => (
             <div
               key={tour.id}
-              className={`bg-surface-container-lowest rounded-[24px] shadow-[0_15px_35px_rgba(23,28,31,0.05)] hover:shadow-2xl hover:shadow-azure/5 hover:-translate-y-2 relative overflow-hidden flex flex-col group transition-all duration-700`}
+              className={`bg-surface-container-lowest rounded-xl border border-[#262626] shadow-[0_15px_35px_rgba(0,0,0,0.25)] hover:shadow-2xl hover:shadow-[#8b6a55]/10 hover:-translate-y-2 relative overflow-hidden flex flex-col group transition-all duration-700`}
               style={{ transitionDelay: `${(index + 3) * 150}ms`, opacity: isVisible ? 1 : 0, transform: isVisible ? "translateY(0)" : "translateY(30px)" }}
             >
               {/* Thumbnail Area */}
@@ -62,33 +62,33 @@ const HotTours = () => {
 
               {/* Body */}
               <div className="p-6 flex flex-col flex-1">
-                <h3 className="text-[18px] font-bold text-dark mb-4 line-clamp-2 min-h-[54px] group-hover:text-azure transition-colors">
+                <h3 className="text-[18px] font-bold text-white mb-4 line-clamp-2 min-h-[54px] group-hover:text-[#8b6a55] transition-colors">
                   {tour.name}
                 </h3>
 
                 <div className="flex items-center gap-[16px] mb-8">
-                  <div className="flex items-center gap-2 text-slate-500 text-[13px] font-medium">
-                    <IoTimeOutline className="text-[16px] text-azure/60" />
+                  <div className="flex items-center gap-2 text-[#a3a3a3] text-[13px] font-medium">
+                    <IoTimeOutline className="text-[16px] text-[#8b6a55]/60" />
                     <span>{tour.duration}</span>
                   </div>
-                  <div className="flex items-center gap-2 text-slate-500 text-[13px] font-medium">
-                    <IoPeopleOutline className="text-[16px] text-azure/60" />
+                  <div className="flex items-center gap-2 text-[#a3a3a3] text-[13px] font-medium">
+                    <IoPeopleOutline className="text-[16px] text-[#8b6a55]/60" />
                     <span>{tour.max_people} {t("common.tour.slots")}</span>
                   </div>
                 </div>
 
                 <div className="mt-auto flex justify-between items-center pt-6 relative">
-                  <div className="absolute top-0 left-0 right-0 h-px bg-slate-100/50" />
+                  <div className="absolute top-0 left-0 right-0 h-px bg-[#262626]" />
 
                   <div className="flex flex-col">
-                    <span className="text-[11px] text-slate-400 font-bold uppercase tracking-wider mb-1">{t("common.tour.price_from")}</span>
-                    <span className="text-[20px] font-black text-azure">
+                    <span className="text-[11px] text-[#737373] font-bold uppercase tracking-wider mb-1">{t("common.tour.price_from")}</span>
+                    <span className="text-[20px] font-black text-[#8b6a55]">
                       {formatPriceVND(tour.price_adult, locale === 'vi' ? 'vi-VN' : 'en-US')}
                     </span>
                   </div>
                   <Link
                   href={`${ROUTES.TOURS}?q=${encodeURIComponent(tour.name)}` as string & {}}
-                    className="w-12 h-12 bg-surface-container text-azure rounded-full flex items-center justify-center hover:bg-azure hover:text-white transition-all duration-500 shadow-sm"
+                    className="w-12 h-12 bg-[#171717] border border-[#262626] text-[#8b6a55] rounded-full flex items-center justify-center hover:border-[#8b6a55] hover:text-white transition-all duration-500 shadow-sm"
                   >
                     <span className="text-xl font-bold">→</span>
                   </Link>

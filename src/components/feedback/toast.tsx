@@ -31,15 +31,15 @@ export function Toast({
   if (!isVisible) return null;
 
   const typeStyles = {
-    success: "bg-green-100 text-green-800 border-green-300",
-    error: "bg-red-100 text-red-800 border-red-300",
-    warning: "bg-yellow-100 text-yellow-800 border-yellow-300",
-    info: "bg-blue-100 text-blue-800 border-blue-300",
+    success: "bg-[#1a1f14] text-[#929852] border-[#2f3b25]",
+    error: "bg-[#2a1616] text-[#d88484] border-[#5f2f2f]",
+    warning: "bg-[#2b1f14] text-[#c59a5f] border-[#5c3822]",
+    info: "bg-[#171717] text-[#8b6a55] border-[#262626]",
   };
 
   return (
     <div
-      className={`fixed bottom-4 right-4 px-4 py-3 rounded-lg border shadow-lg ${typeStyles[type]} animate-fade-in`}
+      className={`fixed bottom-4 right-4 px-4 py-3 rounded-lg border shadow-lg backdrop-blur-md ${typeStyles[type]} animate-fade-in`}
       role="alert"
     >
       <div className="flex items-center gap-2">

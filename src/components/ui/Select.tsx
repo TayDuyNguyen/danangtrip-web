@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import { useId, useState } from "react";
 import ReactSelect, {
   type Props as ReactSelectProps,
   type StylesConfig,
@@ -35,7 +35,7 @@ const DropdownIndicator = (props: DropdownIndicatorProps<SelectOption, false>) =
       <ChevronDown className={cn(
         "w-4 h-4 transition-transform duration-300",
         props.selectProps.menuIsOpen && "rotate-180",
-        variant === "glass" ? "text-white" : "text-slate-400"
+        variant === "glass" ? "text-white" : "text-on-surface-subtle"
       )} />
     </components.DropdownIndicator>
   );
@@ -59,8 +59,8 @@ export const Select = ({
   ...props
 }: SelectProps) => {
   const t = useTranslations("common");
-  const reactId = React.useId();
-  const [internalFocused, setInternalFocused] = React.useState(false);
+  const reactId = useId();
+  const [internalFocused, setInternalFocused] = useState(false);
   const isFocused = externalFocused || internalFocused;
 
   const isGlass = variant === "glass";
@@ -79,7 +79,7 @@ export const Select = ({
       border: "none",
       borderBottom: isGlass
         ? "none"
-        : `1px solid ${error ? "#ef4444" : isFocused ? "#1d4ed8" : "#e2e8f0"}`,
+        : `1px solid ${error ? "#ef4444" : isFocused ? "#8b6a55" : "#262626"}`,
       borderRadius: "0",
       boxShadow: "none",
       padding: "0",
@@ -102,7 +102,7 @@ export const Select = ({
       ...provided,
       margin: "0",
       padding: "0",
-      color: isGlass ? "white" : "var(--color-dark)",
+      color: isGlass ? "white" : "var(--color-foreground)",
       fontSize: "1rem",
       fontWeight: "500",
       textAlign: isGlass ? "center" : "left",
@@ -110,7 +110,7 @@ export const Select = ({
     singleValue: (provided) => ({
       ...provided,
       margin: "0",
-      color: isGlass ? "white" : "var(--color-dark)",
+      color: isGlass ? "white" : "var(--color-foreground)",
       fontSize: "16px",
       fontWeight: "500",
       width: "100%",
@@ -119,7 +119,7 @@ export const Select = ({
     placeholder: (provided) => ({
       ...provided,
       margin: "0",
-      color: isGlass ? "rgba(255, 255, 255, 0.7)" : "#94a3b8",
+      color: isGlass ? "rgba(255, 255, 255, 0.7)" : "#737373",
       fontSize: "16px",
       fontWeight: "500",
       width: "100%",
@@ -137,17 +137,17 @@ export const Select = ({
     }),
     dropdownIndicator: (provided) => ({
       ...provided,
-      color: isGlass ? "white" : (isFocused ? "#1d4ed8" : "#94a3b8"),
+      color: isGlass ? "white" : (isFocused ? "#8b6a55" : "#737373"),
       padding: "0",
       paddingRight: isGlass ? "8px" : "0",
       transition: "color 0.3s ease",
     }),
     menu: (provided) => ({
       ...provided,
-      backgroundColor: "#ffffff",
+      backgroundColor: "#080808",
       borderRadius: "12px",
-      border: "1px solid #f1f5f9",
-      boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04)",
+      border: "1px solid #262626",
+      boxShadow: "0 12px 30px rgba(0, 0, 0, 0.4)",
       overflow: "hidden",
       zIndex: 50,
       marginTop: "8px",
@@ -156,11 +156,11 @@ export const Select = ({
     option: (provided, state) => ({
       ...provided,
       backgroundColor: state.isSelected
-        ? "#1d4ed8"
+        ? "#8b6a55"
         : state.isFocused
-          ? "#f8fafc"
+          ? "#171717"
           : "transparent",
-      color: state.isSelected ? "#ffffff" : "#475569",
+      color: state.isSelected ? "#ffffff" : "#d4d4d4",
       fontSize: "14px",
       fontWeight: state.isSelected ? "700" : "500",
       padding: "10px 12px",
@@ -168,7 +168,7 @@ export const Select = ({
       marginBottom: "2px",
       cursor: "pointer",
       "&:active": {
-        backgroundColor: state.isSelected ? "#1d4ed8" : "#f1f5f9",
+        backgroundColor: state.isSelected ? "#8b6a55" : "#171717",
       },
       transition: "all 0.15s ease",
     }),
@@ -187,7 +187,7 @@ export const Select = ({
             isFocused || error || value
               ? "translate-y-0 opacity-100"
               : "text-transparent -translate-y-1 opacity-0",
-            isFocused ? "text-azure" : (error ? "text-red-500" : "text-slate-400")
+            isFocused ? "text-[#8b6a55]" : (error ? "text-red-500" : "text-[#737373]")
           )}
         >
           {label}
@@ -220,7 +220,7 @@ export const Select = ({
       </div>
 
       {helperText && !error && (
-        <p className="text-slate-400 text-sm mt-1">{helperText}</p>
+        <p className="text-[#737373] text-sm mt-1">{helperText}</p>
       )}
     </div>
   );

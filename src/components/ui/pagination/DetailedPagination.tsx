@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 
@@ -13,7 +13,7 @@ export interface DetailedPaginationProps {
     pageSizeOptions?: number[];
 }
 
-const DetailedPagination: React.FC<DetailedPaginationProps> = ({
+const DetailedPagination = ({
     currentPage,
     totalPages,
     pageSize,
@@ -21,7 +21,7 @@ const DetailedPagination: React.FC<DetailedPaginationProps> = ({
     onPageChange,
     onPageSizeChange,
     pageSizeOptions = [10, 20, 50, 100]
-}) => {
+}: DetailedPaginationProps) => {
     const t = useTranslations('common');
     const [jumpToPage, setJumpToPage] = useState<string>('');
 
@@ -38,21 +38,21 @@ const DetailedPagination: React.FC<DetailedPaginationProps> = ({
     };
 
     return (
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-6 py-6 border-t border-slate-100 mt-4">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-6 py-6 border-t border-[#262626] mt-4">
             {/* Left: Summary and Page Size */}
             <div className="flex flex-col sm:flex-row items-center gap-6 w-full lg:w-auto">
-                <p className="text-sm font-bold text-slate-500 whitespace-nowrap">
-                    {t('pagination.showing')} <span className="text-cyan-600">{startItem}</span> {t('pagination.to')} <span className="text-cyan-600">{endItem}</span> {t('pagination.of')} <span className="text-slate-900">{totalItems}</span> {t('pagination.results')}
+                <p className="text-sm font-semibold text-[#a3a3a3] whitespace-nowrap">
+                    {t('pagination.showing')} <span className="text-[#8b6a55]">{startItem}</span> {t('pagination.to')} <span className="text-[#8b6a55]">{endItem}</span> {t('pagination.of')} <span className="text-white">{totalItems}</span> {t('pagination.results')}
                 </p>
 
                 <div className="flex items-center gap-3">
-                    <span className="text-sm font-bold text-slate-500 whitespace-nowrap">
+                    <span className="text-sm font-semibold text-[#a3a3a3] whitespace-nowrap">
                         {t('pagination.items_per_page')}:
                     </span>
                     <select
                         value={pageSize}
                         onChange={(e) => onPageSizeChange(Number(e.target.value))}
-                        className="bg-slate-50 border border-slate-200 text-slate-700 text-sm font-bold rounded-xl focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2 outline-none transition-all duration-300"
+                        className="bg-[#080808] border border-[#262626] text-[#d4d4d4] text-sm font-semibold rounded-lg focus:ring-[#8b6a55] focus:border-[#8b6a55] block w-full p-2 outline-none transition-all duration-300"
                     >
                         {pageSizeOptions.map((option) => (
                             <option key={option} value={option}>
@@ -68,7 +68,7 @@ const DetailedPagination: React.FC<DetailedPaginationProps> = ({
                 <button
                     onClick={() => onPageChange(1)}
                     disabled={currentPage === 1}
-                    className="p-2 rounded-xl border border-transparent text-slate-400 hover:bg-slate-50 hover:text-cyan-600 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                    className="p-2 rounded-lg border border-transparent text-[#737373] hover:bg-[#171717] hover:text-[#8b6a55] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
                     title={t('pagination.first_page')}
                 >
                     <ChevronsLeft size={18} />
@@ -77,7 +77,7 @@ const DetailedPagination: React.FC<DetailedPaginationProps> = ({
                 <button
                     onClick={() => onPageChange(currentPage - 1)}
                     disabled={currentPage === 1}
-                    className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-cyan-500 hover:text-cyan-600 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-300 shadow-sm active:scale-95 mx-1"
+                    className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg border border-[#262626] text-[#d4d4d4] hover:bg-[#171717] hover:border-[#8b6a55] hover:text-[#8b6a55] disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-300 active:scale-95 mx-1"
                 >
                     <ChevronLeft size={16} />
                     <span className="hidden sm:inline text-sm font-bold tracking-tight">
@@ -100,8 +100,8 @@ const DetailedPagination: React.FC<DetailedPaginationProps> = ({
                                 onClick={() => onPageChange(pageNum)}
                                 className={`w-9 h-9 rounded-xl font-bold text-sm transition-all duration-300 ${
                                     currentPage === pageNum
-                                        ? 'bg-cyan-600 text-white shadow-lg shadow-cyan-600/30 ring-2 ring-cyan-600/20'
-                                        : 'text-slate-600 hover:bg-slate-50 hover:text-cyan-600'
+                                        ? 'bg-[#171717] text-white ring-1 ring-[#8b6a55]'
+                                        : 'text-[#d4d4d4] hover:bg-[#171717] hover:text-[#8b6a55]'
                                 }`}
                             >
                                 {pageNum}
@@ -113,7 +113,7 @@ const DetailedPagination: React.FC<DetailedPaginationProps> = ({
                 <button
                     onClick={() => onPageChange(currentPage + 1)}
                     disabled={currentPage === totalPages}
-                    className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-cyan-500 hover:text-cyan-600 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-300 shadow-sm active:scale-95 mx-1"
+                    className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg border border-[#262626] text-[#d4d4d4] hover:bg-[#171717] hover:border-[#8b6a55] hover:text-[#8b6a55] disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-300 active:scale-95 mx-1"
                 >
                     <span className="hidden sm:inline text-sm font-bold tracking-tight">
                         {t('pagination.next')}
@@ -124,7 +124,7 @@ const DetailedPagination: React.FC<DetailedPaginationProps> = ({
                 <button
                     onClick={() => onPageChange(totalPages)}
                     disabled={currentPage === totalPages}
-                    className="p-2 rounded-xl border border-transparent text-slate-400 hover:bg-slate-50 hover:text-cyan-600 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                    className="p-2 rounded-lg border border-transparent text-[#737373] hover:bg-[#171717] hover:text-[#8b6a55] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
                     title={t('pagination.last_page')}
                 >
                     <ChevronsRight size={18} />
@@ -133,7 +133,7 @@ const DetailedPagination: React.FC<DetailedPaginationProps> = ({
 
             {/* Right: Quick Jump */}
             <form onSubmit={handleJumpToPage} className="flex items-center gap-2 w-full lg:w-auto justify-end">
-                <span className="text-sm font-bold text-slate-500 whitespace-nowrap">
+                <span className="text-sm font-semibold text-[#a3a3a3] whitespace-nowrap">
                     {t('pagination.go_to')}:
                 </span>
                 <input
@@ -142,11 +142,11 @@ const DetailedPagination: React.FC<DetailedPaginationProps> = ({
                     max={totalPages}
                     value={jumpToPage}
                     onChange={(e) => setJumpToPage(e.target.value)}
-                    className="w-16 p-2 bg-white border border-slate-200 rounded-xl text-center text-sm font-bold text-slate-700 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition-all"
+                    className="w-16 p-2 bg-[#080808] border border-[#262626] rounded-lg text-center text-sm font-semibold text-[#d4d4d4] focus:ring-[#8b6a55] focus:border-[#8b6a55] outline-none transition-all"
                 />
                 <button
                     type="submit"
-                    className="p-2 bg-cyan-50 text-cyan-600 rounded-xl hover:bg-cyan-600 hover:text-white font-bold text-xs uppercase tracking-wider transition-all duration-300"
+                    className="p-2 bg-[#171717] text-[#8b6a55] rounded-lg hover:bg-[#8b6a55] hover:text-white font-semibold text-xs uppercase tracking-wider transition-all duration-300"
                 >
                     OK
                 </button>

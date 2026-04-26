@@ -73,7 +73,7 @@ export default function LocationListClient() {
       params.set("page", "1");
     }
 
-    router.push(`${pathname}?${params.toString()}`);
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
   }, [pathname, router, searchParams]);
 
   const handleSearch = debounce((value: string) => {
@@ -88,7 +88,7 @@ export default function LocationListClient() {
   const hasActiveFilters = !!(q || categories.length > 0 || districts.length > 0 || priceLevel || minRating);
 
   return (
-    <div className="max-w-[1600px] mx-auto px-6 md:px-12 pb-24 pt-32">
+    <div className="w-full mx-auto px-6 md:px-16 lg:px-24 pb-24 pt-32">
       <LocationHeader 
         count={pagination.total} 
         onSearch={handleSearch} 

@@ -2,7 +2,7 @@ import { API_ENDPOINTS } from "@/config";
 import axiosInstance from "@/lib/axios";
 import { ApiResponse, PaginatedResponse } from "@/types";
 import type { Location, Tour } from "@/types";
-import { SearchRequestParams, SearchSuggestionResponse } from "@/features/search/types/search.types";
+import type { SearchRequestParams, SearchSuggestionResponse } from "@/types/search.types";
 
 export const searchService = {
   /**

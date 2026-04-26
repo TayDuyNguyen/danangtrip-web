@@ -19,23 +19,23 @@ const StatsBar = () => {
     {
       label: t("home.stats.locations"),
       value: stats ? `${stats.total_locations}+` : "—",
-      icon: <IoLocationOutline className="text-2xl text-[#3B82F6]" />
+      icon: <IoLocationOutline className="text-2xl text-[#8b6a55]" />
     },
     {
       label: t("home.stats.tours"),
       value: stats ? `${stats.total_tours}+` : "—",
-      icon: <IoMapOutline className="text-2xl text-[#10B981]" />
+      icon: <IoMapOutline className="text-2xl text-[#929852]" />
     },
     {
       label: t("home.stats.blog_posts"),
       value: stats ? `${stats.total_blog_posts}+` : "—",
-      icon: <IoNewspaperOutline className="text-2xl text-[#F59E0B]" />
+      icon: <IoNewspaperOutline className="text-2xl text-[#5c3822]" />
     },
   ];
 
   return (
     <div className="container mx-auto px-4 relative z-20" ref={elementRef}>
-      <div className={`flex flex-wrap justify-between items-center gap-10 p-10 bg-surface-container-low/80 backdrop-blur-xl border border-outline-variant shadow-[0_20px_50px_rgba(23,28,31,0.12)] rounded-[24px] -mt-16 mb-12 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
+      <div className={`flex flex-wrap justify-between items-center gap-10 p-10 bg-surface-container-low/80 backdrop-blur-xl border border-[#262626] shadow-[0_20px_50px_rgba(0,0,0,0.35)] rounded-xl -mt-16 mb-12 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
         {statItems.map((item, index) => (
           <div 
             key={index} 
@@ -46,7 +46,7 @@ const StatsBar = () => {
               {item.icon}
             </div>
             <div className="flex flex-col">
-              <span className="text-[32px] font-black text-azure leading-none tracking-tighter mb-1">
+              <span className="text-[32px] font-black text-[#8b6a55] leading-none tracking-tighter mb-1">
                 {item.value}
               </span>
               <span className="text-[12px] text-on-surface-variant font-black tracking-[0.2em] uppercase">

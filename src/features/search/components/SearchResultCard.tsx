@@ -28,7 +28,7 @@ export const SearchResultCard = ({ item, isLoading, featured, index }: SearchRes
   if (isLoading || !item) {
     return (
       <div className={cn(
-        "bg-surface-container-lowest rounded-[32px] overflow-hidden shadow-sm animate-pulse flex flex-col",
+        "bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm animate-pulse flex flex-col border border-[#262626]",
         featured && "md:col-span-2 md:row-span-1 md:flex-row"
       )}>
         <div className={cn(
@@ -56,7 +56,7 @@ export const SearchResultCard = ({ item, isLoading, featured, index }: SearchRes
     <Link 
       href={url as string & {}}
       className={cn(
-        "group bg-surface-container-lowest rounded-[32px] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 reveal-up flex flex-col scale-100 active:scale-[0.98]",
+        "group bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 reveal-up flex flex-col scale-100 active:scale-[0.98] border border-[#262626]",
         featured && "md:col-span-2 md:row-span-1 md:flex-row"
       )}
       style={{ animationDelay: `${index * 100}ms` }}
@@ -79,7 +79,7 @@ export const SearchResultCard = ({ item, isLoading, featured, index }: SearchRes
         <div className="absolute top-4 left-4 z-10 flex gap-2">
           <span className={cn(
             "px-4 py-1.5 rounded-full text-[12px] font-bold text-white shadow-lg backdrop-blur-md",
-            isTour ? "bg-azure/80" : "bg-success/80"
+            isTour ? "bg-[#8b6a55]/80" : "bg-success/80"
           )}>
             {isTour ? t("search.badges.tour") : t("search.badges.location")}
           </span>
@@ -111,14 +111,14 @@ export const SearchResultCard = ({ item, isLoading, featured, index }: SearchRes
           </div>
 
           <h3 className={cn(
-            "font-bold text-foreground group-hover:text-azure transition-colors line-clamp-2 leading-tight",
+            "font-bold text-foreground group-hover:text-[#8b6a55] transition-colors line-clamp-2 leading-tight",
             featured ? "text-2xl md:text-3xl mb-4" : "text-xl mb-3"
           )}>
             {item.title}
           </h3>
 
           <div className="flex items-center gap-2 text-on-surface-subtle text-sm mb-4 font-medium">
-            <IoLocationOutline className="text-azure shrink-0 text-lg" />
+            <IoLocationOutline className="text-[#8b6a55] shrink-0 text-lg" />
             <span className="line-clamp-1">
               {isTour ? t("search.card.default_location") : (item as LocationSearchResult).address}
             </span>
@@ -126,7 +126,7 @@ export const SearchResultCard = ({ item, isLoading, featured, index }: SearchRes
 
           {isTour && (item as TourSearchResult).duration && (
             <div className="flex items-center gap-2 text-on-surface-subtle text-sm mb-4 font-medium">
-              <IoTimeOutline className="text-azure shrink-0 text-lg" />
+              <IoTimeOutline className="text-[#8b6a55] shrink-0 text-lg" />
               <span>{(item as TourSearchResult).duration}</span>
             </div>
           )}
@@ -137,7 +137,7 @@ export const SearchResultCard = ({ item, isLoading, featured, index }: SearchRes
             {isTour ? (
               <div className="flex flex-col">
                 <span className="text-[11px] text-on-surface-variant font-black uppercase tracking-wider">{t("search.card.starting_from")}</span>
-                <span className="text-2xl font-black text-azure">
+                <span className="text-2xl font-black text-[#8b6a55]">
                   {new Intl.NumberFormat(locale === 'vi' ? 'vi-VN' : 'en-US', { 
                     style: 'currency', 
                     currency: locale === 'vi' ? 'VND' : 'USD' 
@@ -161,7 +161,7 @@ export const SearchResultCard = ({ item, isLoading, featured, index }: SearchRes
             )}
           </div>
 
-          <div className="w-12 h-12 rounded-2xl bg-surface-container-low flex items-center justify-center text-foreground group-hover:bg-azure group-hover:text-white transition-all transform group-hover:translate-x-1 shadow-sm group-hover:shadow-azure/20">
+          <div className="w-12 h-12 rounded-2xl bg-surface-container-low flex items-center justify-center text-foreground group-hover:bg-[#8b6a55] group-hover:text-white transition-all transform group-hover:translate-x-1 shadow-sm group-hover:shadow-black/30">
             <IoChevronForward className="text-2xl" />
           </div>
         </div>

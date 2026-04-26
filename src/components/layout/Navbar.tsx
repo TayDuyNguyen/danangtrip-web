@@ -10,15 +10,15 @@ export function Navbar() {
   const t = useTranslations("common");
 
   return (
-    <nav className="bg-white border-b px-4 py-3 flex justify-between items-center">
-      <Link href="/dashboard" className="font-bold text-lg">
+    <nav className="bg-[#030303]/95 backdrop-blur-md border-b border-[#262626] px-4 py-3 flex justify-between items-center">
+      <Link href="/dashboard" className="font-semibold text-lg text-white">
         {t("common.admin_panel")}
       </Link>
 
       <div className="flex items-center gap-4">
         {isAuthenticated && user ? (
           <>
-            <span className="text-gray-600">{user.name}</span>
+            <span className="text-[#a3a3a3]">{user.name}</span>
             <Button variant="secondary" size="sm" onClick={logout}>
               {t("auth.logout")}
             </Button>

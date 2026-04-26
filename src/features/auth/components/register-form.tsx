@@ -60,34 +60,34 @@ export function RegisterForm({ onSuccess, redirectUrl }: RegisterFormProps) {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-900 justify-center items-center p-4 sm:p-8 mt-16 md:mt-0">
-      <div className="relative flex w-full max-w-md lg:max-w-4xl lg:w-3/4 xl:w-2/3 h-auto lg:h-[700px] shadow-[0_0_40px_rgba(34,211,238,0.1)] rounded-2xl glow-effect">
+    <div className="design-page flex min-h-screen justify-center items-center p-4 sm:p-8 mt-16 md:mt-0">
+      <div className="relative flex w-full max-w-md lg:max-w-4xl lg:w-3/4 xl:w-2/3 h-auto lg:h-[700px] shadow-[0_0_40px_rgba(139,106,85,0.12)] rounded-xl glow-effect">
         
         {/* Animated Border Background */}
-        <div className="absolute inset-[-2px] rounded-[18px] overflow-hidden pointer-events-none z-0">
+        <div className="absolute inset-[-2px] rounded-[10px] overflow-hidden pointer-events-none z-0">
           <div 
             className="absolute top-1/2 left-1/2 w-[200%] h-[200%] -translate-x-1/2 -translate-y-1/2 animate-[spin_4s_linear_infinite]" 
-            style={{ backgroundImage: 'conic-gradient(from 0deg, transparent 0 240deg, rgba(34,211,238,0.3) 300deg, #22d3ee 360deg)' }}
+            style={{ backgroundImage: 'conic-gradient(from 0deg, transparent 0 240deg, rgba(139,106,85,0.3) 300deg, #8b6a55 360deg)' }}
           />
         </div>
 
         {/* Main Content Container */}
-        <div className="relative z-10 flex w-full h-full rounded-2xl overflow-hidden bg-gray-900 border border-gray-800/50">
+        <div className="relative z-10 flex w-full h-full rounded-xl overflow-hidden bg-[#080808] border border-[#262626]">
           {/* Left panel - gradient background */}
           <div
-            className="hidden lg:flex flex-1 bg-linear-to-br from-cyan-500 to-blue-950 flex-col pt-12 pl-8 pr-16 text-white relative"
+            className="hidden lg:flex flex-1 bg-linear-to-br from-[#5c3822] to-[#080808] flex-col pt-12 pl-8 pr-16 text-white relative"
           style={{ clipPath: "polygon(0 0, 100% 0, 60% 100%, 0% 100%)" }}
         >
           <h1 className="text-4xl mb-4 font-bold uppercase tracking-wide">
             {t("welcome_title")}
           </h1>
-          <p className="text-cyan-100 text-lg">
+          <p className="text-[#d4d4d4] text-lg">
             {t("welcome_subtitle")}
           </p>
         </div>
 
         {/* Right panel - form */}
-        <div className="flex flex-1 items-center justify-center p-5 sm:p-8 bg-gray-900">
+        <div className="flex flex-1 items-center justify-center p-5 sm:p-8 bg-[#080808]">
           <div className="w-full max-w-md">
             <h2 className="text-3xl font-bold uppercase text-white mb-8 text-center lg:text-left tracking-tight">
               {t("title")}
@@ -154,7 +154,7 @@ export function RegisterForm({ onSuccess, redirectUrl }: RegisterFormProps) {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full flex items-center justify-center gap-2 bg-linear-to-br from-cyan-400 to-blue-600 hover:from-cyan-500 hover:to-blue-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-lg transition-all duration-300 shadow-lg shadow-cyan-500/25 uppercase tracking-wider"
+                className="w-full flex items-center justify-center gap-2 bg-[#171717] hover:border-[#8b6a55] border border-[#262626] disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-full transition-all duration-300 uppercase tracking-wider"
               >
                 {isLoading ? (
                   <>
@@ -170,11 +170,11 @@ export function RegisterForm({ onSuccess, redirectUrl }: RegisterFormProps) {
               </button>
             </form>
 
-            <p className="text-center text-sm text-gray-500 mt-6">
+            <p className="text-center text-sm text-[#737373] mt-6">
               {t("has_account")}{" "}
               <Link
                 href="/login"
-                className="text-cyan-400 font-medium hover:text-cyan-300 hover:underline transition"
+                className="text-[#8b6a55] font-medium hover:text-[#c59a5f] hover:underline transition"
               >
                 {t("login_now")}
               </Link>

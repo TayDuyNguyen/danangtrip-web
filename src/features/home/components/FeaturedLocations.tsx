@@ -66,13 +66,13 @@ const FeaturedLocations = () => {
         <div className={`flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
           <div className="max-w-2xl">
             <div className={`flex items-center gap-3 mb-4 transition-all duration-700 delay-100 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
-              <span className="w-8 h-[2px] bg-azure/40" />
-              <span className="text-azure font-black text-[12px] tracking-[0.4em] uppercase">
+              <span className="w-8 h-[2px] bg-[#8b6a55]/40" />
+              <span className="text-[#8b6a55] font-black text-[12px] tracking-[0.4em] uppercase">
                 {t("home.featured_locations.tagline")}
               </span>
             </div>
-            <h2 className={`text-[36px] md:text-[48px] font-black leading-[1.1] mb-8 text-dark transition-all duration-700 delay-200 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
-              {t("home.featured_locations.title_prefix")} <span className="text-azure underline decoration-azure/30 underline-offset-8">{t("home.featured_locations.title_highlight")}</span>
+            <h2 className={`text-[36px] md:text-[48px] font-black leading-[1.1] mb-8 text-foreground transition-all duration-700 delay-200 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
+              {t("home.featured_locations.title_prefix")} <span className="text-[#8b6a55] underline decoration-[#8b6a55]/30 underline-offset-8">{t("home.featured_locations.title_highlight")}</span>
             </h2>
           </div>
         </div>
@@ -82,8 +82,8 @@ const FeaturedLocations = () => {
           <button
             onClick={() => setActiveCategoryId(undefined)}
             className={`px-8 py-3 rounded-full text-[14px] font-bold transition-all whitespace-nowrap shadow-sm hover:shadow-md ${activeCategoryId === undefined
-              ? "bg-azure text-white shadow-azure/20"
-              : "bg-surface-container text-slate-500 border border-outline-variant hover:bg-surface-container-high"
+              ? "bg-[#8b6a55] text-white shadow-black/30"
+              : "bg-surface-container text-on-surface-subtle border border-outline-variant hover:bg-surface-container-high"
               }`}
           >
             {t("home.filters.all")}
@@ -94,8 +94,8 @@ const FeaturedLocations = () => {
               key={cat.id}
               onClick={() => setActiveCategoryId(cat.id)}
               className={`px-8 py-3 rounded-full text-[14px] font-bold transition-all whitespace-nowrap shadow-sm hover:shadow-md ${activeCategoryId === cat.id
-                ? "bg-azure text-white shadow-azure/20"
-                : "bg-surface-container text-slate-500 border border-outline-variant hover:bg-surface-container-high"
+                ? "bg-[#8b6a55] text-white shadow-black/30"
+                : "bg-surface-container text-on-surface-subtle border border-outline-variant hover:bg-surface-container-high"
                 }`}
             >
               {cat.name}
@@ -110,7 +110,7 @@ const FeaturedLocations = () => {
             <div className="w-full flex justify-between px-2">
               <button
                 onClick={() => scroll("left")}
-                className={`w-12 h-12 rounded-full bg-white/90 backdrop-blur-md border border-outline-variant items-center justify-center text-dark hover:bg-azure hover:text-white shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all pointer-events-auto active:scale-95 ${showLeftBtn ? "flex opacity-100 translate-x-0" : "hidden opacity-0 -translate-x-4"}`}
+                className={`w-12 h-12 rounded-full bg-[#171717]/90 backdrop-blur-md border border-[#262626] items-center justify-center text-white hover:bg-[#8b6a55] hover:text-white shadow-[0_8px_30px_rgb(0,0,0,0.35)] transition-all pointer-events-auto active:scale-95 ${showLeftBtn ? "flex opacity-100 translate-x-0" : "hidden opacity-0 -translate-x-4"}`}
                 aria-label={t("common.accessibility.previous")}
               >
                 <IoChevronBackOutline size={20} />
@@ -118,7 +118,7 @@ const FeaturedLocations = () => {
 
               <button
                 onClick={() => scroll("right")}
-                className={`w-12 h-12 rounded-full bg-white/90 backdrop-blur-md border border-outline-variant items-center justify-center text-dark hover:bg-azure hover:text-white shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all pointer-events-auto active:scale-95 ${showRightBtn && locations.length > 0 ? "flex opacity-100 translate-x-0" : "hidden opacity-0 translate-x-4"}`}
+                className={`w-12 h-12 rounded-full bg-[#171717]/90 backdrop-blur-md border border-[#262626] items-center justify-center text-white hover:bg-[#8b6a55] hover:text-white shadow-[0_8px_30px_rgb(0,0,0,0.35)] transition-all pointer-events-auto active:scale-95 ${showRightBtn && locations.length > 0 ? "flex opacity-100 translate-x-0" : "hidden opacity-0 translate-x-4"}`}
                 aria-label={t("common.accessibility.next")}
               >
                 <IoChevronForwardOutline size={20} />
@@ -137,7 +137,7 @@ const FeaturedLocations = () => {
               // Loading Skeletons
               Array.from({ length: 4 }).map((_, i) => (
                 <div key={i} className="min-w-[300px] md:min-w-[380px] animate-pulse">
-                  <div className="aspect-3/4 rounded-[40px] bg-surface-container-high mb-6" />
+                  <div className="aspect-3/4 rounded-xl bg-surface-container-high mb-6" />
                   <div className="h-6 w-3/4 bg-surface-container-high rounded-full mb-2" />
                   <div className="h-4 w-1/2 bg-surface-container-high rounded-full" />
                 </div>
@@ -150,7 +150,7 @@ const FeaturedLocations = () => {
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
                   <Link href={`${ROUTES.LOCATIONS}?q=${encodeURIComponent(loc.name)}`}>
-                    <div className="relative aspect-3/4 rounded-[40px] overflow-hidden mb-6 shadow-[0_20px_40px_rgba(0,0,0,0.1)] active:scale-[0.98] transition-all duration-500 hover:shadow-[0_30px_60px_rgba(0,102,204,0.15)]">
+                    <div className="relative aspect-3/4 rounded-xl overflow-hidden mb-6 shadow-[0_20px_40px_rgba(0,0,0,0.3)] active:scale-[0.98] transition-all duration-500 hover:shadow-[0_30px_60px_rgba(139,106,85,0.2)] border border-[#262626]">
                       <Image
                         src={loc.thumbnail || "/images/placeholder.png"}
                         alt={loc.name}
@@ -163,7 +163,7 @@ const FeaturedLocations = () => {
                       {/* Favorite Button */}
                       <button
                         onClick={(e) => handleFavoriteClick(e, loc.id)}
-                        className="absolute top-6 right-6 w-12 h-12 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center text-white border border-white/20 hover:bg-white hover:text-red-500 transition-all z-20 group/fav active:scale-90 shadow-lg"
+                        className="absolute top-6 right-6 w-12 h-12 bg-[#111111]/70 backdrop-blur-md rounded-full flex items-center justify-center text-white border border-[#262626] hover:bg-[#171717] hover:text-[#8b6a55] transition-all z-20 group/fav active:scale-90 shadow-lg"
                       >
                         <IoHeartOutline className="text-2xl group-hover/fav:hidden" />
                         <IoHeart className="text-2xl hidden group-hover/fav:block" />
@@ -172,20 +172,20 @@ const FeaturedLocations = () => {
                       {/* Info */}
                       <div className="absolute inset-0 flex flex-col justify-end p-8 translate-y-4 group-hover:translate-y-0 transition-transform duration-700">
                         <div className="flex items-center gap-2 text-white/90 text-[13px] font-bold mb-3 tracking-wide">
-                          <IoLocationOutline className="text-azure text-lg" />
+                          <IoLocationOutline className="text-[#8b6a55] text-lg" />
                           {loc.address || t("home.featured_locations.default_address")}
                         </div>
                         <h3 className="text-white text-[28px] font-black leading-tight mb-2 drop-shadow-2xl">
                           {loc.name}
                         </h3>
-                        <div className="h-1 w-0 bg-azure transition-all duration-500 group-hover:w-16 rounded-full" />
+                        <div className="h-1 w-0 bg-[#8b6a55] transition-all duration-500 group-hover:w-16 rounded-full" />
                       </div>
                     </div>
                   </Link>
                 </div>
               ))
             ) : (
-              <div className="w-full py-20 flex flex-col items-center justify-center text-slate-400 bg-surface-container/30 rounded-[40px] border border-dashed border-outline-variant animate-reveal-up">
+              <div className="w-full py-20 flex flex-col items-center justify-center text-on-surface-subtle bg-surface-container/30 rounded-xl border border-dashed border-outline-variant animate-reveal-up">
                 <IoLocationOutline size={48} className="mb-4 opacity-20" />
                 <p className="text-[16px] font-medium">{t("home.featured_locations.no_data")}</p>
               </div>
