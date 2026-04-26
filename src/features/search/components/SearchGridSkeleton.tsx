@@ -6,7 +6,7 @@ export const SearchGridSkeleton = () => {
       {[1, 2, 3, 4, 5, 6].map((i) => (
         <div 
           key={i} 
-          className="bg-surface-container-low rounded-[32px] overflow-hidden flex flex-col h-full"
+          className="bg-surface-container-low rounded-xl overflow-hidden flex flex-col h-full border border-[#262626]"
         >
           {/* Image Placeholder */}
           <div className="aspect-4/3 bg-surface-container-highest animate-pulse" />
@@ -31,7 +31,7 @@ export const SearchGridSkeleton = () => {
                  <div className="h-4 w-16 bg-surface-container-highest rounded animate-pulse" />
                  <div className="h-8 w-24 bg-surface-container-highest rounded-lg animate-pulse" />
                </div>
-               <div className="h-12 w-12 bg-azure/20 rounded-2xl animate-pulse" />
+               <div className="h-12 w-12 bg-[#8b6a55]/20 rounded-xl animate-pulse" />
             </div>
           </div>
         </div>

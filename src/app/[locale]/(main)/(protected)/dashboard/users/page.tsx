@@ -7,11 +7,11 @@ export default function DashboardUsersPage() {
 
   return (
     <div className="max-w-4xl">
-      <h1 className="text-3xl font-bold mb-6 text-gray-900 tracking-tight">
+      <h1 className="text-3xl font-bold mb-6 text-white tracking-tight">
         {t("users.title")}
       </h1>
-      <div className="bg-white p-8 rounded-3xl shadow-xl shadow-gray-200/50 border border-gray-100">
-        <p className="text-gray-600">
+      <div className="bg-[#080808] p-8 rounded-xl border border-[#262626]">
+        <p className="text-[#a3a3a3]">
           {t("users.description")}
         </p>
       </div>

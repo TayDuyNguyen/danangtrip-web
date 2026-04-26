@@ -14,6 +14,8 @@
     "price": "Price Range",
     "price_level": "Price Level",
     "rating": "Rating",
+    "rating_4_plus": "4+ stars",
+    "rating_3_plus": "3+ stars",
     "reset": "Reset Filters"
   },
   "categories": {
@@ -38,7 +40,9 @@
   },
   "price": {
     "from": "From",
-    "free": "Free"
+    "free": "Free",
+    "budget": "Budget ($)",
+    "mid_range": "Mid-range ($$)"
   },
   "reviews": "reviews",
   "buttons": {

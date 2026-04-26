@@ -1,5 +1,5 @@
 "use client";
-import React from 'react';
+import { Fragment } from 'react';
 import { IoChevronBack, IoChevronForward } from 'react-icons/io5';
 import { cn } from "@/utils/string";
 
@@ -9,11 +9,11 @@ export interface PaginationProps {
     onPageChange: (page: number) => void;
 }
 
-const StandardPagination: React.FC<PaginationProps> = ({
+const StandardPagination = ({
     currentPage,
     totalPages,
     onPageChange
-}) => {
+}: PaginationProps) => {
 
     const generatePageNumbers = () => {
         const pages: (number | string)[] = [];
@@ -41,38 +41,38 @@ const StandardPagination: React.FC<PaginationProps> = ({
     if (totalPages <= 1) return null;
 
     return (
-        <div className="flex items-center justify-center gap-4 py-8">
+        <div className="flex items-center justify-center gap-3 py-8">
             {/* Previous Button */}
             <button
                 onClick={() => onPageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="flex items-center justify-center w-12 h-12 rounded-2xl bg-surface-container-low border-2 border-outline-variant/10 text-on-surface-variant hover:border-azure/30 hover:text-azure disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 shadow-sm active:scale-90 group"
+                className="flex items-center justify-center w-10 h-10 rounded-lg bg-surface-container-low border border-[#262626] text-on-surface-variant hover:border-[#8b6a55] hover:text-[#8b6a55] disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 active:scale-95 group"
             >
                 <IoChevronBack className="text-xl group-hover:-translate-x-1 transition-transform" />
             </button>
 
             {/* Page Numbers */}
-            <div className="flex items-center gap-2 p-1.5 bg-surface-container-low/40 backdrop-blur-md border-2 border-outline-variant/5 rounded-[24px]">
+            <div className="flex items-center gap-2 p-1.5 bg-surface-container-low/70 backdrop-blur-md border border-[#262626] rounded-xl">
                 {generatePageNumbers().map((page, index) => (
-                    <React.Fragment key={index}>
+                    <Fragment key={index}>
                         {page === '...' ? (
-                            <span className="w-10 h-10 flex items-center justify-center text-on-surface-variant/40 font-black">
+                            <span className="w-10 h-10 flex items-center justify-center text-on-surface-variant/40 font-bold">
                                 •••
                             </span>
                         ) : (
                             <button
                                 onClick={() => onPageChange(page as number)}
                                 className={cn(
-                                    "w-10 h-10 rounded-xl font-black text-sm transition-all duration-500 scale-100 active:scale-90",
+                                    "w-10 h-10 rounded-lg font-bold text-sm transition-all duration-300 scale-100 active:scale-95",
                                     currentPage === page
-                                        ? "bg-azure text-white shadow-lg shadow-azure/30"
-                                        : "text-on-surface-variant hover:bg-surface-container-high hover:text-azure"
+                                        ? "bg-[#171717] text-white border border-[#8b6a55]"
+                                        : "text-on-surface-variant hover:bg-surface-container-high hover:text-[#8b6a55]"
                                 )}
                             >
                                 {page}
                             </button>
                         )}
-                    </React.Fragment>
+                    </Fragment>
                 ))}
             </div>
 
@@ -80,7 +80,7 @@ const StandardPagination: React.FC<PaginationProps> = ({
             <button
                 onClick={() => onPageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="flex items-center justify-center w-12 h-12 rounded-2xl bg-surface-container-low border-2 border-outline-variant/10 text-on-surface-variant hover:border-azure/30 hover:text-azure disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 shadow-sm active:scale-90 group"
+                className="flex items-center justify-center w-10 h-10 rounded-lg bg-surface-container-low border border-[#262626] text-on-surface-variant hover:border-[#8b6a55] hover:text-[#8b6a55] disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 active:scale-95 group"
             >
                 <IoChevronForward className="text-xl group-hover:translate-x-1 transition-transform" />
             </button>

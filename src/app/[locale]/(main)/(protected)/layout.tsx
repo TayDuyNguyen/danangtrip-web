@@ -22,8 +22,8 @@ export default function ProtectedLayout({
   // Show loading state while checking auth
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      <div className="design-page min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#8b6a55]"></div>
       </div>
     );
   }
@@ -34,8 +34,8 @@ export default function ProtectedLayout({
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <div className="design-page min-h-screen">
+      <div className="design-container py-6">
         {children}
       </div>
     </div>

@@ -43,11 +43,11 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {label && (
           <label
             className={cn(
-              "block text-xs font-bold mb-1 uppercase tracking-widest transition-all duration-300 transform",
+              "block text-[11px] font-bold mb-1 uppercase tracking-[0.2em] transition-all duration-300 transform",
               isFocused || error
                 ? "translate-y-0 opacity-100"
                 : "text-transparent -translate-y-1 opacity-0",
-              isFocused ? "text-azure" : (error ? "text-red-500" : "")
+              isFocused ? "text-[#8b6a55]" : (error ? "text-red-400" : "")
 
 
             )}
@@ -59,12 +59,12 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {/* Input container */}
         <div
           className={cn(
-            "flex items-center border-b px-0 gap-3 transition-all duration-500 ease-out",
+            "flex items-center border-b px-0 gap-3 transition-all duration-300 ease-out",
             error
               ? "border-red-500"
               : isFocused
-                ? "border-azure"
-                : "border-outline-variant",
+                ? "border-[#8b6a55]"
+                : "border-[#262626]",
             "bg-transparent"
           )}
         >
@@ -73,7 +73,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             <span
               className={cn(
                 "text-xl transition-colors duration-300",
-                isFocused ? "text-azure" : "text-slate-400"
+                isFocused ? "text-[#8b6a55]" : "text-[#737373]"
               )}
             >
               {leftIcon}
@@ -85,9 +85,9 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             ref={ref}
             type={inputType}
             className={cn(
-              "w-full py-4 bg-transparent outline-none placeholder-slate-400",
+              "w-full py-3 bg-transparent outline-none placeholder-[#737373]",
               "transition-all duration-300 focus:placeholder-transparent",
-              "text-sm sm:text-base text-dark font-medium",
+              "text-sm sm:text-base text-white font-medium",
               leftIcon ? "pl-0" : "",
               isPassword ? "pr-8" : ""
             )}
@@ -99,7 +99,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             <button
               type="button"
               onClick={() => setShowPassword((v) => !v)}
-              className="p-2 -mr-2 text-slate-400 hover:text-azure transition-all duration-300 focus:outline-none rounded-full"
+              className="p-2 -mr-2 text-[#737373] hover:text-[#8b6a55] transition-all duration-300 focus:outline-none rounded-full"
               tabIndex={-1}
               aria-label={showPassword ? t("accessibility.hide_password") : t("accessibility.show_password")}
             >
@@ -128,7 +128,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
         {/* Helper text */}
         {helperText && !error && (
-          <p className="text-slate-400 text-sm mt-1">{helperText}</p>
+          <p className="text-[#737373] text-sm mt-1">{helperText}</p>
         )}
 
       </div>

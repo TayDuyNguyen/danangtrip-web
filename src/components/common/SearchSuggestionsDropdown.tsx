@@ -52,12 +52,12 @@ export const SearchSuggestionsDropdown = ({
               className={cn(
                 "group flex items-center gap-4 px-4 py-3 cursor-pointer transition-all duration-300 mx-2 rounded-2xl reveal-up",
                 isSelected 
-                  ? "bg-white/20 border border-white/30 backdrop-blur-md shadow-lg scale-[1.02] z-10" 
-                  : "hover:bg-white/10 hover:translate-x-1"
+                  ? "bg-[#171717] border border-[#8b6a55]/40 backdrop-blur-md shadow-lg scale-[1.02] z-10" 
+                  : "hover:bg-[#171717]/80 hover:translate-x-1"
               )}
               style={{ animationDelay: `${idx * 50}ms` }}
             >
-              <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-white/10 shrink-0 border border-white/10">
+              <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-[#171717] shrink-0 border border-[#262626]">
                 <Image
                   src={item.thumbnail || "/images/placeholder.png"}
                   alt={item.title}
@@ -72,7 +72,7 @@ export const SearchSuggestionsDropdown = ({
                     {item.title}
                   </h4>
                   {item.rating > 0 && (
-                    <div className="flex items-center gap-1 text-amber-400 text-xs shrink-0 bg-white/10 px-2 py-0.5 rounded-full">
+                    <div className="flex items-center gap-1 text-amber-400 text-xs shrink-0 bg-[#171717] px-2 py-0.5 rounded-full">
                       <IoStar />
                       <span className="font-bold text-white">{item.rating}</span>
                     </div>
@@ -117,7 +117,7 @@ export const SearchSuggestionsDropdown = ({
     if (isError) {
       return (
         <div className="p-8 text-center text-white/70 flex flex-col items-center gap-3">
-          <div className="w-16 h-16 rounded-full bg-red-400/10 flex items-center justify-center border border-red-400/20 text-red-400">
+          <div className="w-16 h-16 rounded-full bg-[#171717] flex items-center justify-center border border-[#5c3822]/30 text-[#8b6a55]">
             <IoSearchOutline className="text-3xl" />
           </div>
           <p className="font-bold text-lg text-white">{t("suggestions.error")}</p>
@@ -146,12 +146,12 @@ export const SearchSuggestionsDropdown = ({
 
   const isViewAllSelected = selectedIndex === totalItems;
   const viewAllSelectedStyles = "bg-azure border-azure text-white shadow-lg shadow-azure/20";
-  const viewAllDefaultStyles = "border-white/20 text-[#ffffffb3] hover:bg-white/5 hover:border-white/40";
+  const viewAllDefaultStyles = "border-[#262626] text-[#ffffffb3] hover:bg-[#171717] hover:border-[#8b6a55]/40";
 
   return (
     <div 
       className={cn(
-        "absolute left-0 right-0 top-[110%] z-50 rounded-[32px] overflow-hidden backdrop-blur-2xl bg-[#0a1829]/90 border border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all duration-300 origin-top scale-100 opacity-100",
+        "absolute left-0 right-0 top-[110%] z-50 rounded-xl overflow-hidden backdrop-blur-2xl bg-[#0f0f0f]/95 border border-[#262626] shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all duration-300 origin-top scale-100 opacity-100",
       )}
     >
       <div className="py-2">

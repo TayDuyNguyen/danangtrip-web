@@ -35,48 +35,46 @@ const Header = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${isScrolled
-          ? "bg-white/90 backdrop-blur-xl shadow-md py-3"
-          : "bg-black/40 backdrop-blur-xl border-b border-white/10 py-5 shadow-2xl"
-        }`}
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+        isScrolled
+          ? "bg-[#030303]/95 backdrop-blur-md border-b border-[#262626] py-3"
+          : "bg-[#080808]/75 backdrop-blur-md border-b border-[#262626] py-4"
+      }`}
     >
-      <div className="container mx-auto px-4 flex items-center justify-between">
+      <div className="design-container flex items-center justify-between">
         {/* Logo */}
         <Link
           href={ROUTES.HOME}
-          className="flex items-center gap-2 group"
+          className="flex items-center gap-3 group"
         >
-          <div className="w-10 h-10 bg-cyan-500 rounded-xl flex items-center justify-center text-white shadow-lg group-hover:rotate-12 transition-transform duration-300">
-            <span className="text-xl font-bold">D</span>
+          <div className="w-10 h-10 bg-[#171717] rounded-lg border border-[#262626] flex items-center justify-center text-white group-hover:border-[#8b6a55] transition-all duration-300">
+            <span className="text-xl font-semibold">D</span>
           </div>
           <span
-            className={`text-xl font-bold tracking-tight transition-colors duration-300 ${isScrolled
-                ? "text-gray-900"
-                : "text-white md:text-gray-900 lg:text-white"
-              }`}
+            className={`text-xl font-semibold tracking-tight transition-colors duration-300 ${
+              isScrolled ? "text-white" : "text-white"
+            }`}
           >
-            {t("common.brand_name").split(" ")[0]} <span className="text-cyan-500">{t("common.brand_name").split(" ").slice(1).join(" ")}</span>
+            {t("common.brand_name").split(" ")[0]}{" "}
+            <span className="text-[#8b6a55]">{t("common.brand_name").split(" ").slice(1).join(" ")}</span>
           </span>
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center gap-6">
+        <nav className="hidden lg:flex items-center gap-5">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.path}
               href={link.path}
-              className={`text-[14px] font-medium transition-all duration-300 hover:text-cyan-500 relative group truncate hover:-translate-y-0.5 ${isActive(link.path)
-                  ? "text-cyan-500"
-                  : isScrolled
-                    ? "text-gray-700"
-                    : "text-white"
-                }`}
+              className={`text-[13px] uppercase tracking-[0.18em] font-semibold transition-all duration-300 hover:text-[#8b6a55] relative group truncate ${
+                isActive(link.path) ? "text-[#8b6a55]" : "text-[#d4d4d4]"
+              }`}
             >
-              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-              {t(link.name as any)}
+              {t(link.name)}
               <span
-                className={`absolute -bottom-1 left-0 h-0.5 bg-cyan-500 transition-all duration-300 ${isActive(link.path) ? "w-full" : "w-0 group-hover:w-full"
-                  }`}
+                className={`absolute -bottom-1 left-0 h-px bg-[#8b6a55] transition-all duration-300 ${
+                  isActive(link.path) ? "w-full" : "w-0 group-hover:w-full"
+                }`}
               />
             </Link>
           ))}
@@ -93,29 +91,28 @@ const Header = () => {
           {isAuthenticated ? (
             <div className="relative group/user">
               <button
-                className={`w-10 h-10 rounded-full bg-cyan-500/10 flex items-center justify-center border transition-all ${isScrolled ? "border-cyan-500/20" : "border-white/20"
-                  } hover:bg-cyan-500 hover:text-white`}
+                className={`w-10 h-10 rounded-full bg-[#171717] flex items-center justify-center border border-[#262626] transition-all hover:border-[#8b6a55] hover:text-[#8b6a55]`}
               >
                 <IoPersonOutline className="text-xl" />
               </button>
 
               {/* Dropdown */}
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden py-2 translate-y-2 opacity-0 invisible group-hover/user:translate-y-0 group-hover/user:opacity-100 group-hover/user:visible transition-all duration-300">
-                <div className="px-4 py-2 border-b border-gray-50 mb-1">
-                  <p className="text-xs text-gray-500">{t("auth.profile")}</p>
-                  <p className="text-sm font-bold truncate text-gray-900">
+              <div className="absolute right-0 mt-2 w-56 bg-[#080808] rounded-lg shadow-xl border border-[#262626] overflow-hidden py-2 translate-y-2 opacity-0 invisible group-hover/user:translate-y-0 group-hover/user:opacity-100 group-hover/user:visible transition-all duration-300">
+                <div className="px-4 py-2 border-b border-[#262626] mb-1">
+                  <p className="text-xs text-[#737373]">{t("auth.profile")}</p>
+                  <p className="text-sm font-semibold truncate text-white">
                     {user?.name || t("auth.profile")}
                   </p>
                 </div>
                 <Link
                   href={ROUTES.PROFILE}
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                  className="block px-4 py-2 text-sm text-[#d4d4d4] hover:bg-[#171717]"
                 >
                   {t("auth.profile")}
                 </Link>
                 <button
                   onClick={logout}
-                  className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50"
+                  className="w-full text-left px-4 py-2 text-sm text-red-300 hover:bg-red-500/10"
                 >
                   {t("auth.logout")}
                 </button>
@@ -125,19 +122,13 @@ const Header = () => {
             <div className="flex items-center gap-2">
               <Link
                 href={ROUTES.LOGIN}
-                className={`px-4 py-2 rounded-xl font-semibold text-sm transition-all duration-300 ${isScrolled
-                    ? "text-gray-900 hover:bg-gray-100"
-                    : "text-white hover:bg-white/10"
-                  }`}
+                className={`px-4 py-2 rounded-full border border-[#262626] font-semibold text-sm transition-all duration-300 text-[#d4d4d4] hover:text-white hover:border-[#404040]`}
               >
                 {t("auth.login")}
               </Link>
               <Link
                 href={ROUTES.REGISTER || "/register"}
-                className={`px-6 py-2 rounded-xl font-semibold text-sm transition-all duration-300 ${isScrolled
-                    ? "bg-cyan-500 text-white shadow-lg hover:shadow-cyan-500/40"
-                    : "bg-white text-cyan-500 hover:bg-gray-50"
-                  }`}
+                className={`px-6 py-2 rounded-full font-semibold text-sm transition-all duration-300 bg-[#171717] border border-[#262626] text-white hover:text-[#8b6a55] hover:border-[#8b6a55]`}
               >
                 {t("auth.register")}
               </Link>
@@ -146,8 +137,7 @@ const Header = () => {
 
           {/* Mobile Menu Toggle */}
           <button
-            className={`p-4 -mr-4 lg:hidden text-3xl transition-colors ${isScrolled ? "text-gray-900" : "text-white"
-              }`}
+            className={`p-4 -mr-4 lg:hidden text-3xl transition-colors text-white`}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label={isMobileMenuOpen ? t("accessibility.close_menu") : t("accessibility.open_menu")}
           >
@@ -164,15 +154,15 @@ const Header = () => {
             onClick={() => setIsMobileMenuOpen(false)}
           />
 
-          <div className="lg:hidden fixed inset-y-0 right-0 w-4/5 max-w-sm bg-white/95 backdrop-blur-md z-50 shadow-2xl animate-in slide-in-from-right duration-300">
-            <div className="flex items-center justify-between p-6 border-b border-gray-100">
-              <span className="text-lg font-bold text-gray-900">{t("common.menu")}</span>
+          <div className="lg:hidden fixed inset-y-0 right-0 w-4/5 max-w-sm bg-[#080808]/95 backdrop-blur-md z-50 shadow-2xl animate-in slide-in-from-right duration-300 border-l border-[#262626]">
+            <div className="flex items-center justify-between p-6 border-b border-[#262626]">
+              <span className="text-lg font-semibold text-white">{t("common.menu")}</span>
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+                className="p-2 rounded-full hover:bg-[#171717] transition-colors"
                 aria-label={t("accessibility.close_menu")}
               >
-                <IoCloseOutline className="w-6 h-6 text-gray-600" />
+                <IoCloseOutline className="w-6 h-6 text-[#a3a3a3]" />
               </button>
             </div>
 
@@ -183,15 +173,14 @@ const Header = () => {
                   href={link.path}
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={`group flex items-center gap-4 p-4 rounded-xl transition-all duration-200 ${isActive(link.path)
-                      ? "bg-cyan-500/10 text-cyan-500"
-                      : "text-gray-700 hover:bg-gray-50"
+                      ? "bg-[#171717] text-[#8b6a55]"
+                      : "text-[#d4d4d4] hover:bg-[#171717]"
                     }`}
                   style={{ animationDelay: `${index * 50}ms` }}
                 >
-                  {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                  <span className="text-lg font-medium">{t(link.name as any)}</span>
+                  <span className="text-lg font-medium">{t(link.name)}</span>
                   {isActive(link.path) && (
-                    <IoChevronForward className="ml-auto text-cyan-500" />
+                    <IoChevronForward className="ml-auto text-[#8b6a55]" />
                   )}
                 </Link>
               ))}

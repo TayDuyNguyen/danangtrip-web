@@ -37,12 +37,12 @@ export default function LocationHeader({ onSearch, onOpenFilters, count, hasActi
 
         <button
           onClick={onOpenFilters}
-          className="flex items-center gap-4 px-10 py-7 bg-surface-container-low/40 backdrop-blur-md border-2 border-outline-variant/10 hover:border-azure/30 hover:bg-surface-container-low text-foreground font-black rounded-[32px] transition-all duration-500 scale-100 active:scale-90 shadow-sm group"
+          className="flex items-center gap-4 px-10 py-7 bg-surface-container-low/40 backdrop-blur-md border-2 border-outline-variant/10 hover:border-[#8b6a55]/30 hover:bg-surface-container-low text-foreground font-black rounded-xl transition-all duration-500 scale-100 active:scale-90 shadow-sm group"
         >
-          <IoOptionsOutline className="text-2xl group-hover:rotate-180 transition-transform duration-700 text-azure" />
+          <IoOptionsOutline className="text-2xl group-hover:rotate-180 transition-transform duration-700 text-[#8b6a55]" />
           <span className="text-lg">{t("filters.title")}</span>
           {hasActiveFilters && (
-            <span className="w-3 h-3 rounded-full bg-azure shadow-lg shadow-azure/50 animate-pulse ml-1" />
+            <span className="w-3 h-3 rounded-full bg-[#8b6a55] shadow-lg shadow-black/30 animate-pulse ml-1" />
           )}
         </button>
       </div>

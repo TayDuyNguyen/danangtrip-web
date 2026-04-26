@@ -4,7 +4,7 @@ import { cn } from "@/utils/string";
 import { useTranslations } from "next-intl";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "secondary" | "danger";
+  variant?: "primary" | "secondary" | "danger" | "link";
   size?: "sm" | "md" | "lg";
   isLoading?: boolean;
 }
@@ -24,20 +24,22 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ) => {
     const t = useTranslations("common");
     const baseStyles =
-      "inline-flex items-center justify-center font-bold rounded-xl transition-all active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg";
+      "inline-flex items-center justify-center font-semibold rounded-full border transition-all duration-300 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:opacity-50 disabled:cursor-not-allowed";
 
     const variants = {
-      primary: "bg-azure text-white hover:bg-blue-700 focus-visible:ring-azure shadow-azure/20",
+      primary:
+        "bg-[#171717] text-white border-[#262626] hover:border-[#8b6a55] hover:text-[#8b6a55] focus-visible:ring-[#8b6a55]",
       secondary:
-        "bg-sun text-white hover:bg-orange-600 focus-visible:ring-sun shadow-sun/20",
-      danger: "bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-500",
+        "bg-transparent text-[#737373] border-[#262626] hover:text-white hover:border-[#404040] focus-visible:ring-[#404040]",
+      danger: "bg-transparent text-red-300 border-red-500/40 hover:bg-red-500/10 focus-visible:ring-red-400",
+      link: "bg-transparent text-[#737373] border-transparent px-0 py-0 rounded-none hover:text-white focus-visible:ring-[#404040]",
     };
 
 
     const sizes = {
-      sm: "px-3 py-1.5 text-sm",
-      md: "px-4 py-2 text-base",
-      lg: "px-6 py-3 text-lg",
+      sm: "px-3 py-2 text-xs",
+      md: "px-4 py-3 text-sm",
+      lg: "px-5 py-3 text-sm",
     };
 
     return (

@@ -55,7 +55,7 @@ const Testimonials = () => {
               className="relative p-10 bg-surface-container-lowest rounded-2xl shadow-xl shadow-surface-container-high/50 border border-border flex flex-col"
             >
               <div className="absolute top-0 right-0 p-8 transform translate-x-4 -translate-y-4">
-                <FaQuoteLeft className="text-6xl text-azure/5 opacity-30" />
+                <FaQuoteLeft className="text-6xl text-[#8b6a55]/10 opacity-30" />
               </div>
 
               <div className="flex gap-1 mb-6 text-yellow-400">

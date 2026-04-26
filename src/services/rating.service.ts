@@ -1,9 +1,9 @@
 import { API_ENDPOINTS } from "@/config";
 import axiosInstance from "@/lib/axios";
-import type { LocationRatingCheckData } from "@/features/locations/types/rating.types";
+import type { LocationRatingCheckData } from "@/types/location-rating.types";
 import type { ApiResponse } from "@/types";
 
-export type { LocationRatingListItem, LocationRatingCheckData } from "@/features/locations/types/rating.types";
+export type { LocationRatingListItem, LocationRatingCheckData } from "@/types/location-rating.types";
 
 export const ratingService = {
   checkLocation: (locationId: number): Promise<ApiResponse<LocationRatingCheckData>> =>
