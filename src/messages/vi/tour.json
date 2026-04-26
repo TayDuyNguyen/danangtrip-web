@@ -1,0 +1,40 @@
+{
+  "title": "Danh sách Tour",
+  "subtitle": "Khám phá những hành trình tuyệt vời tại Đà Nẵng",
+  "filters": {
+    "title": "Bộ lọc",
+    "category": "Danh mục",
+    "price": "Khoảng giá",
+    "duration": "Thời lượng",
+    "departure_date": "Ngày khởi hành",
+    "rating": "Đánh giá",
+    "clear_all": "Xóa tất cả",
+    "apply": "Áp dụng",
+    "durations": {
+      "half_day": "Nửa ngày",
+      "one_day": "1 ngày",
+      "two_days_one_night": "2 ngày 1 đêm",
+      "three_days_two_nights": "3 ngày 2 đêm",
+      "multi_day": "Nhiều ngày"
+    }
+  },
+  "sort": {
+    "label": "Sắp xếp",
+    "newest": "Mới nhất",
+    "popular": "Phổ biến nhất",
+    "featured": "Nổi bật nhất",
+    "price_asc": "Giá thấp đến cao",
+    "price_desc": "Giá cao đến thấp",
+    "rating": "Đánh giá cao nhất"
+  },
+  "card": {
+    "book_now": "Đặt ngay",
+    "view_detail": "Xem chi tiết",
+    "participants": "{count} người",
+    "starting_from": "Từ"
+  },
+  "empty": {
+    "title": "Không tìm thấy tour",
+    "description": "Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm của bạn"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "title": "Tour List",
+  "subtitle": "Discover amazing journeys in Da Nang",
+  "filters": {
+    "title": "Filters",
+    "category": "Categories",
+    "price": "Price Range",
+    "duration": "Duration",
+    "departure_date": "Departure Date",
+    "rating": "Rating",
+    "clear_all": "Clear all",
+    "apply": "Apply",
+    "durations": {
+      "half_day": "Half day",
+      "one_day": "1 day",
+      "two_days_one_night": "2 days 1 night",
+      "three_days_two_nights": "3 days 2 nights",
+      "multi_day": "Multi-day"
+    }
+  },
+  "sort": {
+    "label": "Sort by",
+    "newest": "Newest",
+    "popular": "Most Popular",
+    "featured": "Featured",
+    "price_asc": "Price: Low to High",
+    "price_desc": "Price: High to Low",
+    "rating": "Top Rated"
+  },
+  "card": {
+    "book_now": "Book Now",
+    "view_detail": "View Details",
+    "participants": "{count} people",
+    "starting_from": "From"
+  },
+  "empty": {
+    "title": "No tours found",
+    "description": "Try changing your filters or search keyword"
+  }
+}

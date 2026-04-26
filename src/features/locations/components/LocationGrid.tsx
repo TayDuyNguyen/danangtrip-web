@@ -11,7 +11,7 @@ interface LocationGridProps {
 export default function LocationGrid({ locations, isLoading }: LocationGridProps) {
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 py-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 py-8">
         {Array.from({ length: 6 }).map((_, i) => (
           <div key={i} className="aspect-4/5 rounded-xl bg-surface-container-high animate-pulse border border-[#262626]" />
         ))}
@@ -31,7 +31,7 @@ export default function LocationGrid({ locations, isLoading }: LocationGridProps
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 py-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 py-8">
       {locations.map((location) => (
         <LocationCard key={location.id} location={location} />
       ))}

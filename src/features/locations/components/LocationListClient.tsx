@@ -20,14 +20,14 @@ export default function LocationListClient() {
   // Get values from URL
   const q = searchParams.get("q") || "";
   const categoriesParam = searchParams.get("categories");
-  const categories = useMemo(() => 
-    categoriesParam ? categoriesParam.split(",").map(Number) : [], 
+  const categories = useMemo(() =>
+    categoriesParam ? categoriesParam.split(",").map(Number) : [],
     [categoriesParam]
   );
-  
+
   const districtsParam = searchParams.get("districts");
-  const districts = useMemo(() => 
-    districtsParam ? districtsParam.split(",") : [], 
+  const districts = useMemo(() =>
+    districtsParam ? districtsParam.split(",") : [],
     [districtsParam]
   );
 
@@ -57,7 +57,7 @@ export default function LocationListClient() {
 
   const updateFilters = useCallback((updates: Record<string, string | string[] | number[] | null>) => {
     const params = new URLSearchParams(searchParams.toString());
-    
+
     Object.entries(updates).forEach(([key, value]) => {
       if (value === null || (Array.isArray(value) && value.length === 0)) {
         params.delete(key);
@@ -73,7 +73,9 @@ export default function LocationListClient() {
       params.set("page", "1");
     }
 
-    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+    // Use router.push with full URL to ensure proper navigation
+    const newUrl = `${pathname}?${params.toString()}`;
+    router.push(newUrl);
   }, [pathname, router, searchParams]);
 
   const handleSearch = debounce((value: string) => {
@@ -88,20 +90,20 @@ export default function LocationListClient() {
   const hasActiveFilters = !!(q || categories.length > 0 || districts.length > 0 || priceLevel || minRating);
 
   return (
-    <div className="w-full mx-auto px-6 md:px-16 lg:px-24 pb-24 pt-32">
-      <LocationHeader 
-        count={pagination.total} 
-        onSearch={handleSearch} 
-        onOpenFilters={() => {}} 
+    <div className="w-full pb-24 pt-8">
+      <LocationHeader
+        count={pagination.total}
+        onSearch={handleSearch}
+        onOpenFilters={() => { }}
         hasActiveFilters={hasActiveFilters}
         isLoading={isLoading && page === 1}
         query={q}
       />
-      
-      <div className="flex flex-col lg:flex-row gap-12">
-        <aside className="lg:w-80 shrink-0">
+
+      <div className="grid grid-cols-1 md:grid-cols-[320px_1fr] gap-16 py-8">
+        <aside>
           <div className="lg:sticky lg:top-32">
-            <LocationFilters 
+            <LocationFilters
               activeCategories={categories}
               activeDistricts={districts}
               activePriceLevel={priceLevel}
@@ -111,24 +113,24 @@ export default function LocationListClient() {
               onDistrictsChange={(dists) => updateFilters({ districts: dists })}
               onPriceLevelChange={(level) => updateFilters({ price_level: level ? String(level) : null })}
               onRatingChange={(rating) => updateFilters({ min_rating: rating ? String(rating) : null })}
-              onReset={() => updateFilters({ 
-                categories: null, 
-                districts: null, 
-                price_level: null, 
+              onReset={() => updateFilters({
+                categories: null,
+                districts: null,
+                price_level: null,
                 min_rating: null,
-                q: null 
+                q: null
               })}
             />
           </div>
         </aside>
 
         <main className="flex-1">
-          <LocationGrid 
-            locations={locations} 
-            isLoading={isLoading} 
+          <LocationGrid
+            locations={locations}
+            isLoading={isLoading}
           />
 
-          <StandardPagination 
+          <StandardPagination
             currentPage={page}
             totalPages={totalPages}
             onPageChange={handlePageChange}
