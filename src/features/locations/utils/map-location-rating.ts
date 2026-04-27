@@ -1,4 +1,4 @@
-import type { LocationRatingListItem } from "@/features/locations/types/rating.types";
+import type { LocationRatingListItem } from "@/types/location-rating.types";
 import type { LocationReview } from "@/types";
 
 export function mapLocationRatingToReview(row: LocationRatingListItem): LocationReview {

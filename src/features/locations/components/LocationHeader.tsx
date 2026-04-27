@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { IoOptionsOutline } from "react-icons/io5";
+import { IoOptionsOutline } from "@/components/icons/solar";
 import SearchInput from "@/components/ui/SearchInput";
 
 interface LocationHeaderProps {

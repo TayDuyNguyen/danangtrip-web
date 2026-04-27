@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AbstractIntlMessages, NextIntlClientProvider } from "next-intl";
 import { Toaster } from "sonner";
 import { shouldRetryQuery } from "@/lib/react-query";
+import { LocaleHtmlLang } from "@/components/providers/LocaleHtmlLang";
 
 interface ProvidersProps {
   children: ReactNode;
@@ -31,6 +32,7 @@ export function Providers({ children, locale, messages }: ProvidersProps) {
   return (
     <QueryClientProvider client={queryClient}>
       <NextIntlClientProvider locale={locale} messages={messages} timeZone="Asia/Ho_Chi_Minh">
+        <LocaleHtmlLang />
         {children}
         <Toaster position="top-right" richColors closeButton />
       </NextIntlClientProvider>

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { IoStar, IoLocationOutline, IoHeartOutline } from "react-icons/io5";
+import { IoStar, IoLocationOutline, IoHeartOutline } from "@/components/icons/solar";
 import type { Location } from "@/types";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";

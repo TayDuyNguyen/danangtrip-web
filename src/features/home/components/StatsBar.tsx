@@ -6,14 +6,14 @@ import {
   IoLocationOutline,
   IoMapOutline,
   IoNewspaperOutline
-} from "react-icons/io5";
+} from "@/components/icons/solar";
 import { useStatistics } from "../hooks/use-statistics";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 
 const StatsBar = () => {
   const { stats } = useStatistics();
   const t = useTranslations();
-  const { elementRef, isVisible } = useScrollReveal(0.1);
+  const { elementRef, isVisible } = useScrollReveal();
 
   const statItems = [
     {
@@ -34,7 +34,7 @@ const StatsBar = () => {
   ];
 
   return (
-    <div className="container mx-auto px-4 relative z-20" ref={elementRef}>
+    <div className="container mx-auto px-4 relative z-10" ref={elementRef}>
       <div className={`flex flex-wrap justify-between items-center gap-10 p-10 bg-surface-container-low/80 backdrop-blur-xl border border-[#262626] shadow-[0_20px_50px_rgba(0,0,0,0.35)] rounded-xl -mt-16 mb-12 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
         {statItems.map((item, index) => (
           <div 

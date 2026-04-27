@@ -48,3 +48,9 @@ export const isEmpty = (value: unknown): boolean => {
     (typeof value === "object" && Object.keys(value).length === 0)
   );
 };
+
+export const normalizeText = (value: unknown): string => {
+  if(typeof value !== "string") return "";
+  const cleanValue = value.trim();
+  return !cleanValue || cleanValue.toLowerCase() === "null" ? "" : cleanValue;
+}

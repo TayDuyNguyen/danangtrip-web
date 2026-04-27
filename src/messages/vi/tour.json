@@ -1,0 +1,75 @@
+{
+  "title": "Danh sách Tour",
+  "subtitle": "Khám phá những hành trình tuyệt vời tại Đà Nẵng",
+  "list": {
+    "search_placeholder": "Tìm kiếm tour...",
+    "filters_toggle": "Bộ lọc",
+    "results_count": "Tìm thấy <highlight>{count}</highlight> tour phù hợp",
+    "load_error": "Không tải được danh sách tour. Vui lòng thử lại.",
+    "retry": "Thử lại"
+  },
+  "filters": {
+    "title": "Bộ lọc",
+    "category": "Danh mục",
+    "price": "Khoảng giá",
+    "duration": "Thời lượng",
+    "departure_date": "Ngày khởi hành",
+    "rating": "Đánh giá",
+    "clear_all": "Xóa tất cả",
+    "apply": "Áp dụng",
+    "price_min_placeholder": "Từ",
+    "price_max_placeholder": "Đến",
+    "available_from_label": "Từ ngày",
+    "available_to_label": "Đến ngày",
+    "durations": {
+      "half_day": "Nửa ngày",
+      "one_day": "1 ngày",
+      "two_days_one_night": "2 ngày 1 đêm",
+      "three_days_two_nights": "3 ngày 2 đêm",
+      "multi_day": "Nhiều ngày"
+    }
+  },
+  "sort": {
+    "label": "Sắp xếp",
+    "newest": "Mới nhất",
+    "popular": "Phổ biến nhất",
+    "featured": "Nổi bật nhất",
+    "price_asc": "Giá thấp đến cao",
+    "price_desc": "Giá cao đến thấp",
+    "rating": "Đánh giá cao nhất"
+  },
+  "card": {
+    "book_now": "Đặt ngay",
+    "view_detail": "Xem chi tiết",
+    "participants": "{count} người",
+    "starting_from": "Từ",
+    "hot_badge": "HOT",
+    "featured_badge": "Nổi bật",
+    "location_short": "Đà Nẵng, Việt Nam",
+    "discount_percent": "-{percent}%"
+  },
+  "empty": {
+    "title": "Không tìm thấy tour",
+    "description": "Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm của bạn"
+  },
+  "detail": {
+    "meta_brand": "DanangTrip",
+    "breadcrumb_home": "Trang chủ",
+    "breadcrumb_tours": "Tour",
+    "not_found": "Tour không tồn tại",
+    "overview": "Tổng quan",
+    "itinerary": "Lịch trình",
+    "inclusions": "Bao gồm",
+    "exclusions": "Không bao gồm",
+    "meeting_point": "Điểm tập trung",
+    "pricing": "Bảng giá",
+    "price_adult": "Người lớn",
+    "price_child": "Trẻ em",
+    "price_infant": "Em bé",
+    "per_person": "/ người",
+    "stats_duration": "Thời lượng",
+    "stats_group": "Nhóm tối đa",
+    "gallery": "Hình ảnh",
+    "book_cta_hint": "Đặt chỗ hoặc tư vấn thêm qua trang liên hệ."
+  }
+}

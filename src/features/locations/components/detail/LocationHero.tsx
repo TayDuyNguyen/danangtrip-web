@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { PUBLIC_ROUTES } from '@/config/routes';
 import { Button } from '@/components/ui';
-import { Heart, Share2 } from 'lucide-react';
+import { Heart, Share2 } from "@/components/icons/solar";
 import { cn } from '@/lib/utils';
 
 interface LocationHeroProps {
@@ -59,10 +59,10 @@ export default function LocationHero({
             aria-pressed={isFavorite}
           >
             <Heart
-              className={cn('h-5 w-5', isFavorite && 'fill-[#FF5A5F] text-[#FF5A5F]')}
+              className={cn('h-5 w-5', isFavorite && 'fill-primary text-primary')}
             />
           </Button>
-          <Button variant="primary" size="sm" className="rounded-full bg-[#FF5A5F] hover:bg-[#FF5A5F]/90">
+          <Button variant="primary" size="sm" className="rounded-full">
             {t('detail.book_now')}
           </Button>
         </div>
@@ -93,12 +93,12 @@ export default function LocationHero({
           <Button
             type="button"
             variant="secondary"
-            className="gap-2 rounded-full border-border bg-surface-container-lowest text-on-surface-variant shadow-sm hover:border-[#FF5A5F] hover:text-[#FF5A5F] transition-colors"
+            className="gap-2 rounded-full border-border bg-surface-container-lowest text-on-surface-variant shadow-sm hover:border-primary hover:text-primary transition-colors"
             disabled={favoriteBusy}
             onClick={onFavoriteToggle}
             aria-pressed={isFavorite}
           >
-            <Heart className={cn('h-4 w-4', isFavorite && 'fill-[#FF5A5F] text-[#FF5A5F]')} />
+            <Heart className={cn('h-4 w-4', isFavorite && 'fill-primary text-primary')} />
             {t('detail.save')}
           </Button>
         </div>

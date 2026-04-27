@@ -22,7 +22,9 @@
     "joined_date": "Joined Date",
     "no_data": "No data found",
     "no_data_desc": "There is currently no data to display.",
-    "select_placeholder": "Select..."
+    "select_placeholder": "Select...",
+    "auth_checking": "Verifying your session...",
+    "redirecting_login": "Redirecting to sign in..."
   },
   "accessibility": {
     "close": "Close",

@@ -27,7 +27,9 @@ These rules apply to:
 - `src/messages`
 - `src/config`
 - `src/lib`
+- `src/types`
 - `src/utils`
+- `src/providers`
 
 Priority:
 1. Correctness and safety
@@ -189,7 +191,7 @@ Rules:
 - **Namespace Pattern**: Use the pattern that best fits the component's needs:
   - **Scoped** (`useTranslations("login")`): when a component only needs keys from **one namespace**. Use relative key paths (`t("email_label")`). This is the default recommended by next-intl.
   - **Unscoped** (`useTranslations()`): when a component needs keys from **multiple namespaces** simultaneously. Use fully qualified paths (`t("home.featured_locations.tagline")`).
-- **No phantom namespaces**: The namespace string passed to `useTranslations()` must correspond to a real key in the loaded messages object (e.g., `"common"`, `"home"`, `"login"`, `"register"`, `"search"`). Sub-objects like `"accessibility"` or `"search.tabs"` are **not valid top-level namespaces**.
+- **No phantom namespaces**: The namespace string passed to `useTranslations()` must resolve to a real object path in the loaded messages (top-level or nested), for example `"common"`, `"home"`, `"tour.card"`, `"tour.filters"`.
 
 ### Should
 - Keep translation keys stable and descriptive.
@@ -199,7 +201,7 @@ Rules:
 ### Avoid
 - Mixing translated and hardcoded text in the same reusable component.
 - Adding one locale without updating the other.
-- Passing sub-paths as the scoped namespace (e.g., `useTranslations("search.tabs")` — invalid, use `useTranslations("search")` then `t("tabs.all")`).
+- Using a namespace path that does not exist in messages (e.g., typo or stale key path).
 
 ---
 
@@ -299,7 +301,8 @@ Core quality gates before calling work complete:
 
 ```bash
 npm run lint
-npx tsc --noEmit
+npm run typecheck
+npm run check:routes
 npm run build
 ```
 
@@ -435,7 +438,7 @@ If a rule is not realistic or not enforceable, rewrite it to be practical instea
 ### Strict Data Policy
 - **Empty States Over Mocks**: Components should **hide their entire section** or show a clean empty state if the database is empty. 
 - **No Invisible Mocks**: Hardcoded fake data (e.g., "15k users") is forbidden in production-ready components. The UI must accurately reflect the Backend database.
-- **Graceful Error Handling**: If an API fails, provide appropriate error feedback or hide the affected section silently.
+- **Graceful Error Handling**: If an API fails, show clear feedback for user-critical flows; for non-critical decorative sections, hiding the section is acceptable if behavior remains understandable.
 
 ### Premium Visual Standards
 - **Entrance Animations**: Use `reveal-up` CSS classes with staggered `reveal-delay-X` for all top-level sections to create a premium reveal effect.

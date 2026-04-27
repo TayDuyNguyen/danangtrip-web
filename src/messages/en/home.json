@@ -91,6 +91,7 @@
   "testimonials": "Customer Testimonials",
   "testimonials_desc": "Sincere shares from travelers who have accompanied us on their journey to discover Da Nang.",
   "reviews": {
+    "display_star_count": "5",
     "1": {
       "name": "An Nguyen Van",
       "role": "Traveler from Hanoi",

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
 import { ROUTES } from "@/config";
-import { IoMailOutline, IoLockClosedOutline } from "react-icons/io5";
+import { IoMailOutline, IoLockClosedOutline } from "@/components/icons/solar";
 import { useAuth } from "../hooks/use-auth";
 import { Input } from "@/components/ui";
 

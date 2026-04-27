@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { useTranslations, useLocale } from "next-intl";
-import { IoStar, IoLocationOutline, IoTimeOutline, IoChevronForward } from "react-icons/io5";
+import { IoStar, IoLocationOutline, IoTimeOutline, IoChevronForward } from "@/components/icons/solar";
 import { cn } from "@/utils/string";
 import { ROUTES } from "@/config";
 import { SearchResult, TourSearchResult, LocationSearchResult } from "../types/search.types";

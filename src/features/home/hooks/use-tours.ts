@@ -40,10 +40,9 @@ export const useTours = () => {
     retry: shouldRetryQuery,
   });
 
-  // Mock Fallbacks if API fails
-  const featuredTours: Tour[] = featuredQuery.data || [];
-  const hotTours: Tour[] = hotQuery.data || [];
-  const tourCategories: TourCategory[] = categoriesQuery.data || [];
+  const featuredTours: Tour[] = featuredQuery.data ?? [];
+  const hotTours: Tour[] = hotQuery.data ?? [];
+  const tourCategories: TourCategory[] = categoriesQuery.data ?? [];
 
   const isLoading = featuredQuery.isLoading || hotQuery.isLoading || categoriesQuery.isLoading;
 

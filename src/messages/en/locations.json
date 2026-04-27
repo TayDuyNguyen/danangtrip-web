@@ -1,6 +1,9 @@
 {
   "title": "Featured Locations",
   "subtitle": "Discover the most popular destinations in Da Nang.",
+  "grid": {
+    "empty_title": "No locations match your filters"
+  },
   "discovery": {
     "title": "Explore Da Nang Locations",
     "subtitle": "{count} exciting tourist spots waiting for you to discover and experience",

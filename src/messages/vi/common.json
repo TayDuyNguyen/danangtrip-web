@@ -22,7 +22,9 @@
     "joined_date": "Ngày tham gia",
     "no_data": "Không có dữ liệu",
     "no_data_desc": "Hiện tại chưa có dữ liệu nào.",
-    "select_placeholder": "Chọn..."
+    "select_placeholder": "Chọn...",
+    "auth_checking": "Đang xác minh phiên đăng nhập...",
+    "redirecting_login": "Đang chuyển đến trang đăng nhập..."
   },
   "accessibility": {
     "close": "Đóng",

@@ -4,7 +4,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { useState, useTransition, memo } from "react";
 import Image from "next/image";
-import { IoChevronDownOutline } from "react-icons/io5";
+import { IoChevronDownOutline } from "@/components/icons/solar";
 
 const LanguageSwitcher = ({ isScrolled }: { isScrolled: boolean }) => {
   const t = useTranslations("common");

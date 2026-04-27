@@ -1,0 +1,75 @@
+{
+  "title": "Tour List",
+  "subtitle": "Discover amazing journeys in Da Nang",
+  "list": {
+    "search_placeholder": "Search tours...",
+    "filters_toggle": "Filters",
+    "results_count": "Found <highlight>{count}</highlight> matching tours",
+    "load_error": "Could not load tours. Please try again.",
+    "retry": "Retry"
+  },
+  "filters": {
+    "title": "Filters",
+    "category": "Categories",
+    "price": "Price Range",
+    "duration": "Duration",
+    "departure_date": "Departure Date",
+    "rating": "Rating",
+    "clear_all": "Clear all",
+    "apply": "Apply",
+    "price_min_placeholder": "Min",
+    "price_max_placeholder": "Max",
+    "available_from_label": "From",
+    "available_to_label": "To",
+    "durations": {
+      "half_day": "Half day",
+      "one_day": "1 day",
+      "two_days_one_night": "2 days 1 night",
+      "three_days_two_nights": "3 days 2 nights",
+      "multi_day": "Multi-day"
+    }
+  },
+  "sort": {
+    "label": "Sort by",
+    "newest": "Newest",
+    "popular": "Most Popular",
+    "featured": "Featured",
+    "price_asc": "Price: Low to High",
+    "price_desc": "Price: High to Low",
+    "rating": "Top Rated"
+  },
+  "card": {
+    "book_now": "Book Now",
+    "view_detail": "View Details",
+    "participants": "{count} people",
+    "starting_from": "From",
+    "hot_badge": "HOT",
+    "featured_badge": "Featured",
+    "location_short": "Da Nang, Vietnam",
+    "discount_percent": "-{percent}%"
+  },
+  "empty": {
+    "title": "No tours found",
+    "description": "Try changing your filters or search keyword"
+  },
+  "detail": {
+    "meta_brand": "DanangTrip",
+    "breadcrumb_home": "Home",
+    "breadcrumb_tours": "Tours",
+    "not_found": "Tour not found",
+    "overview": "Overview",
+    "itinerary": "Itinerary",
+    "inclusions": "Inclusions",
+    "exclusions": "Exclusions",
+    "meeting_point": "Meeting point",
+    "pricing": "Pricing",
+    "price_adult": "Adult",
+    "price_child": "Child",
+    "price_infant": "Infant",
+    "per_person": "/ person",
+    "stats_duration": "Duration",
+    "stats_group": "Group size",
+    "gallery": "Gallery",
+    "book_cta_hint": "Book or get in touch via our contact page."
+  }
+}

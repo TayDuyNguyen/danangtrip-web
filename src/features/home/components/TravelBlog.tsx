@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { ROUTES } from "@/config";
 import { useTranslations, useLocale } from "next-intl";
-import { IoArrowForwardOutline, IoCalendarOutline } from "react-icons/io5";
+import { IoArrowForwardOutline, IoCalendarOutline } from "@/components/icons/solar";
 import { useBlog } from "../hooks/use-blog";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 
@@ -13,13 +13,13 @@ const TravelBlog = () => {
   const { latestBlogs: blogs } = useBlog();
   const t = useTranslations();
   const locale = useLocale();
-  const { elementRef, isVisible } = useScrollReveal(0.1);
+  const { elementRef, isVisible } = useScrollReveal();
 
   // Keep layout stable even if blogs still loading
   // if (blogs.length === 0) return null;
 
   return (
-    <section className="py-[120px] bg-surface font-sans overflow-hidden">
+    <section className="py-[120px] bg-surface/12 backdrop-blur-[1px] font-sans overflow-hidden">
       <div className="design-container" ref={elementRef}>
         {/* Header */}
         <div className={`flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>

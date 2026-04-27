@@ -1,6 +1,6 @@
 "use client";
 import { useTranslations } from 'next-intl';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from "@/components/icons/solar";
 
 export interface MinimalPaginationProps {
     currentPage: number;

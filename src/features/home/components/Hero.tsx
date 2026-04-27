@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import {
   IoLocationOutline,
-} from "react-icons/io5";
+} from "@/components/icons/solar";
 import { useWeather } from "@/hooks/use-weather";
 import { useEffect, useState } from "react";
 import { useRouter } from "@/i18n/navigation";
@@ -96,7 +96,7 @@ const Hero = () => {
   }, []);
 
   return (
-    <section className="relative w-full h-[600px] md:h-[700px] flex items-center justify-center font-sans border-b border-white/10">
+    <section className="relative w-full h-[600px] md:h-[700px] flex items-center justify-center font-sans border-b border-white/10 transition-all duration-300">
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <Image
@@ -111,7 +111,7 @@ const Hero = () => {
       </div>
 
       {/* Content */}
-      <div className="container relative z-40 px-4 text-center mt-[-40px]">
+      <div className={`container relative px-4 text-center mt-[-40px] transition-all duration-300 ${isDropdownOpen ? "z-50" : "z-20"}`}>
         <div className="mb-10">
           <p className={`text-[14px] md:text-[16px] font-bold text-white tracking-[0.4em] mb-4 uppercase drop-shadow-lg transition-all duration-1000 ${isVisible ? "opacity-90 translate-y-0" : "opacity-0 translate-y-10"}`}>
             {t("home.hero_tagline_premium")}
@@ -127,7 +127,7 @@ const Hero = () => {
         {/* Search Box - Glassmorphism */}
         <div 
           ref={searchContainerRef}
-          className={`relative z-30 max-w-4xl mx-auto flex flex-col md:flex-row shadow-2xl rounded-xl backdrop-blur-md bg-[#111111]/70 border border-[#262626] p-2 transition-all duration-1000 delay-600 ${isVisible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-10 scale-95"}`}
+          className={`relative max-w-4xl mx-auto flex flex-col md:flex-row shadow-2xl rounded-xl backdrop-blur-md bg-[#111111]/70 border border-[#262626] p-2 transition-all duration-1000 delay-600 ${isVisible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-10 scale-95"} ${isDropdownOpen ? "z-50" : "z-30"}`}
         >
           <div className="flex-1 flex items-center px-6 py-4 border-b md:border-b-0 md:border-r border-[#262626]">
             <IoLocationOutline className="text-2xl text-white mr-3" />
