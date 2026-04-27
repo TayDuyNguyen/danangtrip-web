@@ -91,6 +91,9 @@ export const StarHalf = UilStarHalfAlt;
 export const ThumbsUp = UilThumbsUp;
 export const Users = UilUsersAlt;
 export const X = UilTimes;
+export const Calendar = UilCalendarAlt;
+export const InfoCircle = UilExclamationCircle;
+export const ChatLine = UilCommentLines;
 
 // react-icons/io5 compatibility exports
 export const IoAlertCircleOutline = UilExclamationCircle;

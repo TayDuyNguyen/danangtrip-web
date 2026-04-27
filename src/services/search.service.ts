@@ -15,17 +15,22 @@ export const searchService = {
    * Autocomplete suggestions
    */
   getSuggestions: (q: string, limit: number = 5): Promise<ApiResponse<SearchSuggestionResponse>> =>
-    axiosInstance.get(API_ENDPOINTS.SEARCH.SUGGESTIONS, { params: { q, limit } }),
+    axiosInstance.get(API_ENDPOINTS.SEARCH.SUGGESTIONS, { params: { q, limit: Math.min(Math.max(limit, 1), 20) } }),
 
   /**
    * Popular searches (30 days by default)
    */
   getPopular: (limit: number = 10, days: number = 30): Promise<ApiResponse<string[]>> =>
-    axiosInstance.get(API_ENDPOINTS.SEARCH.POPULAR, { params: { limit, days } }),
+    axiosInstance.get(API_ENDPOINTS.SEARCH.POPULAR, {
+      params: {
+        limit: Math.min(Math.max(limit, 1), 50),
+        days: Math.min(Math.max(days, 1), 365),
+      },
+    }),
 
   /**
    * Trending searches (1 day by default)
    */
   getTrending: (limit: number = 10): Promise<ApiResponse<string[]>> =>
-    axiosInstance.get(API_ENDPOINTS.SEARCH.TRENDING, { params: { limit } }),
+    axiosInstance.get(API_ENDPOINTS.SEARCH.TRENDING, { params: { limit: Math.min(Math.max(limit, 1), 50) } }),
 };

@@ -1,116 +1,170 @@
-# 🧠 Full-Cycle Feature Development Prompts
+# DanangTrip Web - Agent Prompt Playbook (Figma -> UI)
 
-Quy trình 6 bước từ Figma → API audit → Code hoàn chỉnh.  
-Áp dụng cho **mọi dự án Frontend**, không phụ thuộc stack hay framework.
+This document is a standard prompt framework for Codex/AI when implementing UI from Figma in the `danangtrip-web` repository.
 
-> **Cách dùng:** Thay `[PLACEHOLDER]` bằng giá trị thực tế của dự án bạn đang làm.
-
----
-
-## Bước 0 – Kích hoạt vai trò
-
-> Dùng **1 lần** đầu phiên làm việc.
-
-**Prompt:**
-> "Đóng vai **Senior Frontend Architect** cho dự án tại `[PROJECT_DIR]`.
->
-> Nguyên tắc:
-> - Đọc `package.json` + `[PROJECT_RULES]` (nếu có) để xác định stack trước khi viết code.
-> - Kiến trúc dữ liệu: **Raw API → Mapper → ViewModel → UI**.
-> - Không hardcode mock data. Server state phải đi qua data-fetching library.
-> - Cuối mỗi câu trả lời: `✅ Đã làm | 🔄 Đang làm | ⏭️ Tiếp theo`."
+Goals:
+- Follow real project conventions, not generic templates.
+- Ship quickly while preserving architecture, i18n, and design tokens.
+- Reduce regressions.
 
 ---
 
-## Bước 1 – Phân tích Figma
+## 0) Required bootstrap (run once per session)
 
-**Prompt:**
-> "Phân tích màn hình Figma: `[FIGMA_LINK]`
+Use this prompt:
+
+> Act as a Senior Frontend Engineer for repo `d:/DATN/danangtrip-web`.
 >
-> Trình bày 3 bảng:
-> 1. **Design Tokens** — màu, spacing, radius, shadow, typography.
-> 2. **Component Breakdown** — phân loại Atom / Molecule / Organism.
-> 3. **Data Fields** — tên trường, kiểu dữ liệu, bắt buộc hay không.
+> Before writing code, you must read:
+> 1. `.agent/rules/PROJECT_RULES.md`
+> 2. `DESIGN.md`
+> 3. `src/app/[locale]/globals.css`
+> 4. related route/page files in `src/app/[locale]/...`
 >
-> Chưa viết code."
+> Rules:
+> - Follow App Router + next-intl.
+> - Do not hardcode user-facing text; use i18n keys.
+> - Prioritize reuse from `src/components/ui` and `src/components/layout`.
+> - Icon set: Solar (`@/components/icons/solar`).
+> - Client data flow: service -> hook (TanStack Query) -> UI.
+> - End each step with: `DONE | DOING | NEXT`.
 
 ---
 
-## Bước 2 – Đối chiếu tài liệu & kiểm tra API
+## 1) Figma analysis (no code yet)
 
-> Gộp: đọc tài liệu + audit API backend + tổng hợp Gap Analysis.
+Use this prompt:
 
-**Prompt:**
-> "Đọc tài liệu màn hình tại `[DOCS_DIR]/TÊN_FILE.md`, sau đó đọc Controller tại `[API_DIR]/TÊN_CONTROLLER.*`.
+> Analyze Figma: `[FIGMA_LINK]` for screen `[SCREEN_NAME]`.
 >
-> Thực hiện:
-> 1. Xác nhận endpoints cần dùng (method, URL, params).
-> 2. Kiểm tra: endpoint tồn tại? response đủ trường? có pagination? có validation? có error handling? có auth middleware?
-> 3. Tổng hợp **Gap Analysis**:
+> Return 5 sections:
+> 1. Required design tokens (color, spacing, radius, typography, shadow, blur).
+> 2. Component breakdown (what can be reused from `src/components/ui`, what must be created).
+> 3. Responsive behavior (mobile/tablet/desktop).
+> 4. Required UI states (loading, empty, error, success, disabled, hover/focus).
+> 5. Data fields to display (field name, type, required/optional).
 >
-> | Bảng | Nội dung |
-> |---|---|
-> | API thiếu | Trường UI cần nhưng API chưa trả về → đề xuất giải pháp |
-> | Figma thiếu | Trường tài liệu có nhưng Figma chưa thể hiện |
-> | Quyết định FE | Vấn đề + giải pháp + lý do |
->
-> Hỏi tôi xác nhận trước khi tiếp."
+> Do not create files and do not write code yet.
 
 ---
 
-## Bước 3 – Scaffolding
+## 2) Map to current codebase (no code yet)
 
-> Chỉ lên **kế hoạch file**, chưa viết code.
+Use this prompt:
 
-**Prompt:**
-> "Đã xác nhận Gap Analysis. Hãy:
-> 1. Đọc cấu trúc `[PROJECT_DIR]/src/` để hiểu convention.
-> 2. Liệt kê từng file `[NEW]` hoặc `[MOD]` + mục đích 1 dòng.
-> 3. Hỏi tôi: 'Bắt đầu từ file nào?'"
+> Compare Figma with the current codebase.
+>
+> Required:
+> - Find reusable components in `src/components/ui`, `src/components/layout`, `src/features/*/components`.
+> - Identify the route/page path under App Router (`src/app/[locale]/...`).
+> - Identify i18n namespaces to update (`src/messages/vi/*.json`, `src/messages/en/*.json`).
+> - Identify existing hooks/services that can be reused.
+>
+> Return:
+> - List `[REUSE]`, `[NEW]`, `[MOD]` + reason.
+> - Risk/gap if Figma conflicts with `DESIGN.md` or `PROJECT_RULES.md`.
+> - Ask for confirmation before scaffold.
 
 ---
 
-## Bước 4 – Triển khai code
+## 3) Scaffold plan (no code yet)
 
-> Viết theo thứ tự lớp: Type → Mapper → API → Hook → Validation → UI.
+Use this prompt:
 
-**Prompt:**
-> "Triển khai theo thứ tự:
-> 1. **Types**: `interface Raw___` (khớp API) + `interface ___` (ViewModel).
-> 2. **Mapper**: `mapFromRaw()` (sanitize) + `mapToRaw()` (payload).
-> 3. **API service**: Gọi HTTP client, import mapper.
-> 4. **Data hooks**: Query + Mutation, không dùng `useEffect` để fetch.
-> 5. **Validation**: Schema function nhận `t()` nếu có i18n. Bổ sung key ngôn ngữ.
-> 6. **UI**: Kiểm tra component dùng chung trước → Organism → Page.
+> Create a file plan for screen `[SCREEN_NAME]`.
 >
-> Yêu cầu UI:
-> - String user-facing → dùng `t()` nếu có i18n.
-> - Loading → Skeleton. Error → message từ API. Empty → icon + text."
+> Requirements:
+> - List each file as: `[NEW|MOD] path - one-line purpose`.
+> - Keep implementation order: types -> service -> hook -> ui -> page -> i18n.
+> - If shared components are touched, state impact clearly.
+>
+> Do not code yet; wait for confirmation.
 
 ---
 
-## Bước 5 – Kiểm tra chất lượng
+## 4) Implement code (after confirmation)
 
-**Prompt:**
-> "Rà soát code màn hình `[TÊN]` theo checklist:
+Use this prompt:
+
+> Implement based on the approved scaffold.
 >
-> | Tiêu chí | ✅/❌ |
-> |---|---|
-> | Không `useEffect` fetch data | |
-> | Không mock/hardcode | |
-> | Mapper sanitize đúng | |
-> | String dùng `t()` | |
-> | File ngôn ngữ vi + en đồng bộ | |
-> | Loading / Error / Empty đủ 3 case | |
-> | Tên file đúng convention | |
-> | Không có `any` | |
+> Required order:
+> 1. Types: place in correct location (shared in `src/types`, feature-specific in `src/features/<feature>/types`).
+> 2. Service: place in `src/services`, do not put HTTP calls in components.
+> 3. Hook: place in `src/features/<feature>/hooks` (or `src/hooks` if shared), prefer TanStack Query.
+> 4. UI components: reuse first, create new only when needed.
+> 5. Wire page in `src/app/[locale]/...`.
+> 6. i18n: update both `vi` and `en`.
 >
-> Chạy build/lint, fix nếu lỗi."
+> Quality rules:
+> - Do not introduce `any` unless necessary.
+> - Do not cross-import sibling features.
+> - Do not break design tokens in `globals.css`.
+> - If icons are needed, use only `@/components/icons/solar`.
 
 ---
 
-## 💡 Shortcut
+## 5) Quality review and close
 
-Khi đã quen, gộp Bước 1–3 bằng 1 prompt:
+Use this prompt:
 
-> "Phân tích Figma `[LINK]`, đối chiếu `[DOC]`, audit API `[CONTROLLER]`, trình bày Gap Analysis rồi đề xuất Scaffolding."
+> Review the implemented screen with this checklist:
+> - Route + locale follow App Router conventions.
+> - No hardcoded user-facing text.
+> - i18n vi/en are in sync.
+> - Loading/empty/error states are complete.
+> - Component reuse is reasonable, no unnecessary duplicates.
+> - TypeScript has no unnecessary `any`.
+> - No violations of [PROJECT_RULES.md].
+>
+> Then run:
+> - `npm run typecheck`
+> - `npm run lint`
+>
+> Report:
+> - Files created/modified
+> - Check results
+> - Residual risks (if any)
+
+---
+
+## Quick prompt (single full-flow run)
+
+> Implement screen from Figma `[FIGMA_LINK]` for repo `d:/DATN/danangtrip-web`.
+>
+> Follow this sequence:
+> 1) Read `.agent/rules/PROJECT_RULES.md`, `DESIGN.md`, `src/app/[locale]/globals.css`.
+> 2) Analyze Figma + map to existing components/hooks/services.
+> 3) Propose scaffold `[NEW|MOD]` and wait for confirmation.
+> 4) Implement after confirmation.
+> 5) Run `npm run typecheck` + `npm run lint`.
+> 6) Summarize with `DONE | DOING | NEXT`.
+
+## Review code
+Review screen `[SCREEN_NAME]` in repo `d:/DATN/danangtrip-web` (no Figma tasks).
+
+Context:
+- Route/file: `[PATH_TO_PAGE_OR_COMPONENT]`
+- Scope: only review and fix this screen + directly related files.
+
+Do this sequence:
+1) Read `.agent/rules/PROJECT_RULES.md`, `DESIGN.md`, `src/app/[locale]/globals.css`.
+2) Audit this screen by checklist:
+   - Validate App Router + locale conventions.
+   - i18n: no hardcoded user-facing text; keep vi/en keys synchronized.
+   - Complete UI states: loading / empty / error / success.
+   - Reuse components appropriately (`src/components/ui`, `src/components/layout`).
+   - Type safety: avoid unnecessary `any`.
+   - Correct data flow: service -> hook (TanStack Query) -> UI.
+   - Basic accessibility: semantic HTML, focus states, aria, keyboard support.
+   - Design consistency with current tokens/rules.
+3) List findings by severity: Critical / Major / Minor, with file path + line.
+4) Fix all issues within scope.
+5) Run `npm run typecheck` and `npm run lint`; fix until both pass.
+6) Final report:
+   - Files changed
+   - What was fixed
+   - Command results
+   - Residual risks (if any)
+
+Output format: `DONE | DOING | NEXT`.

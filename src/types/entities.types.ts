@@ -102,6 +102,27 @@ export interface TourCategory {
   updated_at: string;
 }
 
+export interface TourSchedule {
+  id: number;
+  tour_id: number;
+  start_date: string;
+  end_date: string;
+  max_people: number;
+  current_people: number;
+  min_people: number;
+  status: 'available' | 'full' | 'cancelled';
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface TourAvailability {
+  is_available: boolean;
+  available_seats: number;
+  requested_seats: number;
+}
+
+export type RatingStats = Record<string, number>;
+
 export interface Tour {
   id: number;
   name: string;
@@ -134,6 +155,9 @@ export interface Tour {
   booking_count: number;
   avg_rating: string;
   review_count: number;
+  reviews?: LocationReview[];
+  category?: TourCategory;
+  schedules?: TourSchedule[];
   created_by: number | null;
   created_at: string;
   updated_at: string;
