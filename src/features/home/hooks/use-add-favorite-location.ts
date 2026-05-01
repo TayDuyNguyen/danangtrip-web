@@ -18,7 +18,7 @@ export function useAddFavoriteLocation() {
         err.name = "AuthRequired";
         throw err;
       }
-      return favoriteService.addFavorite(locId);
+      return favoriteService.addFavorite({ location_id: locId });
     },
     onSuccess: (res) => {
       if (res.success) {

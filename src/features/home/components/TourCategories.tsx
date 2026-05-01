@@ -16,8 +16,8 @@ import {
 import { useTours } from "../hooks/use-tours";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 
-const IconMapper = ({ icon, className }: { icon: string; className?: string }) => {
-  if (icon.startsWith("/") || icon.startsWith("http")) {
+const IconMapper = ({ icon, className }: { icon?: string | null; className?: string }) => {
+  if (typeof icon === "string" && (icon.startsWith("/") || icon.startsWith("http"))) {
     return (
       <Image
         src={icon}

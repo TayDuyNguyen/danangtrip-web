@@ -13,15 +13,18 @@ export const API_ENDPOINTS = {
     FEATURED: "/tours/featured",
     HOT: "/tours/hot",
     DETAIL: (id: string) => `/tours/${id}`,
-    BOOKING: "/tours/booking",
     CATEGORIES: "/tour-categories",
+    SCHEDULES: (id: number | string) => `/tours/${id}/schedules`,
+    CHECK_AVAILABILITY: (id: number | string) => `/tours/${id}/check-availability`,
+    RATINGS: (id: number | string) => `/tours/${id}/ratings`,
+    RATING_STATS: (id: number | string) => `/tours/${id}/rating-stats`,
   },
   USER: {
     PROFILE: "/user/profile",
-    UPDATE_PROFILE: "/user/update-profile",
-    CHANGE_PASSWORD: "/user/change-password",
+    UPDATE_PROFILE: "/user/profile",
+    CHANGE_PASSWORD: "/user/password",
     FAVORITES: "/user/favorites",
-    FAVORITES_CHECK: (locationId: number) => `/user/favorites/check/${locationId}`,
+    FAVORITES_CHECK: "/user/favorites/check", // Use query params ?location_id= or ?tour_id=
   },
   LOCATIONS: {
     LIST: "/locations",
@@ -42,13 +45,11 @@ export const API_ENDPOINTS = {
   UPLOAD: {
     IMAGES: "/upload/images",
   },
-  WEATHER: "/weather",
   STATISTICS: "/statistics",
   BLOG: {
     LIST: "/blog",
     DETAIL: (slug: string) => `/blog/${slug}`,
   },
-  CONFIG: "/config",
   SEARCH: {
     LIST: "/search",
     SUGGESTIONS: "/search/suggestions",

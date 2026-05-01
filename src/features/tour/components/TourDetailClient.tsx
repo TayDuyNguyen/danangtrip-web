@@ -1,34 +1,50 @@
 "use client";
 
-import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { ROUTES } from "@/config";
 import type { Tour } from "@/types";
 import { Badge } from "@/components/ui";
 import RatingStars from "@/components/ui/RatingStars";
-import { cn } from "@/lib/utils";
-import { Clock, MapPin, Users } from "@/components/icons/solar";
+import { MapPin, Heart } from "@/components/icons/solar";
 import { normalizeText } from "@/utils";
-import { formatNumber } from "@/utils/format";
+import { useFavoriteCheck, useFavoriteToggle } from "@/hooks/useFavorite";
 
-type Props = {
+// New Feature Components
+import TourImageGallery from "./TourImageGallery";
+import BookingSidebar from "./BookingSidebar";
+import ItineraryTimeline from "./ItineraryTimeline";
+import ReviewSection from "./ReviewSection";
+
+function FavoriteButton({ tourId }: { tourId: number }) {
+  const td = useTranslations("tour.detail");
+  const { data: isFavorite, isLoading } = useFavoriteCheck({ tour_id: tourId });
+  const { mutate: toggleFavorite, isPending } = useFavoriteToggle({ tour_id: tourId });
+
+  return (
+    <button
+      type="button"
+      onClick={() => toggleFavorite(!!isFavorite)}
+      disabled={isLoading || isPending}
+      className={`w-12 h-12 flex items-center justify-center rounded-full glass-surface transition-all ${
+        isFavorite ? "text-red-500 bg-red-50" : "text-on-surface-subtle hover:text-red-500 hover:bg-red-50"
+      }`}
+      aria-label={isFavorite ? td("favorite_remove") : td("favorite_add")}
+    >
+      <Heart className={`w-6 h-6 ${isFavorite ? "fill-current" : ""}`} />
+    </button>
+  );
+}
+
+interface Props {
   tour: Tour;
-};
-
-function formatPriceLine(value: string, suffix: string) {
-  const n = parseFloat(value);
-  if (Number.isNaN(n)) return "—";
-  return `${formatNumber(n)}đ${suffix}`;
 }
 
 export default function TourDetailClient({ tour }: Props) {
   const t = useTranslations("tour");
   const td = useTranslations("tour.detail");
-  const discountPercent = tour.discount_percent;
-  const adult = parseFloat(tour.price_adult);
-  const adultDiscounted = adult * (1 - discountPercent / 100);
-  const suffix = td("per_person");
+  const safeRating = Number.isFinite(Number(tour.avg_rating)) ? Number(tour.avg_rating) : 0;
+  const safeReviewCount = Number.isFinite(Number(tour.review_count)) ? Number(tour.review_count) : 0;
 
   const gallery = [tour.thumbnail, ...(tour.images ?? [])].filter(
     (u): u is string => Boolean(u)
@@ -42,6 +58,7 @@ export default function TourDetailClient({ tour }: Props) {
   return (
     <div className="design-page min-h-screen pb-20 bg-surface">
       <div className="design-container pt-28 md:pt-32">
+        {/* Breadcrumb */}
         <nav aria-label="Breadcrumb" className="text-sm text-on-surface-subtle mb-8 reveal-up">
           <ol className="flex flex-wrap items-center gap-2">
             <li>
@@ -62,213 +79,128 @@ export default function TourDetailClient({ tour }: Props) {
           </ol>
         </nav>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12">
-          <article className="lg:col-span-8 space-y-10">
-            <div
-              className={cn(
-                "p-px rounded-xl bg-linear-to-br from-[rgba(92,56,34,0.4)] to-[rgba(46,58,47,0.1)] reveal-up"
-              )}
-              style={{ animationDelay: "100ms" }}
-            >
-              <div className="relative aspect-video w-full overflow-hidden rounded-lg border border-border bg-surface-container-low">
-                <Image
-                  src={tour.thumbnail || "/images/placeholder.jpg"}
-                  alt={tour.name}
-                  fill
-                  className="object-cover"
-                  priority
-                  sizes="(max-width: 1024px) 100vw, 66vw"
-                />
-                <div className="absolute top-4 left-4 flex flex-wrap gap-2">
-                  {tour.is_hot && (
-                    <Badge variant="error" className="uppercase text-[10px] font-bold">
-                      {t("card.hot_badge")}
-                    </Badge>
-                  )}
-                  {tour.is_featured && (
-                    <Badge variant="warning" className="uppercase text-[10px] font-bold">
-                      {t("card.featured_badge")}
-                    </Badge>
-                  )}
-                </div>
-                {discountPercent > 0 && (
-                  <div className="absolute top-4 right-4">
-                    <Badge variant="warning" className="text-[10px] font-bold px-2 py-0.5">
-                      {t("card.discount_percent", { percent: discountPercent })}
-                    </Badge>
-                  </div>
+        {/* Gallery Section */}
+        <TourImageGallery images={uniqueGallery} title={tour.name} />
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 mt-12">
+          {/* Main Content */}
+          <article className="lg:col-span-8 space-y-16">
+            <header className="reveal-up space-y-6">
+              <div className="flex flex-wrap gap-2">
+                {tour.is_hot && (
+                  <Badge variant="error" className="uppercase text-[10px] font-black tracking-widest px-3">
+                    {t("card.hot_badge")}
+                  </Badge>
+                )}
+                {tour.is_featured && (
+                  <Badge variant="warning" className="uppercase text-[10px] font-black tracking-widest px-3">
+                    {t("card.featured_badge")}
+                  </Badge>
                 )}
               </div>
-            </div>
-
-            <header className="reveal-up space-y-4" style={{ animationDelay: "200ms" }}>
-              <h1 className="text-3xl md:text-4xl font-black text-on-surface leading-tight">
-                {tour.name}
-              </h1>
-              <div className="flex flex-wrap items-center gap-4 text-sm text-on-surface-variant">
-                <span className="inline-flex items-center gap-1.5">
-                  <MapPin className="w-4 h-4 text-primary shrink-0" />
-                  {t("card.location_short")}
-                </span>
-                <span className="inline-flex items-center gap-1.5 font-mono text-[12px]">
-                  <Clock className="w-4 h-4 shrink-0" />
-                  <span className="text-on-surface-subtle">{td("stats_duration")}:</span>{" "}
-                  {tour.duration}
-                </span>
-                <span className="inline-flex items-center gap-1.5 font-mono text-[12px]">
-                  <Users className="w-4 h-4 shrink-0" />
-                  <span className="text-on-surface-subtle">{td("stats_group")}:</span>{" "}
-                  {t("card.participants", { count: tour.max_people })}
-                </span>
+              <div className="flex justify-between items-start gap-4">
+                <h1 className="text-4xl md:text-5xl font-black text-on-surface leading-[1.1] tracking-tight">
+                  {tour.name}
+                </h1>
+                {/* Favorite Button */}
+                <FavoriteButton tourId={tour.id} />
               </div>
-              <RatingStars
-                rating={parseFloat(tour.avg_rating)}
-                count={tour.review_count}
-                size="md"
-                showText
-              />
+              <div className="flex flex-wrap items-center gap-6 text-sm text-on-surface-variant border-y border-border/50 py-6">
+                <span className="inline-flex items-center gap-2">
+                  <MapPin className="w-5 h-5 text-primary shrink-0" />
+                  <span className="font-bold text-on-surface">{t("card.location_short")}</span>
+                </span>
+                <span className="w-px h-4 bg-border hidden md:block" />
+                <span className="inline-flex items-center gap-2">
+                  <span className="text-on-surface-subtle uppercase text-[10px] font-black tracking-widest">{td("stats_duration")}:</span>
+                  <span className="font-mono text-on-surface font-bold">{tour.duration}</span>
+                </span>
+                <span className="w-px h-4 bg-border hidden md:block" />
+                <RatingStars
+                  rating={safeRating}
+                  count={safeReviewCount}
+                  size="md"
+                  showText
+                />
+              </div>
             </header>
 
-            {tour.short_desc ? (
-              <p className="text-lg text-on-surface-subtle reveal-up" style={{ animationDelay: "250ms" }}>
-                {tour.short_desc}
-              </p>
-            ) : null}
-
-            {tour.description ? (
-              <section className="reveal-up space-y-3" style={{ animationDelay: "300ms" }}>
-                <h2 className="text-lg font-bold text-on-surface">{td("overview")}</h2>
-                {tour.description.includes("<") ? (
-                  <div
-                    className="max-w-none text-on-surface-subtle text-sm leading-relaxed [&_a]:text-primary [&_p]:mb-3 [&_ul]:list-disc [&_ul]:pl-5"
-                    dangerouslySetInnerHTML={{ __html: tour.description }}
-                  />
-                ) : (
-                  <div className="text-on-surface-subtle whitespace-pre-line text-sm leading-relaxed">
-                    {tour.description}
-                  </div>
+            {/* Overview Section */}
+            {tour.short_desc || tour.description ? (
+              <section className="reveal-up space-y-6" style={{ animationDelay: "300ms" }}>
+                <div className="flex items-center gap-3">
+                  <div className="w-1.5 h-6 bg-primary rounded-full" />
+                  <h2 className="text-2xl font-black text-on-surface tracking-tight">{td("overview")}</h2>
+                </div>
+                
+                {tour.short_desc && (
+                  <p className="text-xl text-on-surface-subtle leading-relaxed italic border-l-4 border-primary/20 pl-6">
+                    {tour.short_desc}
+                  </p>
                 )}
-              </section>
-            ) : null}
 
-            {tour.itinerary && tour.itinerary.length > 0 ? (
-              <section className="reveal-up space-y-4" style={{ animationDelay: "350ms" }}>
-                <h2 className="text-lg font-bold text-on-surface">{td("itinerary")}</h2>
-                <ul className="space-y-3 border border-border rounded-lg bg-surface-container-low p-4 md:p-6">
-                  {tour.itinerary.map((row, i) => (
-                    <li
-                      key={`${row.time}-${i}`}
-                      className="flex gap-4 text-sm border-b border-border pb-3 last:border-0 last:pb-0"
-                    >
-                      <span className="font-mono text-xs text-primary shrink-0 w-20">{row.time}</span>
-                      <span className="text-on-surface-subtle">{row.activity}</span>
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            ) : null}
-
-            {inclusions ? (
-              <section className="reveal-up space-y-3" style={{ animationDelay: "400ms" }}>
-                <h2 className="text-lg font-bold text-on-surface">{td("inclusions")}</h2>
-                <div className="text-on-surface-subtle whitespace-pre-line text-sm leading-relaxed">
-                  {inclusions}
-                </div>
-              </section>
-            ) : null}
-
-            {exclusions ? (
-              <section className="reveal-up space-y-3" style={{ animationDelay: "450ms" }}>
-                <h2 className="text-lg font-bold text-on-surface">{td("exclusions")}</h2>
-                <div className="text-on-surface-subtle whitespace-pre-line text-sm leading-relaxed">
-                  {exclusions}
-                </div>
-              </section>
-            ) : null}
-
-            {meetingPoint ? (
-              <section className="reveal-up space-y-3" style={{ animationDelay: "500ms" }}>
-                <h2 className="text-lg font-bold text-on-surface">{td("meeting_point")}</h2>
-                <p className="text-on-surface-subtle text-sm">{meetingPoint}</p>
-              </section>
-            ) : null}
-
-            {uniqueGallery.length > 1 ? (
-              <section className="reveal-up space-y-4" style={{ animationDelay: "550ms" }}>
-                <h2 className="text-lg font-bold text-on-surface">{td("gallery")}</h2>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                  {uniqueGallery.slice(1).map((src, idx) => (
+                <div className="prose prose-invert max-w-none">
+                  {tour.description?.includes("<") ? (
                     <div
-                      key={src}
-                      className="relative aspect-4/3 overflow-hidden rounded-lg border border-border"
-                    >
-                      <Image
-                        src={src}
-                        alt={`${tour.name} — ${td("gallery")} ${idx + 2}`}
-                        fill
-                        className="object-cover"
-                        sizes="200px"
-                      />
+                      className="text-on-surface-subtle text-base leading-loose [&_p]:mb-6"
+                      dangerouslySetInnerHTML={{ __html: tour.description }}
+                    />
+                  ) : (
+                    <div className="text-on-surface-subtle whitespace-pre-line text-base leading-loose">
+                      {tour.description}
                     </div>
-                  ))}
+                  )}
                 </div>
               </section>
             ) : null}
+
+            {/* Itinerary Section */}
+            <ItineraryTimeline itinerary={tour.itinerary || []} />
+
+            {/* Inclusions & Meeting Point */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 reveal-up" style={{ animationDelay: "400ms" }}>
+              {inclusions && (
+                <div className="glass-surface p-8 rounded-2xl space-y-4">
+                  <h3 className="text-lg font-black text-on-surface uppercase tracking-tight">{td("inclusions")}</h3>
+                  <div className="text-on-surface-subtle whitespace-pre-line text-sm leading-relaxed">
+                    {inclusions}
+                  </div>
+                </div>
+              )}
+              {exclusions && (
+                <div className="glass-surface p-8 rounded-2xl space-y-4 border-error/10">
+                  <h3 className="text-lg font-black text-on-surface uppercase tracking-tight">{td("exclusions")}</h3>
+                  <div className="text-on-surface-subtle whitespace-pre-line text-sm leading-relaxed">
+                    {exclusions}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {meetingPoint && (
+              <section className="reveal-up space-y-4" style={{ animationDelay: "450ms" }}>
+                <div className="flex items-center gap-3">
+                  <div className="w-1.5 h-6 bg-primary rounded-full" />
+                  <h2 className="text-2xl font-black text-on-surface tracking-tight">{td("meeting_point")}</h2>
+                </div>
+                <div className="glass-surface p-6 rounded-xl flex items-start gap-4">
+                  <MapPin className="w-6 h-6 text-primary shrink-0 mt-1" />
+                  <p className="text-on-surface-subtle text-base">{meetingPoint}</p>
+                </div>
+              </section>
+            )}
+
+            {/* Reviews Section */}
+            <ReviewSection 
+              tourId={tour.id}
+              rating={safeRating} 
+              count={safeReviewCount} 
+            />
           </article>
 
+          {/* Sidebar Section */}
           <aside className="lg:col-span-4">
-            <div
-              id="booking-cta"
-              className="sticky top-28 space-y-6 rounded-xl border border-border bg-surface-container-low p-6 md:p-8 reveal-up"
-              style={{ animationDelay: "150ms" }}
-            >
-              <div>
-                <p className="text-xs font-bold text-on-surface-subtle uppercase tracking-wider mb-2">
-                  {t("card.starting_from")}
-                </p>
-                <div className="flex items-baseline gap-2 flex-wrap">
-                  <span className="text-3xl font-black text-primary">
-                    {formatNumber(adultDiscounted)}đ
-                  </span>
-                  {discountPercent > 0 ? (
-                    <span className="text-sm text-on-surface-subtle line-through">
-                      {formatNumber(adult)}đ
-                    </span>
-                  ) : null}
-                </div>
-                <span className="text-xs text-on-surface-variant">{suffix}</span>
-              </div>
-
-              <div className="space-y-2 text-sm border-t border-border pt-6">
-                <p className="text-xs font-bold text-on-surface-subtle uppercase tracking-wider mb-2">
-                  {td("pricing")}
-                </p>
-                <div className="flex justify-between gap-4 text-on-surface-subtle">
-                  <span>{td("price_child")}</span>
-                  <span className="text-on-surface font-medium tabular-nums">
-                    {formatPriceLine(tour.price_child, suffix)}
-                  </span>
-                </div>
-                <div className="flex justify-between gap-4 text-on-surface-subtle">
-                  <span>{td("price_infant")}</span>
-                  <span className="text-on-surface font-medium tabular-nums">
-                    {formatPriceLine(tour.price_infant, suffix)}
-                  </span>
-                </div>
-              </div>
-
-              <Link
-                href={`${ROUTES.CONTACT}?tour=${encodeURIComponent(tour.slug)}`}
-                className={cn(
-                  "flex w-full items-center justify-center rounded-full border border-[#262626] bg-[#171717] px-5 py-3",
-                  "text-sm font-semibold text-white transition-all duration-300",
-                  "hover:border-[#8b6a55] hover:text-[#8b6a55] active:scale-[0.98]"
-                )}
-              >
-                {t("card.book_now")}
-              </Link>
-              <p className="text-xs text-on-surface-variant leading-relaxed">{td("book_cta_hint")}</p>
-            </div>
+            <BookingSidebar tour={tour} />
           </aside>
         </div>
       </div>

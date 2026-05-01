@@ -36,6 +36,7 @@ export function RegisterForm({ onSuccess, redirectUrl }: RegisterFormProps) {
 
     const result = await register({
       username: formData.name,
+      full_name: formData.name,
       email: formData.email,
       password: formData.password,
       password_confirmation: formData.confirmPassword,
