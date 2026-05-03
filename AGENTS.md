@@ -1,170 +1,110 @@
-# DanangTrip Web - Agent Prompt Playbook (Figma -> UI)
+# DanangTrip Web - Agent Prompt Playbook (Pipeline 10 Bước)
 
-This document is a standard prompt framework for Codex/AI when implementing UI from Figma in the `danangtrip-web` repository.
+Tài liệu này chứa các **Master Prompts** để điều khiển AI/Codex (Gemini/Claude/GPT-4) thực hiện việc code UI từ Figma và tích hợp API từ A đến Z, bám sát kiến trúc của `danangtrip-web` thông qua bộ 10 skills trong `.agent/skills/`.
 
-Goals:
-- Follow real project conventions, not generic templates.
-- Ship quickly while preserving architecture, i18n, and design tokens.
-- Reduce regressions.
-
----
-
-## 0) Required bootstrap (run once per session)
-
-Use this prompt:
-
-> Act as a Senior Frontend Engineer for repo `d:/DATN/danangtrip-web`.
->
-> Before writing code, you must read:
-> 1. `.agent/rules/PROJECT_RULES.md`
-> 2. `DESIGN.md`
-> 3. `src/app/[locale]/globals.css`
-> 4. related route/page files in `src/app/[locale]/...`
->
-> Rules:
-> - Follow App Router + next-intl.
-> - Do not hardcode user-facing text; use i18n keys.
-> - Prioritize reuse from `src/components/ui` and `src/components/layout`.
-> - Icon set: Solar (`@/components/icons/solar`).
-> - Client data flow: service -> hook (TanStack Query) -> UI.
-> - End each step with: `DONE | DOING | NEXT`.
+Mục tiêu của bộ prompt này:
+- Bắt buộc AI đọc rule, hiểu rule và sử dụng đúng skill folder.
+- Không quên context trong quá trình làm dài.
+- Tự động mồi AI chạy tuần tự từ bước 1 (Analysis) đến bước 10 (Deploy), dừng chờ đúng lúc.
 
 ---
 
-## 1) Figma analysis (no code yet)
+## 1. MỘT PROMPT CHẠY TỪ A → Z (Master Auto-Run Prompt)
 
-Use this prompt:
+Sử dụng prompt này khi bạn muốn AI tự động phân tích và chạy toàn bộ pipeline. Prompt này ép AI phải "nhìn" vào bộ kỹ năng (skills), tự định vị mình đang ở đâu, và tuân thủ tuyệt đối quy trình.
 
-> Analyze Figma: `[FIGMA_LINK]` for screen `[SCREEN_NAME]`.
->
-> Return 5 sections:
-> 1. Required design tokens (color, spacing, radius, typography, shadow, blur).
-> 2. Component breakdown (what can be reused from `src/components/ui`, what must be created).
-> 3. Responsive behavior (mobile/tablet/desktop).
-> 4. Required UI states (loading, empty, error, success, disabled, hover/focus).
-> 5. Data fields to display (field name, type, required/optional).
->
-> Do not create files and do not write code yet.
+**Hãy copy và paste prompt dưới đây vào AI:**
 
----
-
-## 2) Map to current codebase (no code yet)
-
-Use this prompt:
-
-> Compare Figma with the current codebase.
->
-> Required:
-> - Find reusable components in `src/components/ui`, `src/components/layout`, `src/features/*/components`.
-> - Identify the route/page path under App Router (`src/app/[locale]/...`).
-> - Identify i18n namespaces to update (`src/messages/vi/*.json`, `src/messages/en/*.json`).
-> - Identify existing hooks/services that can be reused.
->
-> Return:
-> - List `[REUSE]`, `[NEW]`, `[MOD]` + reason.
-> - Risk/gap if Figma conflicts with `DESIGN.md` or `PROJECT_RULES.md`.
-> - Ask for confirmation before scaffold.
-
----
-
-## 3) Scaffold plan (no code yet)
-
-Use this prompt:
-
-> Create a file plan for screen `[SCREEN_NAME]`.
->
-> Requirements:
-> - List each file as: `[NEW|MOD] path - one-line purpose`.
-> - Keep implementation order: types -> service -> hook -> ui -> page -> i18n.
-> - If shared components are touched, state impact clearly.
->
-> Do not code yet; wait for confirmation.
-
----
-
-## 4) Implement code (after confirmation)
-
-Use this prompt:
-
-> Implement based on the approved scaffold.
->
-> Required order:
-> 1. Types: place in correct location (shared in `src/types`, feature-specific in `src/features/<feature>/types`).
-> 2. Service: place in `src/services`, do not put HTTP calls in components.
-> 3. Hook: place in `src/features/<feature>/hooks` (or `src/hooks` if shared), prefer TanStack Query.
-> 4. UI components: reuse first, create new only when needed.
-> 5. Wire page in `src/app/[locale]/...`.
-> 6. i18n: update both `vi` and `en`.
->
-> Quality rules:
-> - Do not introduce `any` unless necessary.
-> - Do not cross-import sibling features.
-> - Do not break design tokens in `globals.css`.
-> - If icons are needed, use only `@/components/icons/solar`.
+> **SYSTEM BOOTSTRAP & MASTER EXECUTION INSTRUCTIONS**
+> 
+> Act as the **Principal AI Engineer** for the repository `d:/DATN/danangtrip-web`. You are about to execute a full 10-step A→Z feature implementation pipeline for a new screen/feature.
+> 
+> **FEATURE CONTEXT:**
+> - Feature Name/Slug: `[NHẬP TÊN FEATURE, VD: user-profile]`
+> - Figma Link: `[NHẬP LINK FIGMA]`
+> - PRD/API Docs: `[NHẬP ĐƯỜNG DẪN HOẶC MÔ TẢ]`
+> 
+> **MANDATORY RULES OF ENGAGEMENT:**
+> 1. You MUST operate strictly using the 10 skills defined in `.agent/skills/STACK_SKILLS_INDEX.md`. Do NOT use your generic knowledge; rely ONLY on the conventions, templates, and checklists within this repository.
+> 2. For each step `X` in the pipeline (from 01 to 10), before you do ANY work, you MUST read the following files in `.agent/skills/[skill-id]/`:
+>    - `SKILL.md` (to understand the goal and workflow)
+>    - `persona.md` (to adopt the exact persona required, e.g., BA, Architect, QA)
+>    - `checklist.md` (to know your acceptance criteria)
+>    - `template_*.md` (if it exists, use it exactly for your output)
+> 3. You must also read `.agent/rules/PROJECT_RULES.md` and `DESIGN.md` as your ultimate source of truth for code quality and UI tokens.
+> 
+> **EXECUTION PIPELINE:**
+> You will execute the following steps sequentially. (Note: Step 02 can be skipped if the project is already running).
+> - **[01-screen-analysis]**: Analyze the requirements and Figma. Produce the analysis artifact.
+> - **[02-project-setup]**: Setup/audit base project.
+> - **[03-types-api-contract]**: Define TS types, Zod schemas, and API service.
+> - **[04-layout-routing]**: Create routes, metadata, layout, and i18n structure.
+> - **[05-ui-components]**: Build UI using Atomic Design, matching DESIGN.md tokens.
+> - **[06-data-integration]**: Wire API to UI using TanStack Query, handling loading/error/empty states.
+> - **[07-interactions]**: Implement forms, CRUD, search, pagination.
+> - **[08-auth-permissions]**: Apply role-based rendering and middleware protection.
+> - **[09-testing]**: Write test cases, MSW mocks, and unit tests.
+> - **[10-optimization-deploy]**: Check Lighthouse rules, build, and deploy.
+> 
+> **YOUR RESPONSE FORMAT FOR EVERY STEP:**
+> To ensure you never lose context, your output for each step MUST end with this exact block:
+> ```
+> 🛠️ **CURRENT SKILL**: `[Skill Name]` completed.
+> ✅ **CHECKLIST VERIFIED**: [List 2-3 key checklist items you just passed from checklist.md]
+> 📂 **FILES CREATED/MODIFIED**: [List files]
+> ⏳ **NEXT SKILL**: `[Next Skill Name]`. 
+> 🛑 "Xin hãy gõ 'tiếp tục' hoặc 'next' để tôi thực hiện skill tiếp theo, hoặc đưa ra feedback để tôi sửa lại bước này."
+> ```
+> 
+> **Now, begin with Step 01: `01-screen-analysis`. Read its folder contents, adopt the Business Analyst persona, execute the analysis, output the artifact, and wait for my command.**
 
 ---
 
-## 5) Quality review and close
+## 2. PROMPT CHẠY TỪNG BƯỚC (Manual Step-by-Step)
 
-Use this prompt:
+Nếu bạn không muốn AI tự động nhảy cóc, mà muốn điều khiển từng bước thật cẩn thận, hãy dùng `STACK_SKILLS_INDEX.md` làm gốc. Đây là mẫu prompt gọi trực tiếp 1 skill cụ thể (Ví dụ: `05-ui-components`):
 
-> Review the implemented screen with this checklist:
-> - Route + locale follow App Router conventions.
-> - No hardcoded user-facing text.
-> - i18n vi/en are in sync.
-> - Loading/empty/error states are complete.
-> - Component reuse is reasonable, no unnecessary duplicates.
-> - TypeScript has no unnecessary `any`.
-> - No violations of [PROJECT_RULES.md].
->
-> Then run:
-> - `npm run typecheck`
-> - `npm run lint`
->
-> Report:
-> - Files created/modified
-> - Check results
-> - Residual risks (if any)
+**Copy và paste:**
+
+> Kích hoạt skill: `[NHẬP TÊN SKILL, VD: 05-ui-components]`
+> 
+> **Context:**
+> - Repo: `d:/DATN/danangtrip-web`
+> - Feature slug: `[FEATURE_SLUG]`
+> - Reference: `[LINK FIGMA HOẶC ĐƯỜNG DẪN OUTPUT TỪ BƯỚC TRƯỚC]`
+> - PRD/API Docs: Đọc tài liệu tại `D:\DATN\DATN_Tài liệu`
+> 
+> **Yêu cầu bắt buộc:**
+> 1. Đọc ngay `persona.md` trong `.agent/skills/[tên-skill]/` và nhập vai tương ứng.
+> 2. Đọc `SKILL.md` để lấy workflow và tuân thủ 100%.
+> 3. Áp dụng `PROJECT_RULES.md` và `DESIGN.md`.
+> 4. Thực hiện các thay đổi code / document cần thiết.
+> 5. Làm xong, lấy file `checklist.md` ra tự chấm điểm Pass/Fail cho từng dòng và báo cáo.
+> 6. Trả về format: `DONE | DOING | NEXT`.
 
 ---
 
-## Quick prompt (single full-flow run)
+## 3. PROMPT REVIEW / FIX BUG (Giữ nguyên bối cảnh)
 
-> Implement screen from Figma `[FIGMA_LINK]` for repo `d:/DATN/danangtrip-web`.
->
-> Follow this sequence:
-> 1) Read `.agent/rules/PROJECT_RULES.md`, `DESIGN.md`, `src/app/[locale]/globals.css`.
-> 2) Analyze Figma + map to existing components/hooks/services.
-> 3) Propose scaffold `[NEW|MOD]` and wait for confirmation.
-> 4) Implement after confirmation.
-> 5) Run `npm run typecheck` + `npm run lint`.
-> 6) Summarize with `DONE | DOING | NEXT`.
+Khi code xong màn hình mà bị lỗi (hoặc bạn muốn AI review lại dựa trên chuẩn của repo), hãy dùng prompt này để ép AI dò lỗi theo system thay vì tự đoán mò:
 
-## Review code
-Review screen `[SCREEN_NAME]` in repo `d:/DATN/danangtrip-web` (no Figma tasks).
+**Copy và paste:**
 
-Context:
-- Route/file: `[PATH_TO_PAGE_OR_COMPONENT]`
-- Scope: only review and fix this screen + directly related files.
-
-Do this sequence:
-1) Read `.agent/rules/PROJECT_RULES.md`, `DESIGN.md`, `src/app/[locale]/globals.css`.
-2) Audit this screen by checklist:
-   - Validate App Router + locale conventions.
-   - i18n: no hardcoded user-facing text; keep vi/en keys synchronized.
-   - Complete UI states: loading / empty / error / success.
-   - Reuse components appropriately (`src/components/ui`, `src/components/layout`).
-   - Type safety: avoid unnecessary `any`.
-   - Correct data flow: service -> hook (TanStack Query) -> UI.
-   - Basic accessibility: semantic HTML, focus states, aria, keyboard support.
-   - Design consistency with current tokens/rules.
-3) List findings by severity: Critical / Major / Minor, with file path + line.
-4) Fix all issues within scope.
-5) Run `npm run typecheck` and `npm run lint`; fix until both pass.
-6) Final report:
-   - Files changed
-   - What was fixed
-   - Command results
-   - Residual risks (if any)
-
-Output format: `DONE | DOING | NEXT`.
+> Kích hoạt quy trình Review / Fix Bug cho repo `d:/DATN/danangtrip-web`
+> 
+> **Context:**
+> - File / Route bị lỗi: `[ĐƯỜNG DẪN FILE]`
+> - Mô tả lỗi: `[MÔ TẢ NGẮN GỌN]`
+> 
+> **Quy trình Audit (Vui lòng đọc và tuân thủ):**
+> 1. Đọc lại `.agent/rules/PROJECT_RULES.md` (chú ý phần Architecture, Data Integration, i18n, Error Handling).
+> 2. Kiểm tra lại luồng data theo rule: `Service → TanStack Query Hook → UI`. API có gọi trực tiếp trong UI không? (Nếu có là sai).
+> 3. Kiểm tra UI States: Đã có đủ Skeleton (loading), Empty state, Error Boundary/Toast chưa?
+> 4. Kiểm tra i18n: Có hardcode text không? (Tuyệt đối cấm).
+> 5. Kiểm tra Types: Có lọt chữ `any` nào không?
+> 
+> **Action:**
+> - Phân tích nguyên nhân gốc rễ (Root Cause).
+> - Viết code fix trực tiếp.
+> - Chạy `npm run typecheck` và `npm run lint` sau khi sửa.
+> - Trả về danh sách file đã đổi và kết quả test.

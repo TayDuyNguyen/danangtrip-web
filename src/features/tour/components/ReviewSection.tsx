@@ -5,7 +5,7 @@ import { useLocale, useTranslations } from "next-intl";
 import RatingStars from "@/components/ui/RatingStars";
 import { ChatLine } from "@/components/icons/solar";
 import { useTourRatings, useTourRatingStats, useCheckTourRating } from "@/features/tour/hooks/useTourDetail";
-import { useAuth } from "@/features/auth/hooks/use-auth";
+import { useAuthStore } from "@/store/auth.store";
 import { Button } from "@/components/ui";
 import type { LocationRatingListItem } from "@/types/location-rating.types";
 
@@ -18,7 +18,7 @@ interface ReviewSectionProps {
 export default function ReviewSection({ tourId, rating, count }: ReviewSectionProps) {
   const td = useTranslations("tour.detail");
   const locale = useLocale();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuthStore();
   const reviewDateFormatter = new Intl.DateTimeFormat(locale === "vi" ? "vi-VN" : "en-US");
   const safeRating = Number.isFinite(rating) ? rating : 0;
   const safeCount = Number.isFinite(count) ? count : 0;

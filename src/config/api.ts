@@ -48,6 +48,7 @@ export const API_ENDPOINTS = {
   STATISTICS: "/statistics",
   BLOG: {
     LIST: "/blog",
+    CATEGORIES: "/blog/categories",
     DETAIL: (slug: string) => `/blog/${slug}`,
   },
   SEARCH: {
@@ -56,4 +57,5 @@ export const API_ENDPOINTS = {
     POPULAR: "/search/popular",
     TRENDING: "/search/trending",
   },
+  CONTACTS: "/contacts",
 };

@@ -1,0 +1,82 @@
+"use client";
+
+import { useTranslations } from "next-intl";
+import { useParams } from "next/navigation";
+import Image from "next/image";
+import Link from "next/link";
+import { format } from "date-fns";
+import { vi, enUS } from "date-fns/locale";
+import { IoTrendingUp, IoNewspaperOutline } from "@/components/icons/solar";
+import { formatCompactNumber } from "@/utils/format";
+import { BlogPost } from "@/types";
+import { TocHeading } from "../types";
+import { TableOfContents } from "./TableOfContents";
+import { ShareButtons } from "./ShareButtons";
+
+interface BlogDetailSidebarProps {
+  popularPosts: BlogPost[];
+  tocHeadings: TocHeading[];
+}
+
+/**
+ * Organism: BlogDetailSidebar
+ * Specialized sidebar for the blog detail page.
+ * Composes TOC, Share buttons, and Popular posts.
+ */
+export const BlogDetailSidebar = ({ popularPosts, tocHeadings }: BlogDetailSidebarProps) => {
+  const t = useTranslations("blog");
+  const { locale } = useParams();
+  const dateLocale = locale === "vi" ? vi : enUS;
+
+  return (
+    <aside className="space-y-10 sticky top-24">
+      {/* Table of Contents */}
+      <TableOfContents headings={tocHeadings} />
+
+      {/* Share Buttons */}
+      <ShareButtons />
+
+      {/* Popular Posts (Re-styled for detail sidebar) */}
+      <div className="space-y-8">
+        <h3 className="text-xl font-bold text-white flex items-center gap-2">
+          <span className="w-1.5 h-6 bg-primary rounded-full" />
+          {t("popular_posts")}
+        </h3>
+        
+        <div className="space-y-6">
+          {popularPosts.map((post) => (
+            <Link
+              key={post.id}
+              href={`/${locale}/blog/${post.slug}`}
+              className="flex gap-4 group"
+            >
+              <div className="relative w-20 h-20 rounded-2xl overflow-hidden shrink-0 border border-white/5">
+                <Image
+                  src={post.featured_image || "/images/placeholder.jpg"}
+                  alt={post.title}
+                  fill
+                  className="object-cover transition-transform duration-500 group-hover:scale-110"
+                />
+              </div>
+              <div className="flex-1 space-y-2 py-1">
+                <h4 className="text-sm font-bold text-white line-clamp-2 group-hover:text-primary transition-colors leading-snug">
+                  {post.title}
+                </h4>
+                <div className="flex items-center gap-3 text-[10px] text-neutral-500">
+                  <span className="flex items-center gap-1">
+                    <IoNewspaperOutline size={12} className="text-primary" />
+                    {post.published_at ? format(new Date(post.published_at), "dd MMM, yyyy", { locale: dateLocale }) : "-"}
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <IoTrendingUp size={12} className="text-primary" />
+                    {formatCompactNumber(post.view_count, locale === "vi" ? "vi-VN" : "en-US")}
+                  </span>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </aside>
+  );
+};
