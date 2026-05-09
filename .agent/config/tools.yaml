@@ -1,0 +1,22 @@
+version: 1
+
+# Allowlist of tools/MCP servers the Agent is allowed to use.
+# Note: this repo also has `.agent/mcp_config.json` which is a runtime MCP server config.
+# This file is intentionally an allowlist (policy) rather than connection details (secrets).
+
+allowed:
+  mcpServers:
+    - context7
+    - shadcn
+    - user-postgres
+    - user-GitKraken
+    - user-dart
+    - user-Framelink Figma MCP
+    - user-stitch
+
+policy:
+  forbid:
+    - "exfiltrate-secrets"
+    - "write-credentials"
+  require:
+    - "read-project-rules-first"

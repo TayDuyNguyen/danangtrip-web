@@ -65,73 +65,35 @@ Current agent files under `.agent/agents`:
 
 Only reference skills that exist under `.agent/skills`.
 
-### Application Architecture
+### Screen Development Pipeline (A→Z)
+
+These 10 skills form a complete pipeline for developing any screen from analysis to deployment.
+Run in order. See `skills/STACK_SKILLS_INDEX.md` for activation prompts.
+
+| # | Skill | Persona | Purpose |
+|---|-------|---------|---------|
+| 01 | `01-screen-analysis` | Business Analyst | Analyze screen from PRD/Figma → output checklist |
+| 02 | `02-project-setup` | DevOps Engineer | Setup/audit project base (run once) |
+| 03 | `03-types-api-contract` | System Architect | Define TS interfaces, Zod schemas, API services |
+| 04 | `04-layout-routing` | SSE | Create routes, layouts, Server/Client boundaries |
+| 05 | `05-ui-components` | UI/UX + SSE | Build UI components (Atomic Design from Figma) |
+| 06 | `06-data-integration` | SSE | Wire API to UI, handle loading/error/empty states |
+| 07 | `07-interactions` | SSE | CRUD, forms, filter/search/sort/pagination |
+| 08 | `08-auth-permissions` | Security Expert | Auth middleware, role-based UI, token management |
+| 09 | `09-testing` | QA/QC Engineer | Unit tests + E2E tests, coverage > 80% |
+| 10 | `10-optimization-deploy` | Perf + DevOps | Optimize, build, deploy, smoke test |
+
+### Legacy SDLC Skills
 
 | Skill | Purpose |
 | --- | --- |
-| `architecture` | System design patterns and trade-offs |
-| `app-builder` | Application scaffolding and creation flows |
-| `nextjs-project-rules` | Repository-specific Next.js operating rules |
-| `nextjs-react-expert` | Next.js and React implementation guidance |
-
-### Frontend and UX
-
-| Skill | Purpose |
-| --- | --- |
-| `frontend-design` | UI and UX guidance |
-| `tailwind-patterns` | Tailwind CSS patterns |
-| `web-design-guidelines` | Web UI review heuristics |
-| `i18n-localization` | Translation and locale consistency |
-
-### Backend and Platform
-
-| Skill | Purpose |
-| --- | --- |
-| `api-patterns` | API design and service patterns |
-| `nodejs-best-practices` | Node.js implementation practices |
-| `database-design` | Database and schema design |
-| `server-management` | Server and environment management |
-| `deployment-procedures` | Delivery and deployment practices |
-
-### Quality and Validation
-
-| Skill | Purpose |
-| --- | --- |
-| `clean-code` | Clean-code rules and editing discipline |
-| `code-review-checklist` | Review heuristics |
-| `lint-and-validate` | Validation helpers |
-| `testing-patterns` | Automated testing patterns |
-| `tdd-workflow` | Test-driven workflow guidance |
-| `webapp-testing` | Browser and E2E testing |
-| `systematic-debugging` | Structured debugging |
-| `performance-profiling` | Performance analysis |
-| `vulnerability-scanner` | Security scanning |
-| `red-team-tactics` | Offensive-security mindset |
-| `seo-fundamentals` | SEO checks |
-| `geo-fundamentals` | GEO and AI-citation checks |
-
-### Planning and Coordination
-
-| Skill | Purpose |
-| --- | --- |
-| `brainstorming` | Discovery and questioning |
-| `plan-writing` | Plans and task breakdowns |
-| `parallel-agents` | Agent coordination patterns |
-| `behavioral-modes` | Mode guidance |
-| `intelligent-routing` | Routing requests to suitable expertise |
-| `documentation-templates` | Documentation structure |
-| `mcp-builder` | MCP-related guidance |
-
-### Environment and Language Specific
-
-| Skill | Purpose |
-| --- | --- |
-| `powershell-windows` | Windows shell guidance |
-| `bash-linux` | Linux shell guidance |
-| `python-patterns` | Python implementation practices |
-| `rust-pro` | Rust guidance |
-| `mobile-design` | Mobile UI and product guidance |
-| `game-development` | Game development guidance |
+| `stack-analyze` | Business analysis → SRS |
+| `stack-design` | Technical design docs |
+| `sdlc-srs` | SRS (repo-aligned) |
+| `sdlc-architecture` | Architecture + API contract |
+| `sdlc-implementation` | Feature implementation |
+| `sdlc-qa-testcases` | Test plan + test cases |
+| `sdlc-security-audit` | Threat model + security review |
 
 ---
 

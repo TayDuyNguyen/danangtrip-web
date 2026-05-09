@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "model": {
+    "provider": "claude",
+    "name": "claude-4.6-sonnet",
+    "temperature": 0.2,
+    "maxOutputTokens": 4096
+  },
+  "runtime": {
+    "language": "vi",
+    "timezone": "Asia/Ho_Chi_Minh"
+  },
+  "quality": {
+    "requireReadProjectRules": true,
+    "requireI18nForUserFacingText": true,
+    "preferredDataFlow": "service->hook(TanStack Query)->ui"
+  },
+  "notes": [
+    "Repo-specific rules live in .agent/rules/PROJECT_RULES.md and AGENTS.md",
+    "MCP servers config currently in .agent/mcp_config.json; tools.yaml is an allowlist used by some runners"
+  ]
+}

@@ -163,6 +163,19 @@ export interface Tour {
   updated_at: string;
 }
 
+export interface BlogAuthor {
+  id: number;
+  username?: string;
+  full_name: string;
+  avatar: string | null;
+  bio?: string | null;
+  social_links?: {
+    facebook?: string;
+    twitter?: string;
+    instagram?: string;
+  };
+}
+
 export interface BlogPost {
   id: number;
   title: string;
@@ -176,7 +189,7 @@ export interface BlogPost {
   published_at: string | null;
   created_at: string;
   updated_at: string;
-  author: { id: number; username: string; full_name: string; avatar: string | null; };
+  author: BlogAuthor;
   categories: Array<{ id: number; name: string; slug: string; }>;
 }
 

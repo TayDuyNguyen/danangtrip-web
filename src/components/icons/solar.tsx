@@ -53,11 +53,13 @@ import {
   UilThumbsUp,
   UilTimes,
   UilTrees,
+  UilTwitter,
   UilUmbrella,
   UilUser,
   UilUsersAlt,
   UilWallet,
   UilYoutube,
+  UilCopy,
 } from "@iconscout/react-unicons";
 
 type SolarIconProps = SVGProps<SVGSVGElement> & {
@@ -144,6 +146,9 @@ export const IoTrendingUp = UilChartLine;
 export const IoUmbrellaOutline = UilUmbrella;
 export const IoWalkOutline = UilDirection;
 export const IoWalletOutline = UilWallet;
+export const IoLogoTwitter = UilTwitter;
+export const IoCopyOutline = UilCopy;
+export const IoShareOutline = UilShareAlt;
 
 // react-icons/fa compatibility exports
 export const FaQuoteLeft = UilCommentLines;
