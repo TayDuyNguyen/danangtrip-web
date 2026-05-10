@@ -1,4 +1,4 @@
-﻿# STACK SKILLS INDEX  Pipeline triển khai 1 màn hình A→Z
+# STACK SKILLS INDEX  Pipeline triển khai 1 màn hình A→Z
 
 > File này là bản hướng dẫn thao tác để kích hoạt các skill trong `.agent/skills/` theo đúng pipeline triển khai từng màn hình cho dự án `danangtrip-web`.
 >
@@ -159,12 +159,19 @@ Files bat buoc doc truoc:
 - .agent/skills/01-screen-analysis/checklist.md
 - .agent/rules/PROJECT_RULES.md
 - DESIGN.md
+- d:/DATN/DATN_Tài liệu/docs/api/api_list.md (NGUON CHAN LY — 184 endpoints, params, DB tables, auth level)
 - src/config/api.ts (de map data fields voi endpoints thuc te)
 - src/config/routes.ts (de biet routes hien co)
 
 Required output:
 - .agent/artifacts/analysis/YYYY-MM-DD__<feature-slug>__screen-analysis.md
   (dung template: .agent/skills/01-screen-analysis/template_screen_analysis.md)
+
+📁 Vi du (feature "blog"):
+  .agent/artifacts/analysis/2026-05-10__blog__screen-analysis.md
+  → Component breakdown: BlogCard[REUSE], BlogHero[NEW], BlogFilter[MOD]
+  → API: GET /api/v1/blogs?page=1&category=&search=
+  → BR-01: Guest chỉ xem published, USER comment được, ADMIN full CRUD
 
 Phan tich 5 muc:
 1. Design tokens: mau sac, typography, spacing doi chieu voi DESIGN.md
@@ -234,6 +241,7 @@ Files bat buoc doc truoc:
 - .agent/skills/03-types-api-contract/checklist.md
 - .agent/skills/03-types-api-contract/template_api_contract.md
 - .agent/rules/PROJECT_RULES.md (Sections 5, 11)
+- d:/DATN/DATN_Tài liệu/docs/api/api_list.md (NGUON CHAN LY — xac nhan method, path, params, auth level TRUOC khi tao type)
 - src/config/api.ts (endpoints thuc te: AUTH, TOURS, LOCATIONS, SEARCH, BLOG, RATINGS, USER)
 - src/types/api.types.ts (ApiResponse<T>, PaginatedResponse<T> - REUSE)
 - src/types/entities.types.ts (entities hien co - REUSE truoc khi tao moi)
@@ -262,6 +270,17 @@ Required outputs:
 - src/features/<feature>/validators/<entity>.validator.ts
 - src/services/<feature>.service.ts
 - .agent/artifacts/api-contracts/YYYY-MM-DD__<feature-slug>__api-contract.md
+
+📁 Vi du (feature "blog"):
+  src/types/blog.types.ts (shared, dung boi >= 2 features)
+    → interface Blog { id, title, slug, thumbnail, category, status, createdAt }
+    → interface BlogListParams { page?, search?, category?, limit? }
+  src/features/blog/validators/blog.validator.ts
+    → const blogCreateSchema = z.object({ title: z.string().min(5), ... })
+    → export type BlogCreateInput = z.infer<typeof blogCreateSchema>
+  src/services/blog.service.ts
+    → blogService.getList(params), .getBySlug(slug), .create(data)
+  .agent/artifacts/api-contracts/2026-05-10__blog__api-contract.md
 
 ---
 
@@ -301,6 +320,13 @@ Required outputs:
 - Cap nhat src/config/routes.ts
 - Cap nhat src/messages/vi/<feature>.json (tao moi neu chua co)
 - Cap nhat src/messages/en/<feature>.json (PHAI dong bo voi vi)
+
+📁 Vi du (feature "blog"):
+  src/app/[locale]/(main)/blog/page.tsx       → Blog list page (Server Component)
+  src/app/[locale]/(main)/blog/[slug]/page.tsx→ Blog detail + generateMetadata()
+  src/config/routes.ts                        → PUBLIC_ROUTES: [..., '/blog', '/blog/:slug']
+  src/messages/vi/blog.json                   → { "title": "Bài viết", "readMore": "Xem thêm" }
+  src/messages/en/blog.json                   → { "title": "Blog", "readMore": "Read more" }
 
 Execution notes:
 - use client chi khi can state/effect/event handler/browser API
@@ -366,6 +392,17 @@ Required outputs:
 - src/features/<feature>/components/<Component>.tsx (feature components)
 - src/components/common/<Shared>.tsx (shared molecules neu dung boi >= 2 features)
 
+📁 Vi du (feature "blog"):
+  src/features/blog/components/BlogCard.tsx
+    → <BlogCard title slug thumbnail category readTime /> (chi props, khong fetch)
+    → reveal-up class + reveal-delay-100 cho entrance animation
+  src/features/blog/components/BlogCardSkeleton.tsx
+    → Skeleton layout khop với BlogCard de tranh CLS
+  src/features/blog/components/BlogGrid.tsx
+    → <BlogGrid blogs={[]} isLoading columns={3} />
+  src/components/common/CategoryBadge.tsx
+    → dung boi blog + tour >= 2 features → dat o common/
+
 ---
 
 ### 3.6 - 06-data-integration
@@ -419,6 +456,17 @@ Required outputs:
 - src/features/<feature>/components/<Component>.tsx (wired with data)
 - src/features/<feature>/components/<Component>Skeleton.tsx
 
+📁 Vi du (feature "blog"):
+  src/features/blog/hooks/use-blog-list.ts
+    → useQuery({ queryKey: ['blog','list',params], queryFn: blogService.getList, staleTime: 10min })
+  src/features/blog/hooks/use-blog-detail.ts
+    → useQuery({ queryKey: ['blog','detail',slug], queryFn: () => blogService.getBySlug(slug) })
+  src/app/[locale]/(main)/blog/page.tsx
+    → Server Component: const blogs = await blogService.getList(params)
+    → Pass xuong <BlogGrid blogs={blogs} /> (khong dung useQuery o Server)
+  src/features/blog/components/BlogGrid.tsx
+    → Nhan blogs={data} isLoading={isLoading} tu hook
+
 ---
 
 ### 3.7 - 07-interactions
@@ -469,6 +517,16 @@ Required outputs:
 - Cap nhat src/messages/vi/<feature>.json
 - Cap nhat src/messages/en/<feature>.json
 
+📁 Vi du (feature "blog"):
+  src/features/blog/components/BlogSearchBar.tsx
+    → useDebounce(search, 300) → onSearch(debouncedVal) → URL ?search=
+  src/features/blog/components/BlogCategoryFilter.tsx
+    → onChange → push({ search: ..., category: val, page: 1 })
+  src/features/blog/hooks/use-blog-list.ts (cap nhat)
+    → useMutation: createBlog, onSuccess → invalidate + toast.success(t('blog.create_success'))
+  src/messages/vi/blog.json  → { "create_success": "Tạo bài viết thành công", "search_placeholder": "Tìm bài viết..." }
+  src/messages/en/blog.json  → { "create_success": "Blog created", "search_placeholder": "Search blogs..." }
+
 ---
 
 ### 3.8 - 08-auth-permissions
@@ -517,6 +575,15 @@ Required outputs:
 - src/hooks/use-permission.ts (neu can shared permission logic)
 - Cap nhat .env.example neu them auth-related env vars
 
+📁 Vi du (feature "blog"):
+  src/middleware.ts
+    → PROTECTED_ROUTES: [..., '/blog/create', '/blog/edit/:slug']
+    → redirect unauthorized → /vi/login?redirect=/vi/blog/create
+  src/features/blog/components/BlogActions.tsx
+    → const { user } = useAuthStore();
+    → const isAuthor = user?.id === blog.authorId || user?.role === 'admin';
+    → {isAuthor && <EditButton />}   ← conditional render, KHONG CSS hide
+
 ---
 
 ### 3.9 - 09-testing
@@ -562,6 +629,17 @@ Required outputs:
 - .agent/artifacts/test-cases/YYYY-MM-DD__<feature-slug>__testcases.md
 - src/features/<feature>/__tests__/*.test.tsx
 - src/features/<feature>/__tests__/*.test.ts
+
+📁 Vi du (feature "blog"):
+  .agent/artifacts/test-cases/2026-05-10__blog__testcases.md
+    → TC-01: BlogCard render dung title/thumbnail
+    → TC-02: BlogGrid hien thi skeleton khi isLoading=true
+    → TC-03: SearchBar debounce 300ms, goi onSearch 1 lan
+  src/features/blog/__tests__/BlogCard.test.tsx
+    → vi.mock('@/services/blog.service')
+    → test('Loading state', ...) / test('Empty state', ...) / test('Success', ...)
+  src/features/blog/__tests__/use-blog-list.test.ts
+    → renderHook(() => useBlogList({})) → assert data mapped correctly
 
 ---
 
@@ -625,6 +703,17 @@ Smoke test sau deploy:
 
 Required outputs:
 - .agent/artifacts/deploy/YYYY-MM-DD__<feature-slug>__deploy-report.md
+
+📁 Vi du (feature "blog"):
+  .agent/artifacts/deploy/2026-05-10__blog__deploy-report.md
+  → | Check         | Status | Notes                               |
+  → | lint          | PASS   | 0 errors                            |
+  → | typecheck     | PASS   | 0 errors                            |
+  → | check:routes  | PASS   | /blog, /blog/[slug] registered      |
+  → | build:cf      | PASS   | Worker bundle 1.2MB                 |
+  → | smoke /blog   | PASS   | page loads, 12 blogs rendered       |
+  → | smoke i18n    | PASS   | vi/en switch OK                     |
+  → | smoke /blog/[slug] | PASS | detail page + SEO metadata OK  |
 
 ---
 
