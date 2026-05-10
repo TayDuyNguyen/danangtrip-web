@@ -17,9 +17,10 @@ Chuyển SRS/analysis thành:
 - `persona.md`
 - `.agent/rules/PROJECT_RULES.md`
 - Screen analysis file: `.agent/artifacts/analysis/YYYY-MM-DD__<slug>__screen-analysis.md`
+- `d:/DATN/DATN_Tài liệu/docs/api/api_list.md` — **NGUỒN CHÂN LÝ API** (xác nhận method, path, params name, auth level TRƯỚC khi tạo type)
 - Existing types: `src/types/` (kiểm tra reuse)
 - Existing services: `src/services/` (kiểm tra patterns)
-- API documentation backend (nếu có)
+- `src/config/api.ts` (endpoints frontend đã đăng ký)
 
 ## 4) Workflow
 
@@ -61,7 +62,8 @@ Chuyển SRS/analysis thành:
 9. Tạo API contract doc theo template.
 
 ## 5) Strict Rules
-- Types phải match backend response — KHÔNG tự bịa fields.
+- **Types phải match backend response** — ĐốI CHIẾU `api_list.md` trước khi tạo field, không tự bịa.
+- **API path/method phải đúng chính xác** — copy từ `api_list.md`, không suy diễn.
 - Service functions KHÔNG chứa business logic — chỉ transport.
 - Zod schemas phải sync với TypeScript types.
 - Không import chéo sibling features.

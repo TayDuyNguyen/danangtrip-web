@@ -19,9 +19,10 @@ Phân tích 1 màn hình từ PRD/Figma/mockup và output ra **checklist triển
 - `persona.md`
 - PRD/SRS/meeting notes do người dùng cung cấp
 - Figma link hoặc mockup screenshots
-- API documentation (nếu có)
 - `DESIGN.md` (design tokens hiện tại)
 - `.agent/rules/PROJECT_RULES.md` (hiểu repo conventions)
+- `d:/DATN/DATN_Tài liệu/docs/api/api_list.md` — **NGUỒN CHÂN LÝ API** (184 endpoints, params, DB tables, auth level, branch Git)
+- `src/config/api.ts` (các endpoints frontend đã đăng ký)
 - `.agent/memory/project-map.md` (hiểu cấu trúc hiện tại)
 
 ## 4) Workflow
@@ -53,6 +54,7 @@ Phân tích 1 màn hình từ PRD/Figma/mockup và output ra **checklist triển
 - **Không viết code**: output chỉ là tài liệu phân tích.
 - **Không skip UI states**: mỗi component phải liệt kê đủ states.
 - **Đối chiếu DESIGN.md**: mọi token phải match, conflict phải flag.
+- **Xác nhận endpoint qua api_list.md**: không tự suy diễn path/method — đối chiếu `DATN_Tài liệu/docs/api/api_list.md` trước khi ghi vào analysis.
 
 ## 6) Output specification
 Tạo file tại:
