@@ -593,6 +593,7 @@ Kich hoat 09-testing
 Context:
 - Repo: d:/DATN/danangtrip-web
 - Feature slug: <feature-slug>
+- Test URL: <link localhost de test UI, vd: http://localhost:3000/contact>
 - SRS/AC: <path hoac mo ta>
 - Code scope: src/features/<feature>/, src/app/[locale]/...
 
@@ -607,6 +608,7 @@ Files bat buoc doc truoc:
 
 Testing stack hien tai:
 - Unit/Integration: Vitest v4 + @testing-library/react v16 + jsdom
+- E2E Manual (AI Browser Subagent): YÊU CẦU TRUYỀN LINK URL VÀO PROMPT (vd: `http://localhost:3000/feature`) ĐỂ AI TEST TRỰC TIẾP TRÊN TRÌNH DUYỆT.
 - KHONG co Playwright setup (E2E manual hoac setup moi neu can)
 - KHONG co MSW setup (mock truc tiep hoac setup moi neu can)
 - Path alias: @/* -> src/* (da config trong vitest.config.ts)

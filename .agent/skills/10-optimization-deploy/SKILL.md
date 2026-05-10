@@ -65,13 +65,9 @@ Skill này chịu trách nhiệm optimization (performance, SEO, accessibility) 
 14. **Focus states**: visible focus indicators.
 15. **Alt text**: cho images.
 
-### 4.4 Build Verification
-16. Run quality gates:
+16. Run mandatory quality gate:
     ```bash
-    npm run lint
-    npm run typecheck
-    npm run check:routes
-    npm run build
+    npm run prepush:check
     ```
 17. Fix tất cả build errors.
 18. Verify `.env` đúng cho target environment (dev/staging/prod).
@@ -105,13 +101,27 @@ Skill này chịu trách nhiệm optimization (performance, SEO, accessibility) 
 - **Smoke test bắt buộc**: không declare done mà chưa smoke test.
 - **No console.log**: remove debug logs trước deploy.
 - **Entrance animations**: `reveal-up` classes theo PROJECT_RULES.
+- **Bắt buộc review trước khi push**: Phải sinh ra file `review.md` và trình USER duyệt. TUYỆT ĐỐI KHÔNG TỰ Ý `git push`.
+- **Quy tắc tên nhánh (Branch Naming)**: Phải dùng format `<viết tắt chức năng>/DATN-<số thứ tự>/<nội dung ngắn gọn>` (ví dụ: `feat/DATN-54/api-align-location`).
 
 ## 6) Output specification
 - Performance report (Lighthouse scores)
 - Build logs (success confirmation)
 - Deploy confirmation (URL)
 - Smoke test report (Pass/Fail)
-- Report: `.agent/artifacts/deploy/YYYY-MM-DD__<feature-slug>__deploy-report.md`
+- Deploy Report: `.agent/artifacts/deploy/YYYY-MM-DD__<feature-slug>__deploy-report.md` (Phải bao gồm: Tên nhánh, Commit message, và bảng trạng thái các Quality Gates).
+- **Feature Review/Walkthrough**: `.agent/artifacts/review/YYYY-MM-DD__<feature-slug>__review.md` (Bản tổng kết cực kỳ chi tiết toàn bộ quá trình thực hiện từ Bước 1 đến Bước 10:
+  1. Phân tích yêu cầu/SRS.
+  2. Thiết kế cấu trúc dữ liệu/Zod Schema.
+  3. Xây dựng Service & Mock API (nếu có).
+  4. Xây dựng Hooks & State logic.
+  5. Phát triển UI Components & Layout.
+  6. Tích hợp i18n (đa ngôn ngữ).
+  7. Viết Unit Tests & Integration Tests.
+  8. Kiểm thử E2E bằng Browser Subagent.
+  9. Tối ưu Performance, SEO & Accessibility.
+  10. Fix bugs phát sinh & Build Verification).
+  Mỗi bước phải mô tả rõ các file đã thay đổi và lý do thực hiện.
 
 ## 7) Control
-Đối chiếu `checklist.md` và report Pass/Fail.
+Đối chiếu `checklist.md` và report Pass/Fail. Đảm bảo file `review.md` đã được tạo để lưu vết toàn bộ quá trình.

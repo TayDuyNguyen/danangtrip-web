@@ -1,19 +1,17 @@
 import { API_ENDPOINTS } from "@/config";
 import axiosInstance from "@/lib/axios";
-import type { ApiResponse } from "@/types";
+import type { ApiResponse, Contact } from "@/types";
+import type { ContactInput } from "@/features/contact/validators/contact.validator";
 
-export interface ContactPayload {
-  name?: string;
-  email: string;
-  phone?: string;
-  subject: string;
-  message: string;
-}
-
+/**
+ * Service for handling contact-related API calls
+ */
 export const contactService = {
   /**
-   * Submit a contact form or newsletter subscription.
+   * Submit the contact form
+   * @param data Contact form data validated by Zod
    */
-  submit: (payload: ContactPayload): Promise<ApiResponse<unknown>> =>
-    axiosInstance.post(API_ENDPOINTS.CONTACTS, payload),
+  submit: async (data: ContactInput): Promise<ApiResponse<Contact>> => {
+    return axiosInstance.post(API_ENDPOINTS.CONTACTS, data);
+  },
 };
