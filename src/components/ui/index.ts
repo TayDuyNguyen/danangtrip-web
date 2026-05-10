@@ -7,3 +7,4 @@ export { default as RatingStars } from "./RatingStars";
 export { default as SearchInput } from "./SearchInput";
 export type { SelectOption } from "./Select";
 export * from "./pagination";
+export { Textarea } from "./Textarea";

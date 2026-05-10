@@ -1,4 +1,52 @@
 {
   "title": "Contact",
-  "subtitle": "Need help with booking tours or partnerships? Contact DaNangTrip."
+  "subtitle": "Need help with booking tours or partnerships? Contact DaNangTrip.",
+  "hero": {
+    "title": "Contact Us",
+    "subtitle": "DaNangTrip team is always ready to listen and support you in every journey."
+  },
+  "info": {
+    "title": "Contact Information",
+    "address": "Address",
+    "phone": "Phone Number",
+    "email": "Email",
+    "working_hours": "Working Hours",
+    "working_hours_desc": "Monday - Sunday: 08:00 AM - 09:00 PM"
+  },
+  "form": {
+    "title": "Send Us a Message",
+    "subtitle": "We will respond to your inquiry as soon as possible (usually within 24h).",
+    "name": "Full Name",
+    "name_placeholder": "Enter your full name",
+    "email": "Email",
+    "email_placeholder": "Enter your email address",
+    "phone": "Phone Number",
+    "phone_placeholder": "Enter your phone number (optional)",
+    "subject": "Subject",
+    "subject_placeholder": "What would you like to contact us about?",
+    "message": "Message",
+    "message_placeholder": "Enter your message content...",
+    "submit": "Send Message",
+    "submitting": "Sending...",
+    "submit_another": "Send another message"
+  },
+  "success": {
+    "title": "Sent Successfully!",
+    "message": "Thank you for contacting us. We have received your information and will respond as soon as possible."
+  },
+  "error": {
+    "title": "Submission Failed",
+    "message": "An error occurred while sending your message. Please try again later or contact our hotline."
+  },
+  "validation": {
+    "name_min_2": "Full name must be at least 2 characters",
+    "name_max_100": "Full name cannot exceed 100 characters",
+    "email_invalid": "Invalid email address",
+    "email_min_5": "Email must be at least 5 characters",
+    "email_max_100": "Email cannot exceed 100 characters",
+    "phone_invalid": "Invalid Vietnamese phone number format",
+    "subject_max_200": "Subject cannot exceed 200 characters",
+    "message_min_10": "Message must be at least 10 characters",
+    "message_max_1000": "Message cannot exceed 1000 characters"
+  }
 }

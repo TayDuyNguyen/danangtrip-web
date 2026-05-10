@@ -56,8 +56,8 @@ Skill này chịu trách nhiệm tạo test plan, viết unit tests + E2E tests,
    - Empty responses
 10. Placement: `__mocks__/handlers/<feature>.ts`
 
-### 4.4 E2E Tests (Playwright)
-11. Flow chính:
+### 4.4 E2E Tests (Playwright & AI Browser Subagent)
+11. Flow chính (Playwright):
     - Navigate → verify page loads
     - CRUD: create → verify → edit → verify → delete → verify
     - Search/filter → verify results
@@ -65,6 +65,9 @@ Skill này chịu trách nhiệm tạo test plan, viết unit tests + E2E tests,
 12. Auth flow: login → protected page → verify access.
 13. Error scenarios: API fail → verify error UI.
 14. Placement: `e2e/<feature>.spec.ts`
+15. **AI Browser UI Testing (Manual E2E)**:
+    - AI PHẢI yêu cầu hoặc sử dụng URL được cấp (vd: `http://localhost:3000/route`) để trực tiếp mở trình duyệt (Browser Subagent) và test giao diện.
+    - AI tự động tương tác với form, nút bấm, kiểm tra luồng (thành công/thất bại) và báo cáo lỗi nếu có.
 
 ### 4.5 Regression Checklist
 15. Kiểm tra regression ở các vùng rủi ro:

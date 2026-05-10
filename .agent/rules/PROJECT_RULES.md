@@ -297,14 +297,13 @@ Current repository baseline:
 - Lack of tests is not a reason to skip verification.
 - When tests do not exist, report the verification you performed and the remaining risk.
 
-Core quality gates before calling work complete:
+Core quality gate before calling work complete:
 
 ```bash
-npm run lint
-npm run typecheck
-npm run check:routes
-npm run build
+npm run prepush:check
 ```
+
+This command runs linting, typechecking, route integrity check, and the full production build. It MUST pass before any feature is considered "done".
 
 Additional checks when relevant:
 
@@ -377,6 +376,9 @@ For reviews, prioritize:
 - Keep commits focused.
 - Use conventional commit style when creating commits.
 - Separate refactor work from feature work unless tightly coupled.
+- **Bắt buộc sinh báo cáo review trước**: Bạn phải tạo file `review.md` (theo chuẩn skill 10-optimization-deploy) TRƯỚC khi tính đến chuyện push code.
+- **Phải được USER duyệt**: Bạn tuyệt đối KHÔNG được tự ý `git push`. Phải trình báo cáo cho USER và chờ USER duyệt mới được push.
+- **Quy tắc đặt tên nhánh (Branch Naming)**: Phải đặt tên nhánh theo đúng format `<viết tắt chức năng>/DATN-<số thứ tự>/<nội dung ngắn gọn>` (ví dụ: `feat/DATN-54/api-align-location-and-tour-category`, `fix/DATN-55/button-loading-bug`).
 
 ### Should
 - Review the diff before commit.
@@ -391,12 +393,13 @@ For reviews, prioritize:
 ## 18. Definition of Done
 
 Work is done only when:
-1. The requested behavior works.
-2. Touched code follows repository boundaries.
-3. Routes, auth, and locale behavior are not knowingly regressed.
-4. Required translation files are synchronized when text changes.
-5. Validation status is reported honestly.
-6. Residual risks or skipped checks are stated explicitly.
+1. The requested behavior works and is verified.
+2. `npm run prepush:check` passes successfully without errors.
+3. Touched code follows repository boundaries and PROJECT_RULES.
+4. Routes, auth, and locale behavior are not knowingly regressed.
+5. Required translation files are synchronized when text changes.
+6. Validation status (review.md & deploy-report.md) is reported and approved by USER.
+7. Residual risks or skipped checks are stated explicitly.
 
 ---
 

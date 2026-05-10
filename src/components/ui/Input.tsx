@@ -90,6 +90,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             ref={ref}
             id={inputId}
             type={inputType}
+            suppressHydrationWarning
             className={cn(
               "w-full py-3 bg-transparent outline-none placeholder:text-on-surface-variant",
               "transition-all duration-300 focus:placeholder-transparent",

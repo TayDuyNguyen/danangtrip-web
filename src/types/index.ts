@@ -4,3 +4,4 @@ export * from "./auth.types";
 export * from "./entities.types";
 export * from "./location-rating.types";
 export * from "./search.types";
+export * from "./contact.types";

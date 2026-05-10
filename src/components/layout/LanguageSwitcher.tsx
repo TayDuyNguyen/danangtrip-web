@@ -52,6 +52,7 @@ const LanguageSwitcher = ({ isScrolled }: { isScrolled: boolean }) => {
       )}
 
       <button
+        suppressHydrationWarning
         onClick={() => setIsOpen(!isOpen)}
         disabled={isPending}
         className={`flex items-center gap-2.5 px-3 py-1.5 rounded-full transition-all duration-300 border ${isScrolled
@@ -87,6 +88,7 @@ const LanguageSwitcher = ({ isScrolled }: { isScrolled: boolean }) => {
             {languages.map((lang) => (
               <button
                 key={lang.code}
+                suppressHydrationWarning
                 onClick={() => onSelectChange(lang.code)}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 group/item ${locale === lang.code
                   ? "bg-[#171717] text-[#8b6a55] font-bold"

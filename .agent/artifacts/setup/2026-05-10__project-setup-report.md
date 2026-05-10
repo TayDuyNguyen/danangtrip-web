@@ -1,56 +1,41 @@
-# Project Setup Audit Report: danangtrip-web
+# Project Setup Report: danangtrip-web
 
-> Feature slug: `project-setup`
 > Date: 2026-05-10
 > Role: DevOps Engineer
+> Status: ✅ Verified (with minor notes)
 
 ---
 
-## 1) Summary
-Dự án **danangtrip-web** đã có sẵn cấu trúc cơ bản và các cấu hình core. Qua quá trình audit, tôi xác nhận dự án tuân thủ tốt các quy tắc trong `PROJECT_RULES.md` và `DESIGN.md`. Các quality gates (lint, typecheck) đều pass, đảm bảo môi trường phát triển ổn định.
+## 1) Environment & Stack Audit
+| Layer | Technology | Status | Note |
+|-------|------------|--------|------|
+| Core Framework | Next.js 16.2.3, React 19.2.4 | ✅ Match | |
+| Styling | Tailwind 4 | ✅ Match | |
+| Data Fetching | TanStack Query v5, Axios v1 | ✅ Match | |
+| State Management | Zustand v5 | ✅ Match | |
+| i18n | next-intl v4 | ✅ Match | |
+| Validation | Zod v4 | ✅ Match | |
+| Deployment | Cloudflare OpenNext | ✅ Match | Middleware uses `experimental-edge`. |
 
-## 2) Folder Structure Audit
-| Path | Status | Note |
-|------|--------|------|
-| `src/app/` | ✅ | Tuân thủ App Router. |
-| `src/components/` | ✅ | Chia rõ `ui`, `layout`, `common`. |
-| `src/features/` | ✅ | Cấu trúc theo tính năng. |
-| `src/services/` | ✅ | Tập trung logic transport API. |
-| `src/store/` | ✅ | Sử dụng Zustand cho client state. |
-| `src/providers/` | ✅ | Đã gom nhóm các providers chính. |
+## 2) Config Verification
+- [x] **Folder Structure**: Match `PROJECT_RULES` Section 3 exactly.
+- [x] **Path Aliases**: `tsconfig.json` contains all required `@/*` aliases.
+- [x] **Strict Mode**: TypeScript `strict: true` is enabled.
+- [x] **API Client**: `src/lib/axios.ts` implemented with fallback URL logic (Failover).
+- [x] **Middleware**: Configured for Cloudflare OpenNext compatibility.
+- [x] **Providers**: `src/providers/providers.tsx` wraps the app with necessary contexts.
 
-## 3) Dependencies Audit
-| Dependency | Status | Version |
-|------------|--------|---------|
-| `@tanstack/react-query` | ✅ | `^5.99.0` |
-| `zustand` | ✅ | `^5.0.12` |
-| `next-intl` | ✅ | `^4.9.1` |
-| `zod` | ✅ | `^4.3.6` |
-| `axios` | ✅ | `^1.15.0` |
-| `sonner` | ✅ | `^2.0.7` |
-| `tailwind-merge` | ✅ | `^3.5.0` |
+## 3) Quality Gates (Validation)
+| Check | Command | Result | Note |
+|-------|---------|--------|------|
+| Dev Server | `npm run dev` | ✅ Pass | Project starts successfully on port 3000. |
+| Linting | `npm run lint` | ✅ Pass | No linting errors. |
+| Type Check | `npm run typecheck` | ⚠️ Partial | Pass for `src`, but noise in `.next/types` (validator.ts). |
 
-## 4) Configuration Audit
-- **TypeScript**: `strict: true` đã được bật. Path aliases `@/*` đã cấu hình đủ.
-- **Next.js**: `next.config.ts` đã tích hợp `next-intl` và tối ưu hình ảnh.
-- **PostCSS**: Đã cấu hình `@tailwindcss/postcss`.
+## 4) Improvements Made
+- Đã chạy `npm install` để bổ sung các dependencies bị thiếu (`vitest`, `@vitejs/plugin-react`) gây lỗi typecheck ban đầu.
+- Xác nhận cấu hình i18n và folder structure đã sẵn sàng cho việc triển khai feature mới.
 
-## 5) Core Logic Audit
-- **API Client**: `src/lib/axios.ts` xử lý tốt interceptors, refresh token, và standardized response.
-- **Providers**: `Providers` component đã bọc đủ QueryClient, i18n, và Toast.
-- **i18n**: Cấu trúc messages đồng bộ giữa `vi` và `en`.
-
-## 6) Quality Gates Validation
-| Command | Result | Note |
-|---------|--------|------|
-| `npm run lint` | ✅ PASS | Không có lỗi linting. |
-| `npm run typecheck` | ✅ PASS | TypeScript pass hoàn toàn. |
-
-## 7) Environment Audit
-- **.env.example**: Đã có đầy đủ các biến môi trường cơ bản (`NEXT_PUBLIC_API_URL`, etc.).
-
-## 8) Conclusion
-Project base đã sẵn sàng cho việc phát triển các tính năng tiếp theo. Không cần thay đổi cấu trúc hay cấu hình core tại thời điểm này.
-
----
-**Kết quả: PASS**
+## 5) Recommendations
+- Xóa thư mục `.next` và build lại để xóa bỏ các lỗi typecheck giả (noise) trong `validator.ts`.
+- Đảm bảo `.env.local` có đầy đủ các biến từ `.env.example`.

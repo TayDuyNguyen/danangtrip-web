@@ -1,4 +1,4 @@
-# API Contract: Contact Form
+# API Contract: Form liên hệ
 
 > Feature slug: `contact`
 > Date: 2026-05-10
@@ -8,52 +8,82 @@
 
 ## 1) Base URL
 - Dev: `${NEXT_PUBLIC_API_URL}`
-- Auth: Public (No auth required)
+- Auth: 🌐 Public (No token required for submission)
 
 ## 2) Endpoints
 
 ### POST /contacts
-- **Purpose**: Gửi thông tin liên hệ hoặc đăng ký newsletter.
-- **Auth**: Public
+- **Purpose**: Gửi thông tin liên hệ từ người dùng.
+- **Auth**: Public 🌐
 - **Request Body** (validated by Zod):
   ```ts
   {
-    name?: string;     // Tối đa 100 ký tự
-    email: string;     // Phải là email hợp lệ
-    phone?: string;    // Regex phone format
-    subject: string;   // Không trống
-    message: string;   // Tối thiểu 10 ký tự
+    name: string;      // Họ tên người gửi (2-100 ký tự)
+    email: string;     // Email người gửi (định dạng email)
+    phone?: string;    // Số điện thoại (optional, format VN)
+    subject?: string;  // Tiêu đề (optional, max 200 ký tự)
+    message: string;   // Nội dung tin nhắn (10-1000 ký tự)
   }
   ```
 - **Response 200**:
   ```ts
   {
     success: true,
-    data: unknown,
-    message: "Success message"
+    data: {
+      id: number,
+      name: string,
+      email: string,
+      phone: string | null,
+      subject: string | null,
+      message: string,
+      status: 'new',
+      created_at: string
+    },
+    message: "Gửi liên hệ thành công"
   }
   ```
-- **Error Codes**:
-  | Code | HTTP | Description | i18n key |
-  |------|------|-------------|----------|
-  | 400 | Bad Request | Dữ liệu không hợp lệ | common.errors.bad_request |
-  | 422 | Unprocessable Entity | Lỗi validation | common.errors.validation_error |
-  | 500 | Internal Server Error | Lỗi hệ thống | common.errors.server_error |
+- **Validation Errors 422**:
+  | Field | Rule | Message key |
+  |-------|------|-------------|
+  | email | email | `email_invalid` |
+  | message | min:10 | `message_min_10` |
+  | phone | regex | `phone_invalid` |
 
 ## 3) Data Types
 ```ts
-export interface ContactPayload {
-  name?: string;
+/**
+ * Contact entity
+ */
+export interface Contact {
+  id: number;
+  name: string;
+  email: string;
+  phone: string | null;
+  subject: string | null;
+  message: string;
+  status: 'new' | 'read' | 'replied';
+  reply: string | null;
+  replied_by: number | null;
+  replied_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+/**
+ * Interface for contact submission request (Zod inferred)
+ */
+export interface ContactInput {
+  name: string;
   email: string;
   phone?: string;
-  subject: string;
+  subject?: string;
   message: string;
 }
 ```
 
 ## 4) Error Model
 ```ts
-export interface ApiResponse<T = unknown> {
+interface ApiResponse<T = unknown> {
   success: boolean;
   data?: T;
   message?: string;
@@ -65,4 +95,4 @@ export interface ApiResponse<T = unknown> {
 ## 5) Auth Requirements
 | Endpoint | Required Role | Notes |
 |----------|--------------|-------|
-| POST /contacts | Guest / User | Public access |
+| POST /contacts | Public | Cho phép khách gửi liên hệ không cần đăng nhập. |
