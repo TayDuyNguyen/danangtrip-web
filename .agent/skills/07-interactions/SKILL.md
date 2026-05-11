@@ -1,81 +1,279 @@
-# Skill: 07-interactions (Chức năng tương tác)
+---
+name: 07-interactions
+description: Define and implement form flows, search, filters, pagination, mutations, and user feedback. Use when a page has meaningful user actions.
+---
 
-## 0) Tuyên bố tự mô tả
-Skill này chịu trách nhiệm implement toàn bộ user interactions: CRUD, form validation, filter/search/sort/pagination, confirm dialogs, toast feedback.
+# Skill: 07-interactions
 
-## 1) Goal
-Làm cho người dùng **thao tác được đầy đủ** trên màn hình:
-- **Form**: validation, submit, error messages
-- **CRUD**: Create, Read, Update, Delete
-- **Filter/Search/Sort/Pagination**: functional
-- **Dialogs**: confirm delete, success/error toasts
-- **Export/Import**: nếu có trong requirements
+## Overview
 
-## 2) Persona (mandatory)
-Đóng vai: **Senior Software Engineer (SSE)**. Đọc `persona.md` trước khi làm.
+Skill này mô tả các interaction chính của feature: forms, CRUD, filter/search/sort, pagination, dialog, toast feedback.
+Nó là bước biến page từ hiển thị dữ liệu thành feature có thể thao tác thật.
 
-## 3) Input & Context (must read first)
+## Required Input
+
 - `persona.md`
-- `.agent/rules/PROJECT_RULES.md` (Sections 7, 12, 13)
-- SRS/analysis: acceptance criteria + business rules
-- Zod validators: `src/features/<feature>/validators/`
-- UI components + hooks đã build ở bước trước
-- Existing interaction patterns: `src/hooks/useDebounce.ts`, etc.
+- `.agent/rules/PROJECT_RULES.md`
+- Analysis file
+- Validators từ bước `03`
+- Hooks và components từ bước `05` và `06`
+- `src/hooks/useDebounce.ts`
 
-## 4) Workflow
+## Recommended Questions To Answer
 
-### 4.1 Form Handling
-1. **Validation**: dùng Zod schemas đã tạo ở bước 03.
-2. **Error display**: field-level errors + summary (nếu cần).
-3. **Submit flow**:
-   - Validate → show errors nếu invalid
-   - Submit → loading state → success toast / error toast
-   - Reset form sau success (nếu applicable)
-4. **i18n**: mọi validation messages dùng translation keys.
+1. Action chính của user là gì?
+2. Action nào destructive?
+3. Form nào cần validate?
+4. Search/filter có sync URL không?
+5. Feedback nào user bắt buộc phải thấy?
 
-### 4.2 CRUD Operations
-5. **Create**: Modal/Form → `useMutation` → invalidate list queries → toast success.
-6. **Read**: List (useQuery) → Click row → Detail view/page.
-7. **Update**: Edit modal/form → `useMutation` → invalidate → toast.
-8. **Delete**: Confirm dialog → `useMutation` → invalidate → toast.
-9. **Bulk operations**: checkbox select → bulk delete/update (nếu có).
+## Process
 
-### 4.3 Filter/Search/Sort
-10. **Search**: debounced input (dùng `useDebounce` hook hiện có).
-11. **Filter**: select/dropdown → update query params → refetch.
-12. **Sort**: click column header → toggle asc/desc → refetch.
-13. **URL sync**: filter/search/sort state đồng bộ với URL query params.
+### 1) Action Breakdown
 
-### 4.4 Pagination
-14. **Pattern**: query params `?page=1&limit=20`.
-15. **UI**: pagination component với prev/next + page numbers.
-16. **Scroll**: scroll to top khi chuyển page.
-17. **Edge case**: xử lý khi page > total pages (redirect về page 1).
+Liệt kê:
 
-### 4.5 Dialogs & Feedback
-18. **Confirm dialog**: trước delete/destructive actions.
-19. **Toast success**: sau create/update/delete thành công.
-20. **Toast error**: khi API fail, dùng normalized error message.
-21. **Optimistic updates**: nếu applicable (UX tốt hơn).
+- create
+- update
+- delete
+- search
+- filter
+- sort
+- pagination
+- export/import nếu có
 
-### 4.6 Export/Import (nếu có)
-22. **Export**: trigger download (CSV/Excel/PDF).
-23. **Import**: file upload → validate → preview → confirm → process.
+### 2) Form Flow Review
 
-## 5) Strict Rules
-- **Validate ở boundary**: validate user input trước khi gửi API.
-- **Normalize errors**: KHÔNG hiện raw backend errors.
-- **i18n bắt buộc**: mọi user-facing text (validation, toast, dialog) → translation keys.
-- **No silent failures**: mọi error phải có feedback cho user.
-- **Mutation → invalidate**: sau mutation luôn invalidate related queries.
-- **Debounce search**: tối thiểu 300ms.
-- **Confirm destructive actions**: delete/bulk delete phải có confirm dialog.
+Mô tả:
 
-## 6) Output specification
-Files tạo/sửa:
-- `src/features/<feature>/components/` (interactive components)
-- `src/features/<feature>/hooks/` (mutation hooks nếu chưa có)
-- `src/messages/vi/<feature>.json` + `en` (validation messages, toast messages)
+- validator (Zod schema nào)
+- submit flow
+- reset/cancel flow
+- error handling
 
-## 7) Control
-Đối chiếu `checklist.md` và report Pass/Fail.
+### 3) URL-Synced State Review
+
+Phải nói:
+
+- state nào local
+- state nào sync URL
+- debounce ra sao
+
+### 4) Destructive And Feedback Review
+
+Nói rõ:
+
+- confirm UI
+- success toast
+- error toast
+- invalidate strategy
+
+### 5) Handoff To Implementation
+
+Interaction spec phải để người code biết:
+
+- component nào chứa form
+- hook nào chứa mutation
+- locale files nào cần key mới
+
+## Pattern Chuẩn Của Repo
+
+### Zod + react-hook-form pattern — Next.js web
+
+```tsx
+// src/features/contact/components/ContactForm.tsx
+'use client';
+
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { contactFormSchema, type ContactFormValues } from '../schemas/contact.schema';
+import { useSubmitContact } from '../hooks/useContactMutations';
+import { useTranslations } from 'next-intl';
+
+export function ContactForm() {
+  const t = useTranslations('contact');
+  const { mutate: submit, isPending } = useSubmitContact();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<ContactFormValues>({
+    resolver: zodResolver(contactFormSchema),
+  });
+
+  const onSubmit = (data: ContactFormValues) => {
+    submit(data, {
+      onSuccess: () => {
+        reset();
+        // toast handled in mutation
+      },
+    });
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <input {...register('name')} aria-label={t('name')} />
+      {errors.name && <p role="alert">{errors.name.message}</p>}
+
+      <input {...register('email')} type="email" aria-label={t('email')} />
+      {errors.email && <p role="alert">{errors.email.message}</p>}
+
+      <textarea {...register('message')} aria-label={t('message')} />
+      {errors.message && <p role="alert">{errors.message.message}</p>}
+
+      <button type="submit" disabled={isPending}>
+        {isPending ? t('sending') : t('send')}
+      </button>
+    </form>
+  );
+}
+```
+
+### URL-synced search + filter — Next.js App Router
+
+```tsx
+// src/features/tours/components/TourFilters.tsx
+'use client';
+
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
+import { useDebounce } from '@/hooks/useDebounce';
+
+export function TourFilters() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const [searchInput, setSearchInput] = useState(searchParams.get('search') ?? '');
+  const debouncedSearch = useDebounce(searchInput, 400);
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (debouncedSearch) {
+      params.set('search', debouncedSearch);
+    } else {
+      params.delete('search');
+    }
+    params.set('page', '1'); // Reset page khi search
+    router.push(`${pathname}?${params.toString()}`);
+  }, [debouncedSearch]);
+
+  return (
+    <input
+      value={searchInput}
+      onChange={(e) => setSearchInput(e.target.value)}
+      placeholder="Tìm kiếm tour..."
+    />
+  );
+}
+```
+
+### Mutation với feedback
+
+```ts
+// src/features/contact/hooks/useContactMutations.ts
+import { useMutation } from '@tanstack/react-query';
+import { contactService } from '../services/contact.service';
+import { toast } from 'sonner'; // hoặc toast library của repo
+
+export const useSubmitContact = () => {
+  return useMutation({
+    mutationFn: (data: ContactFormValues) => contactService.submit(data),
+    onSuccess: () => {
+      toast.success('Gửi thành công! Chúng tôi sẽ liên hệ sớm.');
+    },
+    onError: (error) => {
+      toast.error(getErrorMessage(error));
+    },
+  });
+};
+```
+
+### Destructive action — confirm trước khi xóa
+
+```tsx
+// Không dùng window.confirm
+// Dùng Dialog component từ design system
+
+function DeleteBookingButton({ bookingId }: Props) {
+  const [open, setOpen] = useState(false);
+  const { mutate: cancel, isPending } = useCancelBooking();
+
+  return (
+    <>
+      <button onClick={() => setOpen(true)}>Hủy đặt tour</button>
+
+      <AlertDialog open={open} onOpenChange={setOpen}>
+        <AlertDialogContent>
+          <AlertDialogTitle>Xác nhận hủy đặt tour?</AlertDialogTitle>
+          <AlertDialogDescription>
+            Hành động này không thể hoàn tác.
+          </AlertDialogDescription>
+          <AlertDialogCancel>Không</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={() => cancel(bookingId, { onSuccess: () => setOpen(false) })}
+            disabled={isPending}
+          >
+            {isPending ? 'Đang hủy...' : 'Xác nhận hủy'}
+          </AlertDialogAction>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
+  );
+}
+```
+
+## Output Document
+
+Tạo file:
+
+- `.agent/artifacts/interaction-specs/YYYY-MM-DD__<feature-slug>__interaction-spec.md`
+
+Template:
+
+- `template_interaction_spec.md`
+
+## Strict Rules
+
+- Validation phải dùng Zod + `zodResolver` — không dùng controlled state thủ công
+- Mọi user-facing message phải qua `next-intl` (`useTranslations`)
+- Search phải debounce (400ms)
+- Destructive actions phải có confirm step — không dùng `window.confirm`
+- Không hiện raw backend error — normalize trước khi toast
+
+## Red Flags
+
+Nếu thấy những dấu hiệu sau, phải dừng và flag:
+
+- Form dùng `useState` cho từng field → không có validation tích hợp
+- `window.confirm()` cho delete → không nhất quán với design system
+- Search không debounce → API call mỗi keystroke
+- URL params không update khi filter thay đổi → user mất state khi back/refresh
+- Hardcoded string trong toast thay vì `t()` → không i18n được
+
+## Common Rationalizations
+
+| Lý do hay gặp | Thực tế |
+|---|---|
+| "Form đơn giản, dùng useState cho nhanh" | Khi cần validation, reset, hoặc dirty check, sẽ phải refactor toàn bộ |
+| "window.confirm đủ rồi" | Không nhất quán với design system, không customizable |
+| "Search không cần debounce, API nhanh" | Mỗi keystroke = 1 request — tốn bandwidth và gây race condition |
+| "Toast message hardcode tiếng Việt cho nhanh" | Khi switch sang English, toast vẫn hiện tiếng Việt |
+
+## Documentation Expectations
+
+Interaction spec tốt phải có:
+
+- main actions (list đầy đủ)
+- forms (schema, submit flow, reset flow)
+- search/filter/pagination (URL sync, debounce)
+- destructive actions (confirm UI, feedback)
+- i18n impact (keys cần thêm vào `vi/en`)
+
+## Verification
+
+- Đối chiếu `checklist.md`
+- Interaction spec phải liệt kê trigger, validation, feedback, URL sync, và mutation dependencies
+- Mọi destructive action phải có confirm step
+- Mọi user-facing text phải qua i18n

@@ -1,98 +1,239 @@
-# Skill: 05-ui-components (Xây dựng UI Components — Atomic Design)
+---
+name: 05-ui-components
+description: Turn analysis into a UI specification and component implementation plan aligned with DESIGN.md. Use when building or refactoring user-facing UI.
+---
 
-## 0) Tuyên bố tự mô tả
-Skill này chịu trách nhiệm build UI components theo Atomic Design methodology, pixel-perfect với Figma, tuân thủ `DESIGN.md` tokens.
+# Skill: 05-ui-components
 
-## 1) Goal
-Build UI components **từ trong ra ngoài** theo Atomic Design:
-1. **Atoms**: Button, Input, Badge, Avatar, Skeleton...
-2. **Molecules**: SearchBar, FormField, CardItem...
-3. **Organisms**: DataTable, FilterPanel, ModalForm...
-4. **Templates**: Compose organisms thành sections của màn
+## Overview
 
-Output: **UI giống Figma 100%, responsive, tuân thủ design tokens**.
+Skill này chuyển analysis thành **UI spec** rõ ràng: reuse matrix, component layers, states, responsive notes, và file plan.
+Nó nên đủ chi tiết để dev hoặc reviewer nhìn vào hình dung được UI structure mà chưa cần mở toàn bộ code.
 
-## 2) Persona (mandatory)
-Đóng vai: **UI/UX Designer + Senior Software Engineer**. Đọc `persona.md` trước khi làm.
+## Required Input
 
-## 3) Input & Context (must read first)
 - `persona.md`
-- `DESIGN.md` (design tokens — BẮT BUỘC đọc)
-- `.agent/rules/PROJECT_RULES.md` (Sections 11, 12, 21)
-- Screen analysis: `.agent/artifacts/analysis/`
-- Figma link/mockup (do user cung cấp)
-- Existing components: `src/components/ui/`, `src/components/layout/`, `src/components/common/`
-- Existing feature components: `src/features/*/components/`
+- `DESIGN.md`
+- `.agent/rules/PROJECT_RULES.md`
+- Analysis file từ `01-screen-analysis`
+- `src/components/ui/`
+- `src/components/layout/`
+- `src/features/*/components/`
 
-## 4) Workflow
+## Recommended Questions To Answer
 
-### 4.1 Design Token Alignment
-1. Đối chiếu Figma với `DESIGN.md`:
-   - Colors: `#8B6A55` primary, `#080808` background, etc.
-   - Typography: Inter display, SFMono body
-   - Spacing: 4px base rhythm
-   - Radii: 4px, 7px, 8px, 12px, 9999px
-   - Elevation: glass surfaces, 1px borders, 12px blur
-2. Nếu Figma có token mới → flag, KHÔNG tự thêm vào `DESIGN.md`.
+1. Component nào đã có thể reuse?
+2. Component nào cần tạo mới vì chưa có tương đương?
+3. Component nào shared, component nào chỉ feature-local?
+4. State nào phải đi qua props?
+5. Token/motion/visual rule nào dễ bị lệch nhất?
 
-### 4.2 Reuse Audit
-3. Scan `src/components/ui/` → liệt kê components reusable.
-4. Scan `src/components/common/` → liệt kê shared components.
-5. Chỉ tạo mới khi KHÔNG có component phù hợp.
+## Process
 
-### 4.3 Build Atoms (nếu cần tạo mới)
-6. Atoms = smallest building blocks:
-   - Button variants (primary, secondary, ghost, link)
-   - Input fields (text, select, checkbox, radio)
-   - Badge, Tag, Avatar, Skeleton, Spinner
-7. Placement: `src/components/ui/<ComponentName>.tsx`
-8. Props interface rõ ràng, typed, no `any`.
+### 1) Design Token Alignment
 
-### 4.4 Build Molecules
-9. Molecules = atoms kết hợp:
-   - SearchBar = Input + Button + Icon
-   - FormField = Label + Input + ErrorMessage
-   - CardItem = Image + Title + Badge + Actions
-10. Placement: `src/features/<feature>/components/` hoặc `src/components/common/`
+Đối chiếu UI cần build với `DESIGN.md`:
 
-### 4.5 Build Organisms
-11. Organisms = molecules + logic phức tạp:
-    - DataTable = Header + Rows + Pagination + Sort indicators
-    - FilterPanel = SearchBar + Select + DatePicker + Apply/Reset
-    - ModalForm = Dialog + Form + Submit/Cancel
-12. Placement: `src/features/<feature>/components/`
+- colors
+- spacing
+- typography
+- motion
+- elevation
 
-### 4.6 Compose Template
-13. Template = Compose organisms thành page section:
-    - Header section
-    - Content area (table/list/grid)
-    - Sidebar (filters/details)
-    - Footer/pagination
+### 2) Reuse Audit
 
-### 4.7 Responsive & States
-14. Responsive: mobile-first, Tailwind breakpoints.
-15. States qua props:
-    - `isLoading` → render Skeleton
-    - `isEmpty` → render Empty state
-    - `error` → render Error state
-    - Hover/Focus: CSS transitions theo `DESIGN.md` motion tokens
+Phải liệt kê:
 
-## 5) Strict Rules
-- **Pixel-perfect**: match Figma layout, spacing, typography.
-- **Design tokens only**: KHÔNG tự ý dùng colors/spacing ngoài `DESIGN.md`.
-- **Reuse first**: KHÔNG tạo component mới nếu đã có tương đương.
-- **Props interface**: mỗi component PHẢI có typed props.
-- **No data fetching**: components chỉ nhận data qua props — không gọi API trong component.
-- **Icons**: chỉ dùng Solar iconset (`@/components/icons/solar` hoặc `lucide-react`).
-- **Motion**: theo `DESIGN.md` motion tokens (150ms, ease, cubic-bezier).
-- **Glass surfaces**: border gradient shell theo `DESIGN.md` Elevation section.
-- **Entrance animations**: `reveal-up` classes cho sections.
+- component reuse được
+- path
+- lý do reuse
+- chỗ nào chỉ cần mod nhẹ
 
-## 6) Output specification
-Files tạo/sửa:
-- `src/components/ui/<NewAtom>.tsx` (shared atoms)
-- `src/features/<feature>/components/<Component>.tsx` (feature components)
-- `src/components/common/<Shared>.tsx` (shared molecules nếu cần)
+### 3) Component Decomposition
 
-## 7) Control
-Đối chiếu `checklist.md` và report Pass/Fail.
+Chia theo:
+
+- atom
+- molecule
+- organism
+- page section
+
+### 4) State Contract
+
+Phải chỉ ra:
+
+- loading (skeleton hay spinner)
+- empty
+- error
+- success
+- disabled
+
+### 5) Placement Strategy
+
+Mô tả rõ file placement:
+
+- shared UI: `src/components/ui/`
+- common/shared: `src/components/`
+- feature-local: `src/features/<feature>/components/`
+
+## Pattern Chuẩn Của Repo
+
+### Component placement decision
+
+```
+src/components/ui/          → Primitive atoms: Button, Input, Badge, Skeleton
+                              Không có business logic, không fetch data
+src/components/             → Shared molecules/organisms: Navbar, Footer, SearchBar
+                              Dùng ở nhiều feature
+src/features/<f>/components/ → Feature-local: TourCard, TourGrid, BookingForm
+                              Chỉ dùng trong feature đó
+```
+
+### Loading state — skeleton, không spinner
+
+```tsx
+// GOOD: Skeleton giữ layout ổn định
+function TourCardSkeleton() {
+  return (
+    <div className="rounded-xl overflow-hidden" aria-busy="true">
+      <div className="h-48 bg-muted animate-pulse" />
+      <div className="p-4 space-y-2">
+        <div className="h-4 bg-muted animate-pulse rounded w-3/4" />
+        <div className="h-3 bg-muted animate-pulse rounded w-1/2" />
+      </div>
+    </div>
+  );
+}
+
+// BAD: Spinner gây layout shift
+if (isLoading) return <Spinner />;
+```
+
+### Empty state — có message và CTA
+
+```tsx
+// GOOD: Empty state có context và action
+function TourEmptyState({ onReset }: { onReset?: () => void }) {
+  return (
+    <div className="text-center py-16" role="status">
+      <SearchIcon className="mx-auto h-12 w-12 text-muted-foreground" />
+      <h3 className="mt-4 text-lg font-medium">Không tìm thấy tour</h3>
+      <p className="mt-2 text-sm text-muted-foreground">
+        Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm
+      </p>
+      {onReset && (
+        <button className="mt-4" onClick={onReset}>
+          Xóa bộ lọc
+        </button>
+      )}
+    </div>
+  );
+}
+```
+
+### Props typing — explicit, không dùng any
+
+```tsx
+// GOOD: Props typed rõ ràng
+interface TourCardProps {
+  tour: Tour;
+  variant?: 'default' | 'compact' | 'featured';
+  onBooking?: (tourId: string) => void;
+  className?: string;
+}
+
+export function TourCard({ tour, variant = 'default', onBooking, className }: TourCardProps) {
+  // ...
+}
+
+// BAD: Props không typed
+function TourCard(props: any) { ... }
+```
+
+### i18n — mọi text user-facing qua next-intl
+
+```tsx
+// GOOD: Dùng useTranslations
+'use client';
+import { useTranslations } from 'next-intl';
+
+function BookingButton({ tourId }: { tourId: string }) {
+  const t = useTranslations('tour');
+  return <button>{t('bookNow')}</button>;
+}
+
+// Server component
+import { getTranslations } from 'next-intl/server';
+
+async function TourTitle({ name }: { name: string }) {
+  const t = await getTranslations('tour');
+  return <h1>{t('detailTitle', { name })}</h1>;
+}
+
+// BAD: Hardcode text
+<button>Đặt tour ngay</button>
+```
+
+### Design token — không dùng arbitrary values
+
+```tsx
+// GOOD: Dùng design tokens từ DESIGN.md
+<div className="bg-primary text-primary-foreground rounded-lg p-4 shadow-sm">
+
+// BAD: Arbitrary values
+<div style={{ backgroundColor: '#1a73e8', borderRadius: '12px', padding: '13px' }}>
+```
+
+## Output Document
+
+Tạo file:
+
+- `.agent/artifacts/ui-specs/YYYY-MM-DD__<feature-slug>__ui-spec.md`
+
+Template:
+
+- `template_ui_spec.md`
+
+## Strict Rules
+
+- Reuse first, create later
+- Không fetch data trong UI component — data phải đến từ props hoặc hook
+- Chỉ dùng design tokens từ `DESIGN.md` — không arbitrary pixel values
+- Text user-facing phải đi qua `next-intl`
+- Loading phải dùng skeleton, không phải spinner cho content areas
+- Không tạo shared component nếu mới chỉ có một nơi dùng mà chưa có lý do mạnh
+
+## Red Flags
+
+Nếu thấy những dấu hiệu sau, phải dừng và flag:
+
+- Component fetch data trực tiếp trong body → vi phạm separation of concerns
+- Hardcoded text tiếng Việt trong JSX → không i18n được
+- Arbitrary CSS values (`p-[13px]`, `text-[#1a73e8]`) → lệch design system
+- Spinner thay vì skeleton cho list/card loading → layout shift
+- Props dùng `any` → mất type safety
+
+## Common Rationalizations
+
+| Lý do hay gặp | Thực tế |
+|---|---|
+| "Component nhỏ, fetch data trong đó cho tiện" | Khi cần test hoặc reuse, sẽ phải refactor |
+| "Text tiếng Việt hardcode cho nhanh, i18n sau" | "Sau" thường không bao giờ đến — và khi đến thì tốn nhiều thời gian hơn |
+| "Spinner đơn giản hơn skeleton" | Skeleton giữ layout ổn định, tránh CLS |
+| "Tạo shared component luôn cho tái sử dụng" | Premature abstraction — chỉ tạo shared khi có ≥2 nơi dùng |
+
+## Documentation Expectations
+
+UI spec tốt phải có:
+
+- reuse/new/mod matrix (bảng với path, layer, reason)
+- states (loading/empty/error per component)
+- responsive notes
+- placement strategy (shared vs feature-local)
+- files expected to change
+
+## Verification
+
+- Đối chiếu `checklist.md`
+- UI spec phải nêu rõ `[REUSE]`, `[NEW]`, `[MOD]`, props chính, và UI states
+- Mọi component mới phải có placement rõ ràng (shared hay feature-local)

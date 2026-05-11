@@ -11,3 +11,4 @@
 - [ ] Skeleton layout renders — route navigable.
 - [ ] `npm run check:routes` pass.
 - [ ] `npm run typecheck` pass.
+- [ ] Route plan tạo đúng path: `.agent/artifacts/routing/...`.

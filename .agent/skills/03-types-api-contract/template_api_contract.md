@@ -10,6 +10,11 @@
 - Dev: `${NEXT_PUBLIC_API_URL}`
 - Auth: Bearer token (Authorization header)
 
+## 1.1) Source References
+- `api_list.md` section:
+- `src/config/api.ts` entries:
+- Analysis file:
+
 ## 2) Endpoints
 
 ### GET /api/<resource>
@@ -78,3 +83,11 @@ interface ApiError {
 | Endpoint | Required Role | Notes |
 |----------|--------------|-------|
 | | | |
+
+---
+
+## 6) Files Expected To Change
+- `src/types/...`
+- `src/features/<feature>/types/index.ts`
+- `src/features/<feature>/validators/...`
+- `src/services/<feature>.service.ts`
