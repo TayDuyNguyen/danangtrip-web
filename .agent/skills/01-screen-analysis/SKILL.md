@@ -1,66 +1,218 @@
-# Skill: 01-screen-analysis (Phân tích màn hình)
+---
+name: 01-screen-analysis
+description: Analyze a web screen from Figma, SRS, or requirement notes and produce an implementation-ready analysis document. Use when a new screen or major UI change is requested.
+---
 
-## 0) Tuyên bố tự mô tả
-Skill này **tự chứa toàn bộ quy tắc và checklist**. Khi kích hoạt, đọc toàn bộ file trong folder này trước khi làm.
+# Skill: 01-screen-analysis
 
-## 1) Goal
-Phân tích 1 màn hình từ PRD/Figma/mockup và output ra **checklist triển khai** bao gồm:
-- UI elements cần build
-- API calls cần gọi
-- Business rules cần tuân thủ
-- States cần xử lý
+## Overview
 
-**KHÔNG viết code ở bước này.**
+Skill này là điểm bắt đầu của pipeline cho `danangtrip-web`.
+Nó biến input thô như Figma, SRS, note sản phẩm, hoặc mô tả từ USER thành **screen analysis document đủ chi tiết để các bước route, UI, data, auth, testing không phải tự suy diễn**.
 
-## 2) Persona (mandatory)
-Đóng vai: **Business Analyst (BA)**. Đọc `persona.md` trước khi làm.
+Mục tiêu của output không phải là "ghi chú ngắn", mà là tài liệu đủ để:
 
-## 3) Input & Context (must read first)
+- `03-types-api-contract` xác định đúng field và API
+- `04-layout-routing` biết route/layout nào cần thay đổi
+- `05-ui-components` biết component nào cần reuse hoặc tạo mới
+- `06-data-integration` biết server/client boundary và query plan
+- `07-interactions` biết action nào là trọng tâm
+
+## Required Input
+
 - `persona.md`
-- PRD/SRS/meeting notes do người dùng cung cấp
-- Figma link hoặc mockup screenshots
-- `DESIGN.md` (design tokens hiện tại)
-- `.agent/rules/PROJECT_RULES.md` (hiểu repo conventions)
-- `d:/DATN/DATN_Tài liệu/docs/api/api_list.md` — **NGUỒN CHÂN LÝ API** (184 endpoints, params, DB tables, auth level, branch Git)
-- `src/config/api.ts` (các endpoints frontend đã đăng ký)
-- `.agent/memory/project-map.md` (hiểu cấu trúc hiện tại)
+- Figma link, mockup, PRD, hoặc meeting notes
+- `DESIGN.md`
+- `.agent/rules/PROJECT_RULES.md`
+- `d:/DATN/DATN_Tài liệu/docs/api/api_list.md`
+- `src/config/api.ts`
+- `src/config/routes.ts`
+- `.agent/memory/project-map.md`
 
-## 4) Workflow
+## Recommended Questions To Answer
 
-### 4.1 Phân tích Design (từ Figma/mockup)
-1. **Design tokens cần thiết**: color, spacing, radius, typography, shadow, blur — đối chiếu với `DESIGN.md`.
-2. **Component breakdown**:
-   - `[REUSE]`: components đã có trong `src/components/ui`, `src/components/layout`, `src/features/*/components`
-   - `[NEW]`: components cần tạo mới
-   - `[MOD]`: components cần chỉnh sửa
-3. **Responsive behavior**: mobile / tablet / desktop breakpoints.
-4. **UI States**: loading (skeleton), empty, error, success, disabled, hover/focus.
+1. Đây là page mới, section mới, hay refactor của page cũ?
+2. User chính của màn này là ai?
+3. Màn này là public, auth-only, hay role-based?
+4. Data nào hiển thị ngay khi load, data nào hiển thị theo interaction?
+5. Có SEO, metadata, locale, hoặc route implication nào không?
+6. Có assumption nào cần chặn lại trước khi sang bước code?
 
-### 4.2 Phân tích Data
-5. **Data fields**: field name, type, required/optional, validation rules, example value.
-6. **API endpoints**: method, path, request/response shape, auth requirements.
-7. **Data flow**: xác định Server Component vs Client Component.
+## Process
 
-### 4.3 Phân tích Business
-8. **Business rules**: liệt kê BR-xx cho màn này.
-9. **Actors & permissions**: ai được truy cập, ai được CRUD.
-10. **Edge cases**: timeout, partial data, concurrent edit, large dataset.
+### 1) Summary And Scope
 
-### 4.4 Output Checklist
-11. Tổng hợp thành checklist triển khai có structure rõ ràng.
+Xác định:
 
-## 5) Strict Rules
-- **Không bịa business rule**: thứ không chắc → ghi `[ASSUMPTION]` + "cần xác nhận".
-- **Không viết code**: output chỉ là tài liệu phân tích.
-- **Không skip UI states**: mỗi component phải liệt kê đủ states.
-- **Đối chiếu DESIGN.md**: mọi token phải match, conflict phải flag.
-- **Xác nhận endpoint qua api_list.md**: không tự suy diễn path/method — đối chiếu `DATN_Tài liệu/docs/api/api_list.md` trước khi ghi vào analysis.
+- mục tiêu màn hình
+- actor chính
+- module/feature liên quan
+- screen type: list/detail/form/dashboard/landing section
 
-## 6) Output specification
-Tạo file tại:
+### 2) Design And Token Audit
+
+Không chỉ nhìn layout.
+Phải đối chiếu với `DESIGN.md`:
+
+- màu sắc
+- typography
+- spacing
+- radii
+- elevation / glass surfaces
+- motion / reveal rhythm
+
+Nếu mockup lệch khỏi token chuẩn, phải flag rõ.
+
+### 3) Component Breakdown
+
+Phân loại:
+
+- `[REUSE]`
+- `[NEW]`
+- `[MOD]`
+
+Mỗi component nên có:
+
+- purpose
+- path nếu reuse
+- layer (atom / molecule / organism / section)
+- impact nếu mod
+
+### 4) Responsive And UI States
+
+Phải mô tả:
+
+- mobile
+- tablet
+- desktop
+
+Mỗi section quan trọng nên có:
+
+- loading
+- empty
+- error
+- success
+- disabled
+- hover/focus nếu có interaction
+
+### 5) Data And API Review
+
+Phải map:
+
+- field
+- type
+- required/optional
+- validation expectation
+- source endpoint
+- server/client ownership nếu cần
+
+### 6) Business / Auth / i18n Review
+
+Phải ghi:
+
+- business rules
+- auth requirement
+- locale/message impact
+- edge cases
+- open questions
+
+## Output Example — Component Breakdown
+
+Đây là ví dụ về component breakdown đúng chuẩn:
+
+| Component | Type | Layer | Path | Reason |
+|---|---|---|---|---|
+| `TourCard` | [REUSE] | Molecule | `src/components/common/TourCard.tsx` | Đã có, chỉ cần truyền đúng props |
+| `TourGrid` | [REUSE] | Organism | `src/features/tours/components/TourGrid.tsx` | Dùng lại grid layout |
+| `TourCategoryFilter` | [NEW] | Molecule | `src/features/tours/components/TourCategoryFilter.tsx` | Chưa có filter theo category |
+| `TourSearchBar` | [MOD] | Molecule | `src/components/common/SearchBar.tsx` | Cần thêm debounce và URL sync |
+
+**Không được viết:**
+```
+- TourCard: reuse
+- TourGrid: reuse
+- Filter: new
+```
+
+## Output Example — UI States
+
+Đây là ví dụ về UI states đúng chuẩn:
+
+| Section | Loading | Empty | Error |
+|---|---|---|---|
+| Tour list | `TourCardSkeleton` × 6 | "Chưa có tour nào" + CTA | Inline error + retry button |
+| Category filter | Skeleton pills × 5 | Ẩn filter bar | Toast error |
+| Pagination | Disabled | Ẩn | N/A |
+
+**Không được viết:**
+```
+- Loading state: có
+- Empty state: có
+- Error state: có
+```
+
+## Output Example — Data/API Mapping
+
+| Field | Type | Required | Source | Note |
+|---|---|---|---|---|
+| `id` | `string` | ✓ | `GET /api/tours` | UUID |
+| `name` | `string` | ✓ | `GET /api/tours` | |
+| `slug` | `string` | ✓ | `GET /api/tours` | Dùng cho URL |
+| `price` | `number \| null` | ✗ | `GET /api/tours` | null = liên hệ |
+| `imageUrl` | `string \| null` | ✗ | `GET /api/tours` | Fallback to placeholder |
+| `category.name` | `string` | ✓ | `GET /api/tours` | Nested object |
+
+## Output Document
+
+Tạo file:
+
 - `.agent/artifacts/analysis/YYYY-MM-DD__<feature-slug>__screen-analysis.md`
 
-Dùng template: `template_screen_analysis.md`
+Template:
 
-## 7) Control
-Đối chiếu `checklist.md` và báo cáo Pass/Fail từng mục.
+- `template_screen_analysis.md`
+
+## Strict Rules
+
+- Không viết code ở bước này
+- Không bịa endpoint hoặc business rule
+- Chỗ nào chưa chắc phải đánh dấu `[ASSUMPTION]`
+- Khi có xung đột giữa mockup và `DESIGN.md`, phải flag rõ
+- Endpoint phải đối chiếu với `api_list.md` và `src/config/api.ts` — không tự đặt tên
+
+## Red Flags
+
+Nếu thấy những dấu hiệu sau trong analysis, phải bổ sung:
+
+- Component breakdown chỉ có tên, không có path/layer/reason → bước 05 không dùng được
+- UI states chỉ ghi "có" → bước 05 không biết render gì
+- Data mapping không có source endpoint → bước 03 phải tự đoán
+- Không có business rules section → bước 07 sẽ miss edge cases
+- Không có `[ASSUMPTION]` dù có nhiều điểm chưa chắc → silent assumption
+
+## Common Rationalizations
+
+| Lý do hay gặp | Thực tế |
+|---|---|
+| "Màn đơn giản, không cần analysis chi tiết" | Bước sau sẽ tự đoán và drift — tốn thêm thời gian fix |
+| "Chưa có Figma, phân tích sau" | Phân tích từ SRS/notes trước, ghi `[ASSUMPTION]` cho phần chưa có mockup |
+| "Component breakdown rõ rồi, không cần bảng" | Bảng giúp bước 05 đọc nhanh — prose dài khó scan |
+| "API chưa có docs, bỏ qua phần data mapping" | Phải ghi `Open Question` — không được bỏ qua im lặng |
+
+## Documentation Expectations
+
+Analysis tốt phải có:
+
+- summary rõ (screen type, actor, module)
+- design/token audit rõ (conflict với DESIGN.md nếu có)
+- component breakdown rõ (bảng với path, layer, reason)
+- UI states rõ (per section, không phải chung chung)
+- data/API mapping rõ (field, type, source endpoint)
+- auth/i18n impact rõ
+- assumptions/open questions rõ
+
+## Verification
+
+- Đối chiếu `checklist.md`
+- Tài liệu phải đủ chi tiết để `03`, `04`, `05`, `06`, `07` dùng tiếp mà không phải hỏi lại
+- Người đọc phải hiểu được màn hình này mà không cần mở mockup lại ngay lập tức

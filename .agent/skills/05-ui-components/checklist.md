@@ -14,3 +14,4 @@
 - [ ] Không có component trùng lặp với existing components.
 - [ ] `npm run typecheck` pass.
 - [ ] `npm run lint` pass.
+- [ ] UI spec tạo đúng path: `.agent/artifacts/ui-specs/...`.

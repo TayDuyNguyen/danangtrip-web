@@ -13,3 +13,4 @@
 - [ ] `.env.example` cập nhật nếu thêm auth env vars.
 - [ ] Không commit secrets/credentials.
 - [ ] `npm run typecheck` pass.
+- [ ] Auth review tạo đúng path: `.agent/artifacts/auth/...`.

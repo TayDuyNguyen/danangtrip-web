@@ -1,169 +1,124 @@
-# Antigravity Kit Architecture
+# DanangTrip Web Agent Kit
 
-> Local agent, skill, workflow, and validation inventory for this repository.
+Bộ `.agent/` này là **project-local operating kit** dành riêng cho `danangtrip-web`.
+Mục tiêu của nó là giúp AI:
 
----
+1. Bám đúng codebase thực tế
+2. Sinh ra tài liệu chi tiết, dùng lại được cho team
+3. Đi theo pipeline rõ ràng từ phân tích màn hình đến review bàn giao
 
-## Overview
+Khi có xung đột, hãy ưu tiên:
 
-The `.agent` directory is a local assistance layer for this repository. It provides:
-- Specialist agent profiles in `.agent/agents`
-- Reusable skills in `.agent/skills`
-- Reusable workflows in `.agent/workflows`
-- Repository rules in `.agent/rules`
-- Validation scripts in `.agent/scripts` and skill `scripts/` folders
+1. `.agent/rules/PROJECT_RULES.md`
+2. Repo thực tế (`package.json`, `src/`, `next.config.ts`, `vitest.config.ts`, `scripts/`)
+3. Các `SKILL.md` trong `.agent/skills/`
 
-This file must describe what actually exists in the repository, not a generic template.
+`ARCHITECTURE.md` là file inventory và định hướng sử dụng, không phải source of truth cho runtime architecture.
 
----
+## Inventory thực tế
 
-## Directory Structure
+Hiện `.agent/` của repo này có:
+
+- `10` pipeline skills trong `.agent/skills/`
+- `20` agent profiles trong `.agent/agents/`
+- Persona docs trong `.agent/personas/`
+- Memory docs trong `.agent/memory/`
+- Config/runtime helper files trong `.agent/config/`, `.agent/runtime/`
+- Local validation helpers trong `.agent/scripts/`
+- Artifact output folders trong `.agent/artifacts/`
+
+## Directory Map
 
 ```text
 .agent/
-|-- ARCHITECTURE.md
-|-- agents/
-|-- skills/
-|-- workflows/
-|-- rules/
-|-- scripts/
-`-- .shared/
+├── agents/       # Specialist agent profiles
+├── artifacts/    # Documents generated during work
+├── config/       # Local agent settings
+├── memory/       # Project memory and knowledge notes
+├── personas/     # Persona docs used by pipeline skills
+├── rules/        # Project operating rules
+├── scripts/      # Local validation helpers
+├── runtime/      # Local runtime support files
+└── skills/       # 10-step feature/documentation pipeline
 ```
 
----
+## Core Principle
 
-## Agents
+Bộ này được tối ưu cho **artifact-first delivery**.
 
-Current agent files under `.agent/agents`:
+Điều đó có nghĩa là:
 
-| Agent | Focus |
-| --- | --- |
-| `backend-specialist` | API and business logic work |
-| `code-archaeologist` | Legacy understanding and refactor review |
-| `database-architect` | Schema and persistence design |
-| `debugger` | Root-cause analysis |
-| `devops-engineer` | Delivery and infrastructure guidance |
-| `documentation-writer` | Docs and written guidance |
-| `explorer-agent` | Codebase exploration |
-| `frontend-specialist` | UI and frontend implementation |
-| `game-developer` | Game-specific work |
-| `mobile-developer` | Mobile-specific work |
-| `orchestrator` | Coordination and routing |
-| `penetration-tester` | Offensive security perspective |
-| `performance-optimizer` | Performance and profiling |
-| `product-manager` | Requirement shaping |
-| `product-owner` | Product scope and prioritization |
-| `project-planner` | Planning and task structuring |
-| `qa-automation-engineer` | QA automation |
-| `security-auditor` | Security review |
-| `seo-specialist` | SEO and discoverability |
-| `test-engineer` | Testing strategy and validation |
+- Mỗi step nên để lại tài liệu rõ ràng
+- Tài liệu phải đủ chi tiết để review lại sau
+- Tài liệu phải bám repo thật, không dùng assumptions từ template cũ
+- Khi repo không có tool/test/setup nào đó, tài liệu phải nói rõ thay vì giả định
 
----
+## Pipeline Skills
 
-## Skills
+| # | Skill | Mục tiêu | Artifact chính |
+|---|---|---|---|
+| 01 | `01-screen-analysis` | Phân tích màn hình, UX, API, business rules | `artifacts/analysis/` |
+| 02 | `02-project-setup` | Audit project base trước khi triển khai | `artifacts/setup/` |
+| 03 | `03-types-api-contract` | Types, validators, service contract | `artifacts/api-contracts/` |
+| 04 | `04-layout-routing` | Route plan, layout plan, i18n plan | `artifacts/routing/` |
+| 05 | `05-ui-components` | UI spec và component plan | `artifacts/ui-specs/` |
+| 06 | `06-data-integration` | Query/service wiring plan | `artifacts/integration/` |
+| 07 | `07-interactions` | Form/CRUD/filter/search/pagination spec | `artifacts/interaction-specs/` |
+| 08 | `08-auth-permissions` | Auth/permission review | `artifacts/auth/` |
+| 09 | `09-testing` | Test report và validation evidence | `artifacts/test-cases/` |
+| 10 | `10-optimization-deploy` | Deploy report và review bàn giao | `artifacts/deploy/`, `artifacts/review/` |
 
-Only reference skills that exist under `.agent/skills`.
+Master index:
 
-### Screen Development Pipeline (A→Z)
+- `.agent/skills/STACK_SKILLS_INDEX.md`
 
-These 10 skills form a complete pipeline for developing any screen from analysis to deployment.
-Run in order. See `skills/STACK_SKILLS_INDEX.md` for activation prompts.
+## Artifact Layout
 
-| # | Skill | Persona | Purpose |
-|---|-------|---------|---------|
-| 01 | `01-screen-analysis` | Business Analyst | Analyze screen from PRD/Figma → output checklist |
-| 02 | `02-project-setup` | DevOps Engineer | Setup/audit project base (run once) |
-| 03 | `03-types-api-contract` | System Architect | Define TS interfaces, Zod schemas, API services |
-| 04 | `04-layout-routing` | SSE | Create routes, layouts, Server/Client boundaries |
-| 05 | `05-ui-components` | UI/UX + SSE | Build UI components (Atomic Design from Figma) |
-| 06 | `06-data-integration` | SSE | Wire API to UI, handle loading/error/empty states |
-| 07 | `07-interactions` | SSE | CRUD, forms, filter/search/sort/pagination |
-| 08 | `08-auth-permissions` | Security Expert | Auth middleware, role-based UI, token management |
-| 09 | `09-testing` | QA/QC Engineer | Unit tests + E2E tests, coverage > 80% |
-| 10 | `10-optimization-deploy` | Perf + DevOps | Optimize, build, deploy, smoke test |
+```text
+.agent/artifacts/
+├── analysis/
+├── api-contracts/
+├── auth/
+├── deploy/
+├── integration/
+├── interaction-specs/
+├── review/
+├── routing/
+├── setup/
+├── test-cases/
+└── ui-specs/
+```
 
-### Legacy SDLC Skills
+Tên file chuẩn:
 
-| Skill | Purpose |
-| --- | --- |
-| `stack-analyze` | Business analysis → SRS |
-| `stack-design` | Technical design docs |
-| `sdlc-srs` | SRS (repo-aligned) |
-| `sdlc-architecture` | Architecture + API contract |
-| `sdlc-implementation` | Feature implementation |
-| `sdlc-qa-testcases` | Test plan + test cases |
-| `sdlc-security-audit` | Threat model + security review |
+```text
+YYYY-MM-DD__<feature-slug>__<artifact-name>.md
+```
 
----
+Ví dụ:
 
-## Workflows
+```text
+2026-05-10__contact__screen-analysis.md
+2026-05-10__contact__api-contract.md
+2026-05-10__contact__route-plan.md
+2026-05-10__contact__review.md
+```
 
-Current workflow files under `.agent/workflows`:
+## Documentation Standard
 
-| Workflow | Purpose |
-| --- | --- |
-| `brainstorm.md` | Discovery flow |
-| `create.md` | Creation flow |
-| `debug.md` | Debug flow |
-| `deploy.md` | Deployment flow |
-| `enhance.md` | Improvement flow |
-| `orchestrate.md` | Coordination flow |
-| `plan.md` | Planning flow |
-| `preview.md` | Preview flow |
-| `status.md` | Status flow |
-| `test.md` | Testing flow |
-| `ui-ux-pro-max.md` | UI/UX-heavy workflow |
+Mọi tài liệu sinh ra từ skill nên tuân thủ:
 
----
+- Lưu file dưới dạng `UTF-8`
+- Không để lỗi ký tự kiểu `Ã`, `â†’`, `má»¥c`
+- Mỗi tài liệu chỉ có `1` H1
+- Có metadata đầu file: feature slug, date, source inputs
+- Có `[ASSUMPTION]` khi còn điểm chưa chắc
+- Có `Open Questions` nếu còn blocker về requirement
+- Chỉ ra file hoặc khu vực code dự kiến bị ảnh hưởng
 
-## Validation Scripts
+## Important Notes
 
-### Repository-Level Scripts
-
-| Script | Purpose |
-| --- | --- |
-| `.agent/scripts/checklist.py` | Priority-based validation orchestration |
-| `.agent/scripts/verify_all.py` | Broader validation suite |
-
-### Common Skill-Level Scripts Used in This Repo
-
-| Script | Purpose |
-| --- | --- |
-| `.agent/skills/i18n-localization/scripts/i18n_checker.py` | Locale consistency and hardcoded-string audit |
-| `.agent/skills/frontend-design/scripts/ux_audit.py` | UX-focused audit |
-| `.agent/skills/frontend-design/scripts/accessibility_checker.py` | Accessibility audit |
-| `.agent/skills/lint-and-validate/scripts/lint_runner.py` | Lint runner |
-| `.agent/skills/lint-and-validate/scripts/type_coverage.py` | Type coverage helper |
-| `.agent/skills/testing-patterns/scripts/test_runner.py` | Test runner helper |
-| `.agent/skills/webapp-testing/scripts/playwright_runner.py` | Playwright-based web checks |
-| `.agent/skills/vulnerability-scanner/scripts/security_scan.py` | Security scan |
-| `.agent/skills/database-design/scripts/schema_validator.py` | Schema validation |
-| `.agent/skills/performance-profiling/scripts/lighthouse_audit.py` | Lighthouse audit |
-
-Important:
-- Some orchestration docs historically referenced scripts that do not exist.
-- When documenting validation, only cite scripts present in the repository.
-
----
-
-## Operating Rules
-
-When using `.agent` assets:
-- Read the specific `SKILL.md` before substantial implementation.
-- Prefer repository-specific rules over generic templates.
-- Do not cite missing skills, scripts, or workflows.
-- Keep documentation synchronized when skills or scripts are added or removed.
-
----
-
-## Maintenance Contract
-
-Update this file whenever any of the following changes:
-- a skill is added, removed, or renamed
-- an agent is added, removed, or renamed
-- a workflow is added, removed, or renamed
-- a validation script is added, removed, or renamed
-- repository guidance changes enough to invalidate descriptions here
-
-If this file drifts from the actual `.agent` contents, fix the file first.
+- Không tham chiếu `workflows` dưới `.agent/` nếu file đó không tồn tại thật.
+- Không coi Playwright là test setup mặc định khi repo chưa có `playwright.config.ts`.
+- Không coi MSW là bắt buộc khi repo chưa có setup tương ứng.
+- Khi tài liệu mô tả command kiểm tra, hãy ưu tiên command thực sự có trong `package.json`.

@@ -1,770 +1,490 @@
-# STACK SKILLS INDEX  Pipeline triển khai 1 màn hình A→Z
+# STACK SKILLS INDEX — Pipeline tài liệu và triển khai màn hình A→Z
 
-> File này là bản hướng dẫn thao tác để kích hoạt các skill trong `.agent/skills/` theo đúng pipeline triển khai từng màn hình cho dự án `danangtrip-web`.
->
-> **Cập nhật lần cuối:** Đã đồng bộ với codebase thực tế  đường dẫn file, stack, icon set, deploy target đều bám sát repo.
+File này là master index cho bộ 10 skill trong `.agent/skills/` của `danangtrip-web`.
+Mục tiêu là giúp AI chọn đúng skill, đọc đúng context, và sinh ra **tài liệu chi tiết dùng được cho dự án**.
 
----
+## Mục tiêu của bộ skill này
+
+- Bám repo thực tế của `danangtrip-web`
+- Ưu tiên tài liệu chi tiết trước hoặc song song với code
+- Chuẩn hóa output giữa các bước
+- Tránh lỗi chữ, lỗi format, và reference sai
+
+## Quy ước chung
+
+### 1) Source of truth
+
+Ưu tiên theo thứ tự:
+
+1. `.agent/rules/PROJECT_RULES.md`
+2. Repo thật: `package.json`, `src/`, `next.config.ts`, `vitest.config.ts`, `scripts/`
+3. Từng `SKILL.md`
+
+### 2) Artifact naming
+
+```text
+.agent/artifacts/<group>/YYYY-MM-DD__<feature-slug>__<artifact-name>.md
+```
+
+### 3) Markdown standard
+
+- UTF-8
+- 1 H1 duy nhất
+- Có metadata: feature slug, date, source
+- Nếu chưa chắc: ghi `[ASSUMPTION]`
+- Không để lỗi ký tự mã hóa
+
+### 4) Chuẩn mức chi tiết
+
+Một artifact tốt phải trả lời được:
+
+- Đang làm feature nào?
+- Dựa vào nguồn nào?
+- Những file nào liên quan?
+- Rule nghiệp vụ hoặc technical decision là gì?
+- Còn rủi ro hoặc câu hỏi mở nào?
 
 ## Stack thực tế của dự án
 
 | Hạng mục | Công nghệ |
 |---|---|
-| Framework | Next.js 16.2.3 (App Router) |
-| React | 19.2.4 |
-| Styling | Tailwind CSS 4 |
-| Data fetching | TanStack Query v5 (`@tanstack/react-query`) |
-| State management | Zustand v5 |
-| i18n | next-intl v4 |
+| Framework | Next.js App Router (latest) |
+| React | 19.x |
+| Styling | Tailwind CSS v4 |
+| Data fetching | TanStack Query v5 |
+| State | Zustand v5 |
 | Validation | Zod v4 |
-| HTTP client | Axios v1 (instance tại `src/lib/axios.ts`) |
-| Auth storage | Zustand + localStorage persist + Cookie (`js-cookie`) |
-| Icons | Solar (custom `src/components/icons/solar.tsx`) + `@iconscout/react-unicons` + `lucide-react` |
-| Toast | sonner v2 |
-| Animation | CSS `reveal-up` classes + GSAP ScrollTrigger + Lottie (`lottie-react`) |
-| 3D/WebGL | Three.js (`three`) |
-| Date | date-fns v4 |
-| Select | react-select v5 |
-| Testing | Vitest v4 + @testing-library/react v16 (jsdom) |
-| Deploy | Cloudflare Workers via `@opennextjs/cloudflare` |
-| Build | `npm run build` (webpack mode) / `npm run build:cloudflare` |
+| HTTP | Axios v1 |
+| i18n | next-intl v4 |
+| Forms | react-hook-form + zodResolver |
+| Testing | Vitest v4 |
+| Deploy | Cloudflare Workers via OpenNext |
+
+## Pipeline 10 Skills
+
+| # | Skill | Khi dùng | Output chính | Có thể bỏ qua khi |
+|---|---|---|---|---|
+| 01 | `01-screen-analysis` | Có mockup/SRS/màn hình mới | `analysis/...__screen-analysis.md` | Chỉ sửa bug rất nhỏ, không đổi UI/flow |
+| 02 | `02-project-setup` | Cần audit base hoặc xác minh cấu hình | `setup/...__project-setup-report.md` | Base vừa audit gần đây và không đổi stack |
+| 03 | `03-types-api-contract` | Có contract/type/validator/service mới | `api-contracts/...__api-contract.md` | Chỉ sửa text/style, không chạm data |
+| 04 | `04-layout-routing` | Có route/page/layout/metadata/i18n route mới | `routing/...__route-plan.md` | Chỉ sửa component con trong page sẵn có |
+| 05 | `05-ui-components` | Cần build hoặc refactor UI components | `ui-specs/...__ui-spec.md` | Chỉ sửa logic không đổi UI structure |
+| 06 | `06-data-integration` | Cần nối API thật vào UI | `integration/...__data-integration.md` | UI tĩnh hoặc server-only nhỏ, chưa cần query plan |
+| 07 | `07-interactions` | Có form, filter, search, pagination, mutation | `interaction-specs/...__interaction-spec.md` | Page read-only, không có interaction đáng kể |
+| 08 | `08-auth-permissions` | Có auth, middleware, role-based UI | `auth/...__auth-permissions-review.md` | Feature hoàn toàn public và không đổi quyền |
+| 09 | `09-testing` | Trước khi bàn giao | `test-cases/...__test-report.md` | Không nên bỏ qua |
+| 10 | `10-optimization-deploy` | Trước khi handoff/push/deploy | `deploy/...__deploy-report.md`, `review/...__review.md` | Không nên bỏ qua |
+
+## Kích hoạt nhanh theo loại việc
+
+### Nếu đang làm màn hình mới
+
+1. `01-screen-analysis`
+2. `03-types-api-contract`
+3. `04-layout-routing`
+4. `05-ui-components`
+5. `06-data-integration`
+6. `07-interactions`
+7. `08-auth-permissions` nếu cần
+8. `09-testing`
+9. `10-optimization-deploy`
+
+### Nếu chỉ audit project
+
+1. `02-project-setup`
+2. `09-testing` nếu cần ghi validation evidence
+
+### Nếu chỉ sửa UI nhỏ
+
+1. `01-screen-analysis` dạng nhẹ nếu cần làm rõ scope
+2. `05-ui-components`
+3. `09-testing`
+
+## File nên đọc trước hầu hết task
+
+- `.agent/rules/PROJECT_RULES.md`
+- `package.json`
+- `src/config/api.ts`
+- `src/config/routes.ts`
+- `src/lib/axios.ts`
+- `src/store/auth.store.ts`
+- `src/i18n/routing.ts`
+- `src/messages/vi/`
+- `src/messages/en/`
+
+## Prompt Kích Hoạt Từng Skill
+
+Mỗi skill có prompt riêng với các trường bắt buộc trong `[...]`.
+Copy prompt tương ứng, điền vào các trường `[...]`, rồi gửi cho AI.
 
 ---
 
-## Pipeline tổng quan
+### Skill 01 — Screen Analysis
 
+```text
+Kích hoạt 01-screen-analysis
+
+Context:
+- Repo: [d:/DATN/danangtrip-web]
+- Feature slug: [tour-list]
+- Screen name: [Trang danh sách Tour]
+- Figma/Stitch: [https://www.figma.com/... | https://stitch.withgoogle.com/... | NONE]
+- Input source: [d:/DATN/DATN_Tài liệu/mockup/tour-list.png | SRS section 2.3 | NONE]
+- DESIGN.md: [d:/DATN/danangtrip-web/DESIGN.md]
+- API docs: [d:/DATN/DATN_Tài liệu/docs/api/api_list.md]
+- Output: [.agent/artifacts/analysis/2026-05-11__tour-list__screen-analysis.md]
 ```
-01-screen-analysis      Phan tich man hinh (khong code)
-02-project-setup        Khoi tao/chuan bi project base
-03-types-api-contract   Dinh nghia Types & API Contract
-04-layout-routing       Xay dung Layout & Route
-05-ui-components        Xay dung UI Components (Atomic Design)
-06-data-integration     Tich hop Data (gan API vao UI)
-07-interactions         Chuc nang tuong tac (CRUD, Filter, etc.)
-08-auth-permissions     Auth & Phan quyen
-09-testing              Testing (Unit + E2E)
-10-optimization-deploy  Optimization & Build/Deploy
+
+**Ví dụ thực tế:**
+```text
+Kích hoạt 01-screen-analysis
+
+Context:
+- Repo: d:/DATN/danangtrip-web
+- Feature slug: tour-list
+- Screen name: Trang danh sách Tour
+- Figma/Stitch: https://www.figma.com/design/xyz789/DanangTrip-Web?node-id=5-20
+- Input source: d:/DATN/DATN_Tài liệu/mockup/web-tour-list.png
+- DESIGN.md: d:/DATN/danangtrip-web/DESIGN.md
+- API docs: d:/DATN/DATN_Tài liệu/docs/api/api_list.md
+- Output: .agent/artifacts/analysis/2026-05-11__tour-list__screen-analysis.md
 ```
 
----
-
-## 1) Danh sach 10 Skills
-
-| # | Skill ID | Persona | Muc dich | Output |
-|---|----------|---------|----------|--------|
-| 01 | `01-screen-analysis` | Business Analyst | Doc PRD/Figma -> checklist UI + API + Business Rules | `artifacts/analysis/` |
-| 02 | `02-project-setup` | DevOps Engineer | Setup project base neu la man dau tien | Project chay duoc |
-| 03 | `03-types-api-contract` | System Architect | Dinh nghia TS interfaces, Zod schemas, API service | `types/`, `services/` |
-| 04 | `04-layout-routing` | Senior Software Engineer | Tao route, layout, phan chia Server/Client Component | `app/[locale]/...` |
-| 05 | `05-ui-components` | UI/UX Designer + SSE | Build UI theo Atomic Design tu Figma | `components/`, `features/` |
-| 06 | `06-data-integration` | Senior Software Engineer | Gan API vao UI, xu ly states | Loading/Error/Empty states |
-| 07 | `07-interactions` | Senior Software Engineer | CRUD, Filter, Search, Pagination, Export | Full interactions |
-| 08 | `08-auth-permissions` | Security Expert | Auth middleware, role-based UI, token management | Auth flow hoan chinh |
-| 09 | `09-testing` | QA/QC Engineer | Unit test + E2E test | Test cases + coverage |
-| 10 | `10-optimization-deploy` | Performance Engineer + DevOps | Optimize + Build + Deploy | Lighthouse > 90, deployed |
-
+**Output mong đợi:** `analysis/2026-05-11__tour-list__screen-analysis.md` với design token audit (đối chiếu DESIGN.md + Figma), bảng component breakdown [REUSE]/[NEW]/[MOD], UI states per section, data/API mapping, server/client ownership, business rules BR-xx, edge cases EC-xx.
 
 ---
 
-## 2) File context bat buoc doc truoc khi lam bat ky skill nao
+### Skill 02 — Project Setup Audit
 
-Truoc khi bat dau bat ky skill nao, AI PHAI doc cac file sau de hieu dung kien truc:
+```text
+Kích hoạt 02-project-setup
 
-### Rules & Design
-- `.agent/rules/PROJECT_RULES.md`  quy tac kien truc, code quality, delivery gates
-- `DESIGN.md`  design tokens: mau sac, typography, spacing, motion, WebGL
+Context:
+- Repo: [d:/DATN/danangtrip-web]
+- Feature slug: [project-base | tour-list]
+- Lý do audit: [Trước feature mới | Nghi ngờ stack drift | Onboarding]
+- Output: [.agent/artifacts/setup/2026-05-11__project-base__project-setup-report.md]
+```
 
-### Core Infrastructure
-- `src/lib/axios.ts`  axios instance co fallback URL logic, interceptor tu dong gan Bearer token, refresh token flow
-- `src/lib/react-query.ts`  TanStack Query client config
-- `src/lib/utils.ts`  utility functions chung (cn, clsx, tailwind-merge)
-
-### Config
-- `src/config/api.ts`  tat ca API_ENDPOINTS constants (AUTH, TOURS, LOCATIONS, SEARCH, BLOG, RATINGS, USER...)
-- `src/config/routes.ts`  PUBLIC_ROUTES, AUTH_ROUTES, PROTECTED_ROUTES, DASHBOARD_ROUTES, PLANNED_ROUTES
-- `src/config/env.ts`  environment variables
-- `src/config/index.ts`  config object tong hop
-
-### Auth
-- `src/store/auth.store.ts`  Zustand auth store (user, token, isAuthenticated) + persist vao localStorage
-- `src/utils/auth.helper.ts`  getAccessToken(), setAccessToken(), clearTokens() (dung Cookie js-cookie)
-- `src/middleware.ts`  Edge middleware: i18n routing + auth protection (Cloudflare OpenNext, KHONG dung Node Proxy)
-- `src/features/auth/`  auth components, hooks, services, validators
-
-### i18n
-- `src/i18n/routing.ts`  locales: ["vi", "en"], defaultLocale: "vi", localePrefix: "as-needed"
-- `src/i18n/request.ts`  next-intl request config
-- `src/i18n/navigation.ts`  locale-aware Link, useRouter, usePathname
-- `src/messages/vi/`  vi translations (blog, common, contact, home, locations, login, register, search, settings, tour)
-- `src/messages/en/`  en translations (phai dong bo voi vi)
-
-### Shared UI
-- `src/components/ui/`  Button, Input, Badge, Select, Loading, RatingStars, SearchInput, pagination/
-- `src/components/layout/`  Header, Navbar, Footer, Sidebar, AmbientBackground, LanguageSwitcher
-- `src/components/feedback/`  empty-state.tsx, toast.tsx
-- `src/components/icons/solar.tsx`  Solar icon set (ICON SET CHINH cua du an)
-- `src/providers/providers.tsx`  app-wide providers (QueryClientProvider, next-intl, etc.)
-
-### Existing Features (de reuse patterns)
-- `src/features/auth/`  auth flow mau
-- `src/features/tour/`  tour feature mau (hooks, components, types)
-- `src/features/locations/`  locations feature mau
-- `src/features/search/`  search + suggestions
-- `src/features/home/`  home page sections
-- `src/features/blog/`  blog feature
-
-### Services (de hieu pattern truoc khi viet moi)
-- `src/services/auth.service.ts`
-- `src/services/tour.service.ts`
-- `src/services/location.service.ts`
-- `src/services/search.service.ts`
-- `src/services/blog.service.ts`
-- `src/services/favorite.service.ts`
-- `src/services/rating.service.ts`
-
-### Types (de reuse truoc khi tao moi)
-- `src/types/api.types.ts`  ApiResponse<T>, PaginatedResponse<T>
-- `src/types/entities.types.ts`  Tour, Location, Blog entities
-- `src/types/auth.types.ts`  User, LoginRequest, RegisterRequest
-- `src/types/search.types.ts`  SearchParams, SearchResult
-- `src/types/user.types.ts`  UserProfile, UpdateProfileRequest
-
-### Hooks (de reuse truoc khi tao moi)
-- `src/hooks/useDebounce.ts`  debounce hook (dung cho search)
-- `src/hooks/useFavorite.ts`  favorite toggle hook
-- `src/hooks/use-scroll-reveal.ts`  scroll reveal animation
-- `src/hooks/use-click-outside.ts`  click outside detection
-- `src/hooks/use-search-suggestions.ts`  search suggestions hook
-
----
-
----
-
-## 3) Prompt chi tiet tung skill
-
-### 3.1 - 01-screen-analysis
-
-Kich hoat 01-screen-analysis
+**Ví dụ thực tế:**
+```text
+Kích hoạt 02-project-setup
 
 Context:
 - Repo: d:/DATN/danangtrip-web
-- Screen name: <ten man hinh>
-- Figma link: <link hoac NONE>
-- PRD/notes: <path hoac NONE>
-- API docs: doc src/config/api.ts de biet endpoints co san
+- Feature slug: project-base
+- Lý do audit: Bắt đầu sprint mới, cần verify Next.js config + middleware + Cloudflare setup
+- Output: .agent/artifacts/setup/2026-05-11__project-base__project-setup-report.md
+```
 
-Files bat buoc doc truoc:
-- .agent/skills/01-screen-analysis/persona.md
-- .agent/skills/01-screen-analysis/SKILL.md
-- .agent/skills/01-screen-analysis/checklist.md
-- .agent/rules/PROJECT_RULES.md
-- DESIGN.md
-- d:/DATN/DATN_Tài liệu/docs/api/api_list.md (NGUON CHAN LY — 184 endpoints, params, DB tables, auth level)
-- src/config/api.ts (de map data fields voi endpoints thuc te)
-- src/config/routes.ts (de biet routes hien co)
-
-Required output:
-- .agent/artifacts/analysis/YYYY-MM-DD__<feature-slug>__screen-analysis.md
-  (dung template: .agent/skills/01-screen-analysis/template_screen_analysis.md)
-
-📁 Vi du (feature "blog"):
-  .agent/artifacts/analysis/2026-05-10__blog__screen-analysis.md
-  → Component breakdown: BlogCard[REUSE], BlogHero[NEW], BlogFilter[MOD]
-  → API: GET /api/v1/blogs?page=1&category=&search=
-  → BR-01: Guest chỉ xem published, USER comment được, ADMIN full CRUD
-
-Phan tich 5 muc:
-1. Design tokens: mau sac, typography, spacing doi chieu voi DESIGN.md
-2. Component breakdown: Atoms -> Molecules -> Organisms -> Template
-3. Responsive: mobile-first breakpoints
-4. UI states: loading, empty, error, success cho tung section
-5. Data fields: map voi API_ENDPOINTS trong src/config/api.ts
-
-Xac dinh:
-- API endpoints can dung (tham chieu src/config/api.ts)
-- Business rules va validation rules
-- Auth requirements (public/protected/role-based)
-- i18n keys can them vao src/messages/vi/ va src/messages/en/
-
-KHONG viet code. Chi phan tich va output checklist.
+**Output mong đợi:** `setup/2026-05-11__project-base__project-setup-report.md` với verdict ready/not ready, pass/fail từng nhóm (dependency, config, runtime/middleware, command baseline).
 
 ---
 
-### 3.2 - 02-project-setup
+### Skill 03 — Types & API Contract
 
-Kich hoat 02-project-setup
+```text
+Kích hoạt 03-types-api-contract
+
+Context:
+- Repo: [d:/DATN/danangtrip-web]
+- Feature slug: [tour-list]
+- Analysis file: [.agent/artifacts/analysis/2026-05-11__tour-list__screen-analysis.md]
+- API docs: [d:/DATN/DATN_Tài liệu/docs/api/api_list.md]
+- Endpoints liên quan: [GET /api/tours, GET /api/tours/:slug, GET /api/categories]
+- Output: [.agent/artifacts/api-contracts/2026-05-11__tour-list__api-contract.md]
+```
+
+**Ví dụ thực tế:**
+```text
+Kích hoạt 03-types-api-contract
 
 Context:
 - Repo: d:/DATN/danangtrip-web
-- Day co phai la lan dau setup project khong? <CO/KHONG>
+- Feature slug: tour-list
+- Analysis file: .agent/artifacts/analysis/2026-05-11__tour-list__screen-analysis.md
+- API docs: d:/DATN/DATN_Tài liệu/docs/api/api_list.md
+- Endpoints liên quan: GET /api/tours (list + filter + pagination), GET /api/tours/:slug (detail), GET /api/categories (lookup)
+- Output: .agent/artifacts/api-contracts/2026-05-11__tour-list__api-contract.md
+```
 
-Files bat buoc doc truoc:
-- .agent/skills/02-project-setup/persona.md
-- .agent/skills/02-project-setup/SKILL.md
-- .agent/rules/PROJECT_RULES.md
-- package.json (stack hien tai)
-- tsconfig.json (path aliases: @/*, @/app/*, @/components/*, @/hooks/*, @/lib/*, @/services/*, @/types/*, @/utils/*, @/config/*, @/store/*)
-- next.config.ts
-- src/lib/axios.ts (HTTP client da co san - co fallback URL logic)
-- src/providers/providers.tsx (providers da co san)
-
-Stack hien tai (KHONG thay doi):
-- Next.js 16.2.3, React 19.2.4, Tailwind 4
-- TanStack Query v5, Zustand v5, next-intl v4, Zod v4, Axios v1
-- Icons: Solar (src/components/icons/solar.tsx) + @iconscout/react-unicons + lucide-react
-- Deploy: Cloudflare Workers via @opennextjs/cloudflare
-
-Neu project da co (truong hop nay):
-- Kiem tra dependencies trong package.json
-- Kiem tra folder structure theo PROJECT_RULES Section 3
-- Kiem tra path aliases trong tsconfig.json
-- Kiem tra src/lib/axios.ts co fallback URL logic khong
-- Kiem tra src/middleware.ts co dung cho Cloudflare OpenNext khong
-
-Verify: npm run dev, npm run typecheck, npm run lint
+**Output mong đợi:** `api-contracts/2026-05-11__tour-list__api-contract.md` với Tour entity type, TourListParams, Zod schema (z.infer export), service contract plan, files expected to change.
 
 ---
 
-### 3.3 - 03-types-api-contract
+### Skill 04 — Layout & Routing
 
-Kich hoat 03-types-api-contract
+```text
+Kích hoạt 04-layout-routing
+
+Context:
+- Repo: [d:/DATN/danangtrip-web]
+- Feature slug: [tour-list]
+- Analysis file: [.agent/artifacts/analysis/2026-05-11__tour-list__screen-analysis.md]
+- Route path mong muốn: [/tours]
+- Route group: [(public) | (auth) | (protected)]
+- Có page mới không: [Có — /tours (list), /tours/[slug] (detail) | Không]
+- Server hay Client: [Server Component với client filter | Toàn client]
+- i18n namespace mới: [tour | NONE]
+- Output: [.agent/artifacts/routing/2026-05-11__tour-list__route-plan.md]
+```
+
+**Ví dụ thực tế:**
+```text
+Kích hoạt 04-layout-routing
 
 Context:
 - Repo: d:/DATN/danangtrip-web
-- Feature slug: <feature-slug>
-- SRS/Analysis file: .agent/artifacts/analysis/YYYY-MM-DD__<feature-slug>__screen-analysis.md
-- API endpoints: doc src/config/api.ts
+- Feature slug: tour-list
+- Analysis file: .agent/artifacts/analysis/2026-05-11__tour-list__screen-analysis.md
+- Route path mong muốn: /tours
+- Route group: (public)
+- Có page mới không: Có — /tours (list page), /tours/[slug] (detail page)
+- Server hay Client: Server Component prefetch initial data, TourListClient cho filter/search
+- i18n namespace mới: tour (src/messages/vi/tour.json + en/tour.json)
+- Output: .agent/artifacts/routing/2026-05-11__tour-list__route-plan.md
+```
 
-Files bat buoc doc truoc:
-- .agent/skills/03-types-api-contract/persona.md
-- .agent/skills/03-types-api-contract/SKILL.md
-- .agent/skills/03-types-api-contract/checklist.md
-- .agent/skills/03-types-api-contract/template_api_contract.md
-- .agent/rules/PROJECT_RULES.md (Sections 5, 11)
-- d:/DATN/DATN_Tài liệu/docs/api/api_list.md (NGUON CHAN LY — xac nhan method, path, params, auth level TRUOC khi tao type)
-- src/config/api.ts (endpoints thuc te: AUTH, TOURS, LOCATIONS, SEARCH, BLOG, RATINGS, USER)
-- src/types/api.types.ts (ApiResponse<T>, PaginatedResponse<T> - REUSE)
-- src/types/entities.types.ts (entities hien co - REUSE truoc khi tao moi)
-- src/types/auth.types.ts (User type - REUSE)
-- src/services/tour.service.ts (pattern mau de follow)
-- src/lib/axios.ts (dung api.get/post/put/patch/delete helper - KHONG dung raw axios)
-
-Placement rules:
-- Shared types (dung boi >= 2 features): src/types/<entity>.types.ts
-- Feature-specific types: src/features/<feature>/types/index.ts
-- Validators: src/features/<feature>/validators/<entity>.validator.ts
-- Service: src/services/<feature>.service.ts
-
-Service pattern bat buoc:
-- Import api helper tu src/lib/axios.ts
-- Moi function la async, typed day du input/output
-- Khong chua business logic - chi transport
-- Error: throw typed ApiResponse error (da xu ly trong interceptor)
-
-Zod pattern:
-- Export ca schema va inferred type
-- Sync voi TypeScript types
-
-Required outputs:
-- src/types/<feature>.types.ts HOAC src/features/<feature>/types/index.ts
-- src/features/<feature>/validators/<entity>.validator.ts
-- src/services/<feature>.service.ts
-- .agent/artifacts/api-contracts/YYYY-MM-DD__<feature-slug>__api-contract.md
-
-📁 Vi du (feature "blog"):
-  src/types/blog.types.ts (shared, dung boi >= 2 features)
-    → interface Blog { id, title, slug, thumbnail, category, status, createdAt }
-    → interface BlogListParams { page?, search?, category?, limit? }
-  src/features/blog/validators/blog.validator.ts
-    → const blogCreateSchema = z.object({ title: z.string().min(5), ... })
-    → export type BlogCreateInput = z.infer<typeof blogCreateSchema>
-  src/services/blog.service.ts
-    → blogService.getList(params), .getBySlug(slug), .create(data)
-  .agent/artifacts/api-contracts/2026-05-10__blog__api-contract.md
+**Output mong đợi:** `routing/2026-05-11__tour-list__route-plan.md` với App Router file structure, generateMetadata plan, server/client boundary per section, i18n keys cần thêm, route config impact.
 
 ---
 
-### 3.4 - 04-layout-routing
+### Skill 05 — UI Components
 
-Kich hoat 04-layout-routing
+```text
+Kích hoạt 05-ui-components
+
+Context:
+- Repo: [d:/DATN/danangtrip-web]
+- Feature slug: [tour-list]
+- Analysis file: [.agent/artifacts/analysis/2026-05-11__tour-list__screen-analysis.md]
+- DESIGN.md: [d:/DATN/danangtrip-web/DESIGN.md]
+- Components cần đặc biệt chú ý: [TourCard, TourGrid, TourCategoryFilter | NONE]
+- Output: [.agent/artifacts/ui-specs/2026-05-11__tour-list__ui-spec.md]
+```
+
+**Ví dụ thực tế:**
+```text
+Kích hoạt 05-ui-components
 
 Context:
 - Repo: d:/DATN/danangtrip-web
-- Feature slug: <feature-slug>
-- Route path: <vd: /tours, /tours/[slug], /profile>
-- Layout requirements: <header+footer / fullpage / sidebar>
-- Auth requirement: <public / protected / admin>
+- Feature slug: tour-list
+- Analysis file: .agent/artifacts/analysis/2026-05-11__tour-list__screen-analysis.md
+- DESIGN.md: d:/DATN/danangtrip-web/DESIGN.md
+- Components cần đặc biệt chú ý: TourCard (glass surface theo DESIGN.md), TourGrid (responsive 1→2→3 cols), TourCategoryFilter (pill tabs)
+- Output: .agent/artifacts/ui-specs/2026-05-11__tour-list__ui-spec.md
+```
 
-Files bat buoc doc truoc:
-- .agent/skills/04-layout-routing/persona.md
-- .agent/skills/04-layout-routing/SKILL.md
-- .agent/skills/04-layout-routing/checklist.md
-- .agent/rules/PROJECT_RULES.md (Sections 6, 8, 9)
-- src/config/routes.ts (PUBLIC_ROUTES, AUTH_ROUTES, PROTECTED_ROUTES, PLANNED_ROUTES)
-- src/i18n/routing.ts (locales: [vi, en], defaultLocale: vi, localePrefix: as-needed)
-- src/i18n/navigation.ts (locale-aware Link, useRouter, usePathname)
-- src/app/[locale]/layout.tsx (root layout hien co)
-- src/middleware.ts (protected routes logic)
-- src/components/layout/Header.tsx
-- src/components/layout/Footer.tsx
-- src/messages/vi/common.json (i18n keys mau)
-
-Route structure:
-- Public: src/app/[locale]/(main)/<route>/page.tsx
-- Auth: src/app/[locale]/(auth)/<route>/page.tsx
-- Protected: them vao PROTECTED_ROUTES trong src/config/routes.ts
-
-Required outputs:
-- src/app/[locale]/(main hoac auth)/<route>/page.tsx
-- src/app/[locale]/(main hoac auth)/<route>/layout.tsx (neu can)
-- Cap nhat src/config/routes.ts
-- Cap nhat src/messages/vi/<feature>.json (tao moi neu chua co)
-- Cap nhat src/messages/en/<feature>.json (PHAI dong bo voi vi)
-
-📁 Vi du (feature "blog"):
-  src/app/[locale]/(main)/blog/page.tsx       → Blog list page (Server Component)
-  src/app/[locale]/(main)/blog/[slug]/page.tsx→ Blog detail + generateMetadata()
-  src/config/routes.ts                        → PUBLIC_ROUTES: [..., '/blog', '/blog/:slug']
-  src/messages/vi/blog.json                   → { "title": "Bài viết", "readMore": "Xem thêm" }
-  src/messages/en/blog.json                   → { "title": "Blog", "readMore": "Read more" }
-
-Execution notes:
-- use client chi khi can state/effect/event handler/browser API
-- Page metadata dat o route level
-- Locale-aware navigation: dung Link, useRouter tu src/i18n/navigation.ts
-- Sau khi tao route: npm run check:routes
+**Output mong đợi:** `ui-specs/2026-05-11__tour-list__ui-spec.md` với design token alignment, bảng [REUSE]/[NEW]/[MOD], layer breakdown, UI states per component, placement strategy (shared vs feature-local), build order.
 
 ---
 
-### 3.5 - 05-ui-components
+### Skill 06 — Data Integration
 
-Kich hoat 05-ui-components
+```text
+Kích hoạt 06-data-integration
+
+Context:
+- Repo: [d:/DATN/danangtrip-web]
+- Feature slug: [tour-list]
+- API contract: [.agent/artifacts/api-contracts/2026-05-11__tour-list__api-contract.md]
+- UI spec: [.agent/artifacts/ui-specs/2026-05-11__tour-list__ui-spec.md]
+- Server prefetch cần không: [Có — initial list cho SEO | Không]
+- Queries cần có: [useTourList (client, filter/pagination), useTourDetail (client)]
+- Mutations cần có: [NONE | useSubmitBooking]
+- Output: [.agent/artifacts/integration/2026-05-11__tour-list__data-integration.md]
+```
+
+**Ví dụ thực tế:**
+```text
+Kích hoạt 06-data-integration
 
 Context:
 - Repo: d:/DATN/danangtrip-web
-- Feature slug: <feature-slug>
-- Figma link: <link hoac NONE>
-- Screen analysis: .agent/artifacts/analysis/YYYY-MM-DD__<feature-slug>__screen-analysis.md
+- Feature slug: tour-list
+- API contract: .agent/artifacts/api-contracts/2026-05-11__tour-list__api-contract.md
+- UI spec: .agent/artifacts/ui-specs/2026-05-11__tour-list__ui-spec.md
+- Server prefetch cần không: Có — prefetch page 1 ở Server Component cho LCP tốt
+- Queries cần có: useTourList (client, filter + pagination), useCategoryList (client, lookup)
+- Mutations cần có: NONE (trang list chỉ read)
+- Output: .agent/artifacts/integration/2026-05-11__tour-list__data-integration.md
+```
 
-Files bat buoc doc truoc:
-- .agent/skills/05-ui-components/persona.md
-- .agent/skills/05-ui-components/SKILL.md
-- .agent/skills/05-ui-components/checklist.md
-- DESIGN.md (BAT BUOC - design tokens)
-- .agent/rules/PROJECT_RULES.md (Sections 11, 12, 21)
-- src/components/ui/index.ts (components co san: Button, Input, Badge, Select, Loading, RatingStars, SearchInput)
-- src/components/ui/Button.tsx (pattern mau)
-- src/components/feedback/empty-state.tsx (empty state co san)
-- src/components/icons/solar.tsx (Solar icon set - ICON SET CHINH)
-- src/components/layout/AmbientBackground.tsx (WebGL background)
-- src/features/tour/components/ (feature components mau)
-- src/features/locations/components/ (feature components mau)
-
-Design tokens bat buoc (tu DESIGN.md):
-- Colors: primary #8B6A55, background #080808, surface #030303, text-primary #737373, text-secondary #FFFFFF, border #262626
-- Typography: Inter (display), SFMono-Regular (body), Inter 14px/400 (label)
-- Spacing: 4px base rhythm, scale: 1/4/8/12/16/24/32/48px
-- Radii: 4px, 7px, 8px, 12px, 9999px
-- Elevation: glass surfaces, 1px border #262626, 12px blur
-- Motion: 150ms ease, reveal-up classes, stagger 100ms increments
-
-Icon rules:
-- CHINH: Solar iconset tu src/components/icons/solar.tsx
-- PHU: @iconscout/react-unicons (import tu @iconscout/react-unicons)
-- PHU: lucide-react (cho icons khong co trong Solar)
-- KHONG dung icon set khac
-
-Build order (Atomic Design):
-1. Atoms: Button variants, Input, Badge, Skeleton, Spinner (src/components/ui/)
-2. Molecules: FormField, CardItem, SearchBar (src/features/<feature>/components/ hoac src/components/common/)
-3. Organisms: DataTable, FilterPanel, ModalForm (src/features/<feature>/components/)
-4. Template: compose organisms thanh page sections
-
-Strict rules:
-- KHONG gan data that - chi props interface
-- KHONG tao component moi neu da co tuong duong trong src/components/ui/
-- Entrance animations: reveal-up CSS classes voi stagger reveal-delay-X (100ms increments)
-- Glass surfaces: gradient border shell theo DESIGN.md Elevation section
-- Responsive: mobile-first, Tailwind breakpoints
-
-Required outputs:
-- src/components/ui/<NewAtom>.tsx (shared atoms moi neu can)
-- src/features/<feature>/components/<Component>.tsx (feature components)
-- src/components/common/<Shared>.tsx (shared molecules neu dung boi >= 2 features)
-
-📁 Vi du (feature "blog"):
-  src/features/blog/components/BlogCard.tsx
-    → <BlogCard title slug thumbnail category readTime /> (chi props, khong fetch)
-    → reveal-up class + reveal-delay-100 cho entrance animation
-  src/features/blog/components/BlogCardSkeleton.tsx
-    → Skeleton layout khop với BlogCard de tranh CLS
-  src/features/blog/components/BlogGrid.tsx
-    → <BlogGrid blogs={[]} isLoading columns={3} />
-  src/components/common/CategoryBadge.tsx
-    → dung boi blog + tour >= 2 features → dat o common/
+**Output mong đợi:** `integration/2026-05-11__tour-list__data-integration.md` với server/client ownership per data source, query key hierarchy, HydrationBoundary plan, UI state handling per section (skeleton/empty/error).
 
 ---
 
-### 3.6 - 06-data-integration
+### Skill 07 — Interactions
 
-Kich hoat 06-data-integration
+```text
+Kích hoạt 07-interactions
+
+Context:
+- Repo: [d:/DATN/danangtrip-web]
+- Feature slug: [tour-list]
+- Analysis file: [.agent/artifacts/analysis/2026-05-11__tour-list__screen-analysis.md]
+- Data integration: [.agent/artifacts/integration/2026-05-11__tour-list__data-integration.md]
+- Actions chính: [search, filter-by-category, filter-by-price, pagination, sort]
+- Forms có không: [Có — contact form | Không]
+- Destructive actions: [NONE | cancel-booking]
+- Output: [.agent/artifacts/interaction-specs/2026-05-11__tour-list__interaction-spec.md]
+```
+
+**Ví dụ thực tế:**
+```text
+Kích hoạt 07-interactions
 
 Context:
 - Repo: d:/DATN/danangtrip-web
-- Feature slug: <feature-slug>
-- API service: src/services/<feature>.service.ts
-- UI components: src/features/<feature>/components/
-- TanStack Query key prefix: <feature>
+- Feature slug: tour-list
+- Analysis file: .agent/artifacts/analysis/2026-05-11__tour-list__screen-analysis.md
+- Data integration: .agent/artifacts/integration/2026-05-11__tour-list__data-integration.md
+- Actions chính: search (debounce + URL sync), filter by category (URL sync), filter by price range, pagination (URL sync), sort by price/rating
+- Forms có không: Không (trang list chỉ filter/search)
+- Destructive actions: NONE
+- Output: .agent/artifacts/interaction-specs/2026-05-11__tour-list__interaction-spec.md
+```
 
-Files bat buoc doc truoc:
-- .agent/skills/06-data-integration/persona.md
-- .agent/skills/06-data-integration/SKILL.md
-- .agent/skills/06-data-integration/checklist.md
-- .agent/rules/PROJECT_RULES.md (Sections 5, 7, 12, 13, 21)
-- src/lib/react-query.ts (QueryClient config)
-- src/providers/providers.tsx (QueryClientProvider setup)
-- src/services/<feature>.service.ts (service functions)
-- src/features/tour/hooks/ (hook patterns mau)
-- src/features/locations/hooks/ (hook patterns mau)
-- src/hooks/useDebounce.ts (debounce hook co san)
-- src/components/feedback/empty-state.tsx (empty state co san)
-- src/components/ui/Loading.tsx (loading component co san)
-
-Hook patterns:
-- READ: useQuery({ queryKey: [feature, list, params], queryFn: () => service.getList(params), staleTime: 5*60*1000 })
-- MUTATION: useMutation({ mutationFn: service.create, onSuccess: () => { queryClient.invalidateQueries({queryKey:[feature]}); toast.success(t(create_success)); }, onError: (err) => toast.error(err.message) })
-- Query key strategy: hierarchical [feature, resource, type/id]
-- staleTime: 5-30 min cho non-volatile data
-
-Data flow bat buoc:
-- service (src/services/) -> hook (src/features/*/hooks/) -> UI component
-- KHONG goi API truc tiep trong component
-- KHONG hardcode mock data
-
-States bat buoc:
-- Loading: Skeleton screens (KHONG dung full-page spinner - tranh CLS)
-- Error: normalize error -> toast.error() tu sonner (da xu ly trong axios interceptor)
-- Empty: empty-state component hoac hide section (theo PROJECT_RULES Section 21)
-- Success: hien thi data that
-
-Server Component pattern (neu applicable):
-- Goi API truc tiep (async function)
-- Pass data xuong Client Component qua props
-
-Required outputs:
-- src/features/<feature>/hooks/use-<resource>.ts
-- src/features/<feature>/components/<Component>.tsx (wired with data)
-- src/features/<feature>/components/<Component>Skeleton.tsx
-
-📁 Vi du (feature "blog"):
-  src/features/blog/hooks/use-blog-list.ts
-    → useQuery({ queryKey: ['blog','list',params], queryFn: blogService.getList, staleTime: 10min })
-  src/features/blog/hooks/use-blog-detail.ts
-    → useQuery({ queryKey: ['blog','detail',slug], queryFn: () => blogService.getBySlug(slug) })
-  src/app/[locale]/(main)/blog/page.tsx
-    → Server Component: const blogs = await blogService.getList(params)
-    → Pass xuong <BlogGrid blogs={blogs} /> (khong dung useQuery o Server)
-  src/features/blog/components/BlogGrid.tsx
-    → Nhan blogs={data} isLoading={isLoading} tu hook
+**Output mong đợi:** `interaction-specs/2026-05-11__tour-list__interaction-spec.md` với action breakdown, URL-synced state plan, debounce strategy, i18n keys cần thêm vào `vi/en`.
 
 ---
 
-### 3.7 - 07-interactions
+### Skill 08 — Auth & Permissions
 
-Kich hoat 07-interactions
+```text
+Kích hoạt 08-auth-permissions
+
+Context:
+- Repo: [d:/DATN/danangtrip-web]
+- Feature slug: [tour-list]
+- Route plan: [.agent/artifacts/routing/2026-05-11__tour-list__route-plan.md]
+- Loại feature: [public | authenticated-only | role-based]
+- UI nào bị gate: [nút "Đặt tour" chỉ hiện khi đã login | NONE]
+- Middleware cần update không: [Có | Không]
+- Output: [.agent/artifacts/auth/2026-05-11__tour-list__auth-permissions-review.md]
+```
+
+**Ví dụ thực tế:**
+```text
+Kích hoạt 08-auth-permissions
 
 Context:
 - Repo: d:/DATN/danangtrip-web
-- Feature slug: <feature-slug>
-- SRS/AC list: <path hoac mo ta>
-- Components da build: src/features/<feature>/components/
+- Feature slug: tour-list
+- Route plan: .agent/artifacts/routing/2026-05-11__tour-list__route-plan.md
+- Loại feature: public (trang list public, nhưng nút "Đặt tour" cần login)
+- UI nào bị gate: nút "Đặt tour" — ẩn hoàn toàn khi chưa login, hiện khi đã login
+- Middleware cần update không: Không (route /tours là public)
+- Output: .agent/artifacts/auth/2026-05-11__tour-list__auth-permissions-review.md
+```
 
-Files bat buoc doc truoc:
-- .agent/skills/07-interactions/persona.md
-- .agent/skills/07-interactions/SKILL.md
-- .agent/skills/07-interactions/checklist.md
-- .agent/rules/PROJECT_RULES.md (Sections 7, 9, 13)
-- src/features/<feature>/validators/ (Zod schemas da co)
-- src/features/<feature>/hooks/ (hooks da co)
-- src/hooks/useDebounce.ts (debounce co san - REUSE, debounce 300ms)
-- src/utils/validators.ts (validators co san - REUSE)
-- src/utils/format.ts (format helpers co san - REUSE)
-- src/messages/vi/<feature>.json
-- src/messages/en/<feature>.json
-
-Interaction patterns:
-- Form: Zod validation + error messages dung i18n keys (KHONG hardcode text)
-- CRUD: useMutation + invalidateQueries sau mutation
-- Search: dung useDebounce hook (src/hooks/useDebounce.ts), debounce 300ms
-- Pagination: sync query params voi URL (useSearchParams + useRouter)
-- Filter/Sort: sync voi URL params
-- Confirm dialog: conditional render (KHONG dung window.confirm)
-- Toast: sonner toast.success/error/warning (KHONG hardcode message)
-
-Moi interaction phai co:
-- Success feedback: toast.success(t(action_success))
-- Error feedback: toast.error(normalizedError)
-- Loading state: button disabled + spinner trong khi pending
-
-i18n rules:
-- Moi user-facing text phai co i18n key
-- Cap nhat ca src/messages/vi/ va src/messages/en/ cung luc
-- Namespace: dung scoped useTranslations(feature) lam default
-
-Required outputs:
-- src/features/<feature>/components/ (form, filter, pagination components)
-- src/features/<feature>/hooks/ (interaction hooks)
-- Cap nhat src/messages/vi/<feature>.json
-- Cap nhat src/messages/en/<feature>.json
-
-📁 Vi du (feature "blog"):
-  src/features/blog/components/BlogSearchBar.tsx
-    → useDebounce(search, 300) → onSearch(debouncedVal) → URL ?search=
-  src/features/blog/components/BlogCategoryFilter.tsx
-    → onChange → push({ search: ..., category: val, page: 1 })
-  src/features/blog/hooks/use-blog-list.ts (cap nhat)
-    → useMutation: createBlog, onSuccess → invalidate + toast.success(t('blog.create_success'))
-  src/messages/vi/blog.json  → { "create_success": "Tạo bài viết thành công", "search_placeholder": "Tìm bài viết..." }
-  src/messages/en/blog.json  → { "create_success": "Blog created", "search_placeholder": "Search blogs..." }
+**Output mong đợi:** `auth/2026-05-11__tour-list__auth-permissions-review.md` với protected routes (N/A nếu public), guarded UI actions, middleware behavior, redirect flow, risks/assumptions.
 
 ---
 
-### 3.8 - 08-auth-permissions
+### Skill 09 — Testing
 
-Kich hoat 08-auth-permissions
+```text
+Kích hoạt 09-testing
+
+Context:
+- Repo: [d:/DATN/danangtrip-web]
+- Feature slug: [tour-list]
+- Dev server URL: [http://localhost:3000/vi/tours | NOT AVAILABLE]
+- Code scope: [src/features/tours/, src/services/tour.service.ts, src/app/[locale]/tours/]
+- Analysis file: [.agent/artifacts/analysis/2026-05-11__tour-list__screen-analysis.md]
+- Interaction spec: [.agent/artifacts/interaction-specs/2026-05-11__tour-list__interaction-spec.md]
+- Auth review: [.agent/artifacts/auth/2026-05-11__tour-list__auth-permissions-review.md]
+- Output: [.agent/artifacts/test-cases/2026-05-11__tour-list__test-report.md]
+```
+
+**Ví dụ thực tế:**
+```text
+Kích hoạt 09-testing
 
 Context:
 - Repo: d:/DATN/danangtrip-web
-- Feature slug: <feature-slug>
-- Required roles/permissions: <list: USER/ADMIN/STAFF hoac NONE>
-- Protected routes: <routes can protect>
+- Feature slug: tour-list
+- Dev server URL: http://localhost:3000/vi/tours
+- Code scope: src/features/tours/, src/services/tour.service.ts, src/app/[locale]/tours/page.tsx
+- Analysis file: .agent/artifacts/analysis/2026-05-11__tour-list__screen-analysis.md
+- Interaction spec: .agent/artifacts/interaction-specs/2026-05-11__tour-list__interaction-spec.md
+- Auth review: .agent/artifacts/auth/2026-05-11__tour-list__auth-permissions-review.md
+- Output: .agent/artifacts/test-cases/2026-05-11__tour-list__test-report.md
+```
 
-Files bat buoc doc truoc:
-- .agent/skills/08-auth-permissions/persona.md
-- .agent/skills/08-auth-permissions/SKILL.md
-- .agent/skills/08-auth-permissions/checklist.md
-- .agent/rules/PROJECT_RULES.md (Section 10)
-- src/middleware.ts (Edge middleware - Cloudflare OpenNext, KHONG dung Node Proxy)
-- src/store/auth.store.ts (Zustand auth store: user, token, isAuthenticated, login(), logout())
-- src/utils/auth.helper.ts (getAccessToken, setAccessToken, clearTokens - dung Cookie js-cookie)
-- src/lib/axios.ts (interceptor tu dong gan Bearer token - da co san, KHONG can them)
-- src/features/auth/ (auth components, hooks, services mau)
-- src/config/routes.ts (AUTH_ROUTES, PROTECTED_ROUTES, DASHBOARD_ROUTES)
-
-Auth architecture hien tai:
-- Source of truth: Zustand store (src/store/auth.store.ts) + persist vao localStorage
-- Cookie sync: js-cookie qua src/utils/auth.helper.ts (cho Middleware + SSR)
-- Token auto-attach: axios interceptor trong src/lib/axios.ts (KHONG can them)
-- Refresh token: da xu ly trong src/lib/axios.ts (KHONG duplicate)
-- Logout: useAuthStore.getState().logout() -> clearTokens() -> redirect /login
-
-Middleware rules (src/middleware.ts):
-- Cloudflare OpenNext: KHONG dung Node Proxy
-- Kiem tra token tu Cookie
-- Redirect unauthorized -> /login?redirect=<current-route>
-- Bao gom locale trong redirect path
-
-Role-based UI pattern:
-  const { user } = useAuthStore();
-  const canEdit = user?.role === ADMIN;
-  {canEdit && <EditButton />}  // conditional render, KHONG CSS hide
-
-Required outputs:
-- src/middleware.ts (cap nhat neu can protect route moi)
-- src/features/<feature>/components/ (permission-gated UI)
-- src/hooks/use-permission.ts (neu can shared permission logic)
-- Cap nhat .env.example neu them auth-related env vars
-
-📁 Vi du (feature "blog"):
-  src/middleware.ts
-    → PROTECTED_ROUTES: [..., '/blog/create', '/blog/edit/:slug']
-    → redirect unauthorized → /vi/login?redirect=/vi/blog/create
-  src/features/blog/components/BlogActions.tsx
-    → const { user } = useAuthStore();
-    → const isAuthor = user?.id === blog.authorId || user?.role === 'admin';
-    → {isAuthor && <EditButton />}   ← conditional render, KHONG CSS hide
+**Output mong đợi:** `test-cases/2026-05-11__tour-list__test-report.md` với 5 phase đầy đủ:
+- Phase 1: lint/typecheck/check:routes/build/prepush (PASS/FAIL)
+- Phase 2: UI visual — layout responsive, design tokens DESIGN.md, skeleton, empty state
+- Phase 3: Functional — search/filter/pagination URL-synced, form submit, locale switch
+- Phase 4: Edge cases — boundary values, network errors, SEO metadata check
+- Phase 5: Regression — i18n /vi/ ↔ /en/, auth redirect, existing pages
+- Verdict: `ready / not ready`
 
 ---
 
-### 3.9 - 09-testing
+### Skill 10 — Optimization & Deploy
 
-Kich hoat 09-testing
+```text
+Kích hoạt 10-optimization-deploy
+
+Context:
+- Repo: [d:/DATN/danangtrip-web]
+- Feature slug: [tour-list]
+- Test report: [.agent/artifacts/test-cases/2026-05-11__tour-list__test-report.md]
+- Test verdict: [READY | READY WITH RISKS | NOT READY]
+- Artifacts đã có: [analysis, api-contract, route-plan, ui-spec, data-integration, interaction-spec, auth-review, test-report]
+- Branch hiện tại: [main | develop | NONE — chưa tạo nhánh]
+- Deploy target: [Cloudflare Workers via OpenNext]
+- Output deploy: [.agent/artifacts/deploy/2026-05-11__tour-list__deploy-report.md]
+- Output review: [.agent/artifacts/review/2026-05-11__tour-list__review.md]
+```
+
+**Ví dụ thực tế:**
+```text
+Kích hoạt 10-optimization-deploy
 
 Context:
 - Repo: d:/DATN/danangtrip-web
-- Feature slug: <feature-slug>
-- Test URL: <link localhost de test UI, vd: http://localhost:3000/contact>
-- SRS/AC: <path hoac mo ta>
-- Code scope: src/features/<feature>/, src/app/[locale]/...
+- Feature slug: tour-list
+- Test report: .agent/artifacts/test-cases/2026-05-11__tour-list__test-report.md
+- Test verdict: READY
+- Artifacts đã có: analysis, api-contract, route-plan, ui-spec, data-integration, interaction-spec, auth-review, test-report
+- Branch hiện tại: main
+- Deploy target: Cloudflare Workers via OpenNext (wrangler.jsonc)
+- Output deploy: .agent/artifacts/deploy/2026-05-11__tour-list__deploy-report.md
+- Output review: .agent/artifacts/review/2026-05-11__tour-list__review.md
+```
 
-Files bat buoc doc truoc:
-- .agent/skills/09-testing/persona.md
-- .agent/skills/09-testing/SKILL.md
-- .agent/skills/09-testing/checklist.md
-- .agent/rules/PROJECT_RULES.md (Section 14)
-- vitest.config.ts (test environment: jsdom, globals: true, setupFiles: ./src/test/setup.ts)
-- package.json (devDependencies: vitest v4, @testing-library/react v16, @testing-library/jest-dom)
-- src/features/<feature>/ (code can test)
+**Output mong đợi:**
+- `deploy-report.md` — build status, bundle size, Cloudflare notes, smoke test, verdict
+- `review.md` — objective, scope, artifact trace, technical decisions, risks
+- **Gợi ý tên nhánh**: `feat/tour-list`
+- **Gợi ý commit message**: `feat(tours): add tour list page with filter and pagination`
+- **Hiển thị lệnh git** và **CHỜ USER xác nhận** trước khi push.
 
-Testing stack hien tai:
-- Unit/Integration: Vitest v4 + @testing-library/react v16 + jsdom
-- E2E Manual (AI Browser Subagent): YÊU CẦU TRUYỀN LINK URL VÀO PROMPT (vd: `http://localhost:3000/feature`) ĐỂ AI TEST TRỰC TIẾP TRÊN TRÌNH DUYỆT.
-- KHONG co Playwright setup (E2E manual hoac setup moi neu can)
-- KHONG co MSW setup (mock truc tiep hoac setup moi neu can)
-- Path alias: @/* -> src/* (da config trong vitest.config.ts)
+## Những gì mỗi SKILL.md cung cấp
 
-Test file placement:
-- Unit tests: src/features/<feature>/__tests__/<Component>.test.tsx
-- Hook tests: src/features/<feature>/__tests__/<hook>.test.ts
-- Util tests: src/utils/__tests__/<util>.test.ts
+Mỗi SKILL.md trong bộ này có:
 
-Mock strategy (khong co MSW):
-- vi.mock(@/services/<feature>.service) -> mock tung function
-- vi.mock(@/store/auth.store) -> mock auth state
-- vi.mock(next-intl) -> mock useTranslations
+- **Overview**: mục tiêu và vai trò trong pipeline
+- **Required Input**: file phải đọc trước khi bắt đầu
+- **Process**: các bước thực hiện có thứ tự
+- **Pattern Chuẩn**: code example thực tế từ repo (không generic)
+- **Output Document**: artifact cần tạo và template dùng
+- **Strict Rules**: rule không được vi phạm
+- **Red Flags**: dấu hiệu đang làm sai — phải dừng và flag
+- **Common Rationalizations**: lý do hay dùng để bỏ qua bước — và tại sao sai
+- **Verification**: checklist cuối để xác nhận output đủ chất lượng
 
-States phai test: Loading, Empty, Error, Success
+## Kỳ vọng đầu ra 10/10
 
-Coverage target: > 80% cho feature code
+Một bộ skill được xem là practical `10/10` cho repo này khi:
 
-Required outputs:
-- .agent/artifacts/test-cases/YYYY-MM-DD__<feature-slug>__testcases.md
-- src/features/<feature>/__tests__/*.test.tsx
-- src/features/<feature>/__tests__/*.test.ts
-
-📁 Vi du (feature "blog"):
-  .agent/artifacts/test-cases/2026-05-10__blog__testcases.md
-    → TC-01: BlogCard render dung title/thumbnail
-    → TC-02: BlogGrid hien thi skeleton khi isLoading=true
-    → TC-03: SearchBar debounce 300ms, goi onSearch 1 lan
-  src/features/blog/__tests__/BlogCard.test.tsx
-    → vi.mock('@/services/blog.service')
-    → test('Loading state', ...) / test('Empty state', ...) / test('Success', ...)
-  src/features/blog/__tests__/use-blog-list.test.ts
-    → renderHook(() => useBlogList({})) → assert data mapped correctly
-
----
-
-### 3.10 - 10-optimization-deploy
-
-Kich hoat 10-optimization-deploy
-
-Context:
-- Repo: d:/DATN/danangtrip-web
-- Feature slug: <feature-slug>
-- Deploy target: Cloudflare Workers (PRIMARY)
-- Environment: <dev/staging/prod>
-
-Files bat buoc doc truoc:
-- .agent/skills/10-optimization-deploy/persona.md
-- .agent/skills/10-optimization-deploy/SKILL.md
-- .agent/skills/10-optimization-deploy/checklist.md
-- .agent/rules/PROJECT_RULES.md (Sections 6, 12, 14, 17, 21)
-- DESIGN.md (motion tokens, animation rules)
-- next.config.ts (images.unoptimized: true, compress: true, typescript.ignoreBuildErrors: true)
-- open-next.config.ts (Cloudflare OpenNext config)
-- wrangler.jsonc (Cloudflare Workers config)
-- package.json (build scripts)
-- .env.example
-
-Build commands:
-- Standard: npm run build (webpack mode, NODE_OPTIONS max-old-space-size=4096)
-- Cloudflare: npm run build:cloudflare
-- Preview: npm run preview:cloudflare
-- Deploy: npm run deploy:cloudflare
-
-Quality gates (PHAI pass truoc khi deploy):
-- npm run lint
-- npm run typecheck
-- npm run check:routes
-- npm run build
-
-Performance checklist:
-- React.memo cho expensive components (chi khi co evidence)
-- dynamic import cho modals, heavy components (Three.js, Lottie)
-- next/image cho tat ca images (luu y: images.unoptimized: true trong next.config.ts)
-- staleTime hop ly trong TanStack Query hooks
-- Entrance animations: reveal-up classes voi stagger reveal-delay-X (100ms increments)
-- KHONG premature optimize
-
-SEO:
-- export const metadata: Metadata = { title, description, openGraph } o route level
-- generateMetadata cho dynamic pages (tours/[slug], locations/[slug], blog/[slug])
-- JSON-LD structured data cho Tour, Location pages
-
-Cloudflare-specific notes:
-- Middleware PHAI dung Edge Runtime (KHONG Node.js APIs)
-- images.unoptimized: true (Cloudflare khong ho tro Next.js Image Optimization)
-- Environment variables: set trong Cloudflare Dashboard hoac wrangler.jsonc
-
-Smoke test sau deploy:
-- Navigate to deployed URL -> page loads
-- Test: home, locations, tours, blog, search, auth flow
-- Verify i18n (switch vi/en)
-- Browser console: khong co errors
-
-Required outputs:
-- .agent/artifacts/deploy/YYYY-MM-DD__<feature-slug>__deploy-report.md
-
-📁 Vi du (feature "blog"):
-  .agent/artifacts/deploy/2026-05-10__blog__deploy-report.md
-  → | Check         | Status | Notes                               |
-  → | lint          | PASS   | 0 errors                            |
-  → | typecheck     | PASS   | 0 errors                            |
-  → | check:routes  | PASS   | /blog, /blog/[slug] registered      |
-  → | build:cf      | PASS   | Worker bundle 1.2MB                 |
-  → | smoke /blog   | PASS   | page loads, 12 blogs rendered       |
-  → | smoke i18n    | PASS   | vi/en switch OK                     |
-  → | smoke /blog/[slug] | PASS | detail page + SEO metadata OK  |
-
----
-
-## 4) Thu tu chay cho 1 feature
-
-1. 01-screen-analysis      -> Output: screen analysis + checklist
-2. 02-project-setup        -> Output: project audit (chi lan dau hoac khi co van de)
-3. 03-types-api-contract   -> Output: types + validators + service + api contract
-4. 04-layout-routing       -> Output: routes + layout + i18n keys
-5. 05-ui-components        -> Output: UI components pixel-perfect (khong data)
-6. 06-data-integration     -> Output: UI + data that + loading/error/empty states
-7. 07-interactions         -> Output: CRUD + filter + search + pagination
-8. 08-auth-permissions     -> Output: auth + permissions (neu can)
-9. 09-testing              -> Output: test cases + unit tests
-10. 10-optimization-deploy -> Output: optimized + deployed
-
----
-
-## 5) Checklist truoc khi goi hoan thien
-
-- [ ] UI giong Figma (pixel-perfect, responsive, dark mode)
-- [ ] Design tokens dung (mau, spacing, radii, motion theo DESIGN.md)
-- [ ] API integrate xong, data hien thi dung (khong mock data)
-- [ ] Day du states: loading (skeleton), error (toast), empty (empty-state), success
-- [ ] Form validate dung business rules (Zod + i18n error messages)
-- [ ] Auth/permission hoat dong (conditional render, khong CSS hide)
-- [ ] i18n: vi/en dong bo, khong hardcode text
-- [ ] Query keys hierarchical, staleTime hop ly
-- [ ] Test pass (unit tests)
-- [ ] npm run lint pass
-- [ ] npm run typecheck pass
-- [ ] npm run check:routes pass
-- [ ] npm run build pass (khong loi)
-- [ ] Deploy thanh cong (Cloudflare), smoke test OK
-- [ ] Entrance animations: reveal-up classes voi stagger
-
----
-
-## 6) Cac loi thuong gap va cach tranh
-
-| Loi | Nguyen nhan | Cach tranh |
-|-----|-------------|------------|
-| Import type error | Dung import thay vi import type cho types | Dung import type cho type-only imports |
-| Hardcode text | Quen i18n | Moi text phai co key trong src/messages/ |
-| API call trong component | Bo qua service layer | Luon: service -> hook -> UI |
-| CSS hide permission | Nham bao mat | Dung conditional render |
-| Duplicate auth store | Tao store moi | Dung useAuthStore tu src/store/auth.store.ts |
-| Wrong icon import | Nhieu icon sets | Solar (src/components/icons/solar.tsx) la chinh |
-| Node.js API trong middleware | Cloudflare Edge Runtime | Middleware chi dung Edge-compatible APIs |
-| Mock data trong production | Quen xoa mock | Empty state hoac hide section, KHONG fake data |
-| Missing vi/en sync | Cap nhat 1 locale | Luon cap nhat ca 2 locale cung luc |
-| Spinner thay vi skeleton | Quen PROJECT_RULES | Loading = Skeleton screens (tranh CLS) |
+- Tất cả skill chỉ tham chiếu file thật
+- Mỗi step có artifact rõ ràng
+- Tài liệu đủ chi tiết để review mà không phải hỏi lại nhiều
+- Không có lỗi encoding/format
+- Không giả định Playwright/MSW/workflow nếu repo chưa có
+- Code example trong skill bám đúng pattern thật của repo (Zod v4, next-intl v4, TanStack Query v5)

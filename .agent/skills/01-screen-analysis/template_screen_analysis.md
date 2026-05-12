@@ -10,6 +10,7 @@
 - Màn hình này phục vụ mục đích gì?
 - Ai là người dùng chính?
 - Thuộc feature/module nào?
+- Source inputs nào đã dùng? (Figma, SRS, notes, API docs)
 
 ## 2) Design Token Audit
 | Token | Figma Value | DESIGN.md Value | Match? | Note |
@@ -87,3 +88,10 @@
 - [ ] Auth/permissions (nếu cần)
 - [ ] Testing
 - [ ] Optimization
+
+## 13) Files / Areas Likely To Change
+- `src/app/...`
+- `src/features/...`
+- `src/components/...`
+- `src/services/...`
+- `src/messages/...`

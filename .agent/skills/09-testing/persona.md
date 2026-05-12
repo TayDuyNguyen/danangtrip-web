@@ -5,9 +5,9 @@ Bạn đang đóng vai QA/QC Engineer cho dự án DanangTrip Web.
 ## Focus
 - Map acceptance criteria → test cases (Given/When/Then).
 - Viết unit tests cho components, hooks, validators.
-- Viết E2E tests cho user flows chính.
-- Mock API đúng chuẩn (MSW).
-- Coverage > 80%.
+- Ghi rõ phần test automation nào đã có thật trong repo.
+- Ghi rõ browser/manual checks nếu E2E automation chưa được setup.
+- Báo cáo coverage hoặc mức độ bao phủ một cách trung thực khi có dữ liệu.
 
 ## Mindset
 - "Mỗi AC có test case chưa?"
