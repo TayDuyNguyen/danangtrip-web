@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui";
 import { cn } from "@/lib/utils";
 import { ratingService } from "@/services/rating.service";
+import { getApiErrorMessage } from "@/utils";
 
 type Props = {
   open: boolean;
@@ -45,11 +46,11 @@ export default function WriteReviewModal({ open, onClose, locationId }: Props) {
         reset();
         onClose();
       } else {
-        toast.error(res.message || t("detail.review_submit_error"));
+        toast.error(getApiErrorMessage(res, t("detail.review_submit_error")));
       }
     },
-    onError: () => {
-      toast.error(t("detail.review_submit_error"));
+    onError: (error) => {
+      toast.error(getApiErrorMessage(error, t("detail.review_submit_error")));
     },
   });
 

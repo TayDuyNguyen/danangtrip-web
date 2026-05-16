@@ -7,6 +7,8 @@ export const API_ENDPOINTS = {
     FORGOT_PASSWORD: "/auth/forgot-password",
     RESET_PASSWORD: "/auth/reset-password",
     ME: "/auth/me",
+    VERIFY_EMAIL: "/auth/verify-email",
+    RESEND_VERIFICATION: "/auth/resend-verification",
   },
   TOURS: {
     LIST: "/tours",
@@ -22,9 +24,32 @@ export const API_ENDPOINTS = {
   USER: {
     PROFILE: "/user/profile",
     UPDATE_PROFILE: "/user/profile",
+    AVATAR: "/user/profile/avatar",
     CHANGE_PASSWORD: "/user/password",
+    RATINGS: "/user/ratings",
     FAVORITES: "/user/favorites",
     FAVORITES_CHECK: "/user/favorites/check", // Use query params ?location_id= or ?tour_id=
+  },
+  BOOKINGS: {
+    CALCULATE: "/bookings/calculate",
+    STORE: "/bookings",
+    USER_LIST: "/user/bookings",
+    DETAIL: (id: number | string) => `/user/bookings/${id}`,
+    DETAIL_BY_CODE: (bookingCode: string) => `/user/bookings/code/${bookingCode}`,
+    INVOICE: (id: number | string) => `/user/bookings/${id}/invoice`,
+    CANCEL: (id: number | string) => `/user/bookings/${id}/cancel`,
+  },
+  PAYMENTS: {
+    CREATE: "/payments/create",
+    STATUS: (transactionCode: string) => `/payments/status/${transactionCode}`,
+    RETRY: (bookingCode: string) => `/payments/retry/${bookingCode}`,
+  },
+  NOTIFICATIONS: {
+    LIST: "/user/notifications",
+    UNREAD_COUNT: "/user/notifications/unread-count",
+    MARK_READ: (id: number | string) => `/user/notifications/${id}/read`,
+    MARK_ALL_READ: "/user/notifications/read-all",
+    DELETE: (id: number | string) => `/user/notifications/${id}`,
   },
   LOCATIONS: {
     LIST: "/locations",
@@ -40,6 +65,8 @@ export const API_ENDPOINTS = {
   RATINGS: {
     CHECK: "/ratings/check",
     STORE: "/ratings",
+    UPDATE: (id: number | string) => `/ratings/${id}`,
+    DELETE: (id: number | string) => `/ratings/${id}`,
     HELPFUL: (id: number) => `/ratings/${id}/helpful`,
   },
   UPLOAD: {

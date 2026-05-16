@@ -31,3 +31,19 @@ export interface RegisterResponse {
 export type RefreshTokenResponse = LoginResponse;
 export type FormRegister = RegisterRequest;
 export type LoginForm = LoginRequest;
+
+export interface ForgotPasswordRequest {
+  email: string;
+}
+
+export interface ResetPasswordRequest {
+  token: string;
+  email: string;
+  password: string;
+  password_confirmation: string;
+}
+
+export interface VerifyEmailRequest {
+  token?: string;
+  code?: string;
+}

@@ -7,6 +7,12 @@ description: Plan how real data flows through services, hooks, and UI. Use when 
 
 ## Overview
 
+## When to Use
+
+- When wiring real API data into UI.
+- When query ownership, mutation flow, or invalidate behavior needs to be planned explicitly.
+- When a feature is at risk of data-flow drift between service, hook, and UI layers.
+
 Skill này mô tả cách nối data thật vào UI theo flow:
 
 ```
@@ -19,6 +25,9 @@ Với page server-first (Next.js App Router), tài liệu cũng phải ghi rõ p
 
 - `persona.md`
 - `.agent/rules/PROJECT_RULES.md`
+- `.agent/rules/REPO_FACTS.md`
+- `.agent/memory/WORKING_STATE.md`
+- `.agent/memory/HANDOFF.md`
 - `src/lib/react-query.ts`
 - `src/providers/providers.tsx`
 - `src/services/<feature>.service.ts`
@@ -219,6 +228,16 @@ Template:
 - Server component không được import client-only hooks
 - `"use client"` chỉ đặt ở component thật sự cần interactivity
 
+## Rationalizations
+
+| Lý do hay gặp | Thực tế |
+|---|---|
+| "Page đơn giản, fetch trong useEffect cho nhanh" | Không có caching, không có loading state chuẩn, không dedup request |
+| "Server component fetch rồi, không cần TanStack Query" | Đúng cho static data — nhưng filter/pagination cần client query |
+| "Invalidate all queries cho chắc" | Refetch toàn bộ app — tốn bandwidth và gây flicker |
+| "Loading state chỉ cần spinner là đủ" | Skeleton giữ layout ổn định, tránh CLS |
+
+
 ## Red Flags
 
 Nếu thấy những dấu hiệu sau, phải dừng và flag:
@@ -229,15 +248,6 @@ Nếu thấy những dấu hiệu sau, phải dừng và flag:
 - Client component fetch data trong `useEffect` thay vì TanStack Query → không có caching
 - `isLoading` nhưng không có skeleton → layout shift
 - Error chỉ `console.error` → user không biết có lỗi
-
-## Common Rationalizations
-
-| Lý do hay gặp | Thực tế |
-|---|---|
-| "Page đơn giản, fetch trong useEffect cho nhanh" | Không có caching, không có loading state chuẩn, không dedup request |
-| "Server component fetch rồi, không cần TanStack Query" | Đúng cho static data — nhưng filter/pagination cần client query |
-| "Invalidate all queries cho chắc" | Refetch toàn bộ app — tốn bandwidth và gây flicker |
-| "Loading state chỉ cần spinner là đủ" | Skeleton giữ layout ổn định, tránh CLS |
 
 ## Documentation Expectations
 

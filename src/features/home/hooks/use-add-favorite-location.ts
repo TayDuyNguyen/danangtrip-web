@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { favoriteService } from "@/services/favorite.service";
 import { useAuthStore } from "@/store/auth.store";
+import { getApiErrorMessage } from "@/utils";
 
 export function useAddFavoriteLocation() {
   const t = useTranslations();
@@ -24,12 +25,12 @@ export function useAddFavoriteLocation() {
       if (res.success) {
         toast.success(t("common.favorite.add_success"));
       } else {
-        toast.error(res.message || t("common.favorite.error"));
+        toast.error(getApiErrorMessage(res, t("common.favorite.error")));
       }
     },
     onError: (err) => {
       if (err instanceof Error && err.name === "AuthRequired") return;
-      toast.error(t("common.favorite.error"));
+      toast.error(getApiErrorMessage(err, t("common.favorite.error")));
     },
   });
 }

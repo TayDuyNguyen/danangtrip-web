@@ -7,6 +7,12 @@ description: Analyze a web screen from Figma, SRS, or requirement notes and prod
 
 ## Overview
 
+## When to Use
+
+- When a new screen or major UI change needs structured analysis before implementation.
+- When the requirement is still scattered across Figma, notes, PRD, or discussion.
+- When downstream steps need one shared interpretation instead of ad hoc assumptions.
+
 Skill này là điểm bắt đầu của pipeline cho `danangtrip-web`.
 Nó biến input thô như Figma, SRS, note sản phẩm, hoặc mô tả từ USER thành **screen analysis document đủ chi tiết để các bước route, UI, data, auth, testing không phải tự suy diễn**.
 
@@ -24,6 +30,9 @@ Mục tiêu của output không phải là "ghi chú ngắn", mà là tài liệ
 - Figma link, mockup, PRD, hoặc meeting notes
 - `DESIGN.md`
 - `.agent/rules/PROJECT_RULES.md`
+- `.agent/rules/REPO_FACTS.md`
+- `.agent/memory/WORKING_STATE.md`
+- `.agent/memory/HANDOFF.md`
 - `d:/DATN/DATN_Tài liệu/docs/api/api_list.md`
 - `src/config/api.ts`
 - `src/config/routes.ts`
@@ -180,6 +189,16 @@ Template:
 - Khi có xung đột giữa mockup và `DESIGN.md`, phải flag rõ
 - Endpoint phải đối chiếu với `api_list.md` và `src/config/api.ts` — không tự đặt tên
 
+## Rationalizations
+
+| Lý do hay gặp | Thực tế |
+|---|---|
+| "Màn đơn giản, không cần analysis chi tiết" | Bước sau sẽ tự đoán và drift — tốn thêm thời gian fix |
+| "Chưa có Figma, phân tích sau" | Phân tích từ SRS/notes trước, ghi `[ASSUMPTION]` cho phần chưa có mockup |
+| "Component breakdown rõ rồi, không cần bảng" | Bảng giúp bước 05 đọc nhanh — prose dài khó scan |
+| "API chưa có docs, bỏ qua phần data mapping" | Phải ghi `Open Question` — không được bỏ qua im lặng |
+
+
 ## Red Flags
 
 Nếu thấy những dấu hiệu sau trong analysis, phải bổ sung:
@@ -189,15 +208,6 @@ Nếu thấy những dấu hiệu sau trong analysis, phải bổ sung:
 - Data mapping không có source endpoint → bước 03 phải tự đoán
 - Không có business rules section → bước 07 sẽ miss edge cases
 - Không có `[ASSUMPTION]` dù có nhiều điểm chưa chắc → silent assumption
-
-## Common Rationalizations
-
-| Lý do hay gặp | Thực tế |
-|---|---|
-| "Màn đơn giản, không cần analysis chi tiết" | Bước sau sẽ tự đoán và drift — tốn thêm thời gian fix |
-| "Chưa có Figma, phân tích sau" | Phân tích từ SRS/notes trước, ghi `[ASSUMPTION]` cho phần chưa có mockup |
-| "Component breakdown rõ rồi, không cần bảng" | Bảng giúp bước 05 đọc nhanh — prose dài khó scan |
-| "API chưa có docs, bỏ qua phần data mapping" | Phải ghi `Open Question` — không được bỏ qua im lặng |
 
 ## Documentation Expectations
 

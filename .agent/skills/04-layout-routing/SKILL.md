@@ -7,6 +7,12 @@ description: Plan routes, layouts, metadata, locale behavior, and server/client 
 
 ## Overview
 
+## When to Use
+
+- When adding or changing pages, route groups, layouts, metadata, or locale-aware navigation.
+- When route behavior may affect auth, i18n, or server/client boundaries.
+- When implementation needs a route plan before files are created or edited.
+
 Skill này lập **route plan** cho App Router: route path, metadata, layout, locale behavior, và server/client boundary.
 Mục tiêu là để bước code không bị lệch giữa route thật, route config, locale files, và page structure.
 
@@ -14,6 +20,9 @@ Mục tiêu là để bước code không bị lệch giữa route thật, route
 
 - `persona.md`
 - `.agent/rules/PROJECT_RULES.md`
+- `.agent/rules/REPO_FACTS.md`
+- `.agent/memory/WORKING_STATE.md`
+- `.agent/memory/HANDOFF.md`
 - Analysis file từ `01-screen-analysis`
 - `src/app/[locale]/`
 - `src/config/routes.ts`
@@ -246,6 +255,16 @@ Template:
 - Dùng `next-intl` navigation (`Link`, `useRouter`) thay vì `next/navigation` trực tiếp
 - Route path phải lowercase, kebab-case
 
+## Rationalizations
+
+| Lý do hay gặp | Thực tế |
+|---|---|
+| `"use client"` cho cả page cho tiện | Mất server rendering, SEO kém hơn, bundle lớn hơn |
+| "Metadata tĩnh, hardcode cho nhanh" | Khi cần dynamic title/OG, phải refactor |
+| "i18n thêm sau" | Khi thêm sau, dễ bỏ sót key — thêm ngay khi tạo route |
+| "Dùng next/link cũng được" | Mất locale prefix tự động của next-intl |
+
+
 ## Red Flags
 
 Nếu thấy những dấu hiệu sau, phải dừng và flag:
@@ -255,15 +274,6 @@ Nếu thấy những dấu hiệu sau, phải dừng và flag:
 - Dùng `next/link` thay vì `next-intl/link` → locale prefix bị mất
 - i18n chỉ thêm vào `vi` mà quên `en` → broken UI khi switch language
 - Route path không thêm vào `src/config/routes.ts` → hardcode string rải rác
-
-## Common Rationalizations
-
-| Lý do hay gặp | Thực tế |
-|---|---|
-| `"use client"` cho cả page cho tiện | Mất server rendering, SEO kém hơn, bundle lớn hơn |
-| "Metadata tĩnh, hardcode cho nhanh" | Khi cần dynamic title/OG, phải refactor |
-| "i18n thêm sau" | Khi thêm sau, dễ bỏ sót key — thêm ngay khi tạo route |
-| "Dùng next/link cũng được" | Mất locale prefix tự động của next-intl |
 
 ## Documentation Expectations
 

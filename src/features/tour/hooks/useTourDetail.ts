@@ -1,13 +1,14 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { tourService } from "@/services/tour.service";
 import { ratingService } from "@/services/rating.service";
+import { tourMapper } from "../utils/tour-mapper";
 
 export function useTourDetail(slug: string) {
   return useQuery({
     queryKey: ["tours", "detail", slug],
     queryFn: async () => {
       const response = await tourService.getDetail(slug);
-      return response.data;
+      return response.data ? tourMapper.mapTour(response.data) : null;
     },
     enabled: !!slug,
   });
@@ -23,8 +24,9 @@ export function useRelatedTours(categoryId?: number, currentTourId?: number) {
         per_page: 4 
       });
       const tours = response.data?.data ?? [];
+      const normalizedTours = tourMapper.mapTours(tours);
       // Filter out current tour if possible
-      return tours.filter((tour) => tour.id !== currentTourId);
+      return normalizedTours.filter((tour) => tour.id !== currentTourId);
     },
     enabled: !!categoryId,
   });

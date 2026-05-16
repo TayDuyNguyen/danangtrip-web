@@ -108,9 +108,14 @@ export interface TourSchedule {
   start_date: string;
   end_date: string;
   max_people: number;
-  current_people: number;
-  min_people: number;
-  status: 'available' | 'full' | 'cancelled';
+  booked_people: number;
+  current_people?: number;
+  min_people?: number;
+  status: 'available' | 'cancelled';
+  booking_availability: 'open' | 'sold_out';
+  price_adult?: string | number | null;
+  price_child?: string | number | null;
+  price_infant?: string | number | null;
   created_at?: string;
   updated_at?: string;
 }

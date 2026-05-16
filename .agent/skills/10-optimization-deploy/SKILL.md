@@ -7,6 +7,12 @@ description: Produce final build, deploy, smoke-test, and handoff documents alig
 
 ## Overview
 
+## When to Use
+
+- When wrapping up a feature before handoff, push, preview, or deploy.
+- When build/deploy readiness must be summarized for review.
+- When testing already produced a verdict and a final delivery package is needed.
+
 Đây là bước cuối của pipeline. Skill này tạo ra:
 
 - `deploy report`: ghi nhận build, performance, smoke test, và readiness
@@ -18,6 +24,9 @@ Nếu `09-testing` là bước ghi nhận kiểm thử, thì `10-optimization-de
 
 - `persona.md`
 - `.agent/rules/PROJECT_RULES.md`
+- `.agent/rules/REPO_FACTS.md`
+- `.agent/memory/WORKING_STATE.md`
+- `.agent/memory/HANDOFF.md`
 - `DESIGN.md`
 - `next.config.ts`
 - `package.json`
@@ -301,6 +310,15 @@ Templates:
 - **Tuyệt đối không tự ý `git push` — phải chờ USER xác nhận**
 - **Phải gợi ý tên nhánh và commit message trước khi hỏi USER**
 - `review.md` phải mô tả đúng stack hiện tại (Next.js App Router, Cloudflare Workers)
+
+## Rationalizations
+
+| Excuse | Rebuttal |
+|---|---|
+| "The test report is already enough." | A final delivery step still needs deploy readiness, smoke status, and reviewer-facing summary. |
+| "Build passed, so deployment is fine." | Build pass alone does not cover deploy assumptions, smoke results, or operational risks. |
+| "Reviewers can read the diff themselves." | A delivery report reduces ambiguity and accelerates final approval. |
+
 
 ## Red Flags
 

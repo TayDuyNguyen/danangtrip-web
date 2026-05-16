@@ -16,6 +16,7 @@ import { shouldRetryQuery } from '@/lib/react-query';
 import { mapLocationRatingToReview } from '@/features/locations/utils/map-location-rating';
 import { useAuthStore } from '@/store/auth.store';
 import WriteReviewModal from '@/features/locations/components/detail/WriteReviewModal';
+import { getApiErrorMessage } from '@/utils';
 
 interface LocationReviewsProps {
   locationId: number;
@@ -87,10 +88,10 @@ const LocationReviews: React.FC<LocationReviewsProps> = ({
       if (res.success) {
         void queryClient.invalidateQueries({ queryKey: ['locations', locationId, 'ratings'] });
       } else {
-        toast.error(res.message || t('detail.helpful_error'));
+        toast.error(getApiErrorMessage(res, t('detail.helpful_error')));
       }
     },
-    onError: () => toast.error(t('detail.helpful_error')),
+    onError: (error) => toast.error(getApiErrorMessage(error, t('detail.helpful_error'))),
   });
 
   const reviews: LocationReview[] = useMemo(() => {
@@ -211,7 +212,9 @@ const LocationReviews: React.FC<LocationReviewsProps> = ({
       ) : null}
 
       {ratingsQuery.isError ? (
-        <p className="text-sm text-on-surface-subtle">{t('detail.reviews_load_error')}</p>
+        <p className="text-sm text-on-surface-subtle">
+          {getApiErrorMessage(ratingsQuery.error, t('detail.reviews_load_error'))}
+        </p>
       ) : null}
 
       <div className="grid gap-6">

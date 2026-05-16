@@ -41,7 +41,7 @@ const TourCard = ({ tour, className, index = 0 }: TourCardProps) => {
         {/* Image Container */}
         <div className="relative aspect-4/3 overflow-hidden">
           <Image
-            src={tour.thumbnail || "/images/placeholder.jpg"}
+            src={tour.thumbnail || "/images/placeholder.png"}
             alt={tour.name}
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-110"

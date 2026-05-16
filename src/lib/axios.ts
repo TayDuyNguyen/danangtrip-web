@@ -4,6 +4,7 @@ import { config } from "@/config";
 import { useAuthStore } from "@/store/auth.store";
 import type { ApiResponse } from "@/types";
 import { clearTokens, getAccessToken, setAccessToken } from "@/utils/auth.helper";
+import { getApiErrorMessage } from "@/utils/api-error";
 
 /**
  * Enhanced Axios instance with cookie-based auth and standardized ApiResponse contract.
@@ -128,7 +129,16 @@ axiosInstance.interceptors.response.use(
       message: (response.data as { message?: string })?.message || "Success",
     };
   },
-  async (error: AxiosError<{ error?: string; message?: string }>) => {
+  async (
+    error: AxiosError<{
+      code?: number;
+      error?: string;
+      message?: string;
+      user_message?: string;
+      error_key?: string;
+      errors?: Record<string, string[] | string | undefined>;
+    }>
+  ) => {
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
     const locale = typeof window !== "undefined" && window.location.pathname.startsWith("/en") ? "en" : "vi";
 
@@ -160,7 +170,6 @@ axiosInstance.interceptors.response.use(
         : config.api.fallbackUrls[nextUrlIndex];
 
       if (nextUrl) {
-        console.warn(`[API Failover] Lỗi kết nối tại ${activeBaseUrl}. Tự động chuyển sang fallback API: ${nextUrl}`);
         activeBaseUrl = nextUrl;
         originalRequest.baseURL = activeBaseUrl;
         
@@ -176,6 +185,7 @@ axiosInstance.interceptors.response.use(
         success: false,
         error: isNetwork ? "Network Error" : "Server Error",
         message: getSystemMessage(isNetwork ? "network" : "server"),
+        user_message: getSystemMessage(isNetwork ? "network" : "server"),
         status: isNetwork ? 0 : error.response!.status,
       } as ApiResponse);
     }
@@ -236,18 +246,27 @@ axiosInstance.interceptors.response.use(
       handleLogout();
     }
 
+    const localizedMessage = getApiErrorMessage(
+      data as ApiResponse,
+      getSystemMessage(status === 403 ? "forbidden" : "server")
+    );
+
     if (status === 403) {
-      toast.warning(getSystemMessage("forbidden"));
+      toast.warning(localizedMessage);
     }
 
     if (status >= 500) {
-      toast.error(getSystemMessage("server"));
+      toast.error(localizedMessage);
     }
 
     const errorResponse: ApiResponse = {
       success: false,
-      error: data?.error || data?.message || "Unknown Error",
-      message: data?.message || "An unexpected error occurred",
+      code: data?.code,
+      error_key: data?.error_key,
+      user_message: data?.user_message,
+      errors: data?.errors,
+      error: localizedMessage,
+      message: localizedMessage,
       status,
     };
 

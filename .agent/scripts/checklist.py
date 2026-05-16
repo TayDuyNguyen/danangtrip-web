@@ -13,6 +13,7 @@ from typing import List
 
 
 CHECKS = [
+    ("Agent Drift Check", ["python", ".agent/scripts/verify_agent_drift.py", "."]),
     ("Lint", ["npm", "run", "lint"]),
     ("Typecheck", ["npm", "run", "typecheck"]),
     ("Route Check", ["npm", "run", "check:routes"]),

@@ -93,9 +93,13 @@ export default function BookingSidebar({ tour }: BookingSidebarProps) {
               >
                 <option value="">{td("select_date")}</option>
                 {schedules.map((schedule) => (
-                  <option key={schedule.id} value={schedule.id} disabled={schedule.status !== 'available'}>
+                  <option
+                    key={schedule.id}
+                    value={schedule.id}
+                    disabled={schedule.status !== "available" || schedule.booking_availability === "sold_out"}
+                  >
                     {dateFormatter.format(new Date(schedule.start_date))}{" "}
-                    {schedule.status === "full" ? `(${td("schedule_full")})` : ""}
+                    {schedule.booking_availability === "sold_out" ? `(${td("schedule_full")})` : ""}
                   </option>
                 ))}
               </select>

@@ -7,6 +7,12 @@ description: Review middleware, auth state, and permission-gated UI. Use when a 
 
 ## Overview
 
+## When to Use
+
+- When a feature changes protected routes, permission-gated UI, or sensitive actions.
+- When middleware, cookie/store sync, or redirect behavior may be affected.
+- When access control needs review before handoff.
+
 Skill này dùng để rà soát auth, middleware, permission matrix, và UI gating trước khi bàn giao feature có yếu tố bảo vệ truy cập.
 Mục tiêu là để route behavior, cookie/store sync, và UI permission cùng khớp một logic.
 
@@ -14,6 +20,9 @@ Mục tiêu là để route behavior, cookie/store sync, và UI permission cùng
 
 - `persona.md`
 - `.agent/rules/PROJECT_RULES.md`
+- `.agent/rules/REPO_FACTS.md`
+- `.agent/memory/WORKING_STATE.md`
+- `.agent/memory/HANDOFF.md`
 - `src/middleware.ts`
 - `src/store/auth.store.ts`
 - `src/utils/auth.helper.ts`
@@ -201,6 +210,16 @@ Template:
 - Nếu không chắc role matrix, ghi `[ASSUMPTION]`
 - Middleware redirect không được tạo vòng lặp (login → protected → login)
 
+## Rationalizations
+
+| Lý do hay gặp | Thực tế |
+|---|---|
+| "Feature này public, không cần auth review" | Vẫn cần ghi N/A rõ ràng — không bỏ qua im lặng |
+| "Chỉ cần check `isAuthenticated` là đủ" | Nếu có role-based UI, cần check cả `user.role` |
+| "CSS hide nhanh hơn conditional render" | User có thể inspect DOM và thấy hidden elements |
+| "Interceptor đã xử lý 401, không cần check trong component" | Đúng — nhưng phải verify interceptor đang hoạt động đúng |
+
+
 ## Red Flags
 
 Nếu thấy những dấu hiệu sau, phải dừng và flag:
@@ -210,15 +229,6 @@ Nếu thấy những dấu hiệu sau, phải dừng và flag:
 - Middleware redirect về `/login` nhưng `/login` cũng bị protect → infinite redirect loop
 - Service tự gắn `Authorization` header thay vì để interceptor làm → duplicate logic
 - Logout chỉ clear cookie nhưng không clear Zustand store → stale auth state
-
-## Common Rationalizations
-
-| Lý do hay gặp | Thực tế |
-|---|---|
-| "Feature này public, không cần auth review" | Vẫn cần ghi N/A rõ ràng — không bỏ qua im lặng |
-| "Chỉ cần check `isAuthenticated` là đủ" | Nếu có role-based UI, cần check cả `user.role` |
-| "CSS hide nhanh hơn conditional render" | User có thể inspect DOM và thấy hidden elements |
-| "Interceptor đã xử lý 401, không cần check trong component" | Đúng — nhưng phải verify interceptor đang hoạt động đúng |
 
 ## Documentation Expectations
 

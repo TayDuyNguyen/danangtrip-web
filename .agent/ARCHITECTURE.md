@@ -10,10 +10,16 @@ Mục tiêu của nó là giúp AI:
 Khi có xung đột, hãy ưu tiên:
 
 1. `.agent/rules/PROJECT_RULES.md`
-2. Repo thực tế (`package.json`, `src/`, `next.config.ts`, `vitest.config.ts`, `scripts/`)
-3. Các `SKILL.md` trong `.agent/skills/`
+2. `.agent/rules/REPO_FACTS.md`
+3. Repo thực tế (`package.json`, `src/`, `next.config.ts`, `vitest.config.ts`, `scripts/`)
+4. Các `SKILL.md` trong `.agent/skills/`
 
 `ARCHITECTURE.md` là file inventory và định hướng sử dụng, không phải source of truth cho runtime architecture.
+
+Quick anchors:
+
+- Repo facts: `.agent/rules/REPO_FACTS.md`
+- Drift check: `.agent/scripts/verify_agent_drift.py`
 
 ## Inventory thực tế
 
@@ -21,9 +27,8 @@ Hiện `.agent/` của repo này có:
 
 - `10` pipeline skills trong `.agent/skills/`
 - `20` agent profiles trong `.agent/agents/`
-- Persona docs trong `.agent/personas/`
 - Memory docs trong `.agent/memory/`
-- Config/runtime helper files trong `.agent/config/`, `.agent/runtime/`
+- Config helper files trong `.agent/config/`
 - Local validation helpers trong `.agent/scripts/`
 - Artifact output folders trong `.agent/artifacts/`
 
@@ -35,10 +40,8 @@ Hiện `.agent/` của repo này có:
 ├── artifacts/    # Documents generated during work
 ├── config/       # Local agent settings
 ├── memory/       # Project memory and knowledge notes
-├── personas/     # Persona docs used by pipeline skills
 ├── rules/        # Project operating rules
 ├── scripts/      # Local validation helpers
-├── runtime/      # Local runtime support files
 └── skills/       # 10-step feature/documentation pipeline
 ```
 

@@ -114,7 +114,6 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
     tocHeadings = processed.headings;
 
   } catch (error) {
-    console.error("[BlogDetail] Data fetching error:", error);
     throw error; 
   }
 

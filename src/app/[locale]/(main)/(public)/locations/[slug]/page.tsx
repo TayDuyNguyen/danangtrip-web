@@ -39,8 +39,7 @@ export default async function LocationDetailPage({ params }: LocationDetailPageP
   try {
     const response = await locationService.getDetail(slug);
     location = response.data;
-  } catch (error) {
-    console.error('Error fetching location detail:', error);
+  } catch {
     return notFound();
   }
 
