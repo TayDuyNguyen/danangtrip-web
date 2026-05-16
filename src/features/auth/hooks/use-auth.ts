@@ -5,6 +5,7 @@ import { useAuthStore } from "@/store/auth.store";
 import { authService } from "@/services/auth.service";
 import type { LoginRequest, RegisterRequest, ApiResponse } from "@/types";
 import { clearTokens, getAccessToken } from "@/utils/auth.helper";
+import { getApiErrorMessage } from "@/utils";
 
 export const useAuth = () => {
   const {
@@ -36,11 +37,11 @@ export const useAuth = () => {
           }
         }
 
-        setError(response.message || "Login failed");
-        return { success: false, error: response.message };
+        const message = getApiErrorMessage(response, "Login failed");
+        setError(message);
+        return { success: false, error: message };
       } catch (err) {
-        const apiError = err as ApiResponse;
-        const message = apiError.message || apiError.error || "Login failed";
+        const message = getApiErrorMessage(err, "Login failed");
         setError(message);
         return { success: false, error: message };
       } finally {
@@ -68,11 +69,11 @@ export const useAuth = () => {
           }
         }
 
-        setError(response.message || "Registration failed");
-        return { success: false, error: response.message };
+        const message = getApiErrorMessage(response, "Registration failed");
+        setError(message);
+        return { success: false, error: message };
       } catch (err) {
-        const apiError = err as ApiResponse;
-        const message = apiError.message || apiError.error || "Registration failed";
+        const message = getApiErrorMessage(err, "Registration failed");
         setError(message);
         return { success: false, error: message };
       } finally {

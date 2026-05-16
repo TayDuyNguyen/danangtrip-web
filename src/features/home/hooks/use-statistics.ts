@@ -2,8 +2,9 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { statisticsService } from "@/services/statistics.service";
-import type { Statistics, ApiResponse } from "@/types";
+import type { Statistics } from "@/types";
 import { shouldRetryQuery } from "@/lib/react-query";
+import { getApiErrorMessage } from "@/utils";
 
 /**
  * Enhanced useStatistics hook using TanStack Query.
@@ -26,7 +27,7 @@ export const useStatistics = () => {
   return {
     stats,
     isLoading: query.isLoading,
-    error: query.error ? ((query.error as ApiResponse).error || (query.error as ApiResponse).message || "Statistics load failed") : null,
+    error: query.error ? getApiErrorMessage(query.error, "Statistics load failed") : null,
     refresh: () => query.refetch(),
   };
 };

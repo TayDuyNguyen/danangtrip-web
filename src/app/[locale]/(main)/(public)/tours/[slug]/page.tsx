@@ -38,8 +38,7 @@ export default async function TourDetailPage({ params }: TourDetailPageProps) {
   try {
     const response = await tourService.getDetail(slug);
     tour = response.data;
-  } catch (error) {
-    console.error("Error fetching tour detail:", error);
+  } catch {
     return notFound();
   }
 

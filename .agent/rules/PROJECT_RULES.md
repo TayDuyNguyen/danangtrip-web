@@ -7,6 +7,10 @@ description: "DanangTrip Web repository rules for architecture, code quality, de
 This is the repository operating contract for AI and contributors working in this codebase.
 Use this file together with `AGENTS.md`.
 
+Fast companion doc:
+- `.agent/rules/REPO_FACTS.md` for compact repository reality checks before using skill templates.
+- `.agent/memory/WORKING_STATE.md` and `.agent/memory/HANDOFF.md` for continuity across sessions.
+
 Goals:
 - Keep architecture consistent.
 - Reduce regressions in routes, i18n, auth, and UI behavior.
@@ -56,6 +60,16 @@ Priority:
 - Template-driven code that does not match this repository.
 - New abstractions without at least two real consumers.
 - Large cross-layer edits without clear justification.
+
+### Working Memory Protocol
+- Before non-trivial work, read:
+  - `.agent/rules/REPO_FACTS.md`
+  - `.agent/memory/WORKING_STATE.md`
+  - `.agent/memory/HANDOFF.md`
+  - the most recent relevant files in `.agent/memory/decisions/` and `.agent/artifacts/`
+- When the active task changes, update `.agent/memory/WORKING_STATE.md`.
+- When pausing unfinished work, update `.agent/memory/HANDOFF.md`.
+- When a repo-wide decision is made, record it under `.agent/memory/decisions/`.
 
 ---
 

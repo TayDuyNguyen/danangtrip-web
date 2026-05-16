@@ -1,117 +1,72 @@
 ---
 name: 09-testing
-description: Execute structured testing phases like a professional QA tester — from static gates to UI visual, functional flows, edge cases, and regression. Use before handoff.
+description: Execute structured testing phases like a professional QA tester, from static gates to UI visual review, copy review, functional flows, edge cases, and regression. Use before handoff.
 ---
 
 # Skill: 09-testing
 
 ## Overview
 
-Skill này thực hiện kiểm thử có cấu trúc theo **5 phase** như một tester chuyên nghiệp.
+This skill runs a structured QA pass for the current web feature and produces a defensible release verdict.
+It must catch both runtime failures and user-facing defects such as broken copy, visual drift, state issues, and browser warnings.
 
-**QUAN TRỌNG — Gate cứng giữa các phase:**
+## When to Use
 
-```
-Phase 1 PHẢI PASS 100% → mới được chạy Phase 2
-Phase 2 không có crash/blank → mới được chạy Phase 3
-Phase 3 PHẢI PASS happy path → mới được chạy Phase 4
-Phase 4 + Phase 5 → tổng hợp verdict cuối
-```
+- When a feature is approaching handoff, review, push, or deploy.
+- When testing must produce a structured verdict with evidence instead of ad hoc notes.
+- When multiple validation phases need clear stop conditions.
 
-**Nếu Phase 1 có bất kỳ FAIL nào → DỪNG NGAY. Không chạy Phase 2-5. Báo cáo lỗi và yêu cầu fix trước.**
+## Process
 
-```
-Phase 1: Static Gates      → lint / typecheck / check:routes / build  [BLOCKING]
-Phase 2: UI Visual         → layout, responsive, design tokens, states [BLOCKING nếu crash]
-Phase 3: Functional Flows  → happy path, form, search, filter, pagination [BLOCKING]
-Phase 4: Edge Cases        → boundary, network failure, concurrent actions
-Phase 5: Regression        → i18n locale switch, auth, existing pages
-```
+1. Run static gates first and stop immediately on blocking failures.
+2. If a working dev URL exists, execute UI visual review, copy review, functional flow testing, edge-case testing, and regression testing in order.
+3. Review every major page section, not only the primary happy path.
+4. Record passes, fails, skipped checks, and concrete evidence.
+5. Produce a verdict that matches the actual gate outcomes.
 
 ## Required Input
 
-- `persona.md`
 - `.agent/rules/PROJECT_RULES.md`
-- Analysis / acceptance criteria từ `01-screen-analysis`
-- Interaction spec từ `07-interactions`
-- Auth review từ `08-auth-permissions` nếu có
-- `vitest.config.ts`, `package.json`
-- **Dev server URL** — bắt buộc để chạy Phase 2-5
+- `.agent/rules/REPO_FACTS.md`
+- `.agent/memory/WORKING_STATE.md`
+- `.agent/memory/HANDOFF.md`
+- the relevant analysis artifact from `01-screen-analysis`
+- the interaction spec from `07-interactions`
+- the auth review from `08-auth-permissions` when relevant
+- `package.json`
+- a working browser URL for runtime phases
 
-## Dev Server URL
+## Dev Server Requirement
 
-Truyền URL vào khi kích hoạt skill:
+Provide URLs when activating this skill:
 
-```
-Dev server URL: http://localhost:3000
-Feature URL:    http://localhost:3000/vi/tours
-```
-
-Nếu không có URL → Phase 2-5 ghi `NOT RUN` với lý do cụ thể.
-
----
-
-## GATE LOGIC — Bắt buộc tuân thủ
-
-```
-┌─────────────────────────────────────────────────────┐
-│  Phase 1: Static Gates                              │
-│  lint + typecheck + check:routes + build + prepush  │
-└──────────────┬──────────────────────────────────────┘
-               │
-        Có FAIL nào không?
-               │
-        YES ───┼──→ DỪNG. Báo lỗi cụ thể.
-               │    Yêu cầu fix trước khi tiếp tục.
-               │    Verdict: NOT READY — blocked by Phase 1
-               │
-        NO  ───┼──→ Tiếp tục Phase 2
-               │
-┌──────────────▼──────────────────────────────────────┐
-│  Phase 2: UI Visual                                 │
-│  Layout, responsive, design tokens, skeleton, empty │
-└──────────────┬──────────────────────────────────────┘
-               │
-        App có crash / blank screen không?
-               │
-        YES ───┼──→ DỪNG. Báo lỗi cụ thể.
-               │    Verdict: NOT READY — blocked by Phase 2
-               │
-        NO  ───┼──→ Ghi nhận issues (non-blocking), tiếp tục Phase 3
-               │
-┌──────────────▼──────────────────────────────────────┐
-│  Phase 3: Functional Flows                          │
-│  Happy path: search, filter, pagination, form       │
-└──────────────┬──────────────────────────────────────┘
-               │
-        Happy path có FAIL không?
-               │
-        YES ───┼──→ DỪNG. Báo flow nào fail.
-               │    Verdict: NOT READY — blocked by Phase 3
-               │
-        NO  ───┼──→ Tiếp tục Phase 4 + 5
-               │
-┌──────────────▼──────────────────────────────────────┐
-│  Phase 4: Edge Cases + Phase 5: Regression          │
-│  Boundary, network errors, i18n, auth               │
-└──────────────┬──────────────────────────────────────┘
-               │
-        Tổng hợp tất cả issues
-               │
-        ┌──────▼──────┐
-        │   VERDICT   │
-        │ ready /     │
-        │ not ready / │
-        │ ready with  │
-        │ risks       │
-        └─────────────┘
+```text
+Login URL:   http://localhost:3000/login
+Feature URL: http://localhost:3000/tours
 ```
 
----
+If no browser URL is available, browser-based phases must be reported as `NOT RUN` with a specific reason.
 
-## Phase 1 — Static Quality Gates [BLOCKING]
+## Gate Logic
 
-Chạy tuần tự. **Dừng ngay nếu có FAIL — không chạy Phase tiếp theo.**
+```text
+Phase 1 must pass before Phase 2 starts.
+Phase 2 must not have crash, blank-screen, or unusable-layout failures before Phase 3 starts.
+Phase 3 happy path must pass before Phase 4 and Phase 5 start.
+Phase 4 and Phase 5 contribute to the final verdict and residual risk summary.
+```
+
+Phase map:
+
+- Phase 1: Static Gates
+- Phase 2: UI Visual + Copy + Polish Review
+- Phase 3: Functional Flows
+- Phase 4: Edge Cases
+- Phase 5: Regression
+
+## Phase 1 - Static Gates [Blocking]
+
+Run in order:
 
 ```bash
 npm run lint
@@ -121,659 +76,321 @@ npm run build
 npm run prepush:check
 ```
 
-**Ghi kết quả:**
-```
-PASS  - lint: 0 errors, 0 warnings
-PASS  - typecheck: no errors
-PASS  - check:routes: all routes valid
-PASS  - build: completed, bundle 245KB gzipped
-PASS  - prepush:check: all gates passed
-```
+Required evidence format:
 
-**Nếu FAIL:**
-```
-FAIL  - typecheck: 2 errors tại src/features/tours/TourCard.tsx:23
-        → Type 'string | null' is not assignable to type 'string'
-        → BLOCKING: không thể tiếp tục Phase 2-5
-        → Yêu cầu fix trước khi chạy lại skill 09
+```text
+PASS - lint: 0 errors, 0 warnings
+PASS - typecheck: no errors
+PASS - check:routes: all routes valid
+PASS - build: completed successfully
+PASS - prepush:check: all gates passed
 ```
 
----
+If any command fails:
 
-## Phase 2 — UI Visual Testing [BLOCKING nếu crash]
+- stop immediately
+- report the failing command
+- report the relevant file and error summary
+- mark the verdict as `NOT READY`
 
-Mở URL feature trong browser. **Nếu app crash hoặc blank screen → dừng ngay.**
+## Phase 2 - UI Visual, Copy, and Polish Review [Blocking for severe issues]
 
-### 2.1) Layout & Responsive
+This phase must inspect the real page in the browser, not just source code.
 
-| Check | Desktop (1440px) | Tablet (768px) | Mobile (375px) |
-|---|---|---|---|
-| Layout không bị vỡ | | | |
-| Text không bị overflow/truncate sai | | | |
-| Image đúng tỷ lệ, không bị stretch | | | |
-| Navigation/header đúng | | | |
-| Footer đúng | | | |
+### 2.1 Layout and Responsive Review
 
-### 2.2) Design Token Compliance
+Check on at least:
 
-Đối chiếu với `DESIGN.md`:
+- desktop
+- tablet
+- mobile
 
-- Màu sắc đúng token (`primary: #8B6A55`, `background: #080808`, v.v.)
-- Typography đúng font Inter/SFMono, size, weight
-- Spacing nhất quán theo scale
-- Glass surfaces / gradient border đúng nếu có
-- Motion / reveal animation đúng nếu có
+Validate:
 
-### 2.3) Loading States
+- layout does not break
+- text does not overflow or collapse incorrectly
+- key controls remain visible and usable
+- cards, drawers, filters, and sticky regions behave correctly
+- spacing remains coherent across breakpoints
 
-Reload trang, quan sát:
+### 2.2 Loading, Empty, Error, and Disabled States
 
-- Skeleton hiển thị đúng vị trí (không phải spinner toàn trang)
-- Skeleton đúng số lượng cards/rows
-- Không có layout shift (CLS) khi data load xong
+Check each visible section for:
 
-### 2.4) Empty States
+- loading state
+- empty state
+- error state
+- disabled state
 
-Dùng filter không có kết quả:
+Validate:
 
-- Empty state component hiển thị (không phải blank)
-- Message rõ ràng, có CTA nếu cần
-- Không có lỗi console khi empty
+- skeletons preserve layout
+- empty states are informative
+- error states are actionable
+- disabled controls look disabled and are actually non-interactive
 
-**Blocking issues Phase 2:** App crash, blank screen, console.error khi load.
-**Non-blocking issues Phase 2:** Minor visual misalignment — ghi nhận, tiếp tục.
+### 2.3 UI Copy Review [Required]
 
----
+Review every user-facing string on the page:
 
-## Phase 3 — Functional Flow Testing [BLOCKING]
+- page titles
+- section headers
+- CTA labels
+- filter labels
+- form labels
+- helper text
+- validation messages
+- empty-state text
+- error messages
+- modal, dialog, or drawer copy
+- pagination and sort labels
 
-**Nếu happy path của bất kỳ flow nào FAIL → dừng, báo cáo, yêu cầu fix.**
+Catch:
 
-### 3.1) Search & Filter
+- spelling mistakes
+- grammar mistakes
+- mojibake or broken encoding
+- mixed-language copy
+- placeholder text left in production UI
+- missing translation keys rendered as raw paths
+- inconsistent capitalization or terminology
 
-```
-1. Nhập từ khóa vào search box
-✓ Không gửi request ngay — chờ debounce (400ms)
-✓ Kết quả cập nhật đúng
-✓ URL params cập nhật (?search=...)
-2. Xóa từ khóa
-✓ Kết quả trở về default
-✓ URL params được clear
+### 2.4 Visual Polish Review [Required]
 
-Filter theo category:
-1. Chọn category
-✓ URL params cập nhật (?categoryId=...)
-2. Refresh trang
-✓ Filter vẫn giữ nguyên (URL-synced)
-3. Click "Reset filter"
-✓ Tất cả filter clear, list về default
-```
+Inspect section by section for small but real UI defects:
 
-### 3.2) Pagination
+- misalignment
+- inconsistent spacing
+- icon size mismatch
+- incorrect badge or button height
+- broken hover, focus, active, or disabled styles
+- image stretching or clipping
+- border, shadow, or radius drift from `DESIGN.md`
+- weak contrast
+- layering issues in modal, dropdown, drawer, or popover
 
-```
-1. Chuyển sang trang 2
-✓ URL params: ?page=2
-✓ Data đúng trang 2
-2. Refresh trang
-✓ Vẫn ở trang 2
-3. Back button
-✓ Về trang 1
-```
+Do not treat "no crash" as sufficient quality.
 
-### 3.3) Form Submit (nếu có)
+### 2.5 Section-by-Section Checklist
 
-```
-Submit form rỗng:
-✓ Required fields hiển thị error message
-✓ Error message đúng ngôn ngữ hiện tại
-✓ Form không submit
+For each major section on the page, explicitly review:
 
-Nhập sai format:
-✓ Field-level error sau blur
-✓ Message cụ thể
+- section header
+- content block layout
+- primary action area
+- secondary action area
+- loading state
+- empty state
+- error state
+- responsive behavior
 
-Submit hợp lệ:
-✓ Loading state trên button
-✓ Success feedback (toast hoặc redirect)
-✓ Không có console.error
-```
+If the page has tabs, cards, dialogs, filters, carousels, or drawers, each of them must be checked separately.
 
-### 3.4) Navigation & Links
+### Phase 2 Severity Rules
 
-```
-- Click tất cả link trong feature
-  ✓ Không có 404
-  ✓ Locale prefix đúng (/vi/... hoặc /en/...)
-  ✓ Back button hoạt động đúng
+Blocking Phase 2 issues:
 
-- Locale switch (vi ↔ en)
-  ✓ URL thay đổi locale prefix
-  ✓ Trang hiện tại giữ nguyên (không về home)
-```
+- crash
+- blank screen
+- unusable layout
+- hidden or inaccessible primary CTA
+- severe overflow that breaks core usage
+- missing translation keys in critical UI
 
----
+Non-blocking but mandatory findings:
 
-## Phase 4 — Edge Case Testing
+- minor spacing drift
+- capitalization inconsistency
+- icon or badge polish issues
+- non-critical copy issues
 
-### 4.1) Boundary Values
+## Phase 3 - Functional Flow Testing [Blocking]
 
-```
-- Input có 1 ký tự → fail nếu min > 1
-- Input có đúng max length → pass
-- Input có max+1 ký tự → fail
-- Số âm → fail nếu min = 0
-```
+The happy path for core actions must pass before moving on.
 
-### 4.2) Network & Error States
+### 3.1 Search, Filter, Pagination, and Sort
 
-Dùng DevTools → Network → Block request hoặc Throttle:
+Validate:
 
-```
-Simulate API timeout / offline:
-✓ Loading skeleton không stuck vô hạn
-✓ Error state hiển thị
-✓ Retry button hoạt động (nếu có)
-✓ App không crash
+- search updates the data correctly
+- filters apply correctly
+- reset works correctly
+- pagination updates the expected data
+- sort order reflects the selected control
+- URL state stays correct when the page uses URL-driven state
 
-Simulate 500 error:
-✓ Toast error hoặc inline error hiển thị
-✓ Message không expose raw server error
-✓ App không crash
-```
+### 3.2 Forms and Primary Mutations
 
-### 4.3) Concurrent Actions
+Where applicable, test:
 
-```
-- Double-click submit button nhanh
-  ✓ Chỉ gửi 1 request
+- submit
+- update
+- delete
+- retry flow
+- toggle or preference changes
 
-- Search trong khi đang load
-  ✓ Request cũ bị cancel, dùng request mới nhất
-```
+Validate:
 
-### 4.4) SEO & Metadata (Next.js specific)
+- controls open the correct UI
+- pending state appears immediately
+- success feedback appears correctly
+- persisted state is reflected correctly after mutation
 
-```
-View Page Source (Ctrl+U):
-✓ <title> đúng nội dung
-✓ <meta name="description"> có nội dung
-✓ <meta property="og:title"> có nội dung
-✓ Không có duplicate <h1>
-```
+### 3.3 Navigation and Links
 
----
+Validate:
 
-## Phase 5 — Regression Testing
+- visible links go to real routes
+- locale-aware navigation stays correct
+- back and forward behavior stays coherent
+- route state remains consistent after refresh when expected
 
-### 5.1) i18n Regression
+### 3.4 Micro-Interaction Review
 
-```
-Switch sang tiếng Anh (/en/...):
-✓ Tất cả text chuyển sang English
-✓ Không có key bị thiếu (không hiển thị dạng "tour.pageTitle")
-✓ Validation messages đúng ngôn ngữ
-✓ Date/number format đúng locale
+Validate:
 
-Switch lại tiếng Việt (/vi/...):
-✓ Tất cả text trở về tiếng Việt
-```
+- button pending states
+- confirmation flows
+- retry actions
+- focus return after modal close
+- keyboard accessibility for key controls when applicable
+- URL-synced controls stay visually in sync with actual URL state
 
-### 5.2) Auth Regression
+If any core happy path fails, stop and mark the verdict as `NOT READY`.
 
-```
-Truy cập protected route khi chưa login:
-✓ Redirect về /login?redirect=<current-path>
-✓ Sau login, redirect về URL ban đầu
+## Phase 4 - Edge Case Testing
 
-Token hết hạn (xóa cookie):
-✓ Redirect về login
-✓ Không có infinite redirect loop
-```
+### 4.1 Boundary Values
 
-### 5.3) Existing Page Regression
+Validate representative bounds:
 
-```
-- Home page vẫn load đúng
-- Các trang cùng module vẫn hoạt động
-- Navigation vẫn đúng
-- Không có console.error mới ở các trang khác
-```
+- too short
+- exact minimum
+- exact maximum
+- above maximum
+- zero
+- negative numbers where invalid
+- empty optional values
 
----
+### 4.2 Network and Error Simulation
 
-## Unit Test Automation
+Use DevTools or equivalent controls to simulate:
 
-Chạy song song với browser testing:
+- timeout
+- offline
+- 4xx
+- 5xx
 
-```bash
-npx vitest run
-```
+Validate:
 
-### Schema test pattern (Zod v4)
+- UI exits loading state
+- error presentation is understandable
+- retry actions behave correctly
+- raw backend internals are not exposed to users
 
-```ts
-describe('contactFormSchema', () => {
-  it('validates valid input', () => {
-    const result = contactFormSchema.safeParse({ name: 'Test', email: 'a@b.com', message: 'Hello world' });
-    expect(result.success).toBe(true);
-  });
-  it('rejects empty name', () => {
-    const result = contactFormSchema.safeParse({ name: '', email: 'a@b.com', message: 'Hello' });
-    expect(result.success).toBe(false);
-  });
-});
-```
+### 4.3 Concurrent Actions
 
----
+Validate:
 
-## Verdict Logic
+- double-click does not submit twice
+- rapid filter/search changes do not leave stale results on screen
+- repeated user actions do not corrupt local state
 
-```
-Phase 1 có FAIL            → NOT READY (blocked by Phase 1)
-Phase 2 có crash/blank     → NOT READY (blocked by Phase 2)
-Phase 3 có happy path FAIL → NOT READY (blocked by Phase 3)
-Phase 4-5 có issues nhỏ   → READY WITH RISKS (liệt kê rõ)
-Tất cả pass                → READY
-```
+### 4.4 SEO and Metadata Review
 
-**READY WITH RISKS** — dùng khi:
-- Phase 4-5 có issues không block core flow
-- Phải liệt kê rõ risks và reviewer phải acknowledge trước khi push
+Where relevant, validate:
 
----
+- page title
+- meta description
+- OG tags
+- no duplicate core headings caused by implementation drift
+
+### 4.5 Console and Warning Review
+
+Check DevTools for:
+
+- `console.error`
+- repeated `console.warn`
+- React key warnings
+- hydration warnings
+- runtime promise rejections
+- resource-loading failures
+
+Warnings that do not crash the app are still valid findings and must be recorded.
+
+## Phase 5 - Regression Testing
+
+### 5.1 i18n Regression
+
+Validate:
+
+- both `vi` and `en` render without raw key paths
+- meaning stays consistent across locales
+- destructive messages remain complete
+- validation messages remain complete
+- date, number, and currency labels stay aligned with the current locale
+
+### 5.2 Auth Regression
+
+Validate where relevant:
+
+- protected routes redirect correctly
+- login redirect flow remains correct
+- session loss or token removal is handled correctly
+
+### 5.3 Existing Page Regression
+
+Validate nearby or related pages:
+
+- related list/detail flows still work
+- navigation still works
+- no new console errors appear in adjacent pages
+
+### 5.4 Translation Integrity Regression
+
+Confirm:
+
+- the same page remains semantically equivalent in both locales
+- no locale renders incomplete warning, validation, or empty-state copy
 
 ## Output Document
 
-Tạo file:
+Create:
 
 - `.agent/artifacts/test-cases/YYYY-MM-DD__<feature-slug>__test-report.md`
 
-Template:
+The report must include:
 
-- `template_test_report.md`
+1. Summary and verdict
+2. Phase 1 findings
+3. Phase 2 findings
+4. Phase 3 findings
+5. Phase 4 findings
+6. Phase 5 findings
+7. Copy and visual findings
+8. Console and warning findings
+9. Residual risks
 
-### Cấu trúc report
+## Rationalizations
 
-```
-1. Summary & Verdict (ready / not ready / ready with risks)
-2. Phase 1 — Static Gates [BLOCKING]
-3. Phase 2 — UI Visual [BLOCKING nếu crash]
-4. Phase 3 — Functional Flows [BLOCKING]
-5. Phase 4 — Edge Cases
-6. Phase 5 — Regression
-7. Unit Test Status
-8. Residual Risks
-```
-
----
-
-## Strict Rules
-
-- **Phase 1 FAIL → DỪNG NGAY. Không chạy Phase 2-5.**
-- **Phase 2 crash/blank → DỪNG NGAY. Không chạy Phase 3-5.**
-- **Phase 3 happy path FAIL → DỪNG NGAY. Không chạy Phase 4-5.**
-- Không claim Playwright nếu `playwright.config.ts` chưa tồn tại
-- Mọi check phải có status: `PASS` / `FAIL` / `NOT RUN` / `N/A`
-- Không ghi "đã test ổn" — phải có evidence cụ thể
-- Verdict "READY" chỉ được dùng khi Phase 1-3 đều PASS
+| Excuse | Rebuttal |
+|---|---|
+| "Lint passed, so the page is fine." | Lint does not validate runtime UX, copy quality, or user flows. |
+| "The happy path worked once, so the page is ready." | A ready page also needs edge-case handling, polish review, and regression coverage. |
+| "Minor copy or alignment issues can wait." | User-facing polish defects are still quality defects and must be documented before handoff. |
 
 ## Red Flags
 
-- Phase 2 bị bỏ qua → UI có thể vỡ layout mà không ai biết
-- Phase 4 không có network error test → không biết app xử lý lỗi thế nào
-- Phase 5 không có i18n locale switch test → language switch có thể broken
-- Verdict "READY" khi Phase 3 chưa pass → sai hoàn toàn
-- Không có SEO check cho Next.js page → metadata có thể sai
+- Phase 2 is skipped entirely
+- copy review is missing
+- visual polish review is missing
+- no console review is performed
+- only static gates are reported
+- verdict says `READY` while a core functional flow failed
 
 ## Verification
 
-- Đối chiếu `checklist.md`
-- Report phải cover đủ 5 phase
-- Verdict phải có lý do cụ thể
-- Nếu dừng sớm vì blocking issue, phải ghi rõ phase nào block và lỗi gì
-
-
-## Required Input
-
-- `persona.md`
-- `.agent/rules/PROJECT_RULES.md`
-- Analysis / acceptance criteria từ `01-screen-analysis`
-- Interaction spec từ `07-interactions`
-- Auth review từ `08-auth-permissions` nếu có
-- `vitest.config.ts`, `package.json`
-- **Dev server URL** — bắt buộc để chạy Phase 2-5
-
-## Dev Server URL
-
-Truyền URL vào khi kích hoạt skill:
-
-```
-Dev server URL: http://localhost:3000
-Feature URL:    http://localhost:3000/vi/tours
-```
-
-Nếu không có URL → Phase 2-5 ghi `NOT RUN` với lý do cụ thể.
-
----
-
-## Phase 1 — Static Quality Gates
-
-Chạy tuần tự, dừng ngay nếu có FAIL:
-
-```bash
-npm run lint
-npm run typecheck
-npm run check:routes
-npm run build
-npm run prepush:check
-```
-
-**Ghi kết quả:**
-```
-PASS  - lint: 0 errors, 0 warnings
-PASS  - typecheck: no errors
-PASS  - check:routes: all routes valid
-PASS  - build: completed, bundle 245KB gzipped
-PASS  - prepush:check: all gates passed
-```
-
-Nếu FAIL → ghi rõ file lỗi, dòng lỗi, loại lỗi, có block release không.
-
----
-
-## Phase 2 — UI Visual Testing
-
-Mở URL feature trong browser, kiểm tra từng mục:
-
-### 2.1) Layout & Responsive
-
-| Check | Desktop (1440px) | Tablet (768px) | Mobile (375px) |
-|---|---|---|---|
-| Layout không bị vỡ | | | |
-| Text không bị overflow/truncate sai | | | |
-| Image đúng tỷ lệ, không bị stretch | | | |
-| Navigation/header đúng | | | |
-| Footer đúng | | | |
-
-### 2.2) Design Token Compliance
-
-Đối chiếu với `DESIGN.md`:
-
-- Màu sắc đúng token (`primary: #8B6A55`, `background: #080808`, v.v.)
-- Typography đúng font Inter/SFMono, size, weight
-- Spacing nhất quán theo scale
-- Glass surfaces / gradient border đúng nếu có
-- Motion / reveal animation đúng nếu có
-
-### 2.3) Loading States
-
-Reload trang, quan sát:
-
-- Skeleton hiển thị đúng vị trí (không phải spinner toàn trang)
-- Skeleton đúng số lượng cards/rows
-- Không có layout shift (CLS) khi data load xong
-- LCP element load nhanh (hero image, main heading)
-
-### 2.4) Empty States
-
-Dùng filter không có kết quả:
-
-- Empty state component hiển thị (không phải blank)
-- Message rõ ràng, có CTA nếu cần
-- Không có lỗi console khi empty
-
----
-
-## Phase 3 — Functional Flow Testing
-
-Test từng flow theo interaction spec từ `07-interactions`.
-
-### 3.1) Search & Filter (nếu có)
-
-```
-1. Nhập từ khóa vào search box
-2. ✓ Không gửi request ngay — chờ debounce (400ms)
-3. ✓ Kết quả cập nhật đúng
-4. ✓ URL params cập nhật (?search=...)
-5. Xóa từ khóa
-6. ✓ Kết quả trở về default
-7. ✓ URL params được clear
-
-Filter theo category:
-1. Chọn category
-2. ✓ URL params cập nhật (?categoryId=...)
-3. Refresh trang
-4. ✓ Filter vẫn giữ nguyên (URL-synced)
-```
-
-### 3.2) Pagination
-
-```
-1. Chuyển sang trang 2
-2. ✓ URL params: ?page=2
-3. ✓ Data đúng trang 2
-4. Refresh trang
-5. ✓ Vẫn ở trang 2
-6. Back button
-7. ✓ Về trang 1
-```
-
-### 3.3) Form Submit (nếu có)
-
-```
-Submit form rỗng:
-✓ Required fields hiển thị error message
-✓ Error message đúng ngôn ngữ hiện tại
-✓ Form không submit
-
-Nhập sai format:
-✓ Field-level error sau blur
-✓ Message cụ thể
-
-Submit hợp lệ:
-✓ Loading state trên button
-✓ Success feedback (toast hoặc redirect)
-✓ Không có console.error
-```
-
-### 3.4) Navigation & Links
-
-```
-- Click tất cả link trong feature
-  ✓ Không có 404
-  ✓ Locale prefix đúng (/vi/... hoặc /en/...)
-  ✓ Back button hoạt động đúng
-
-- Locale switch (vi ↔ en)
-  ✓ URL thay đổi locale prefix
-  ✓ Trang hiện tại giữ nguyên (không về home)
-```
-
----
-
-## Phase 4 — Edge Case Testing
-
-### 4.1) Boundary Values
-
-```
-- Input có 1 ký tự → fail nếu min > 1
-- Input có đúng max length → pass
-- Input có max+1 ký tự → fail
-- Số âm → fail nếu min = 0
-```
-
-### 4.2) Network & Error States
-
-Dùng DevTools → Network → Block request hoặc Throttle:
-
-```
-Simulate API timeout / offline:
-✓ Loading skeleton không stuck vô hạn
-✓ Error state hiển thị
-✓ Retry button hoạt động (nếu có)
-✓ App không crash
-
-Simulate 500 error:
-✓ Toast error hoặc inline error hiển thị
-✓ Message không expose raw server error
-✓ App không crash
-
-Simulate 404:
-✓ Empty state hoặc redirect đúng
-```
-
-### 4.3) Concurrent Actions
-
-```
-- Double-click submit button nhanh
-  ✓ Chỉ gửi 1 request
-
-- Search trong khi đang load
-  ✓ Request cũ bị cancel, dùng request mới nhất
-```
-
-### 4.4) SEO & Metadata (Next.js specific)
-
-```
-View Page Source (Ctrl+U):
-✓ <title> đúng nội dung
-✓ <meta name="description"> có nội dung
-✓ <meta property="og:title"> có nội dung
-✓ Không có duplicate <h1>
-✓ Structured data đúng nếu có
-```
-
----
-
-## Phase 5 — Regression Testing
-
-### 5.1) i18n Regression
-
-```
-Switch sang tiếng Anh (/en/...):
-✓ Tất cả text chuyển sang English
-✓ Không có key bị thiếu (không hiển thị dạng "tour.pageTitle")
-✓ Validation messages đúng ngôn ngữ
-✓ Date/number format đúng locale
-✓ URL locale prefix đúng
-
-Switch lại tiếng Việt (/vi/...):
-✓ Tất cả text trở về tiếng Việt
-✓ Không có flash of wrong language
-```
-
-### 5.2) Auth Regression
-
-```
-Truy cập protected route khi chưa login:
-✓ Redirect về /login?redirect=<current-path>
-✓ Sau login, redirect về URL ban đầu
-
-Truy cập public route khi đã login:
-✓ Không bị redirect sai
-
-Token hết hạn (xóa cookie):
-✓ Redirect về login
-✓ Không có infinite redirect loop
-```
-
-### 5.3) Existing Page Regression
-
-Kiểm tra các trang liên quan không bị ảnh hưởng:
-
-```
-- Home page vẫn load đúng
-- Các trang cùng module vẫn hoạt động
-- Navigation vẫn đúng
-- Không có console.error mới ở các trang khác
-```
-
----
-
-## Unit Test Automation
-
-Chạy song song với browser testing:
-
-```bash
-npx vitest run
-```
-
-### Schema test pattern (Zod v4)
-
-```ts
-describe('contactFormSchema', () => {
-  it('validates valid input', () => {
-    const result = contactFormSchema.safeParse({ name: 'Test', email: 'a@b.com', message: 'Hello world' });
-    expect(result.success).toBe(true);
-  });
-  it('rejects empty name', () => {
-    const result = contactFormSchema.safeParse({ name: '', email: 'a@b.com', message: 'Hello' });
-    expect(result.success).toBe(false);
-  });
-});
-```
-
-### Service test pattern
-
-```ts
-describe('tourService.getList', () => {
-  it('calls correct endpoint with params', async () => {
-    const mockGet = vi.mocked(axiosInstance.get).mockResolvedValue({ data: mockResponse });
-    await tourService.getList({ page: 1 });
-    expect(mockGet).toHaveBeenCalledWith('/api/tours', { params: { page: 1 } });
-  });
-});
-```
-
----
-
-## Output Document
-
-Tạo file:
-
-- `.agent/artifacts/test-cases/YYYY-MM-DD__<feature-slug>__test-report.md`
-
-Template:
-
-- `template_test_report.md`
-
-### Cấu trúc report
-
-```
-1. Summary & Verdict (ready / not ready)
-2. Phase 1 — Static Gates
-3. Phase 2 — UI Visual
-4. Phase 3 — Functional Flows
-5. Phase 4 — Edge Cases
-6. Phase 5 — Regression
-7. Unit Test Status
-8. Residual Risks
-```
-
----
-
-## Strict Rules
-
-- Không gọi done nếu Phase 1 chưa pass
-- Không bỏ qua Phase 2 nếu có URL — UI visual là phase đầu tiên sau static gates
-- Không claim Playwright nếu `playwright.config.ts` chưa tồn tại
-- Mọi check phải có status: `PASS` / `FAIL` / `NOT RUN` / `N/A`
-- Không ghi "đã test ổn" — phải có evidence cụ thể
-- Nếu FAIL: ghi file/dòng lỗi, severity, có block release không
-- Nếu NOT RUN: ghi lý do và residual risk
-
-## Red Flags
-
-- Phase 2 bị bỏ qua → UI có thể vỡ layout mà không ai biết
-- Phase 4 không có network error test → không biết app xử lý lỗi thế nào
-- Phase 5 không có i18n locale switch test → language switch có thể broken
-- Report chỉ có Phase 1 → không đủ để bàn giao
-- Không có SEO check cho Next.js page → metadata có thể sai
-
-## Verification
-
-- Đối chiếu `checklist.md`
-- Report phải cover đủ 5 phase
-- Verdict `ready / not ready` phải có lý do cụ thể
-- Residual risks phải liệt kê rõ phần nào chưa test và tại sao
+- Cross-check with `checklist.md`
+- Confirm that all five phases are covered
+- Confirm that copy findings and visual findings are explicitly present
+- Confirm that early-stop conditions are respected when blocking failures occur

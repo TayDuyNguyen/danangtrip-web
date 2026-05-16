@@ -14,6 +14,7 @@ import LocationGallery from "@/features/locations/components/detail/LocationGall
 import LocationInfo from "@/features/locations/components/detail/LocationInfo";
 import LocationSidebar from "@/features/locations/components/detail/LocationSidebar";
 import LocationReviews from "@/features/locations/components/detail/LocationReviews";
+import { getApiErrorMessage } from "@/utils";
 
 type Props = {
   location: Location;
@@ -73,10 +74,10 @@ export default function LocationDetailClient({ location, locale }: Props) {
         toast.success(t("common.favorite.add_success"));
         void queryClient.invalidateQueries({ queryKey: ["locations", location.id, "favorite-check"] });
       } else {
-        toast.error(res.message || t("common.favorite.error"));
+        toast.error(getApiErrorMessage(res, t("common.favorite.error")));
       }
     },
-    onError: () => toast.error(t("common.favorite.error")),
+    onError: (error) => toast.error(getApiErrorMessage(error, t("common.favorite.error"))),
   });
 
   const removeFavorite = useMutation({
@@ -86,10 +87,10 @@ export default function LocationDetailClient({ location, locale }: Props) {
         toast.success(t("common.favorite.remove_success"));
         void queryClient.invalidateQueries({ queryKey: ["locations", location.id, "favorite-check"] });
       } else {
-        toast.error(res.message || t("common.favorite.error"));
+        toast.error(getApiErrorMessage(res, t("common.favorite.error")));
       }
     },
-    onError: () => toast.error(t("common.favorite.error")),
+    onError: (error) => toast.error(getApiErrorMessage(error, t("common.favorite.error"))),
   });
 
   const isFavorite = Boolean(favoriteQuery.data);

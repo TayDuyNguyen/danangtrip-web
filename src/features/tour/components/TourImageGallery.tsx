@@ -22,7 +22,7 @@ export default function TourImageGallery({ images, title }: TourImageGalleryProp
         {/* Main Image */}
         <div className="md:col-span-2 md:row-span-2 relative overflow-hidden rounded-xl border border-border group">
           <Image
-            src={gallery[0] || "/images/placeholder.jpg"}
+            src={gallery[0] || "/images/placeholder.png"}
             alt={title}
             fill
             className="object-cover transition-transform duration-700 group-hover:scale-110"

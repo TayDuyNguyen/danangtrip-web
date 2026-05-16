@@ -7,6 +7,12 @@ description: Audit the project base before feature work and produce a reusable s
 
 ## Overview
 
+## When to Use
+
+- When starting a new feature and you need to verify the project base first.
+- When scripts, config, middleware, i18n, or deploy assumptions may have drifted.
+- When you need a reusable baseline audit before deeper implementation work.
+
 Skill này dùng để audit project base của `danangtrip-web` trước khi triển khai feature và để lại **project setup report** cho team.
 Nó giúp khóa lại stack thực tế, commands thực tế, và các risk ở tầng nền trước khi làm sâu vào feature.
 
@@ -14,6 +20,9 @@ Nó giúp khóa lại stack thực tế, commands thực tế, và các risk ở
 
 - `persona.md`
 - `.agent/rules/PROJECT_RULES.md`
+- `.agent/rules/REPO_FACTS.md`
+- `.agent/memory/WORKING_STATE.md`
+- `.agent/memory/HANDOFF.md`
 - `DESIGN.md`
 - `package.json`
 - `tsconfig.json`
@@ -188,6 +197,15 @@ Template:
 - Không thêm dependency chỉ để hợp docs
 - Nếu phát hiện vấn đề, phải nêu hướng fix nhỏ nhất
 - Không báo "ổn" nếu chưa kiểm thực tế file/config liên quan
+
+## Rationalizations
+
+| Excuse | Rebuttal |
+|---|---|
+| "The repo already runs, so no audit is needed." | A running repo can still have drift between docs, scripts, config, and actual architecture. |
+| "This is only a small change." | Small changes still inherit risk from broken baseline commands, middleware, or environment assumptions. |
+| "Build passing is enough." | Build is only one signal and does not replace route, lint, type, and setup verification. |
+
 
 ## Red Flags
 

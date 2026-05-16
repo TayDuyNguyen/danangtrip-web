@@ -12,6 +12,7 @@ from typing import List, Tuple
 
 
 CHECKS: List[Tuple[str, List[str], bool]] = [
+    ("Agent Drift Check", ["python", ".agent/scripts/verify_agent_drift.py", "."], True),
     ("Lint", ["npm", "run", "lint"], True),
     ("Typecheck", ["npm", "run", "typecheck"], True),
     ("Route Check", ["npm", "run", "check:routes"], True),

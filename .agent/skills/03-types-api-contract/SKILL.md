@@ -7,6 +7,12 @@ description: Convert analysis into concrete types, validators, services, and an 
 
 ## Overview
 
+## When to Use
+
+- When a feature adds or changes fields, params, payloads, or response shapes.
+- When UI, service, and validation boundaries need one explicit data contract.
+- When analysis exists but the concrete data model still needs to be locked down.
+
 Skill này chuyển screen analysis thành:
 
 - shared hoặc feature-local TypeScript types
@@ -21,6 +27,9 @@ Không có bước này, các bước sau sẽ tự suy diễn type và dẫn đ
 
 - `persona.md`
 - `.agent/rules/PROJECT_RULES.md`
+- `.agent/rules/REPO_FACTS.md`
+- `.agent/memory/WORKING_STATE.md`
+- `.agent/memory/HANDOFF.md`
 - Analysis file từ `01-screen-analysis`
 - `/DATN/DATN_Tài liệu/docs/api/api_list.md`
 - `src/config/api.ts`
@@ -205,6 +214,16 @@ Template:
 - Message validation nên i18n-ready (dùng key hoặc ghi rõ sẽ replace sau)
 - Không được nhảy thẳng sang code mà bỏ qua contract doc
 
+## Rationalizations
+
+| Lý do hay gặp | Thực tế |
+|---|---|
+| "Type đơn giản, viết inline trong component cho nhanh" | Khi cần reuse hoặc test, sẽ phải extract lại — tốn thêm thời gian |
+| "Schema nhỏ, không cần `z.infer`" | Khi schema thay đổi, type riêng sẽ không tự update → silent bug |
+| "Chưa có API docs, tự đoán field trước" | Phải ghi `[ASSUMPTION]` và flag — không được code trên assumption im lặng |
+| "Service chỉ 1 dòng, không cần file riêng" | Khi cần mock trong test hoặc thêm retry logic, sẽ phải refactor toàn bộ |
+
+
 ## Red Flags
 
 Nếu thấy những dấu hiệu sau, phải dừng và flag:
@@ -215,15 +234,6 @@ Nếu thấy những dấu hiệu sau, phải dừng và flag:
 - Endpoint path hardcode trong service thay vì dùng `API` constant từ `src/config/api.ts`
 - Form type khác với schema inferred type → validation không cover đúng fields
 - Không handle response envelope `{ code, message, data }` → component đọc sai field
-
-## Common Rationalizations
-
-| Lý do hay gặp | Thực tế |
-|---|---|
-| "Type đơn giản, viết inline trong component cho nhanh" | Khi cần reuse hoặc test, sẽ phải extract lại — tốn thêm thời gian |
-| "Schema nhỏ, không cần `z.infer`" | Khi schema thay đổi, type riêng sẽ không tự update → silent bug |
-| "Chưa có API docs, tự đoán field trước" | Phải ghi `[ASSUMPTION]` và flag — không được code trên assumption im lặng |
-| "Service chỉ 1 dòng, không cần file riêng" | Khi cần mock trong test hoặc thêm retry logic, sẽ phải refactor toàn bộ |
 
 ## Documentation Expectations
 

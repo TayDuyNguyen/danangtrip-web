@@ -15,6 +15,26 @@ export const ratingService = {
   markHelpful: (ratingId: number): Promise<ApiResponse<unknown>> =>
     axiosInstance.post(API_ENDPOINTS.RATINGS.HELPFUL(ratingId)),
 
+  update: (
+    ratingId: number,
+    payload: { score?: number; comment?: string; files?: File[] }
+  ): Promise<ApiResponse<unknown>> => {
+    const fd = new FormData();
+    if (payload.score !== undefined) {
+      fd.append("score", String(payload.score));
+    }
+    if (payload.comment !== undefined) {
+      fd.append("comment", payload.comment.trim());
+    }
+    payload.files?.slice(0, 5).forEach((file) => {
+      fd.append("images[]", file);
+    });
+    return axiosInstance.put(API_ENDPOINTS.RATINGS.UPDATE(ratingId), fd);
+  },
+
+  delete: (ratingId: number): Promise<ApiResponse<unknown>> =>
+    axiosInstance.delete(API_ENDPOINTS.RATINGS.DELETE(ratingId)),
+
   createForLocation: (payload: {
     locationId: number;
     score: number;
