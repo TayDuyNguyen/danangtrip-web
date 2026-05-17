@@ -11,7 +11,7 @@ export const runtime = "experimental-edge";
 
 const i18nMiddleware = createMiddleware(routing);
 
-const protectedRoutes = ["/profile", "/settings"];
+const protectedRoutes = ["/profile", "/settings", "/dashboard"];
 const authRoutes = ["/login", "/register"];
 
 export function middleware(request: NextRequest) {
@@ -26,7 +26,10 @@ export function middleware(request: NextRequest) {
     return routes.some((route) => cleanPath === route || cleanPath.startsWith(`${route}/`));
   };
 
-  const isProtectedRoute = isMatch(protectedRoutes);
+  const cleanPath = pathname.replace(/^\/(en|vi)/, "") || "/";
+  const isBookingRoute = /^\/tours\/[^/]+\/book\/?$/.test(cleanPath);
+
+  const isProtectedRoute = isMatch(protectedRoutes) || isBookingRoute;
   const isAuthRoute = isMatch(authRoutes);
 
   if (!token && isProtectedRoute) {

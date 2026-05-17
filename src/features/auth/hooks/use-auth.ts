@@ -3,7 +3,7 @@
 import { useCallback, useEffect } from "react";
 import { useAuthStore } from "@/store/auth.store";
 import { authService } from "@/services/auth.service";
-import type { LoginRequest, RegisterRequest, ApiResponse } from "@/types";
+import type { LoginRequest, RegisterRequest, RegisterResponse, ApiResponse, User } from "@/types";
 import { clearTokens, getAccessToken } from "@/utils/auth.helper";
 import { getApiErrorMessage } from "@/utils";
 
@@ -19,6 +19,21 @@ export const useAuth = () => {
     setError,
     clearError,
   } = useAuthStore();
+
+  const extractRegisteredUser = (payload: RegisterResponse): { user: User; token?: string } | null => {
+    if ("user" in payload && payload.user) {
+      return {
+        user: payload.user,
+        token: payload.token,
+      };
+    }
+
+    if ("id" in payload) {
+      return { user: payload };
+    }
+
+    return null;
+  };
 
   const login = useCallback(
     async (credentials: LoginRequest) => {
@@ -60,8 +75,9 @@ export const useAuth = () => {
         const response = await authService.register(credentials);
 
         if (response.success && response.data) {
-          const { user: userData, token: userToken } = response.data;
-          if (userData) {
+          const registered = extractRegisteredUser(response.data);
+          if (registered?.user) {
+            const { user: userData, token: userToken } = registered;
             if (userToken) {
               storeLogin(userData, userToken);
             }

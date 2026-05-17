@@ -1,4 +1,4 @@
-import type { Tour, TourCategory, TourSchedule } from "@/types";
+import type { Tour, TourCategory } from "@/types";
 
 /**
  * Normalizes a URL from the API.
