@@ -11,7 +11,7 @@ export const runtime = "experimental-edge";
 
 const i18nMiddleware = createMiddleware(routing);
 
-const protectedRoutes = ["/profile", "/settings", "/dashboard"];
+const protectedRoutes = ["/profile", "/settings", "/dashboard", "/payment"];
 const authRoutes = ["/login", "/register"];
 
 export function middleware(request: NextRequest) {

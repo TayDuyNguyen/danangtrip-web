@@ -95,7 +95,8 @@
     "favorite_remove": "Remove tour from favorites",
     "error_title": "Could not load tour details",
     "error_desc": "Something went wrong. Please try again.",
-    "retry": "Retry"
+    "retry": "Retry",
+    "location_short": "Da Nang, Vietnam"
   },
   "booking": {
     "title": "Book tour: {name}",
@@ -121,5 +122,44 @@
     "order_summary": "Order Summary",
     "cancellation_policy": "Cancellation Policy",
     "cancellation_note": "Free cancellation 24 hours before departure. Cancellation within 24 hours will incur a 50% fee."
+  },
+  "payment": {
+    "title": "Payment Transaction",
+    "status_pending": "Pending Payment",
+    "status_success": "Payment Successful",
+    "status_failed": "Payment Failed",
+    "countdown_prefix": "Please complete your payment in",
+    "redirecting": "Redirecting to payment gateway...",
+    "retry": "Retry Payment",
+    "cancel": "Cancel Transaction",
+    "view_booking": "View Booking Details",
+    "transaction_info": "Transaction Information",
+    "amount": "Amount to Pay",
+    "method": "Payment Method",
+    "booking_code": "Booking Code",
+    "cancel_confirm": "Are you sure you want to cancel this transaction?",
+    "cancel_reason": "Cancellation Reason",
+    "success_desc": "Thank you for using Danang Trip services. Your booking has been confirmed.",
+    "back_home": "Back to Home",
+    "view_profile": "View Profile",
+    "success_without_booking": "Your payment status was updated successfully. You can check your account for the latest booking details.",
+    "expired_title": "Transaction Expired",
+    "expired_message": "This payment session has expired after 15 minutes. Please start a new payment attempt.",
+    "methods": {
+      "momo": "MoMo E-Wallet",
+      "vnpay": "VNPay Gateway",
+      "zalopay": "ZaloPay",
+      "bank_transfer": "Bank Transfer",
+      "credit_card": "Credit Card",
+      "cash": "Cash",
+      "paypal": "PayPal"
+    },
+    "errors": {
+      "missing_context": "This payment page is missing the booking or transaction information needed to continue.",
+      "payment_not_found": "We could not find a payment session for this request.",
+      "payment_link": "Could not get the payment link.",
+      "create_failed": "Failed to initialize payment.",
+      "retry_failed": "Failed to retry payment."
+    }
   }
 }
