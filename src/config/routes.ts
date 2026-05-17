@@ -41,6 +41,7 @@ export const AUTH_ROUTES = {
 export const PROTECTED_ROUTES = {
   PROFILE: "/profile",
   SETTINGS: "/settings",
+  PAYMENT: "/payment",
 } as const;
 
 // Dashboard routes (require authentication + admin/staff role)
