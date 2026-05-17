@@ -23,10 +23,12 @@ export interface RegisterRequest {
   phone?: string | null;
 }
 
-export interface RegisterResponse {
-  user: User;
-  token?: string;
-}
+export type RegisterResponse =
+  | User
+  | {
+      user: User;
+      token?: string;
+    };
 
 export type RefreshTokenResponse = LoginResponse;
 export type FormRegister = RegisterRequest;

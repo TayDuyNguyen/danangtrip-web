@@ -96,5 +96,30 @@
     "error_title": "Không thể tải chi tiết tour",
     "error_desc": "Đã xảy ra lỗi ngoài ý muốn. Vui lòng thử lại.",
     "retry": "Thử lại"
+  },
+  "booking": {
+    "title": "Đặt tour: {name}",
+    "step_info": "Thông tin đặt tour",
+    "step_payment": "Thanh toán",
+    "step_confirm": "Xác nhận",
+    "back": "Quay lại",
+    "customer_info": "Thông tin khách hàng",
+    "customer_note": "Thông tin này dùng để liên hệ và xác nhận đặt tour",
+    "fill_from_profile": "Điền từ hồ sơ của bạn",
+    "fill_now": "Điền ngay",
+    "full_name": "Họ và tên",
+    "email": "Email",
+    "phone": "Số điện thoại",
+    "address": "Địa chỉ",
+    "note": "Ghi chú",
+    "note_placeholder": "Yêu cầu đặc biệt, dị ứng thức ăn, v.v...",
+    "payment_method": "Phương thức thanh toán",
+    "terms_agree": "Tôi đồng ý với <terms>Điều khoản sử dụng</terms> và <policy>Chính sách hủy tour</policy> của Đà Nẵng Trip.",
+    "terms_link": "Điều khoản sử dụng",
+    "policy_link": "Chính sách hủy tour",
+    "continue_payment": "Tiếp tục thanh toán",
+    "order_summary": "Chi tiết đơn hàng",
+    "cancellation_policy": "Chính sách hủy",
+    "cancellation_note": "Hủy miễn phí trước 24 giờ kể từ lúc khởi hành. Hủy trong vòng 24 giờ sẽ chịu phí 50% tổng đơn hàng."
   }
 }
