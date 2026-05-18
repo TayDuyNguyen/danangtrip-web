@@ -9,6 +9,7 @@ export const PUBLIC_ROUTES = {
   LOCATION_DETAIL: (slug: string) => `/locations/${slug}`,
   TOURS: "/tours",
   TOUR_DETAIL: (slug: string) => `/tours/${slug}`,
+  TOUR_DEPARTURES: (slug: string) => `/tours/${slug}/departures`,
   BLOG: "/blog",
   BLOG_DETAIL: (slug: string) => `/blog/${slug}`,
   CONTACT: "/contact",
