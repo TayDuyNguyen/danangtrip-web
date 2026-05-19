@@ -291,18 +291,19 @@ Form note:
 
 ## Recommended Current Screen Prompt
 
-Use this ready prompt for the next recommended `danangtrip-web` screen: payment continuation / booking result after booking creation.
+Use this ready prompt for the next recommended `danangtrip-web` screen: departure selection in the core tour booking funnel.
 
 ```text
 SYSTEM EXECUTION CONTRACT
 
 Act as the execution agent for repository: `D:\DATN\danangtrip-web`
 
-Your job is to implement the recommended user screen: `Thanh toán / Kết quả đặt tour`
-Feature slug: `tour-payment`
-Target route: `/payment`
-App Router file target: `src/app/[locale]/(main)/(protected)/payment/page.tsx`
-Route group: protected, user must be authenticated.
+Your job is to implement the recommended user screen: `Chọn lịch khởi hành`
+Feature slug: `tour-departure-select`
+Primary target route: `/tours/{slug}/departures`
+Primary App Router file target: `src/app/[locale]/(main)/(public)/tours/[slug]/departures/page.tsx`
+Related existing route: `src/app/[locale]/(main)/(public)/tours/[slug]/page.tsx`
+Route group: public route with booking CTA; preserve repo reality if step `04-layout-routing` decides the final UX should be a modal inside detail instead of a dedicated page.
 
 MANDATORY READ ORDER BEFORE ANY WORK
 1. `D:\DATN\danangtrip-web\AGENTS.md`
@@ -315,14 +316,16 @@ MANDATORY READ ORDER BEFORE ANY WORK
 8. Screen and API references listed below
 
 SCREEN REFERENCES
-- Primary screen doc: `D:\DATN\DATN_Document\docs\page\user_payment.md`
-- Related payment result doc: `D:\DATN\DATN_Document\docs\page\user_payment_result.md`
-- Related booking doc: `D:\DATN\DATN_Document\docs\page\user_tour_booking.md`
-- User page list: `D:\DATN\DATN_Document\docs\reference\list_page_user.md`
-- API list: `D:\DATN\DATN_Document\docs\api\api_list.md`
+- Primary screen doc: `D:\DATN\DATN_Tài liệu\docs\page\user_tour_departure_select.md`
+- Related tour detail doc: `D:\DATN\DATN_Tài liệu\docs\page\user_tour_detail.md`
+- Related booking doc: `D:\DATN\DATN_Tài liệu\docs\page\user_tour_booking.md`
+- User page list: `D:\DATN\DATN_Tài liệu\docs\reference\list_page_user.md`
+- Flow priority note: `D:\DATN\DATN_Tài liệu\docs\reference\travel_com_benchmark_flow.md`
+- Gap analysis: `D:\DATN\DATN_Tài liệu\docs\reference\screen_gap_analysis.md`
+- API list: `D:\DATN\DATN_Tài liệu\docs\api\api_list.md`
 - Backend API repo: `D:\DATN\danangtrip-api`
 - Backend routes: `D:\DATN\danangtrip-api\routes\api.php`
-- Backend payment docs: `D:\DATN\danangtrip-api\api-doc\payments.js`
+- Backend tour docs: `D:\DATN\danangtrip-api\api-doc\tours.js`
 - Backend booking docs: `D:\DATN\danangtrip-api\api-doc\bookings.js`
 - Backend schema note: `D:\DATN\danangtrip-api\SCHEMA_CURRENT_ANNOTATED.md`
 
@@ -339,19 +342,17 @@ SKILL PATHS
 - `10-optimization-deploy`: `D:\DATN\danangtrip-web\.agent\skills\10-optimization-deploy\SKILL.md`
 
 PROTOTYPE REFERENCES
-- Prototype mapping: `D:\DATN\DATN_Document\screen\4_Others\01-Screen_To_Docs_Mapping.md`
-- Prototype classification: `D:\DATN\DATN_Document\screen\4_Others\00-Bang_Phan_Loai_Man_Hinh.md`
-- Payment screen image: `D:\DATN\DATN_Document\screen\2_User_Flows\05.2-Thanh_Toan.png`
-- Payment screen HTML/code: `D:\DATN\DATN_Document\screen\2_User_Flows\05.2-Thanh_Toan.html`
-- Payment v2 image: `D:\DATN\DATN_Document\screen\2_User_Flows\09.3-Thanh_Toan_v2.png`
-- Payment v2 HTML/code: `D:\DATN\DATN_Document\screen\2_User_Flows\09.3-Thanh_Toan_v2.html`
-- Payment success image: `D:\DATN\DATN_Document\screen\2_User_Flows\09.4-Thanh_Toan_Thanh_Cong.png`
-- Payment success HTML/code: `D:\DATN\DATN_Document\screen\2_User_Flows\09.4-Thanh_Toan_Thanh_Cong.html`
+- Prototype mapping: `D:\DATN\DATN_Tài liệu\screen\4_Others\01-Screen_To_Docs_Mapping.md`
+- Prototype classification: `D:\DATN\DATN_Tài liệu\screen\4_Others\00-Bang_Phan_Loai_Man_Hinh.md`
+- Related booking image: `D:\DATN\DATN_Tài liệu\screen\2_User_Flows\05.1-Dat_Tour.png`
+- Related booking HTML/code: `D:\DATN\DATN_Tài liệu\screen\2_User_Flows\05.1-Dat_Tour.html`
+- There is no dedicated departure-select prototype asset in the current screen folder; derive layout from the screen doc plus existing repo UI and booking/tour detail references.
 
 PROTOTYPE USAGE RULES
 - Treat the `.png` files as the visual reference and the `.html` files as implementation reference only.
 - Adapt prototype markup to this repo's Next.js, Tailwind v4, component, i18n, and API patterns.
-- Prefer the payment-specific screens `05.2-Thanh_Toan`, `09.3-Thanh_Toan_v2`, and `09.4-Thanh_Toan_Thanh_Cong` as the primary visual and HTML references for this screen.
+- Use `user_tour_departure_select.md` as the primary structure source.
+- Reuse real repo patterns from the current tour detail and booking components before inventing a new visual language.
 - Do not copy external image URLs blindly from prototype HTML if local/public assets or API images are available.
 
 REPO CONTEXT TO READ
@@ -360,31 +361,33 @@ REPO CONTEXT TO READ
 - `D:\DATN\danangtrip-web\src\config\api.ts`
 - `D:\DATN\danangtrip-web\src\config\routes.ts`
 - `D:\DATN\danangtrip-web\src\lib\axios.ts`
-- `D:\DATN\danangtrip-web\src\middleware.ts`
-- `D:\DATN\danangtrip-web\src\store\auth.store.ts`
+- `D:\DATN\danangtrip-web\src\services\tour.service.ts`
 - `D:\DATN\danangtrip-web\src\services\booking.service.ts`
-- `D:\DATN\danangtrip-web\src\services\payment.service.ts`
 - `D:\DATN\danangtrip-web\src\types\booking.types.ts`
-- `D:\DATN\danangtrip-web\src\types\payment.types.ts`
+- `D:\DATN\danangtrip-web\src\features\tour\types.ts`
+- `D:\DATN\danangtrip-web\src\features\tour\hooks\useTourDetail.ts`
+- `D:\DATN\danangtrip-web\src\features\tour\hooks\useBookingQueries.ts`
+- `D:\DATN\danangtrip-web\src\features\tour\components\TourDetailClient.tsx`
+- `D:\DATN\danangtrip-web\src\features\tour\components\BookingSidebar.tsx`
+- `D:\DATN\danangtrip-web\src\features\tour\components\ScheduleCalendar.tsx`
+- `D:\DATN\danangtrip-web\src\features\tour\components\BookingForm.tsx`
 - `D:\DATN\danangtrip-web\src\messages\vi\tour.json`
 - `D:\DATN\danangtrip-web\src\messages\en\tour.json`
-- Existing route trigger: `D:\DATN\danangtrip-web\src\features\tour\components\BookingForm.tsx`
 
 REQUIRED API FLOW
-- Read `booking_code` from the route query after booking creation redirect.
-- Resolve current payment or booking payment context from the existing payment and booking service contracts.
-- Create or retry a payment transaction when needed: `POST /payments/create`.
-- Poll or refresh payment status when appropriate: `GET /payments/status/{transaction_code}`.
-- Render success, pending, failed, and missing-context states using the existing payment contract.
-- Support retry via `POST /payments/retry/{booking_code}` and failed-state cancellation via `POST /user/bookings/{id}/cancel` when the contract permits.
-- Cross-check API docs versus schema note because docs mention `paid` while backend annotations mention normalized `success`.
+- Load tour detail context from the slug so the departure screen stays consistent with the main tour page.
+- Load schedules: `GET /tours/{id}/schedules`.
+- Check live availability for the selected schedule and passenger counts: `POST /tours/{id}/check-availability`.
+- Calculate booking summary for the selected schedule and passenger counts: `POST /bookings/calculate`.
+- Hand off to booking page using the selected `schedule_id` and passenger counts via query params or the repo's current preferred state handoff.
+- Cross-check the actual request key names because the current repo already uses `tour_schedule_id` in booking flows while some docs still describe `schedule_id`.
 
 EXPECTED UX
-- Payment page must support loading, missing booking code, pending payment, payment retry, payment success, and payment failure states with clear booking and payment summary.
-- Use existing `Button`, `Input`, `Textarea`, `Select`, toast, loading, and tour UI patterns where they fit.
-- Keep route protected. If the user is unauthenticated, follow the existing protected layout/middleware behavior.
+- The screen must show tour summary, schedule list or calendar, availability state, adult/child/infant quantity controls, live price summary, and a clear CTA to continue to `/tours/{slug}/book`.
+- Support loading, empty schedules, sold-out schedule, invalid query state, API error, and recalculating summary states.
+- Preserve public access. Do not require login at departure selection time unless repo reality proves otherwise.
+- Reuse existing `ScheduleCalendar`, `QuantityCounter`, `OrderSummaryCard`, toast, loading, and tour-detail visual patterns where possible.
 - Add i18n keys in both Vietnamese and English if new copy is introduced.
-- Use the documented payment flow states: creating-link, redirect-waiting, callback-processing, success, failed, and polling-timeout.
 
 PIPELINE ORDER
 Execute in this exact order, stopping after each step for approval:
@@ -399,16 +402,16 @@ Execute in this exact order, stopping after each step for approval:
 9. `10-optimization-deploy`
 
 ARTIFACT TARGETS
-- Analysis: `.agent/artifacts/analysis/YYYY-MM-DD__tour-payment__screen-analysis.md`
-- API contract: `.agent/artifacts/api-contracts/YYYY-MM-DD__tour-payment__api-contract.md`
-- Routing: `.agent/artifacts/routing/YYYY-MM-DD__tour-payment__route-plan.md`
-- UI spec: `.agent/artifacts/ui-specs/YYYY-MM-DD__tour-payment__ui-spec.md`
-- Data integration: `.agent/artifacts/integration/YYYY-MM-DD__tour-payment__data-integration.md`
-- Interaction spec: `.agent/artifacts/interaction-specs/YYYY-MM-DD__tour-payment__interaction-spec.md`
-- Auth review: `.agent/artifacts/auth/YYYY-MM-DD__tour-payment__auth-permissions-review.md`
-- Test report: `.agent/artifacts/test-cases/YYYY-MM-DD__tour-payment__test-report.md`
-- Deploy report: `.agent/artifacts/deploy/YYYY-MM-DD__tour-payment__deploy-report.md`
-- Final review: `.agent/artifacts/review/YYYY-MM-DD__tour-payment__review.md`
+- Analysis: `.agent/artifacts/analysis/YYYY-MM-DD__tour-departure-select__screen-analysis.md`
+- API contract: `.agent/artifacts/api-contracts/YYYY-MM-DD__tour-departure-select__api-contract.md`
+- Routing: `.agent/artifacts/routing/YYYY-MM-DD__tour-departure-select__route-plan.md`
+- UI spec: `.agent/artifacts/ui-specs/YYYY-MM-DD__tour-departure-select__ui-spec.md`
+- Data integration: `.agent/artifacts/integration/YYYY-MM-DD__tour-departure-select__data-integration.md`
+- Interaction spec: `.agent/artifacts/interaction-specs/YYYY-MM-DD__tour-departure-select__interaction-spec.md`
+- Auth review: `.agent/artifacts/auth/YYYY-MM-DD__tour-departure-select__auth-permissions-review.md`
+- Test report: `.agent/artifacts/test-cases/YYYY-MM-DD__tour-departure-select__test-report.md`
+- Deploy report: `.agent/artifacts/deploy/YYYY-MM-DD__tour-departure-select__deploy-report.md`
+- Final review: `.agent/artifacts/review/YYYY-MM-DD__tour-departure-select__review.md`
 
 BEGIN NOW
 Start with step `01-screen-analysis`.
@@ -434,7 +437,7 @@ Do not implement code for later steps until the current step is approved.
 The examples below are fallback templates.
 Dates and slugs are examples only; replace them with the current task values.
 
-### Current Recommended Screen - Tour Payment
+### Current Recommended Screen - Tour Departure Select
 
 Use this prompt when manually activating the local skill pipeline for the recommended web screen.
 
@@ -443,46 +446,43 @@ Activate full pipeline for current recommended screen
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [tour-payment]
-- Screen name: [Thanh toán / Kết quả đặt tour]
-- Target route: [/payment]
-- Target page file: [D:\DATN\danangtrip-web\src\app\[locale]\(main)\(protected)\payment\page.tsx]
-- Route group: [(protected)]
-- Auth requirement: [User must be authenticated]
+- Feature slug: [tour-departure-select]
+- Screen name: [Chọn lịch khởi hành]
+- Primary target route: [/tours/{slug}/departures]
+- Primary target page file: [D:\DATN\danangtrip-web\src\app\[locale]\(main)\(public)\tours\[slug]\departures\page.tsx]
+- Related existing tour detail file: [D:\DATN\danangtrip-web\src\app\[locale]\(main)\(public)\tours\[slug]\page.tsx]
+- Route group: [(public)]
+- Auth requirement: [Public browsing; booking handoff may later enter protected flow if repo reality requires]
 - DESIGN.md: [D:\DATN\danangtrip-web\DESIGN.md]
-- Primary docs: [D:\DATN\DATN_Document\docs\page\user_payment.md]
-- Related docs: [D:\DATN\DATN_Document\docs\page\user_payment_result.md; D:\DATN\DATN_Document\docs\page\user_tour_booking.md; D:\DATN\DATN_Document\docs\reference\list_page_user.md]
-- API docs: [D:\DATN\DATN_Document\docs\api\api_list.md]
+- Primary docs: [D:\DATN\DATN_Tài liệu\docs\page\user_tour_departure_select.md]
+- Related docs: [D:\DATN\DATN_Tài liệu\docs\page\user_tour_detail.md; D:\DATN\DATN_Tài liệu\docs\page\user_tour_booking.md; D:\DATN\DATN_Tài liệu\docs\reference\list_page_user.md; D:\DATN\DATN_Tài liệu\docs\reference\travel_com_benchmark_flow.md; D:\DATN\DATN_Tài liệu\docs\reference\screen_gap_analysis.md]
+- API docs: [D:\DATN\DATN_Tài liệu\docs\api\api_list.md]
 - Backend API repo: [D:\DATN\danangtrip-api]
 - Backend routes: [D:\DATN\danangtrip-api\routes\api.php]
-- Backend payment docs: [D:\DATN\danangtrip-api\api-doc\payments.js]
+- Backend tour docs: [D:\DATN\danangtrip-api\api-doc\tours.js]
 - Backend booking docs: [D:\DATN\danangtrip-api\api-doc\bookings.js]
 - Backend schema note: [D:\DATN\danangtrip-api\SCHEMA_CURRENT_ANNOTATED.md]
-- Prototype mapping: [D:\DATN\DATN_Document\screen\4_Others\01-Screen_To_Docs_Mapping.md]
-- Prototype classification: [D:\DATN\DATN_Document\screen\4_Others\00-Bang_Phan_Loai_Man_Hinh.md]
-- Prototype image: [D:\DATN\DATN_Document\screen\2_User_Flows\09.3-Thanh_Toan_v2.png]
-- Prototype HTML/code: [D:\DATN\DATN_Document\screen\2_User_Flows\09.3-Thanh_Toan_v2.html]
-- Related payment prototype: [D:\DATN\DATN_Document\screen\2_User_Flows\05.2-Thanh_Toan.html; D:\DATN\DATN_Document\screen\2_User_Flows\09.4-Thanh_Toan_Thanh_Cong.html]
-- Existing route trigger: [D:\DATN\danangtrip-web\src\features\tour\components\BookingForm.tsx]
-- Existing web API config: [D:\DATN\danangtrip-web\src\config\api.ts]
-- Services/types to inspect: [D:\DATN\danangtrip-web\src\services\booking.service.ts; D:\DATN\danangtrip-web\src\services\payment.service.ts; D:\DATN\danangtrip-web\src\types\booking.types.ts; D:\DATN\danangtrip-web\src\types\payment.types.ts]
-- Main endpoints: [GET /user/bookings/code/{booking_code}; POST /payments/create; GET /payments/status/{transaction_code}; POST /payments/retry/{booking_code}; POST /user/bookings/{id}/cancel]
-- Payment states from docs: [creating-link; redirect-waiting; callback-processing; success; failed; polling-timeout]
-- Callback/result note: [docs also define /payment/result as callback/result screen; if repo keeps one-screen solution under /payment, preserve existing route plan and handle query-driven states there unless routing step chooses to add a dedicated result route]
-- Contract note: [api-doc uses payment_status pending|paid|failed|refunded, but backend schema note says project normalized to pending|success|failed|refunded; verify actual response shape before finalizing UI badges and branching]
-- Redirect source note: [booking form already redirects with booking_code after booking creation; reuse that entrypoint instead of rebuilding booking flow]
+- Prototype mapping: [D:\DATN\DATN_Tài liệu\screen\4_Others\01-Screen_To_Docs_Mapping.md]
+- Prototype classification: [D:\DATN\DATN_Tài liệu\screen\4_Others\00-Bang_Phan_Loai_Man_Hinh.md]
+- Related booking prototype image: [D:\DATN\DATN_Tài liệu\screen\2_User_Flows\05.1-Dat_Tour.png]
+- Related booking prototype HTML/code: [D:\DATN\DATN_Tài liệu\screen\2_User_Flows\05.1-Dat_Tour.html]
+- Existing UI references: [D:\DATN\danangtrip-web\src\features\tour\components\BookingSidebar.tsx; D:\DATN\danangtrip-web\src\features\tour\components\ScheduleCalendar.tsx; D:\DATN\danangtrip-web\src\features\tour\components\OrderSummaryCard.tsx; D:\DATN\danangtrip-web\src\features\tour\components\QuantityCounter.tsx; D:\DATN\danangtrip-web\src\features\tour\components\TourDetailClient.tsx]
+- Services/types to inspect: [D:\DATN\danangtrip-web\src\services\tour.service.ts; D:\DATN\danangtrip-web\src\services\booking.service.ts; D:\DATN\danangtrip-web\src\features\tour\hooks\useTourDetail.ts; D:\DATN\danangtrip-web\src\features\tour\hooks\useBookingQueries.ts; D:\DATN\danangtrip-web\src\types\booking.types.ts; D:\DATN\danangtrip-web\src\features\tour\types.ts]
+- Main endpoints: [GET /tours/{id}/schedules; POST /tours/{id}/check-availability; POST /bookings/calculate]
+- Handoff target: [/tours/{slug}/book with schedule_id or repo-reality equivalent query params]
+- Contract note: [docs often say schedule_id, but current booking form schema uses tour_schedule_id; confirm real request shape before wiring client state and redirects]
+- Route strategy note: [docs allow either modal in tour detail or dedicated /departures route; preserve repo reality and record the final choice in routing artifact]
 - i18n files: [D:\DATN\danangtrip-web\src\messages\vi\tour.json; D:\DATN\danangtrip-web\src\messages\en\tour.json]
 - Skill paths: [D:\DATN\danangtrip-web\.agent\skills\01-screen-analysis\SKILL.md; D:\DATN\danangtrip-web\.agent\skills\03-types-api-contract\SKILL.md; D:\DATN\danangtrip-web\.agent\skills\04-layout-routing\SKILL.md; D:\DATN\danangtrip-web\.agent\skills\05-ui-components\SKILL.md; D:\DATN\danangtrip-web\.agent\skills\06-data-integration\SKILL.md; D:\DATN\danangtrip-web\.agent\skills\07-interactions\SKILL.md; D:\DATN\danangtrip-web\.agent\skills\08-auth-permissions\SKILL.md; D:\DATN\danangtrip-web\.agent\skills\09-testing\SKILL.md; D:\DATN\danangtrip-web\.agent\skills\10-optimization-deploy\SKILL.md]
-- Output prefix: [.agent/artifacts/<group>/YYYY-MM-DD__tour-payment__...md]
+- Output prefix: [.agent/artifacts/<group>/YYYY-MM-DD__tour-departure-select__...md]
 
 Execution:
 - Start with `01-screen-analysis`.
 - Before each step, read the matching `SKILL.md` from `Skill paths`.
-- Read `.png` as the visual source and `.html` as implementation reference.
-- Adapt prototype code to repo patterns; do not paste prototype HTML directly.
-- Derive flow from docs: auto-create payment link on entry when needed, redirect to gateway, resolve callback or polling state, support retry, and expose cancel only in allowed failed states.
-- Reuse `bookingService.detailByCode` and `paymentService.create/status/retry` before inventing new client contracts.
-- During API-contract step, explicitly resolve the `paid` vs `success` status naming mismatch against backend annotations or actual response contracts before implementing badges and transitions.
+- Treat the screen doc as the main UX spec because no dedicated departure prototype exists today.
+- Reuse repo components and booking/tour patterns before building new primitives.
+- Resolve `schedule_id` versus `tour_schedule_id` during API-contract step before implementing interactions.
+- Ensure the screen can hand off a selected schedule and quantities cleanly into booking without duplicating booking logic.
 - Stop after each pipeline step for approval.
 ```
 
@@ -493,16 +493,18 @@ Activate 01-screen-analysis
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [tour-payment]
-- Screen name: [Thanh to�n / K?t qu? d?t tour]
+- Feature slug: [tour-departure-select]
+- Screen name: [Chọn lịch khởi hành]
 - Figma/Stitch: [NONE]
-- Input source: [D:\DATN\DATN_Document\docs\page\user_payment.md]
-- Prototype image: [D:\DATN\DATN_Document\screen\2_User_Flows\09.3-Thanh_Toan_v2.png]
-- Prototype HTML/code: [D:\DATN\DATN_Document\screen\2_User_Flows\09.3-Thanh_Toan_v2.html]
+- Input source: [D:\DATN\DATN_Tài liệu\docs\page\user_tour_departure_select.md]
+- Related sources: [D:\DATN\DATN_Tài liệu\docs\page\user_tour_detail.md; D:\DATN\DATN_Tài liệu\docs\page\user_tour_booking.md; D:\DATN\DATN_Tài liệu\docs\reference\travel_com_benchmark_flow.md]
+- Prototype image: [D:\DATN\DATN_Tài liệu\screen\2_User_Flows\05.1-Dat_Tour.png]
+- Prototype HTML/code: [D:\DATN\DATN_Tài liệu\screen\2_User_Flows\05.1-Dat_Tour.html]
+- Prototype note: [No dedicated departure-select prototype; derive from doc and repo reality]
 - DESIGN.md: [D:\DATN\danangtrip-web\DESIGN.md]
-- API docs: [D:\DATN\DATN_Document\docs\api\api_list.md]
+- API docs: [D:\DATN\DATN_Tài liệu\docs\api\api_list.md]
 - Skill path: [D:\DATN\danangtrip-web\.agent\skills\01-screen-analysis\SKILL.md]
-- Output: [.agent/artifacts/analysis/YYYY-MM-DD__tour-payment__screen-analysis.md]
+- Output: [.agent/artifacts/analysis/YYYY-MM-DD__tour-departure-select__screen-analysis.md]
 ```
 
 Expected output:
@@ -538,14 +540,16 @@ Activate 03-types-api-contract
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [tour-payment]
-- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__tour-payment__screen-analysis.md]
-- API docs: [D:\DATN\DATN_Document\docs\api\api_list.md]
-- Relevant endpoints: [GET /user/bookings/code/{booking_code}, POST /payments/create, GET /payments/status/{transaction_code}, POST /payments/retry/{booking_code}, POST /user/bookings/{id}/cancel]
-- Existing services: [D:\DATN\danangtrip-web\src\services\booking.service.ts; D:\DATN\danangtrip-web\src\services\payment.service.ts]
-- Existing types: [D:\DATN\danangtrip-web\src\types\booking.types.ts; D:\DATN\danangtrip-web\src\types\payment.types.ts]
+- Feature slug: [tour-departure-select]
+- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__tour-departure-select__screen-analysis.md]
+- API docs: [D:\DATN\DATN_Tài liệu\docs\api\api_list.md]
+- Relevant endpoints: [GET /tours/{id}/schedules, POST /tours/{id}/check-availability, POST /bookings/calculate]
+- Existing services: [D:\DATN\danangtrip-web\src\services\tour.service.ts; D:\DATN\danangtrip-web\src\services\booking.service.ts]
+- Existing hooks: [D:\DATN\danangtrip-web\src\features\tour\hooks\useTourDetail.ts; D:\DATN\danangtrip-web\src\features\tour\hooks\useBookingQueries.ts]
+- Existing types: [D:\DATN\danangtrip-web\src\features\tour\types.ts; D:\DATN\danangtrip-web\src\types\booking.types.ts]
+- Contract check: [Resolve schedule_id vs tour_schedule_id naming before finalizing form state and redirect params]
 - Skill path: [D:\DATN\danangtrip-web\.agent\skills\03-types-api-contract\SKILL.md]
-- Output: [.agent/artifacts/api-contracts/YYYY-MM-DD__tour-payment__api-contract.md]
+- Output: [.agent/artifacts/api-contracts/YYYY-MM-DD__tour-departure-select__api-contract.md]
 ```
 
 Expected output:
@@ -562,16 +566,17 @@ Activate 04-layout-routing
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [tour-payment]
-- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__tour-payment__screen-analysis.md]
-- Target route path: [/payment]
-- Route group: [(protected)]
-- New page files: [yes]
-- Target page file: [D:\DATN\danangtrip-web\src\app\[locale]\(main)\(protected)\payment\page.tsx]
-- Server or client ownership: [server/page shell + client payment flow]
+- Feature slug: [tour-departure-select]
+- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__tour-departure-select__screen-analysis.md]
+- Target route path: [/tours/{slug}/departures]
+- Route group: [(public)]
+- New page files: [yes unless routing step keeps modal-in-detail strategy]
+- Target page file: [D:\DATN\danangtrip-web\src\app\[locale]\(main)\(public)\tours\[slug]\departures\page.tsx]
+- Related page file: [D:\DATN\danangtrip-web\src\app\[locale]\(main)\(public)\tours\[slug]\page.tsx]
+- Server or client ownership: [server page shell + client departure selector]
 - New i18n namespace: [tour]
 - Skill path: [D:\DATN\danangtrip-web\.agent\skills\04-layout-routing\SKILL.md]
-- Output: [.agent/artifacts/routing/YYYY-MM-DD__tour-payment__route-plan.md]
+- Output: [.agent/artifacts/routing/YYYY-MM-DD__tour-departure-select__route-plan.md]
 ```
 
 Expected output:
@@ -589,14 +594,16 @@ Activate 05-ui-components
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [tour-payment]
-- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__tour-payment__screen-analysis.md]
+- Feature slug: [tour-departure-select]
+- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__tour-departure-select__screen-analysis.md]
 - DESIGN.md: [D:\DATN\danangtrip-web\DESIGN.md]
-- Prototype image: [D:\DATN\DATN_Document\screen\2_User_Flows\09.3-Thanh_Toan_v2.png]
-- Prototype HTML/code: [D:\DATN\DATN_Document\screen\2_User_Flows\09.3-Thanh_Toan_v2.html]
-- Components to focus on: [PaymentPageShell, PaymentStatusCard, PaymentSummaryCard, PaymentActions, PaymentRetryPanel]
+- Prototype image: [D:\DATN\DATN_Tài liệu\screen\2_User_Flows\05.1-Dat_Tour.png]
+- Prototype HTML/code: [D:\DATN\DATN_Tài liệu\screen\2_User_Flows\05.1-Dat_Tour.html]
+- Prototype note: [No exact prototype; use repo tour detail and booking UI as primary reference]
+- Components to focus on: [DepartureSelectPageShell, DepartureSchedulePanel, DepartureAvailabilityCard, PassengerQuantityPanel, DepartureSummaryCard]
+- Existing reusable components: [ScheduleCalendar, QuantityCounter, OrderSummaryCard, BookingProgressSteps]
 - Skill path: [D:\DATN\danangtrip-web\.agent\skills\05-ui-components\SKILL.md]
-- Output: [.agent/artifacts/ui-specs/YYYY-MM-DD__tour-payment__ui-spec.md]
+- Output: [.agent/artifacts/ui-specs/YYYY-MM-DD__tour-departure-select__ui-spec.md]
 ```
 
 Expected output:
@@ -615,14 +622,14 @@ Activate 06-data-integration
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [tour-payment]
-- API contract: [.agent/artifacts/api-contracts/YYYY-MM-DD__tour-payment__api-contract.md]
-- UI spec: [.agent/artifacts/ui-specs/YYYY-MM-DD__tour-payment__ui-spec.md]
-- Need server prefetch: [optional booking lookup by booking_code if current pattern supports it]
-- Queries: [booking detail by code, payment status]
-- Mutations: [create payment, retry payment, cancel booking if allowed]
+- Feature slug: [tour-departure-select]
+- API contract: [.agent/artifacts/api-contracts/YYYY-MM-DD__tour-departure-select__api-contract.md]
+- UI spec: [.agent/artifacts/ui-specs/YYYY-MM-DD__tour-departure-select__ui-spec.md]
+- Need server prefetch: [optional tour detail prefetch if the selected route pattern benefits from it]
+- Queries: [tour detail, tour schedules]
+- Mutations: [check availability, calculate booking]
 - Skill path: [D:\DATN\danangtrip-web\.agent\skills\06-data-integration\SKILL.md]
-- Output: [.agent/artifacts/integration/YYYY-MM-DD__tour-payment__data-integration.md]
+- Output: [.agent/artifacts/integration/YYYY-MM-DD__tour-departure-select__data-integration.md]
 ```
 
 Expected output:
@@ -639,13 +646,13 @@ Activate 07-interactions
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [tour-payment]
-- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__tour-payment__screen-analysis.md]
-- Data integration: [.agent/artifacts/integration/YYYY-MM-DD__tour-payment__data-integration.md]
-- Main actions: [create payment link, redirect to gateway, poll status, retry payment, cancel booking in failed state, navigate to booking detail or home]
-- Forms present: [maybe only retry or cancel confirmations depending on implementation]
+- Feature slug: [tour-departure-select]
+- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__tour-departure-select__screen-analysis.md]
+- Data integration: [.agent/artifacts/integration/YYYY-MM-DD__tour-departure-select__data-integration.md]
+- Main actions: [choose schedule, adjust adult-child-infant counts, trigger availability check, trigger booking calculation, continue to booking page, go back to tour detail]
+- Forms present: [lightweight selection form driven by schedule and passenger quantities]
 - Skill path: [D:\DATN\danangtrip-web\.agent\skills\07-interactions\SKILL.md]
-- Output: [.agent/artifacts/interaction-specs/YYYY-MM-DD__tour-payment__interaction-spec.md]
+- Output: [.agent/artifacts/interaction-specs/YYYY-MM-DD__tour-departure-select__interaction-spec.md]
 ```
 
 Expected output:
@@ -663,12 +670,12 @@ Activate 08-auth-permissions
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [tour-payment]
-- Route plan: [.agent/artifacts/routing/YYYY-MM-DD__tour-payment__route-plan.md]
-- Feature type: [authenticated-only]
-- Gated UI actions: [entire payment route, payment creation, retry payment, booking cancel]
+- Feature slug: [tour-departure-select]
+- Route plan: [.agent/artifacts/routing/YYYY-MM-DD__tour-departure-select__route-plan.md]
+- Feature type: [public route with booking handoff]
+- Gated UI actions: [none on the departure screen unless repo reality requires auth before booking handoff]
 - Skill path: [D:\DATN\danangtrip-web\.agent\skills\08-auth-permissions\SKILL.md]
-- Output: [.agent/artifacts/auth/YYYY-MM-DD__tour-payment__auth-permissions-review.md]
+- Output: [.agent/artifacts/auth/YYYY-MM-DD__tour-departure-select__auth-permissions-review.md]
 ```
 
 Expected output:
@@ -686,12 +693,12 @@ Activate 09-testing
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [tour-payment]
-- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__tour-payment__screen-analysis.md]
-- Interaction spec: [.agent/artifacts/interaction-specs/YYYY-MM-DD__tour-payment__interaction-spec.md]
-- Auth review: [.agent/artifacts/auth/YYYY-MM-DD__tour-payment__auth-permissions-review.md]
+- Feature slug: [tour-departure-select]
+- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__tour-departure-select__screen-analysis.md]
+- Interaction spec: [.agent/artifacts/interaction-specs/YYYY-MM-DD__tour-departure-select__interaction-spec.md]
+- Auth review: [.agent/artifacts/auth/YYYY-MM-DD__tour-departure-select__auth-permissions-review.md]
 - Skill path: [D:\DATN\danangtrip-web\.agent\skills\09-testing\SKILL.md]
-- Output: [.agent/artifacts/test-cases/YYYY-MM-DD__tour-payment__test-report.md]
+- Output: [.agent/artifacts/test-cases/YYYY-MM-DD__tour-departure-select__test-report.md]
 ```
 
 Expected output:
@@ -710,13 +717,13 @@ Activate 10-optimization-deploy
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [tour-payment]
-- Test report: [.agent/artifacts/test-cases/YYYY-MM-DD__tour-payment__test-report.md]
+- Feature slug: [tour-departure-select]
+- Test report: [.agent/artifacts/test-cases/YYYY-MM-DD__tour-departure-select__test-report.md]
 - Test verdict: [READY | READY WITH RISKS | NOT READY]
 - Existing artifacts: [analysis, api-contract, route-plan, ui-spec, data-integration, interaction-spec, auth-review, test-report]
 - Skill path: [D:\DATN\danangtrip-web\.agent\skills\10-optimization-deploy\SKILL.md]
-- Output deploy: [.agent/artifacts/deploy/YYYY-MM-DD__tour-payment__deploy-report.md]
-- Output review: [.agent/artifacts/review/YYYY-MM-DD__tour-payment__review.md]
+- Output deploy: [.agent/artifacts/deploy/YYYY-MM-DD__tour-departure-select__deploy-report.md]
+- Output review: [.agent/artifacts/review/YYYY-MM-DD__tour-departure-select__review.md]
 ```
 
 Expected output:

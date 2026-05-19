@@ -52,6 +52,12 @@
     "title": "No tours found",
     "description": "Try changing your filters or search keyword"
   },
+  "departures": {
+    "title": "Select Departure",
+    "select_date": "Departure Date",
+    "passengers": "Passengers",
+    "continue": "Continue to Book"
+  },
   "detail": {
     "meta_brand": "DanangTrip",
     "breadcrumb_home": "Home",

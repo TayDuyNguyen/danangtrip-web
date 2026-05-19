@@ -52,6 +52,12 @@
     "title": "Không tìm thấy tour",
     "description": "Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm của bạn"
   },
+  "departures": {
+    "title": "Chọn lịch khởi hành",
+    "select_date": "Ngày đi",
+    "passengers": "Số lượng khách",
+    "continue": "Tiếp tục đặt tour"
+  },
   "detail": {
     "meta_brand": "DanangTrip",
     "breadcrumb_home": "Trang chủ",

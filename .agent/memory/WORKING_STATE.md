@@ -1,30 +1,33 @@
 # Working State
 
 ## Current Status
-- Date: 2026-05-17
-- Active feature/task: tour-booking
-- Status: Completed (Ready for user review and push)
-- Current step: 10-optimization-deploy (Deploy and review reports finalized)
+- Date: 2026-05-19
+- Active feature/task: tour-departure-select
+- Status: Ready
+- Current step: 10-optimization-deploy (Successfully completed with READY verdict!)
 - Owner: AI collaborator
 
 ## Current Objective
-- Implement the 'Đặt tour' screen at `/tours/{slug}/book`.
-- Follow the 10-step pipeline from STACK_SKILLS_INDEX.md.
-- Ensure authentication, price calculation, and booking creation flows are correct.
+- Conclude feature work for tour-departure-select by generating final Deploy and Review Reports.
+- Prepare git checkout, staging, commit, and push commands, and present branch handoff to the USER for final approval.
 
 ## Files Recently Updated
-- `src/app/[locale]/(main)/(protected)/tours/[slug]/book/page.tsx` (New - Implementation)
-- `src/features/tour/components/BookingForm.tsx` (New - Implementation)
-- `src/features/tour/components/ScheduleCalendar.tsx` (New - Implementation)
-- `src/features/tour/components/OrderSummaryCard.tsx` (New - Implementation)
-- `src/features/tour/components/BookingProgressSteps.tsx` (New - Implementation)
-- `src/features/tour/components/QuantityCounter.tsx` (New - Implementation)
-- `src/features/tour/components/PaymentMethodSelector.tsx` (New - Implementation)
-- `src/features/tour/hooks/useBookingQueries.ts` (New - Implementation)
-- `src/features/tour/validators/booking.schema.ts` (New - Implementation)
-- `src/messages/vi/tour.json` (Update - i18n)
-- `src/messages/en/tour.json` (Update - i18n)
-- `.agent/artifacts/test-cases/2026-05-17__tour-booking__test-report.md` (New - Test Report)
+- `.agent/artifacts/analysis/2026-05-18__tour-departure-select__screen-analysis.md` (New - Screen Analysis)
+- `.agent/artifacts/setup/2026-05-18__tour-departure-select__project-setup-report.md` (New - Setup Report)
+- `.agent/artifacts/api-contracts/2026-05-18__tour-departure-select__api-contract.md` (New - API Contract)
+- `src/features/tour/validators/departure-select.schema.ts` (New - Zod Schema)
+- `.agent/artifacts/routing/2026-05-18__tour-departure-select__route-plan.md` (New - Route Plan)
+- `src/config/routes.ts` (Update - Added `TOUR_DEPARTURES` route)
+- `.agent/artifacts/ui-specs/2026-05-18__tour-departure-select__ui-spec.md` (New - UI Spec)
+- `src/messages/vi/tour.json` & `en/tour.json` (Update - Localization keys)
+- `src/app/[locale]/(main)/(public)/tours/[slug]/departures/page.tsx` (Update - Fixed JSX block)
+- `src/features/tour/components/DepartureSelectClient.tsx` (New)
+- `.agent/artifacts/integration/2026-05-18__tour-departure-select__data-integration.md` (New - Integration Plan)
+- `.agent/artifacts/interaction-specs/2026-05-18__tour-departure-select__interaction-spec.md` (New - Interaction Spec)
+- `.agent/artifacts/auth/2026-05-18__tour-departure-select__auth-permissions-review.md` (New - Auth Review)
+- `.agent/artifacts/test-cases/2026-05-18__tour-departure-select__test-report.md` (Updated - E2E Verified Test Report)
+- `.agent/artifacts/deploy/2026-05-19__tour-departure-select__deploy-report.md` (New - Deploy Report)
+- `.agent/artifacts/review/2026-05-19__tour-departure-select__review.md` (New - Review Report)
 
 ## Current Decisions In Force
 - `REPO_FACTS.md` is the compact repo reality anchor.
@@ -38,12 +41,8 @@
 - **Code Policy:** Code starts no later than `05-ui-components`; `03-types-api-contract` and `04-layout-routing` also edit code when missing contracts/routes block the feature.
 
 ## Known Open Items
-- Implementation of components and page shell is complete.
-- Static quality gates passed.
-- UI and Localization verification passed.
-- **Blocker**: Backend API returns 401 on login and 500 on registration, preventing functional testing of the booking flow.
+- Final E2E flow is fully verified and functional locally; no remaining blockers.
 
 ## Immediate Next Steps
-1. Stop for approval.
-2. The user must resolve the backend authentication blocker (500 Error on Register / DB Seed).
-3. Wait for instructions on whether to re-run functional tests for `tour-booking` or move to `10-optimization-deploy`.
+- Delineate Git commands for USER approval.
+- Execute branch creation, add, commit, and push once the USER types `push` or `confirm push`.
