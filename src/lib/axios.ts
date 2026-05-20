@@ -139,6 +139,9 @@ axiosInstance.interceptors.response.use(
       errors?: Record<string, string[] | string | undefined>;
     }>
   ) => {
+    if (axios.isCancel(error)) {
+      return Promise.reject(error);
+    }
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
     const locale = typeof window !== "undefined" && window.location.pathname.startsWith("/en") ? "en" : "vi";
 

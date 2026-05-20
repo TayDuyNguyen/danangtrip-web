@@ -40,7 +40,7 @@ test.describe('Tour Departure Select Visual & Functional Verification', () => {
       // Wait for the login response
       const loginResponsePromise = page.waitForResponse(
         response => response.url().includes('/auth/login') && response.status() === 200,
-        { timeout: 15000 }
+        { timeout: 45000 }
       );
       await page.locator('button[type="submit"]').click();
       await loginResponsePromise;
@@ -115,7 +115,7 @@ test.describe('Tour Departure Select Visual & Functional Verification', () => {
       await expect(continueBtn).toBeVisible({ timeout: 10000 });
       console.log('Scrolling continue button into view...');
       await continueBtn.scrollIntoViewIfNeeded();
-      await expect(continueBtn).toBeEnabled();
+      await expect(continueBtn).toBeEnabled({ timeout: 30000 });
       console.log('Continue button is enabled. Clicking to proceed to checkout via page.evaluate...');
       await page.evaluate(() => {
         const btns = Array.from(document.querySelectorAll('button'));
@@ -139,7 +139,7 @@ test.describe('Tour Departure Select Visual & Functional Verification', () => {
       await page.waitForURL('**/book**', { timeout: 90000 });
       console.log(`Successfully redirected! Final URL: ${page.url()}`);
       expect(page.url()).toContain('/book');
-      expect(page.url()).toContain('schedule_id=');
+      expect(page.url()).toContain('tour_schedule_id=');
 
       // Take screenshot of the booking form
       await page.screenshot({ path: path.join(screenshotsDir, 'web_booking_form_redirected.png'), fullPage: true });

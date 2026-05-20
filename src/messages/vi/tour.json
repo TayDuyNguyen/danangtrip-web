@@ -1,6 +1,23 @@
 {
   "title": "Danh sách Tour",
-  "subtitle": "Khám phá những hành trình tuyệt vời tại Đà Nẵng",
+  "list_subtitle": "Khám phá các tour du lịch tuyệt vời tại Đà Nẵng",
+  "landing": {
+    "meta_title": "Tour Du Lịch Đà Nẵng - Giá Tốt, Khởi Hành Hàng Ngày | DanangTrip",
+    "meta_description": "Tổng hợp các tour du lịch Đà Nẵng hấp dẫn: tour Ngũ Hành Sơn, Hội An, Bà Nà Hills, Cù Lao Chàm. Đặt tour trực tuyến, hỗ trợ 24/7.",
+    "hero_title": "Du lịch Đà Nẵng",
+    "hero_subtitle": "Khám phá các tour du lịch hấp dẫn nhất tại thành phố đáng sống nhất Việt Nam.",
+    "content": "<h2>Khám phá Đà Nẵng - Thành phố của những cây cầu</h2><p>Đà Nẵng không chỉ nổi tiếng với những bãi biển tuyệt đẹp như Mỹ Khê, mà còn thu hút du khách bởi những công trình kiến trúc độc đáo và danh lam thắng cảnh hùng vĩ...</p>",
+    "faqs": [
+      {
+        "question": "Thời điểm nào đẹp nhất để đi du lịch Đà Nẵng?",
+        "answer": "Thời điểm lý tưởng nhất là từ tháng 4 đến tháng 8, khi thời tiết có nắng đẹp, ít mưa, phù hợp cho các hoạt động tắm biển và tham quan."
+      },
+      {
+        "question": "Các tour Đà Nẵng phổ biến nhất là gì?",
+        "answer": "Các tour được yêu thích nhất bao gồm: Tour Bà Nà Hills, Tour Ngũ Hành Sơn - Hội An, Tour Cù Lao Chàm và Tour Bán đảo Sơn Trà."
+      }
+    ]
+  },
   "list": {
     "search_placeholder": "Tìm kiếm tour...",
     "filters_toggle": "Bộ lọc",
@@ -56,7 +73,10 @@
     "title": "Chọn lịch khởi hành",
     "select_date": "Ngày đi",
     "passengers": "Số lượng khách",
-    "continue": "Tiếp tục đặt tour"
+    "continue": "Tiếp tục đặt tour",
+    "no_schedules": "Không có lịch khởi hành nào khả dụng.",
+    "over_capacity": "Vượt quá số chỗ trống!",
+    "calc_error": "Lỗi khi cập nhật giá hoặc chỗ trống."
   },
   "detail": {
     "meta_brand": "DanangTrip",

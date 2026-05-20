@@ -71,18 +71,39 @@ export function OrderSummaryCard({
                 </div>
                 <div className="flex justify-between items-center text-sm">
                     <span className="text-on-surface-subtle">{td("price_adult")}</span>
-                    <span className="text-on-surface font-black tabular-nums">× {adults}</span>
+                    <div className="flex flex-col items-end">
+                      <span className="text-on-surface font-black tabular-nums">× {adults}</span>
+                      {calculation?.breakdown?.adult && (
+                        <span className="text-[10px] text-on-surface-subtle">
+                          {formatPriceVND(calculation.breakdown.adult.subtotal)}
+                        </span>
+                      )}
+                    </div>
                 </div>
                 {childrenCount > 0 && (
                     <div className="flex justify-between items-center text-sm">
                         <span className="text-on-surface-subtle">{td("price_child")}</span>
-                        <span className="text-on-surface font-black tabular-nums">× {childrenCount}</span>
+                        <div className="flex flex-col items-end">
+                          <span className="text-on-surface font-black tabular-nums">× {childrenCount}</span>
+                          {calculation?.breakdown?.child && (
+                            <span className="text-[10px] text-on-surface-subtle">
+                              {formatPriceVND(calculation.breakdown.child.subtotal)}
+                            </span>
+                          )}
+                        </div>
                     </div>
                 )}
                 {infants > 0 && (
                     <div className="flex justify-between items-center text-sm">
                         <span className="text-on-surface-subtle">{td("price_infant")}</span>
-                        <span className="text-on-surface font-black tabular-nums">× {infants}</span>
+                        <div className="flex flex-col items-end">
+                          <span className="text-on-surface font-black tabular-nums">× {infants}</span>
+                          {calculation?.breakdown?.infant && (
+                            <span className="text-[10px] text-on-surface-subtle">
+                              {formatPriceVND(calculation.breakdown.infant.subtotal)}
+                            </span>
+                          )}
+                        </div>
                     </div>
                 )}
             </div>

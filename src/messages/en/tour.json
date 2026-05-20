@@ -1,5 +1,11 @@
 {
   "title": "Tour List",
+  "landing": {
+    "meta_title": "Da Nang Tours - Best Price, Daily Departure | DanangTrip",
+    "meta_description": "Explore amazing Da Nang tours: Marble Mountains, Hoi An, Ba Na Hills, Cham Island. Book online, 24/7 support.",
+    "hero_title": "Da Nang Tours",
+    "hero_subtitle": "Discover the most attractive tours in the most livable city in Vietnam."
+  },
   "subtitle": "Discover amazing journeys in Da Nang",
   "list": {
     "search_placeholder": "Search tours...",
@@ -56,7 +62,10 @@
     "title": "Select Departure",
     "select_date": "Departure Date",
     "passengers": "Passengers",
-    "continue": "Continue to Book"
+    "continue": "Continue to Book",
+    "no_schedules": "No available schedules.",
+    "over_capacity": "Over capacity!",
+    "calc_error": "Error updating price or availability."
   },
   "detail": {
     "meta_brand": "DanangTrip",
