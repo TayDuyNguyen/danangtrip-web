@@ -1,33 +1,18 @@
 # Working State
 
 ## Current Status
-- Date: 2026-05-19
+- Date: 2026-05-20
 - Active feature/task: tour-departure-select
-- Status: Ready
-- Current step: 10-optimization-deploy (Successfully completed with READY verdict!)
+- Status: In Progress
+- Current step: 09-testing (Executing)
+- Next step: 10-optimization-deploy
 - Owner: AI collaborator
 
 ## Current Objective
-- Conclude feature work for tour-departure-select by generating final Deploy and Review Reports.
-- Prepare git checkout, staging, commit, and push commands, and present branch handoff to the USER for final approval.
+- Perform Phase 1-5 testing for the tour-departure-select feature on danangtrip-web. This is a verification step that produces a test report artifact at .agent/artifacts/test-cases/2026-05-20__tour-departure-select__test-report.md.
 
 ## Files Recently Updated
-- `.agent/artifacts/analysis/2026-05-18__tour-departure-select__screen-analysis.md` (New - Screen Analysis)
-- `.agent/artifacts/setup/2026-05-18__tour-departure-select__project-setup-report.md` (New - Setup Report)
-- `.agent/artifacts/api-contracts/2026-05-18__tour-departure-select__api-contract.md` (New - API Contract)
-- `src/features/tour/validators/departure-select.schema.ts` (New - Zod Schema)
-- `.agent/artifacts/routing/2026-05-18__tour-departure-select__route-plan.md` (New - Route Plan)
-- `src/config/routes.ts` (Update - Added `TOUR_DEPARTURES` route)
-- `.agent/artifacts/ui-specs/2026-05-18__tour-departure-select__ui-spec.md` (New - UI Spec)
-- `src/messages/vi/tour.json` & `en/tour.json` (Update - Localization keys)
-- `src/app/[locale]/(main)/(public)/tours/[slug]/departures/page.tsx` (Update - Fixed JSX block)
-- `src/features/tour/components/DepartureSelectClient.tsx` (New)
-- `.agent/artifacts/integration/2026-05-18__tour-departure-select__data-integration.md` (New - Integration Plan)
-- `.agent/artifacts/interaction-specs/2026-05-18__tour-departure-select__interaction-spec.md` (New - Interaction Spec)
-- `.agent/artifacts/auth/2026-05-18__tour-departure-select__auth-permissions-review.md` (New - Auth Review)
-- `.agent/artifacts/test-cases/2026-05-18__tour-departure-select__test-report.md` (Updated - E2E Verified Test Report)
-- `.agent/artifacts/deploy/2026-05-19__tour-departure-select__deploy-report.md` (New - Deploy Report)
-- `.agent/artifacts/review/2026-05-19__tour-departure-select__review.md` (New - Review Report)
+- `.agent/artifacts/test-cases/2026-05-19__tour-departure-select__test-report.md` (New - Test Report)
 
 ## Current Decisions In Force
 - `REPO_FACTS.md` is the compact repo reality anchor.
