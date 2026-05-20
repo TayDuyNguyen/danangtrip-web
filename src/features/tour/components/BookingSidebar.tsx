@@ -180,7 +180,7 @@ export default function BookingSidebar({ tour }: BookingSidebarProps) {
 
           {/* CTA Button */}
           <Link
-            href={`/tours/${tour.slug}/book${selectedScheduleId ? `?schedule_id=${selectedScheduleId}&adults=${adults}&children=${children}` : ""}`}
+            href={`/tours/${tour.slug}/book${selectedScheduleId ? `?tour_schedule_id=${selectedScheduleId}&adults=${adults}&children=${children}` : ""}`}
             className="block"
           >
             <Button 

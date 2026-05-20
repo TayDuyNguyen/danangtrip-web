@@ -14,7 +14,6 @@ interface Props {
 export function PaymentRetryPanel({ bookedAt, onRetry, isRetrying, disabled }: Props) {
   const t = useTranslations("tour.payment");
   const [timeLeft, setTimeLeft] = useState<number>(0);
-  const [isExpired, setIsExpired] = useState<boolean>(false);
 
   useEffect(() => {
     const calculateTimeLeft = () => {
@@ -24,9 +23,6 @@ export function PaymentRetryPanel({ bookedAt, onRetry, isRetrying, disabled }: P
       const diff = Math.max(0, expireTime - now);
 
       setTimeLeft(diff);
-      if (diff <= 0) {
-        setIsExpired(true);
-      }
     };
 
     calculateTimeLeft();
@@ -47,24 +43,18 @@ export function PaymentRetryPanel({ bookedAt, onRetry, isRetrying, disabled }: P
       <div className="flex items-center justify-center gap-2 mb-4 text-[#8b6a55]">
         <IoTimeOutline className="w-5 h-5 animate-pulse" />
         <span className="text-sm font-medium tracking-wide">
-          {isExpired ? t("expired_title").toUpperCase() : t("countdown_prefix").toUpperCase()}
+          {t("countdown_prefix").toUpperCase()}
         </span>
       </div>
 
-      {!isExpired ? (
-        <div className="text-3xl font-mono font-black text-white tracking-widest bg-[#0a0a0a]/80 py-3 px-6 rounded-lg border border-[#262626] inline-block shadow-inner">
-          {formatTime(timeLeft)}
-        </div>
-      ) : (
-        <p className="text-red-500 text-sm font-medium">
-          {t("expired_message")}
-        </p>
-      )}
+      <div className="text-3xl font-mono font-black text-white tracking-widest bg-[#0a0a0a]/80 py-3 px-6 rounded-lg border border-[#262626] inline-block shadow-inner">
+        {formatTime(timeLeft)}
+      </div>
 
       <div className="mt-6">
         <button
           onClick={onRetry}
-          disabled={isRetrying || isExpired || disabled}
+          disabled={isRetrying || disabled}
           className="btn-primary w-full py-3 px-6 rounded-full font-semibold transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2"
         >
           {isRetrying ? (

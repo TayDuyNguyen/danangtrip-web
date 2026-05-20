@@ -1,4 +1,5 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
+import { useLocale } from "next-intl";
 import { useTranslations } from "next-intl";
 import { paymentService } from "@/services/payment.service";
 import { bookingService } from "@/services/booking.service";
@@ -6,10 +7,23 @@ import type { CreatePaymentPayload } from "@/types";
 import { toast } from "sonner";
 
 export const usePayment = () => {
+  const locale = useLocale();
   const t = useTranslations("tour.payment");
+  const localePrefix = locale === "vi" ? "" : `/${locale}`;
+  const getReturnUrl = () => {
+    if (typeof window === "undefined") {
+      return undefined;
+    }
+
+    return `${window.location.origin}${localePrefix}/payment/result`;
+  };
 
   const createPaymentMutation = useMutation({
-    mutationFn: (data: CreatePaymentPayload) => paymentService.create(data),
+    mutationFn: (data: CreatePaymentPayload) =>
+      paymentService.create({
+        ...data,
+        return_url: data.return_url ?? getReturnUrl(),
+      }),
     onSuccess: (res) => {
       if (res.data?.payment_url) {
         window.location.href = res.data.payment_url;
@@ -23,7 +37,8 @@ export const usePayment = () => {
   });
 
   const retryPaymentMutation = useMutation({
-    mutationFn: (bookingCode: string) => paymentService.retry(bookingCode),
+    mutationFn: (bookingCode: string) =>
+      paymentService.retry(bookingCode, { return_url: getReturnUrl() }),
     onSuccess: (res) => {
       if (res.data?.payment_url) {
         window.location.href = res.data.payment_url;
