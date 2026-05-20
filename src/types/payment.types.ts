@@ -3,6 +3,11 @@ import type { PaymentMethod, PaymentStatus } from "./booking.types";
 export interface CreatePaymentPayload {
   booking_id: number;
   payment_method: Extract<PaymentMethod, "momo" | "vnpay" | "zalopay">;
+  return_url?: string;
+}
+
+export interface RetryPaymentPayload {
+  return_url?: string;
 }
 
 export interface Payment {
@@ -24,5 +29,6 @@ export interface PaymentCreateResult {
   payment?: Payment;
   payment_url?: string;
   transaction_code?: string;
+  booking_code?: string;
   [key: string]: unknown;
 }

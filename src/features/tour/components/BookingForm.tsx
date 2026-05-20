@@ -18,6 +18,7 @@ import { useFieldFocus } from "@/hooks/use-field-focus";
 import { toast } from "sonner";
 import { useSearchParams } from "next/navigation";
 import type { Tour } from "@/types";
+import { usePayment } from "@/features/payment/hooks/usePayment";
 
 interface BookingFormProps {
   tour: Tour;
@@ -30,7 +31,11 @@ export function BookingForm({ tour }: BookingFormProps) {
   const { user } = useAuthStore();
   const searchParams = useSearchParams();
 
-  const initialScheduleId = searchParams.get("schedule_id") ? Number(searchParams.get("schedule_id")) : 0;
+  const initialScheduleId = searchParams.get("tour_schedule_id")
+    ? Number(searchParams.get("tour_schedule_id"))
+    : searchParams.get("schedule_id")
+      ? Number(searchParams.get("schedule_id"))
+      : 0;
   const initialAdults = searchParams.get("adults") ? Number(searchParams.get("adults")) : 1;
   const initialChildren = searchParams.get("children") ? Number(searchParams.get("children")) : 0;
   
@@ -55,8 +60,10 @@ export function BookingForm({ tour }: BookingFormProps) {
   const { data: schedules = [] } = useTourSchedules(tour.id);
   const { mutate: calculate, data: priceData, isPending: isCalculating } = useBookingCalculate();
   const { mutate: createBooking, isPending: isCreating } = useCreateBooking();
+  const { createPayment, isCreating: isCreatingPayment } = usePayment();
 
   const debouncedFormData = useDebounce(formData, 400);
+  const onlinePaymentMethods = ["momo", "vnpay", "zalopay"] as const;
 
   useEffect(() => {
     if (debouncedFormData.tour_schedule_id) {
@@ -107,9 +114,19 @@ export function BookingForm({ tour }: BookingFormProps) {
 
     createBooking(formData, {
       onSuccess: (booking) => {
-        if (booking && booking.booking_code) {
+        if (booking?.id) {
           toast.success(t("step_confirm"));
-          router.push(`/payment?booking_code=${booking.booking_code}`);
+          if (onlinePaymentMethods.includes(formData.payment_method as typeof onlinePaymentMethods[number])) {
+            createPayment({
+              booking_id: booking.id,
+              payment_method: formData.payment_method as typeof onlinePaymentMethods[number],
+            });
+            return;
+          }
+
+          if (booking.booking_code) {
+            router.push(`/payment/result?booking_code=${booking.booking_code}`);
+          }
         }
       }
     });
@@ -282,8 +299,8 @@ export function BookingForm({ tour }: BookingFormProps) {
              <Button 
                 type="submit" 
                 className="w-full h-16 text-lg font-black uppercase tracking-widest shadow-[0_10px_30px_-5px_rgba(139,106,85,0.4)]"
-                isLoading={isCreating}
-                disabled={isCalculating}
+                isLoading={isCreating || isCreatingPayment}
+                disabled={isCalculating || isCreatingPayment}
              >
                {t("continue_payment")}
              </Button>

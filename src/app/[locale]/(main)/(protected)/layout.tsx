@@ -1,25 +1,25 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { useAuthStore } from "@/store/auth.store";
 import { useTranslations } from "next-intl";
+import { useSearchParams } from "next/navigation";
 
-export default function ProtectedLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+function AuthChecker({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const { isAuthenticated, isLoading } = useAuthStore();
   const t = useTranslations("common");
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
-      router.push(`/login?callbackUrl=${encodeURIComponent(pathname)}`);
+      const queryString = searchParams.toString();
+      const callbackUrl = queryString ? `${pathname}?${queryString}` : pathname;
+      router.push(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
     }
-  }, [isAuthenticated, isLoading, router, pathname]);
+  }, [isAuthenticated, isLoading, router, pathname, searchParams]);
 
   if (isLoading) {
     return (
@@ -41,10 +41,20 @@ export default function ProtectedLayout({
     );
   }
 
+  return <>{children}</>;
+}
+
+export default function ProtectedLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <div className="design-page min-h-screen">
       <div className="design-container py-6">
-        {children}
+        <Suspense fallback={null}>
+          <AuthChecker>{children}</AuthChecker>
+        </Suspense>
       </div>
     </div>
   );
