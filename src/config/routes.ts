@@ -15,6 +15,7 @@ export const PUBLIC_ROUTES = {
   CONTACT: "/contact",
   ABOUT: "/about",
   SEARCH: "/search",
+  DESTINATION_DA_NANG: "/du-lich-da-nang",
 } as const;
 
 // Planned / future pages only — do not merge into ROUTES (see PROJECT_RULES §8).

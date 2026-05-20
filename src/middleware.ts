@@ -36,7 +36,8 @@ export function middleware(request: NextRequest) {
     const locale = pathname.startsWith("/en") ? "en" : "vi";
     const loginPath = locale === "en" ? "/en/login" : "/login";
     const url = new URL(loginPath, request.url);
-    url.searchParams.set("callbackUrl", pathname);
+    const fullPath = pathname + request.nextUrl.search;
+    url.searchParams.set("callbackUrl", fullPath);
     return NextResponse.redirect(url);
   }
 

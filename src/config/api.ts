@@ -85,4 +85,7 @@ export const API_ENDPOINTS = {
     TRENDING: "/search/trending",
   },
   CONTACTS: "/contacts",
+  LANDING_PAGES: {
+    DETAIL: (slug: string) => `/landing-pages/${slug}`,
+  },
 };

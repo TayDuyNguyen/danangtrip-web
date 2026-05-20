@@ -289,9 +289,52 @@ Form note:
 2. `05-ui-components`
 3. `09-testing`
 
+## Current Decision Snapshot
+
+Date locked for this index: `2026-05-20`
+
+### Single Chosen Screen Only
+
+- Repo: `danangtrip-web`
+- Only screen to implement now: `Landing tour Đà Nẵng`
+- Feature slug: `destination-tour-landing`
+- Main route: `/du-lich-da-nang`
+- Main file: `src/app/[locale]/(main)/(public)/destinations/da-nang/tours/page.tsx`
+- Rule: do not switch to checkout, payment, landing, cart, or any other screen until this screen is finished through `10-optimization-deploy`.
+
+### Candidate Screens Reviewed
+
+| Candidate | Priority | Why it is relevant now | Why it is not the current first pick |
+| --- | --- | --- | --- |
+| `tour-departure-select` | High | Sits in the core booking funnel, has docs, real route/file scaffolding, reusable components, and near-complete API coverage. | Selected as the current pick. |
+| `tour-booking-checkout` | High | Direct revenue step after departure selection. | Depends on a stable departure-selection handoff and schedule field contract first. |
+| `destination-tour-landing` | Medium | Important for SEO and acquisition. | Good marketing surface, but less urgent than booking-funnel completion. |
+| `cart` | Medium | Matches benchmark flow and future hold-seat behavior. | Still planned and depends on promotion/cart backend work. |
+| `payment-result hardening` | Medium | Important for trust and payment recovery UX. | Downstream step; does not unblock the main upstream booking funnel. |
+
+### Selected Next Screen
+
+- Screen: `Landing tour Đà Nẵng`
+- Feature slug: `destination-tour-landing`
+- Main route: `/du-lich-da-nang`
+- Main file: `src/app/[locale]/(main)/(public)/destinations/da-nang/tours/page.tsx`
+- Decision basis:
+  - Travel benchmark and project docs both treat departure selection as part of the core selling flow.
+  - The repo already contains route, hooks, services, and reusable components for schedule, quantity, and booking summary behavior.
+  - This screen is implementable now without waiting for large new backend modules, but it still benefits from admin schedule data stabilization first.
+
+### Cross-Project Rollout Order
+
+1. `danangtrip-admin` implements `admin-tour-schedule-edit`
+2. `danangtrip-web` implements `tour-departure-select`
+3. `danangtrip-web` follows with `tour-booking-checkout` if no blocking API mismatch remains
+
+Dependency rule:
+- Do not finalize the web handoff contract until admin schedule edit confirms the schedule fields exposed to `GET /tours/{id}/schedules`, `POST /tours/{id}/check-availability`, and `POST /bookings/calculate`.
+
 ## Recommended Current Screen Prompt
 
-Use this ready prompt for the next recommended `danangtrip-web` screen: departure selection in the core tour booking funnel.
+Use this ready prompt for the next recommended `danangtrip-web` screen: Landing tour Đà Nẵng.
 System sequencing note: implement `danangtrip-admin` schedule edit first when cross-project coordination is needed, because the web departure screen depends on schedule field completeness and stable booking availability data.
 
 ```text
@@ -299,12 +342,14 @@ SYSTEM EXECUTION CONTRACT
 
 Act as the execution agent for repository: `D:\DATN\danangtrip-web`
 
-Your job is to implement the recommended user screen: `Chọn lịch khởi hành`
-Feature slug: `tour-departure-select`
-Primary target route: `/tours/{slug}/departures`
-Primary App Router file target: `src/app/[locale]/(main)/(public)/tours/[slug]/departures/page.tsx`
-Related existing route: `src/app/[locale]/(main)/(public)/tours/[slug]/page.tsx`
-Route group: public route with booking CTA; preserve repo reality if step `04-layout-routing` decides the final UX should be a modal inside detail instead of a dedicated page.
+Your job is to implement the recommended user screen: `Landing tour Đà Nẵng`
+Feature slug: `destination-tour-landing`
+Primary target route: `/du-lich-da-nang`
+Primary App Router file target: `src/app/[locale]/(main)/(public)/destinations/da-nang/tours/page.tsx`
+
+SINGLE-SCREEN LOCK
+- You are working on exactly one screen only: `Landing tour Đà Nẵng`.
+- You MUST NOT switch to booking checkout, payment result, cart, favorites, notifications, or profile in this run.
 
 MANDATORY READ ORDER BEFORE ANY WORK
 1. `D:\DATN\danangtrip-web\AGENTS.md`
@@ -314,110 +359,92 @@ MANDATORY READ ORDER BEFORE ANY WORK
 5. `D:\DATN\danangtrip-web\.agent\memory\HANDOFF.md`
 6. `D:\DATN\danangtrip-web\.agent\skills\STACK_SKILLS_INDEX.md`
 7. Current step `SKILL.md`
-8. Screen and API references listed below
-
-SCREEN REFERENCES
-- Primary screen doc: `D:\DATN\DATN_Tài liệu\docs\page\user_tour_departure_select.md`
-- Related tour detail doc: `D:\DATN\DATN_Tài liệu\docs\page\user_tour_detail.md`
-- Related booking doc: `D:\DATN\DATN_Tài liệu\docs\page\user_tour_booking.md`
-- User page list: `D:\DATN\DATN_Tài liệu\docs\reference\list_page_user.md`
-- Flow priority note: `D:\DATN\DATN_Tài liệu\docs\reference\travel_com_benchmark_flow.md`
-- Gap analysis: `D:\DATN\DATN_Tài liệu\docs\reference\screen_gap_analysis.md`
-- API list: `D:\DATN\DATN_Tài liệu\docs\api\api_list.md`
-- Backend API repo: `D:\DATN\danangtrip-api`
-- Backend routes: `D:\DATN\danangtrip-api\routes\api.php`
-- Backend tour docs: `D:\DATN\danangtrip-api\api-doc\tours.js`
-- Backend booking docs: `D:\DATN\danangtrip-api\api-doc\bookings.js`
-- Backend schema note: `D:\DATN\danangtrip-api\SCHEMA_CURRENT_ANNOTATED.md`
-
-SKILL PATHS
-- `01-screen-analysis`: `D:\DATN\danangtrip-web\.agent\skills\01-screen-analysis\SKILL.md`
-- `02-project-setup`: `D:\DATN\danangtrip-web\.agent\skills\02-project-setup\SKILL.md`
-- `03-types-api-contract`: `D:\DATN\danangtrip-web\.agent\skills\03-types-api-contract\SKILL.md`
-- `04-layout-routing`: `D:\DATN\danangtrip-web\.agent\skills\04-layout-routing\SKILL.md`
-- `05-ui-components`: `D:\DATN\danangtrip-web\.agent\skills\05-ui-components\SKILL.md`
-- `06-data-integration`: `D:\DATN\danangtrip-web\.agent\skills\06-data-integration\SKILL.md`
-- `07-interactions`: `D:\DATN\danangtrip-web\.agent\skills\07-interactions\SKILL.md`
-- `08-auth-permissions`: `D:\DATN\danangtrip-web\.agent\skills\08-auth-permissions\SKILL.md`
-- `09-testing`: `D:\DATN\danangtrip-web\.agent\skills\09-testing\SKILL.md`
-- `10-optimization-deploy`: `D:\DATN\danangtrip-web\.agent\skills\10-optimization-deploy\SKILL.md`
-
-PROTOTYPE REFERENCES
-- Prototype mapping: `D:\DATN\DATN_Tài liệu\screen\4_Others\01-Screen_To_Docs_Mapping.md`
-- Prototype classification: `D:\DATN\DATN_Tài liệu\screen\4_Others\00-Bang_Phan_Loai_Man_Hinh.md`
-- Related booking image: `D:\DATN\DATN_Tài liệu\screen\2_User_Flows\05.1-Dat_Tour.png`
-- Related booking HTML/code: `D:\DATN\DATN_Tài liệu\screen\2_User_Flows\05.1-Dat_Tour.html`
-- There is no dedicated departure-select prototype asset in the current screen folder; derive layout from the screen doc plus existing repo UI and booking/tour detail references.
-
-PROTOTYPE USAGE RULES
-- Treat the `.png` files as the visual reference and the `.html` files as implementation reference only.
-- Adapt prototype markup to this repo's Next.js, Tailwind v4, component, i18n, and API patterns.
-- Use `user_tour_departure_select.md` as the primary structure source.
-- Reuse real repo patterns from the current tour detail and booking components before inventing a new visual language.
-- Do not copy external image URLs blindly from prototype HTML if local/public assets or API images are available.
-
-REPO CONTEXT TO READ
-- `D:\DATN\danangtrip-web\DESIGN.md`
-- `D:\DATN\danangtrip-web\package.json`
-- `D:\DATN\danangtrip-web\src\config\api.ts`
-- `D:\DATN\danangtrip-web\src\config\routes.ts`
-- `D:\DATN\danangtrip-web\src\lib\axios.ts`
-- `D:\DATN\danangtrip-web\src\services\tour.service.ts`
-- `D:\DATN\danangtrip-web\src\services\booking.service.ts`
-- `D:\DATN\danangtrip-web\src\types\booking.types.ts`
-- `D:\DATN\danangtrip-web\src\features\tour\types.ts`
-- `D:\DATN\danangtrip-web\src\features\tour\hooks\useTourDetail.ts`
-- `D:\DATN\danangtrip-web\src\features\tour\hooks\useBookingQueries.ts`
-- `D:\DATN\danangtrip-web\src\features\tour\components\TourDetailClient.tsx`
-- `D:\DATN\danangtrip-web\src\features\tour\components\BookingSidebar.tsx`
-- `D:\DATN\danangtrip-web\src\features\tour\components\ScheduleCalendar.tsx`
-- `D:\DATN\danangtrip-web\src\features\tour\components\BookingForm.tsx`
-- `D:\DATN\danangtrip-web\src\messages\vi\tour.json`
-- `D:\DATN\danangtrip-web\src\messages\en\tour.json`
-
-REQUIRED API FLOW
-- Load tour detail context from the slug so the departure screen stays consistent with the main tour page.
-- Load schedules: `GET /tours/{id}/schedules`.
-- Check live availability for the selected schedule and passenger counts: `POST /tours/{id}/check-availability`.
-- Calculate booking summary for the selected schedule and passenger counts: `POST /bookings/calculate`.
-- Hand off to booking page using the selected `schedule_id` and passenger counts via query params or the repo's current preferred state handoff.
-- Cross-check the actual request key names because the current repo already uses `tour_schedule_id` in booking flows while some docs still describe `schedule_id`.
-- Dependency note: verify the admin schedule edit flow preserves the fields consumed by the public schedule list and booking calculation before finalizing the handoff contract.
-
-EXPECTED UX
-- The screen must show tour summary, schedule list or calendar, availability state, adult/child/infant quantity controls, live price summary, and a clear CTA to continue to `/tours/{slug}/book`.
-- Support loading, empty schedules, sold-out schedule, invalid query state, API error, and recalculating summary states.
-- Preserve public access. Do not require login at departure selection time unless repo reality proves otherwise.
-- Reuse existing `ScheduleCalendar`, `QuantityCounter`, `OrderSummaryCard`, toast, loading, and tour-detail visual patterns where possible.
-- Add i18n keys in both Vietnamese and English if new copy is introduced.
-
-PIPELINE ORDER
-Execute in this exact order, stopping after each step for approval:
-1. `01-screen-analysis`
-2. `03-types-api-contract`
-3. `04-layout-routing`
-4. `05-ui-components`
-5. `06-data-integration`
-6. `07-interactions`
-7. `08-auth-permissions`
-8. `09-testing`
-9. `10-optimization-deploy`
-
-ARTIFACT TARGETS
-- Analysis: `.agent/artifacts/analysis/YYYY-MM-DD__tour-departure-select__screen-analysis.md`
-- API contract: `.agent/artifacts/api-contracts/YYYY-MM-DD__tour-departure-select__api-contract.md`
-- Routing: `.agent/artifacts/routing/YYYY-MM-DD__tour-departure-select__route-plan.md`
-- UI spec: `.agent/artifacts/ui-specs/YYYY-MM-DD__tour-departure-select__ui-spec.md`
-- Data integration: `.agent/artifacts/integration/YYYY-MM-DD__tour-departure-select__data-integration.md`
-- Interaction spec: `.agent/artifacts/interaction-specs/YYYY-MM-DD__tour-departure-select__interaction-spec.md`
-- Auth review: `.agent/artifacts/auth/YYYY-MM-DD__tour-departure-select__auth-permissions-review.md`
-- Test report: `.agent/artifacts/test-cases/YYYY-MM-DD__tour-departure-select__test-report.md`
-- Deploy report: `.agent/artifacts/deploy/YYYY-MM-DD__tour-departure-select__deploy-report.md`
-- Final review: `.agent/artifacts/review/YYYY-MM-DD__tour-departure-select__review.md`
+8. Screen and API references: `D:\DATN\DATN_Tài liệu\docs\page\user_destination_tour_landing.md`
 
 BEGIN NOW
 Start with step `01-screen-analysis`.
 Do not implement code for later steps until the current step is approved.
+```
+
+## Project Kickoff Prompt
+
+Use this when you want the AI to start the currently recommended web work from zero context and still stay aligned with the system-level rollout order.
+
+```text
+SYSTEM ROLE
+
+You are the execution planner and implementation agent for `D:\DATN\danangtrip-web`.
+
+CURRENT PRIORITY
+
+- Repo: `D:\DATN\danangtrip-web`
+- Screen: `Chọn lịch khởi hành`
+- Feature slug: `tour-departure-select`
+- Main route: `/tours/{slug}/departures`
+- Main file target: `D:\DATN\danangtrip-web\src\app\[locale]\(main)\(public)\tours\[slug]\departures\page.tsx`
+- System dependency: this work comes after `danangtrip-admin` stabilizes `admin-tour-schedule-edit`
+
+SCOPE LOCK
+
+- Only build `Chọn lịch khởi hành`.
+- Do not expand scope into checkout, payment result, cart, favorites, notifications, or profile.
+- If another screen is needed, write it down as the next recommendation instead of implementing it now.
+
+GOAL
+
+Build the departure-selection step so a user can:
+1. inspect available schedules for a tour
+2. choose a schedule
+3. choose adult, child, and infant quantities
+4. check availability
+5. calculate the current price summary
+6. continue into booking with a valid schedule handoff
+
+MANDATORY READ ORDER
+
+1. `D:\DATN\DATN_Tài liệu\docs\reference\travel_com_benchmark_flow.md`
+2. `D:\DATN\DATN_Tài liệu\docs\reference\screen_gap_analysis.md`
+3. `D:\DATN\DATN_Tài liệu\docs\reference\list_page_user.md`
+4. `D:\DATN\DATN_Tài liệu\docs\page\user_tour_departure_select.md`
+5. `D:\DATN\DATN_Tài liệu\docs\page\user_tour_detail.md`
+6. `D:\DATN\DATN_Tài liệu\docs\page\user_tour_booking.md`
+7. `D:\DATN\danangtrip-web\.agent\skills\STACK_SKILLS_INDEX.md`
+8. `D:\DATN\danangtrip-web\src\config\routes.ts`
+9. `D:\DATN\danangtrip-web\src\services\tour.service.ts`
+10. `D:\DATN\danangtrip-web\src\services\booking.service.ts`
+11. `D:\DATN\danangtrip-web\src\features\tour\components\TourDetailClient.tsx`
+12. `D:\DATN\danangtrip-web\src\features\tour\components\ScheduleCalendar.tsx`
+13. `D:\DATN\danangtrip-web\src\features\tour\components\QuantityCounter.tsx`
+14. `D:\DATN\danangtrip-web\src\features\tour\components\OrderSummaryCard.tsx`
+
+EXECUTION MODE
+
+- Run the local `.agent` pipeline.
+- Default step order for this feature:
+  - `01-screen-analysis`
+  - `03-types-api-contract`
+  - `04-layout-routing`
+  - `05-ui-components`
+  - `06-data-integration`
+  - `07-interactions`
+  - `08-auth-permissions`
+  - `09-testing`
+  - `10-optimization-deploy`
+- Stop after each step for approval.
+- If docs and repo differ, follow repo reality and record the mismatch.
+- If admin schedule field naming is uncertain, mark it explicitly in the API-contract artifact before implementing the redirect/handoff logic.
+
+SUCCESS CRITERIA
+
+- The user can select a valid departure schedule.
+- Passenger quantities and pricing update correctly.
+- The screen handles loading, empty, full, and API-error states.
+- The redirect or state handoff into booking uses the repo’s real request contract, not a guessed one.
+- Artifacts and memory files are updated for every completed step.
+
+BEGIN
+
+Start with `01-screen-analysis`.
 ```
 
 ## Files Commonly Read Before Most Tasks

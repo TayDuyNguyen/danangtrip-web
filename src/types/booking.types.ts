@@ -80,6 +80,11 @@ export interface Booking {
 }
 
 export interface BookingCalculation {
+  breakdown?: {
+    adult: { quantity: number; unit_price: number | string; subtotal: number | string };
+    child: { quantity: number; unit_price: number | string; subtotal: number | string };
+    infant: { quantity: number; unit_price: number | string; subtotal: number | string };
+  };
   total_amount: number | string;
   discount_amount?: number | string;
   final_amount: number | string;

@@ -1,6 +1,6 @@
 import { API_ENDPOINTS } from "@/config";
 import axiosInstance from "@/lib/axios";
-import type { Tour, TourCategory, ApiResponse, TourSchedule, TourAvailability, RatingStats, PaginatedResponse } from "@/types";
+import type { Tour, TourCategory, ApiResponse, TourSchedule, TourAvailability, RatingStats, PaginatedResponse, LandingPage } from "@/types";
 import type { LocationRatingListItem } from "@/types/location-rating.types";
 import type { TourFilterParams } from "@/features/tour/types";
 
@@ -31,4 +31,7 @@ export const tourService = {
 
   getRatingStats: (id: number | string): Promise<ApiResponse<RatingStats>> =>
     axiosInstance.get(API_ENDPOINTS.TOURS.RATING_STATS(id)),
+
+  getLandingPage: (slug: string): Promise<ApiResponse<LandingPage>> =>
+    axiosInstance.get(API_ENDPOINTS.LANDING_PAGES.DETAIL(slug)),
 };
