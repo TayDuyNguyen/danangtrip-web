@@ -292,6 +292,7 @@ Form note:
 ## Recommended Current Screen Prompt
 
 Use this ready prompt for the next recommended `danangtrip-web` screen: departure selection in the core tour booking funnel.
+System sequencing note: implement `danangtrip-admin` schedule edit first when cross-project coordination is needed, because the web departure screen depends on schedule field completeness and stable booking availability data.
 
 ```text
 SYSTEM EXECUTION CONTRACT
@@ -381,6 +382,7 @@ REQUIRED API FLOW
 - Calculate booking summary for the selected schedule and passenger counts: `POST /bookings/calculate`.
 - Hand off to booking page using the selected `schedule_id` and passenger counts via query params or the repo's current preferred state handoff.
 - Cross-check the actual request key names because the current repo already uses `tour_schedule_id` in booking flows while some docs still describe `schedule_id`.
+- Dependency note: verify the admin schedule edit flow preserves the fields consumed by the public schedule list and booking calculation before finalizing the handoff contract.
 
 EXPECTED UX
 - The screen must show tour summary, schedule list or calendar, availability state, adult/child/infant quantity controls, live price summary, and a clear CTA to continue to `/tours/{slug}/book`.
@@ -471,6 +473,7 @@ Context:
 - Main endpoints: [GET /tours/{id}/schedules; POST /tours/{id}/check-availability; POST /bookings/calculate]
 - Handoff target: [/tours/{slug}/book with schedule_id or repo-reality equivalent query params]
 - Contract note: [docs often say schedule_id, but current booking form schema uses tour_schedule_id; confirm real request shape before wiring client state and redirects]
+- System priority note: [if both repos are being advanced together, stabilize `danangtrip-admin` schedule edit first because this screen consumes the schedule data that admin curates]
 - Route strategy note: [docs allow either modal in tour detail or dedicated /departures route; preserve repo reality and record the final choice in routing artifact]
 - i18n files: [D:\DATN\danangtrip-web\src\messages\vi\tour.json; D:\DATN\danangtrip-web\src\messages\en\tour.json]
 - Skill paths: [D:\DATN\danangtrip-web\.agent\skills\01-screen-analysis\SKILL.md; D:\DATN\danangtrip-web\.agent\skills\03-types-api-contract\SKILL.md; D:\DATN\danangtrip-web\.agent\skills\04-layout-routing\SKILL.md; D:\DATN\danangtrip-web\.agent\skills\05-ui-components\SKILL.md; D:\DATN\danangtrip-web\.agent\skills\06-data-integration\SKILL.md; D:\DATN\danangtrip-web\.agent\skills\07-interactions\SKILL.md; D:\DATN\danangtrip-web\.agent\skills\08-auth-permissions\SKILL.md; D:\DATN\danangtrip-web\.agent\skills\09-testing\SKILL.md; D:\DATN\danangtrip-web\.agent\skills\10-optimization-deploy\SKILL.md]
