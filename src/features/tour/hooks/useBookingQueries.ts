@@ -52,6 +52,15 @@ export function useUserBookings(params: BookingListParams) {
   });
 }
 
+export function useBookingDetail(id: number | string) {
+  return useQuery({
+    queryKey: ["bookings", "detail", id],
+    queryFn: () => bookingService.detail(id).then((res) => res.data),
+    enabled: Boolean(id),
+    staleTime: 60 * 1000,
+  });
+}
+
 export function useCancelBooking() {
   const queryClient = useQueryClient();
   
