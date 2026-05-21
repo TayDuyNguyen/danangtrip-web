@@ -2,10 +2,10 @@
 
 ## Current Status
 - Date: 2026-05-21
-- Active feature/task: user-bookings-list
-- Status: Blocked
-- Current step: 09-testing
-- Next step: Fix testing findings and provide working browser URL for runtime validation
+- Active feature/task: user-booking-detail
+- Status: Completed Step 10
+- Current step: 10-optimization-deploy
+- Next step: Wait for user review and approval before any git push actions
 - Owner: AI collaborator
 
 ### Progress Breakdown
@@ -16,22 +16,19 @@
 - [x] **06-data-integration**: Completed
 - [x] **07-interactions**: Completed
 - [x] **08-auth-permissions**: Completed
-- [ ] **09-testing**: Incomplete - static gates passed, runtime phases blocked, source issues found
-- [ ] **10-optimization-deploy**: Pending
+- [x] **09-testing**: Completed - verdict `READY WITH RISKS`
+- [x] **10-optimization-deploy**: Completed
 
 ## Context Summary
-- Completed the Da Nang landing page with premium glassmorphism UI.
-- Unified the booking funnel by hardening the departure selection and fixing authentication handoff.
-- Fully coded, polished, and hardened Step 5 (UI Components) for the `user-bookings-list` feature.
+- The protected booking detail route is implemented at `/[locale]/bookings/[id]`.
+- Static and browser validation completed successfully for the current feature.
+- Step 10 artifacts now summarize deploy readiness and residual risks.
 
 ## Known Issues / Risks
-- Runtime validation is blocked because no working browser URL was provided and `http://localhost:3000/vi/bookings` refused the connection.
-- `CancelBookingDialog` uses missing key `tour.history.availability_checking`, causing an i18n/runtime risk.
-- `BookingHistoryCard` uses `useTranslations("payment")` instead of `tour.payment`, causing payment badge translation risk.
-- `cancelBookingSchema` hardcodes a Vietnamese validation string, causing English locale regression risk.
-- `BookingsHistoryClient` state is not URL-synced, which conflicts with the interaction spec for search, filter, and pagination.
+- Backend payload encoding still exposes `Ti?n m?t` instead of `Tiền mặt` in at least one Vietnamese payment-method value.
+- Repo-level framework follow-up remains around deprecated `middleware` naming on newer Next versions.
 
 ## Recent Accomplishments
-- Ran `npm run lint`, `npm run typecheck`, `npm run check:routes`, `npm run build`, and `npm run prepush:check`.
-- Confirmed static build output includes `/[locale]/bookings`.
-- Produced `.agent/artifacts/test-cases/2026-05-21__user-bookings-list__test-report.md` with explicit PASS, FAIL, and SKIPPED evidence.
+- Produced `.agent/artifacts/deploy/2026-05-21__user-booking-detail__deploy-report.md`.
+- Produced `.agent/artifacts/review/2026-05-21__user-booking-detail__review.md`.
+- Synced memory to reflect Step 10 completion for `user-booking-detail`.
