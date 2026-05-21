@@ -189,13 +189,15 @@ test.describe('Phases 2-5 — Booking Detail Full Validation', () => {
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
 
-    // Print invoice button
-    const printBtn = page.locator('button').filter({ hasText: /In hóa đơn/i }).first();
-    const jsonBtn  = page.locator('button').filter({ hasText: /JSON/i }).first();
-    const isPrint  = await printBtn.isVisible().catch(() => false);
-    const isJson   = await jsonBtn.isVisible().catch(() => false);
+    // Print & Download invoice buttons
+    const downloadBtn = page.locator('button').filter({ hasText: /Tải hóa đơn/i }).first();
+    const printBtn    = page.locator('button').filter({ hasText: /In hóa đơn/i }).first();
+    const isDownload  = await downloadBtn.isVisible().catch(() => false);
+    const isPrint     = await printBtn.isVisible().catch(() => false);
+    console.log(`  Download button visible: ${isDownload}`);
     console.log(`  Print button visible: ${isPrint}`);
-    console.log(`  JSON  button visible: ${isJson}`);
+    expect(isDownload).toBe(true);
+    expect(isPrint).toBe(true);
 
     // Back button
     const backBtn   = page.locator('button[aria-label="Back"]').first();

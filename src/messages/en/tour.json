@@ -221,6 +221,7 @@
     "no_note": "No note",
     "detail_title": "Booking Details",
     "button_print_invoice": "Print Invoice",
+    "button_download_invoice": "Download Invoice (PDF)",
     "invoice_downloading": "Downloading invoice...",
     "invoice_unpaid_error": "Invoices are only available after successful payment",
     "invoice_server_error": "Could not download invoice. Please try again.",

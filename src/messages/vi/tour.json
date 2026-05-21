@@ -232,6 +232,7 @@
     "no_note": "Không có ghi chú",
     "detail_title": "Chi tiết đơn hàng",
     "button_print_invoice": "In hóa đơn",
+    "button_download_invoice": "Tải hóa đơn (PDF)",
     "invoice_downloading": "Đang tải hóa đơn...",
     "invoice_unpaid_error": "Hóa đơn chỉ có sau khi thanh toán thành công",
     "invoice_server_error": "Không thể tải hóa đơn. Vui lòng thử lại.",
