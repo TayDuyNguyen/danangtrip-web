@@ -262,7 +262,7 @@ axiosInstance.interceptors.response.use(
       toast.error(localizedMessage);
     }
 
-    const errorResponse: ApiResponse = {
+    const errorResponse: ApiResponse & { rawData?: Blob | Record<string, unknown> | null } = {
       success: false,
       code: data?.code,
       error_key: data?.error_key,
@@ -271,6 +271,7 @@ axiosInstance.interceptors.response.use(
       error: localizedMessage,
       message: localizedMessage,
       status,
+      rawData: data,
     };
 
     return Promise.reject(errorResponse);
