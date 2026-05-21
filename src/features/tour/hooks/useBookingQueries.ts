@@ -61,6 +61,15 @@ export function useBookingDetail(id: number | string) {
   });
 }
 
+export function useBookingDetailByCode(bookingCode: string) {
+  return useQuery({
+    queryKey: ["bookings", "detail-by-code", bookingCode],
+    queryFn: () => bookingService.detailByCode(bookingCode).then((res) => res.data),
+    enabled: Boolean(bookingCode),
+    staleTime: 60 * 1000,
+  });
+}
+
 export function useCancelBooking() {
   const queryClient = useQueryClient();
   

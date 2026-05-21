@@ -1,4 +1,4 @@
-# STACK SKILLS INDEX - DanangTrip Web
+﻿# STACK SKILLS INDEX - DanangTrip Web
 
 Master index for the 10 local skills in `.agent/skills/`.
 Use this file to decide which skill to activate, what context must be read first, and what artifact each step should produce.
@@ -291,65 +291,67 @@ Form note:
 
 ## Current Decision Snapshot
 
-Date locked for this index: `2026-05-20`
+Date locked for this index: `2026-05-21`
 
 ### Single Chosen Screen Only
 
 - Repo: `danangtrip-web`
-- Only screen to implement now: `Lịch sử đặt tour`
-- Feature slug: `user-bookings-list`
-- Main route: `/bookings`
-- Main file: `src/app/[locale]/(main)/(protected)/bookings/page.tsx`
-- Rule: do not switch to booking detail, favorites, notifications, cart, or any other screen until this screen is finished through `10-optimization-deploy`.
+- Only screen to implement now: `Đơn đặt theo mã đơn`
+- Feature slug: `user-booking-by-code`
+- Main route: `/bookings/code/{booking_code}`
+- Main file target: `src/app/[locale]/(main)/(protected)/bookings/code/[bookingCode]/page.tsx`
+- Rule: do not switch to invoice, favorites, notifications, profile, cart, or any other screen until this screen is finished through `10-optimization-deploy`.
 
 ### Candidate Screens Reviewed
 
 | Candidate | Priority | Why it is relevant now | Why it is not the current first pick |
 | --- | --- | --- | --- |
-| `user-bookings-list` | High | The booking and payment flow is now in place, API already supports `GET /user/bookings` and `POST /user/bookings/{id}/cancel`, and the route is still missing in the repo. | Selected as the current first pick. |
-| `user-booking-detail` | High | Natural next step after bookings list and already documented. | Better after the list exists, because the list becomes the main entry point. |
-| `favorites` | Medium | API exists and screen is missing. | Less critical than post-booking trust and order visibility. |
-| `notifications` | Medium | API exists and screen is missing. | Useful but not as central as bookings after checkout/payment work. |
-| `cart` | Low | Documented benchmark feature. | Backend is still planned; not the right next delivery target. |
+| `user-booking-by-code` | High | The report marks it as the next screen after `user-bookings-list` and `user-booking-detail`; repo already exposes `bookingService.detailByCode` and `API_ENDPOINTS.BOOKINGS.DETAIL_BY_CODE`. | Selected as the current first pick. |
+| `user-booking-invoice` | Medium | Invoice is the next booking-adjacent screen and API exists. | Current booking detail already exposes invoice as an action; lookup by code closes a more direct post-booking access gap first. |
+| `favorites` | Medium | API and docs exist. | Less central than the booking follow-up path after checkout and detail completion. |
+| `notifications` | Medium | API and docs exist. | Useful account utility, but not as critical as booking lookup continuity. |
+| `user-profile-password` | Medium | API exists and account hardening matters. | Better after the active booking follow-up flow is closed. |
 
 ### Selected Next Screen
 
-- Screen: `Lịch sử đặt tour`
-- Feature slug: `user-bookings-list`
-- Main route: `/bookings`
-- Main file: `src/app/[locale]/(main)/(protected)/bookings/page.tsx`
+- Screen: `Đơn đặt theo mã đơn`
+- Feature slug: `user-booking-by-code`
+- Main route: `/bookings/code/{booking_code}`
+- Main file target: `src/app/[locale]/(main)/(protected)/bookings/code/[bookingCode]/page.tsx`
 - Decision basis:
-  - The payment flow now has a result route, so the next user-facing gap is order visibility after checkout.
-  - The API and existing web services already support list and cancel flows, so this is implementable now without waiting for new backend modules.
-  - The route does not exist yet in the protected app, making it a clean next screen with high user value and low contract risk.
+  - `project_delivery_progress_report.md` lists `user-booking-by-code` as `Kế tiếp` and `Làm ngay` after booking detail completion.
+  - `user-bookings-list` and `user-booking-detail` both have `deploy-report` artifacts dated `2026-05-21`.
+  - The frontend already has `bookingService.detailByCode(bookingCode)` and endpoint config for `/user/bookings/code/{bookingCode}`.
+  - This screen should reuse the completed booking-detail display logic where possible instead of building a separate booking-detail model.
 
 ### Cross-Project Rollout Order
 
-1. `danangtrip-admin` implements `admin-bookings-detail`
-2. `danangtrip-web` implements `user-bookings-list`
-3. `danangtrip-web` follows with `user-booking-detail`
+1. `danangtrip-web` implements `user-booking-by-code`
+2. `danangtrip-admin` implements `admin-dashboard`
+3. `danangtrip-web` follows with `user-booking-invoice` or account utilities based on the next report update
 
 Dependency rule:
-- Keep booking status labels and cancel-action behavior aligned with the real booking status contract used by admin and API.
+- Keep booking status labels, invoice affordances, cancel behavior, and payment-method normalization aligned with the completed `user-booking-detail` flow.
 
 ## Recommended Current Screen Prompt
 
-Use this ready prompt for the next recommended `danangtrip-web` screen: `Lịch sử đặt tour`.
-System sequencing note: when both repos move together, complete `danangtrip-admin` booking detail first so booking status handling and operator actions are clearly stabilized.
+Use this ready prompt for the next recommended `danangtrip-web` screen: `Đơn đặt theo mã đơn`.
 
 ```text
 SYSTEM EXECUTION CONTRACT
 
 Act as the execution agent for repository: `D:\DATN\danangtrip-web`
 
-Your job is to implement the recommended user screen: `Lịch sử đặt tour`
-Feature slug: `user-bookings-list`
-Primary target route: `/bookings`
-Primary App Router file target: `src/app/[locale]/(main)/(protected)/bookings/page.tsx`
+Your job is to implement the recommended user screen: `Đơn đặt theo mã đơn`
+Feature slug: `user-booking-by-code`
+Primary target route: `/bookings/code/{booking_code}`
+Primary App Router file target: `src/app/[locale]/(main)/(protected)/bookings/code/[bookingCode]/page.tsx`
+Feature type: protected booking lookup screen that loads a booking by booking code and presents the same trusted detail context as `/bookings/{id}`.
 
 SINGLE-SCREEN LOCK
-- You are working on exactly one screen only: `Lịch sử đặt tour`.
-- You MUST NOT switch to booking detail, favorites, notifications, cart, or profile editing in this run.
+- You are working on exactly one screen only: `Đơn đặt theo mã đơn`.
+- You MUST NOT switch to invoice, favorites, notifications, profile, cart, or unrelated booking screens in this run.
+- If an adjacent issue is discovered in booking detail, record it as a dependency or follow-up and continue only with the booking-by-code scope.
 
 MANDATORY READ ORDER BEFORE ANY WORK
 1. `D:\DATN\danangtrip-web\AGENTS.md`
@@ -359,7 +361,68 @@ MANDATORY READ ORDER BEFORE ANY WORK
 5. `D:\DATN\danangtrip-web\.agent\memory\HANDOFF.md`
 6. `D:\DATN\danangtrip-web\.agent\skills\STACK_SKILLS_INDEX.md`
 7. Current step `SKILL.md`
-8. Screen and API references: `D:\DATN\DATN_Tài liệu\docs\page\user_bookings_list.md`
+8. Screen and API references listed below
+
+SCREEN REFERENCES
+- Progress report: `D:\DATN\DATN_Document\docs\project_delivery_progress_report.md`
+- Primary doc: `D:\DATN\DATN_Document\docs\page\user_booking_by_code.md`
+- Related detail doc: `D:\DATN\DATN_Document\docs\page\user_booking_detail.md`
+- Related invoice doc: `D:\DATN\DATN_Document\docs\page\user_booking_invoice.md`
+- User page list: `D:\DATN\DATN_Document\docs\reference\list_page_user.md`
+- Flow priority note: `D:\DATN\DATN_Document\docs\reference\travel_com_benchmark_flow.md`
+- Gap analysis: `D:\DATN\DATN_Document\docs\reference\screen_gap_analysis.md`
+- API list: `D:\DATN\DATN_Document\docs\api\api_list.md`
+- Backend API repo: `D:\DATN\danangtrip-api`
+- Backend routes: `D:\DATN\danangtrip-api\routes\api.php`
+- Backend booking docs: `D:\DATN\danangtrip-api\api-doc\bookings.js`
+
+REPO CONTEXT TO READ
+- `D:\DATN\danangtrip-web\DESIGN.md`
+- `D:\DATN\danangtrip-web\src\config\api.ts`
+- `D:\DATN\danangtrip-web\src\config\routes.ts`
+- `D:\DATN\danangtrip-web\src\services\booking.service.ts`
+- `D:\DATN\danangtrip-web\src\features\tour\hooks\useBookingQueries.ts`
+- `D:\DATN\danangtrip-web\src\features\tour\components\BookingDetailClient.tsx`
+- `D:\DATN\danangtrip-web\src\app\[locale]\(main)\(protected)\bookings\[id]\page.tsx`
+- `D:\DATN\danangtrip-web\src\types\booking.types.ts`
+- `D:\DATN\danangtrip-web\src\messages\vi\tour.json`
+- `D:\DATN\danangtrip-web\src\messages\en\tour.json`
+
+REQUIRED API FLOW
+- Load booking detail by code through `GET /user/bookings/code/{booking_code}` using the existing `bookingService.detailByCode`.
+- Reuse or adapt the existing booking detail query/display model where repo reality allows.
+- Preserve protected route behavior and locale-aware routing.
+- If docs and backend differ on `booking_code`, `code`, or route param naming, follow repo reality and record the mismatch in the API-contract artifact.
+
+EXPECTED UX
+- A user can open a booking-by-code URL and see the correct booking context.
+- Loading, not-found, API-error, and invalid-code states are explicit.
+- The screen links back to `/bookings` and can move to `/bookings/{id}` when an internal booking id is present.
+- Invoice and cancel affordances remain consistent with `user-booking-detail`; do not create a separate invoice screen in this run.
+
+PIPELINE ORDER
+Execute in this exact order, stopping after each step for approval:
+1. `01-screen-analysis`
+2. `03-types-api-contract`
+3. `04-layout-routing`
+4. `05-ui-components`
+5. `06-data-integration`
+6. `07-interactions`
+7. `08-auth-permissions`
+8. `09-testing`
+9. `10-optimization-deploy`
+
+ARTIFACT TARGETS
+- Analysis: `.agent/artifacts/analysis/YYYY-MM-DD__user-booking-by-code__screen-analysis.md`
+- API contract: `.agent/artifacts/api-contracts/YYYY-MM-DD__user-booking-by-code__api-contract.md`
+- Routing: `.agent/artifacts/routing/YYYY-MM-DD__user-booking-by-code__route-plan.md`
+- UI spec: `.agent/artifacts/ui-specs/YYYY-MM-DD__user-booking-by-code__ui-spec.md`
+- Data integration: `.agent/artifacts/integration/YYYY-MM-DD__user-booking-by-code__data-integration.md`
+- Interaction spec: `.agent/artifacts/interaction-specs/YYYY-MM-DD__user-booking-by-code__interaction-spec.md`
+- Auth review: `.agent/artifacts/auth/YYYY-MM-DD__user-booking-by-code__auth-permissions-review.md`
+- Test report: `.agent/artifacts/test-cases/YYYY-MM-DD__user-booking-by-code__test-report.md`
+- Deploy report: `.agent/artifacts/deploy/YYYY-MM-DD__user-booking-by-code__deploy-report.md`
+- Final review: `.agent/artifacts/review/YYYY-MM-DD__user-booking-by-code__review.md`
 
 BEGIN NOW
 Start with step `01-screen-analysis`.
@@ -378,44 +441,43 @@ You are the execution planner and implementation agent for `D:\DATN\danangtrip-w
 CURRENT PRIORITY
 
 - Repo: `D:\DATN\danangtrip-web`
-- Screen: `Lịch sử đặt tour`
-- Feature slug: `user-bookings-list`
-- Main route: `/bookings`
-- Main file target: `D:\DATN\danangtrip-web\src\app\[locale]\(main)\(protected)\bookings\page.tsx`
-- System dependency: this work comes after `danangtrip-admin` clarifies booking detail and status operations
+- Screen: `Đơn đặt theo mã đơn`
+- Feature slug: `user-booking-by-code`
+- Main route: `/bookings/code/{booking_code}`
+- Main file target: `D:\DATN\danangtrip-web\src\app\[locale]\(main)\(protected)\bookings\code\[bookingCode]\page.tsx`
+- System role: this work follows the completed `user-bookings-list` and `user-booking-detail` rollout and closes direct booking-code lookup.
 
 SCOPE LOCK
 
-- Only build `Lịch sử đặt tour`.
-- Do not expand scope into booking detail, favorites, notifications, cart, or profile editing.
+- Only build `Đơn đặt theo mã đơn`.
+- Do not expand scope into invoice, favorites, notifications, cart, or profile editing.
 - If another screen is needed, write it down as the next recommendation instead of implementing it now.
 
 GOAL
 
-Build the bookings-history step so a user can:
-1. load their bookings with pagination
-2. filter by booking status
-3. inspect booking summary cards with payment status
-4. cancel eligible bookings with a reason
-5. move toward booking detail from a clear entry point
-6. recover cleanly from empty, loading, and API-error states
+Build the booking-code lookup screen so a user can:
+1. load a booking directly from a booking code route
+2. inspect the same booking context as the completed detail page
+3. recover cleanly from invalid, not-found, loading, and API-error states
+4. navigate back to booking history or canonical booking detail
+5. preserve protected route, locale, invoice, and cancellation behavior consistently
 
 MANDATORY READ ORDER
 
-1. `D:\DATN\DATN_Tài liệu\docs\reference\travel_com_benchmark_flow.md`
-2. `D:\DATN\DATN_Tài liệu\docs\reference\screen_gap_analysis.md`
-3. `D:\DATN\DATN_Tài liệu\docs\reference\list_page_user.md`
-4. `D:\DATN\DATN_Tài liệu\docs\page\user_bookings_list.md`
-5. `D:\DATN\DATN_Tài liệu\docs\page\user_booking_detail.md`
-6. `D:\DATN\DATN_Tài liệu\docs\page\user_payment_result.md`
-7. `D:\DATN\danangtrip-web\.agent\skills\STACK_SKILLS_INDEX.md`
-8. `D:\DATN\danangtrip-web\src\config\routes.ts`
-9. `D:\DATN\danangtrip-web\src\services\booking.service.ts`
+1. `D:\DATN\DATN_Document\docs\project_delivery_progress_report.md`
+2. `D:\DATN\DATN_Document\docs\reference\travel_com_benchmark_flow.md`
+3. `D:\DATN\DATN_Document\docs\reference\screen_gap_analysis.md`
+4. `D:\DATN\DATN_Document\docs\reference\list_page_user.md`
+5. `D:\DATN\DATN_Document\docs\page\user_booking_by_code.md`
+6. `D:\DATN\DATN_Document\docs\page\user_booking_detail.md`
+7. `D:\DATN\DATN_Document\docs\page\user_booking_invoice.md`
+8. `D:\DATN\danangtrip-web\.agent\skills\STACK_SKILLS_INDEX.md`
+9. `D:\DATN\danangtrip-web\src\config\api.ts`
 10. `D:\DATN\danangtrip-web\src\services\booking.service.ts`
-11. `D:\DATN\danangtrip-web\src\features\payment\components\PaymentSummaryCard.tsx`
-12. `D:\DATN\danangtrip-web\src\types\booking.types.ts`
-13. `D:\DATN\danangtrip-web\src\middleware.ts`
-14. `D:\DATN\danangtrip-web\src\app\[locale]\(main)\(protected)\profile\page.tsx`
+11. `D:\DATN\danangtrip-web\src\features\tour\hooks\useBookingQueries.ts`
+12. `D:\DATN\danangtrip-web\src\features\tour\components\BookingDetailClient.tsx`
+13. `D:\DATN\danangtrip-web\src\app\[locale]\(main)\(protected)\bookings\[id]\page.tsx`
+14. `D:\DATN\danangtrip-web\src\types\booking.types.ts`
 
 EXECUTION MODE
 
@@ -432,14 +494,12 @@ EXECUTION MODE
   - `10-optimization-deploy`
 - Stop after each step for approval.
 - If docs and repo differ, follow repo reality and record the mismatch.
-- If admin schedule field naming is uncertain, mark it explicitly in the API-contract artifact before implementing the redirect/handoff logic.
 
 SUCCESS CRITERIA
 
-- The user can see their bookings in a clear, paginated, filterable list.
-- Eligible bookings can be cancelled with the real API contract.
-- The screen handles loading, empty, filtered-empty, and API-error states.
-- The screen becomes the canonical entry point to future booking detail pages.
+- The user can open a protected booking-by-code route and see the booking.
+- The screen reuses completed booking-detail behavior where practical.
+- Invalid code, not found, loading, and API-error states are handled cleanly.
 - Artifacts and memory files are updated for every completed step.
 
 BEGIN
@@ -447,6 +507,196 @@ BEGIN
 Start with `01-screen-analysis`.
 ```
 
+## Manual Activation Templates - Current Recommended Screen
+
+### Current Recommended Screen - User Booking By Code
+
+```text
+Activate full pipeline for current recommended screen
+
+Context:
+- Repo: [D:\DATN\danangtrip-web]
+- Feature slug: [user-booking-by-code]
+- Screen name: [Đơn đặt theo mã đơn]
+- Primary target route: [/bookings/code/{booking_code}]
+- Primary target page file: [D:\DATN\danangtrip-web\src\app\[locale]\(main)\(protected)\bookings\code\[bookingCode]\page.tsx]
+- Related detail file: [D:\DATN\danangtrip-web\src\app\[locale]\(main)\(protected)\bookings\[id]\page.tsx]
+- Route group: [(protected)]
+- Auth requirement: [Protected user route]
+- DESIGN.md: [D:\DATN\danangtrip-web\DESIGN.md]
+- Primary docs: [D:\DATN\DATN_Document\docs\page\user_booking_by_code.md]
+- Related docs: [D:\DATN\DATN_Document\docs\page\user_booking_detail.md; D:\DATN\DATN_Document\docs\page\user_booking_invoice.md; D:\DATN\DATN_Document\docs\reference\list_page_user.md; D:\DATN\DATN_Document\docs\reference\travel_com_benchmark_flow.md; D:\DATN\DATN_Document\docs\reference\screen_gap_analysis.md]
+- API docs: [D:\DATN\DATN_Document\docs\api\api_list.md]
+- Backend API repo: [D:\DATN\danangtrip-api]
+- Backend routes: [D:\DATN\danangtrip-api\routes\api.php]
+- Backend booking docs: [D:\DATN\danangtrip-api\api-doc\bookings.js]
+- Existing UI references: [D:\DATN\danangtrip-web\src\features\tour\components\BookingDetailClient.tsx; D:\DATN\danangtrip-web\src\app\[locale]\(main)\(protected)\bookings\page.tsx]
+- Services/types to inspect: [D:\DATN\danangtrip-web\src\services\booking.service.ts; D:\DATN\danangtrip-web\src\types\booking.types.ts; D:\DATN\danangtrip-web\src\config\api.ts]
+- Main endpoint: [GET /user/bookings/code/{booking_code}]
+- Contract note: [repo has `bookingService.detailByCode(bookingCode)`; resolve route param naming `booking_code` vs `bookingCode` during API-contract and routing steps]
+- Output prefix: [.agent/artifacts/<group>/YYYY-MM-DD__user-booking-by-code__...md]
+
+Execution:
+- Start with `01-screen-analysis`.
+- Before each step, read the matching `SKILL.md`.
+- Treat the booking-by-code doc as the main UX spec and reuse completed booking-detail patterns where possible.
+- Do not create a separate invoice screen in this run.
+- Stop after each pipeline step for approval.
+```
+
+### Skill 01 - Screen Analysis
+
+```text
+Activate 01-screen-analysis
+
+Context:
+- Repo: [D:\DATN\danangtrip-web]
+- Feature slug: [user-booking-by-code]
+- Screen name: [Đơn đặt theo mã đơn]
+- Figma/Stitch: [NONE]
+- Input source: [D:\DATN\DATN_Document\docs\page\user_booking_by_code.md]
+- Related sources: [D:\DATN\DATN_Document\docs\page\user_booking_detail.md; D:\DATN\DATN_Document\docs\page\user_booking_invoice.md; D:\DATN\DATN_Document\docs\reference\travel_com_benchmark_flow.md]
+- Prototype note: [Use screen doc and completed booking detail route as main references]
+- DESIGN.md: [D:\DATN\danangtrip-web\DESIGN.md]
+- API docs: [D:\DATN\DATN_Document\docs\api\api_list.md]
+- Output: [.agent/artifacts/analysis/YYYY-MM-DD__user-booking-by-code__screen-analysis.md]
+```
+
+### Skill 02 - Project Setup Audit
+
+```text
+Activate 02-project-setup
+
+Context:
+- Repo: [D:\DATN\danangtrip-web]
+- Feature slug: [user-booking-by-code]
+- Audit reason: [new protected route after completed booking detail]
+- Output: [.agent/artifacts/setup/YYYY-MM-DD__user-booking-by-code__project-setup-report.md]
+```
+
+### Skill 03 - Types And API Contract
+
+```text
+Activate 03-types-api-contract
+
+Context:
+- Repo: [D:\DATN\danangtrip-web]
+- Feature slug: [user-booking-by-code]
+- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__user-booking-by-code__screen-analysis.md]
+- API docs: [D:\DATN\DATN_Document\docs\api\api_list.md]
+- Relevant endpoints: [GET /user/bookings/code/{booking_code}]
+- Existing services: [D:\DATN\danangtrip-web\src\services\booking.service.ts]
+- Existing hooks: [D:\DATN\danangtrip-web\src\features\tour\hooks\useBookingQueries.ts]
+- Existing types: [D:\DATN\danangtrip-web\src\types\booking.types.ts]
+- Contract check: [Resolve `booking_code` vs `bookingCode`, response shape reuse from `Booking`, and not-found/error mapping]
+- Output: [.agent/artifacts/api-contracts/YYYY-MM-DD__user-booking-by-code__api-contract.md]
+```
+
+### Skill 04 - Layout And Routing
+
+```text
+Activate 04-layout-routing
+
+Context:
+- Repo: [D:\DATN\danangtrip-web]
+- Feature slug: [user-booking-by-code]
+- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__user-booking-by-code__screen-analysis.md]
+- Target route path: [/bookings/code/{booking_code}]
+- Route group: [(protected)]
+- New page files: [yes]
+- Target page file: [D:\DATN\danangtrip-web\src\app\[locale]\(main)\(protected)\bookings\code\[bookingCode]\page.tsx]
+- Related page file: [D:\DATN\danangtrip-web\src\app\[locale]\(main)\(protected)\bookings\[id]\page.tsx]
+- Server or client ownership: [server page shell + client booking-by-code detail]
+- Output: [.agent/artifacts/routing/YYYY-MM-DD__user-booking-by-code__route-plan.md]
+```
+
+### Skill 05 - UI Components
+
+```text
+Activate 05-ui-components
+
+Context:
+- Repo: [D:\DATN\danangtrip-web]
+- Feature slug: [user-booking-by-code]
+- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__user-booking-by-code__screen-analysis.md]
+- DESIGN.md: [D:\DATN\danangtrip-web\DESIGN.md]
+- Components to focus on: [BookingByCodePageShell, BookingCodeHeader, BookingCodeResult, BookingCodeErrorState]
+- Existing reusable components: [BookingDetailClient patterns, bookings list empty/error states, shared Button/Input primitives]
+- Output: [.agent/artifacts/ui-specs/YYYY-MM-DD__user-booking-by-code__ui-spec.md]
+```
+
+### Skill 06 - Data Integration
+
+```text
+Activate 06-data-integration
+
+Context:
+- Repo: [D:\DATN\danangtrip-web]
+- Feature slug: [user-booking-by-code]
+- API contract: [.agent/artifacts/api-contracts/YYYY-MM-DD__user-booking-by-code__api-contract.md]
+- UI spec: [.agent/artifacts/ui-specs/YYYY-MM-DD__user-booking-by-code__ui-spec.md]
+- Queries: [booking detail by code]
+- Mutations: [reuse detail cancel/invoice behavior only if already supported by shared detail component]
+- Output: [.agent/artifacts/integration/YYYY-MM-DD__user-booking-by-code__data-integration.md]
+```
+
+### Skill 07 - Interactions
+
+```text
+Activate 07-interactions
+
+Context:
+- Repo: [D:\DATN\danangtrip-web]
+- Feature slug: [user-booking-by-code]
+- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__user-booking-by-code__screen-analysis.md]
+- Data integration: [.agent/artifacts/integration/YYYY-MM-DD__user-booking-by-code__data-integration.md]
+- Main actions: [load from route param, retry, go back to bookings, open canonical booking detail, use invoice/cancel affordances when available]
+- Forms present: [none unless repo reality requires code search input fallback]
+- Output: [.agent/artifacts/interaction-specs/YYYY-MM-DD__user-booking-by-code__interaction-spec.md]
+```
+
+### Skill 08 - Auth And Permissions
+
+```text
+Activate 08-auth-permissions
+
+Context:
+- Repo: [D:\DATN\danangtrip-web]
+- Feature slug: [user-booking-by-code]
+- Route plan: [.agent/artifacts/routing/YYYY-MM-DD__user-booking-by-code__route-plan.md]
+- Feature type: [protected route]
+- Gated UI actions: [load booking by code, invoice/cancel if reused, move to canonical detail]
+- Output: [.agent/artifacts/auth/YYYY-MM-DD__user-booking-by-code__auth-permissions-review.md]
+```
+
+### Skill 09 - Testing
+
+```text
+Activate 09-testing
+
+Context:
+- Repo: [D:\DATN\danangtrip-web]
+- Feature slug: [user-booking-by-code]
+- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__user-booking-by-code__screen-analysis.md]
+- Interaction spec: [.agent/artifacts/interaction-specs/YYYY-MM-DD__user-booking-by-code__interaction-spec.md]
+- Auth review: [.agent/artifacts/auth/YYYY-MM-DD__user-booking-by-code__auth-permissions-review.md]
+- Output: [.agent/artifacts/test-cases/YYYY-MM-DD__user-booking-by-code__test-report.md]
+```
+
+### Skill 10 - Optimization And Deploy
+
+```text
+Activate 10-optimization-deploy
+
+Context:
+- Repo: [D:\DATN\danangtrip-web]
+- Feature slug: [user-booking-by-code]
+- Test report: [.agent/artifacts/test-cases/YYYY-MM-DD__user-booking-by-code__test-report.md]
+- Test verdict: [READY | READY WITH RISKS | NOT READY]
+- Existing artifacts: [analysis, api-contract, route-plan, ui-spec, data-integration, interaction-spec, auth-review, test-report]
+- Output deploy: [.agent/artifacts/deploy/YYYY-MM-DD__user-booking-by-code__deploy-report.md]
+- Output review: [.agent/artifacts/review/YYYY-MM-DD__user-booking-by-code__review.md]
+```
 ## Files Commonly Read Before Most Tasks
 
 - `.agent/rules/PROJECT_RULES.md`
@@ -460,297 +710,7 @@ Start with `01-screen-analysis`.
 - `src/i18n/routing.ts`
 - `src/messages/vi/`
 - `src/messages/en/`
-
-## Manual Activation Templates
-
-The examples below are fallback templates.
-Dates and slugs are examples only; replace them with the current task values.
-
-### Current Recommended Screen - User Bookings List
-
-Use this prompt when manually activating the local skill pipeline for the recommended web screen.
-
-```text
-Activate full pipeline for current recommended screen
-
-Context:
-- Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [user-bookings-list]
-- Screen name: [Lịch sử đặt tour]
-- Primary target route: [/bookings]
-- Primary target page file: [D:\DATN\danangtrip-web\src\app\[locale]\(main)\(protected)\bookings\page.tsx]
-- Related future detail file: [D:\DATN\danangtrip-web\src\app\[locale]\(main)\(protected)\bookings\[id]\page.tsx]
-- Route group: [(protected)]
-- Auth requirement: [Protected user route]
-- DESIGN.md: [D:\DATN\danangtrip-web\DESIGN.md]
-- Primary docs: [D:\DATN\DATN_Tài liệu\docs\page\user_bookings_list.md]
-- Related docs: [D:\DATN\DATN_Tài liệu\docs\page\user_booking_detail.md; D:\DATN\DATN_Tài liệu\docs\page\user_booking_by_code.md; D:\DATN\DATN_Tài liệu\docs\page\user_booking_invoice.md; D:\DATN\DATN_Tài liệu\docs\reference\list_page_user.md; D:\DATN\DATN_Tài liệu\docs\reference\travel_com_benchmark_flow.md; D:\DATN\DATN_Tài liệu\docs\reference\screen_gap_analysis.md]
-- API docs: [D:\DATN\DATN_Tài liệu\docs\api\api_list.md]
-- Backend API repo: [D:\DATN\danangtrip-api]
-- Backend routes: [D:\DATN\danangtrip-api\routes\api.php]
-- Backend booking docs: [D:\DATN\danangtrip-api\api-doc\bookings.js]
-- Backend payment docs: [D:\DATN\danangtrip-api\api-doc\payments.js]
-- Prototype mapping: [D:\DATN\DATN_Tài liệu\screen\4_Others\01-Screen_To_Docs_Mapping.md]
-- Prototype classification: [D:\DATN\DATN_Tài liệu\screen\4_Others\00-Bang_Phan_Loai_Man_Hinh.md]
-- Existing UI references: [D:\DATN\danangtrip-web\src\features\payment\components\PaymentSummaryCard.tsx; D:\DATN\danangtrip-web\src\features\payment\components\PaymentActions.tsx; D:\DATN\danangtrip-web\src\app\[locale]\(main)\(protected)\profile\page.tsx]
-- Services/types to inspect: [D:\DATN\danangtrip-web\src\services\booking.service.ts; D:\DATN\danangtrip-web\src\types\booking.types.ts; D:\DATN\danangtrip-web\src\store\auth.store.ts]
-- Main endpoints: [GET /user/bookings; POST /user/bookings/{id}/cancel]
-- Contract note: [docs sometimes use `status`; backend request uses `booking_status` plus pagination params; preserve repo reality and record mapping]
-- System priority note: [align labels and status actions with the admin booking detail screen]
-- i18n files: [D:\DATN\danangtrip-web\src\messages\vi\tour.json; D:\DATN\danangtrip-web\src\messages\en\tour.json]
-- Skill paths: [D:\DATN\danangtrip-web\.agent\skills\01-screen-analysis\SKILL.md; D:\DATN\danangtrip-web\.agent\skills\03-types-api-contract\SKILL.md; D:\DATN\danangtrip-web\.agent\skills\04-layout-routing\SKILL.md; D:\DATN\danangtrip-web\.agent\skills\05-ui-components\SKILL.md; D:\DATN\danangtrip-web\.agent\skills\06-data-integration\SKILL.md; D:\DATN\danangtrip-web\.agent\skills\07-interactions\SKILL.md; D:\DATN\danangtrip-web\.agent\skills\08-auth-permissions\SKILL.md; D:\DATN\danangtrip-web\.agent\skills\09-testing\SKILL.md; D:\DATN\danangtrip-web\.agent\skills\10-optimization-deploy\SKILL.md]
-- Output prefix: [.agent/artifacts/<group>/YYYY-MM-DD__user-bookings-list__...md]
-
-Execution:
-- Start with `01-screen-analysis`.
-- Before each step, read the matching `SKILL.md` from `Skill paths`.
-- Treat the screen doc as the main UX spec and adapt it to the current protected-app layout reality.
-- Reuse existing booking and payment display patterns before building new primitives.
-- Resolve `status` versus `booking_status` query naming during API-contract step before wiring tabs and filters.
-- Ensure cancel flow updates the list cleanly without losing pagination or filter state.
-- Stop after each pipeline step for approval.
-```
-
-### Skill 01 - Screen Analysis
-
-```text
-Activate 01-screen-analysis
-
-Context:
-- Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [user-bookings-list]
-- Screen name: [Lịch sử đặt tour]
-- Figma/Stitch: [NONE]
-- Input source: [D:\DATN\DATN_Tài liệu\docs\page\user_bookings_list.md]
-- Related sources: [D:\DATN\DATN_Tài liệu\docs\page\user_booking_detail.md; D:\DATN\DATN_Tài liệu\docs\page\user_payment_result.md; D:\DATN\DATN_Tài liệu\docs\reference\travel_com_benchmark_flow.md]
-- Prototype note: [Use screen doc and existing protected layout reality]
-- DESIGN.md: [D:\DATN\danangtrip-web\DESIGN.md]
-- API docs: [D:\DATN\DATN_Tài liệu\docs\api\api_list.md]
-- Skill path: [D:\DATN\danangtrip-web\.agent\skills\01-screen-analysis\SKILL.md]
-- Output: [.agent/artifacts/analysis/YYYY-MM-DD__user-bookings-list__screen-analysis.md]
-```
-
-Expected output:
-
-- design token audit against `DESIGN.md`
-- `[REUSE]`, `[NEW]`, `[MOD]` component breakdown
-- per-section UI states
-- data and API mapping
-- server vs client ownership
-- business rules and edge cases
-
-### Skill 02 - Project Setup Audit
-
-```text
-Activate 02-project-setup
-
-Context:
-- Repo: [d:/DATN/danangtrip-web]
-- Feature slug: [project-base | tour-list]
-- Audit reason: [new sprint | stack drift suspicion | onboarding]
-- Output: [.agent/artifacts/setup/YYYY-MM-DD__project-base__project-setup-report.md]
-```
-
-Expected output:
-
-- ready or not-ready verdict
-- dependency, config, runtime, middleware, and command baseline checks
-
-### Skill 03 - Types And API Contract
-
-```text
-Activate 03-types-api-contract
-
-Context:
-- Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [user-bookings-list]
-- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__user-bookings-list__screen-analysis.md]
-- API docs: [D:\DATN\DATN_Tài liệu\docs\api\api_list.md]
-- Relevant endpoints: [GET /user/bookings, POST /user/bookings/{id}/cancel]
-- Existing services: [D:\DATN\danangtrip-web\src\services\booking.service.ts]
-- Existing hooks: [Create or adapt bookings query and cancel mutation hooks in repo reality]
-- Existing types: [D:\DATN\danangtrip-web\src\types\booking.types.ts]
-- Contract check: [Resolve filter key naming, pagination shape, and cancel payload shape before wiring tabs and dialog]
-- Skill path: [D:\DATN\danangtrip-web\.agent\skills\03-types-api-contract\SKILL.md]
-- Output: [.agent/artifacts/api-contracts/YYYY-MM-DD__user-bookings-list__api-contract.md]
-```
-
-Expected output:
-
-- entity and params types
-- Zod schema plan
-- service contract plan
-- files expected to change
-
-### Skill 04 - Layout And Routing
-
-```text
-Activate 04-layout-routing
-
-Context:
-- Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [user-bookings-list]
-- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__user-bookings-list__screen-analysis.md]
-- Target route path: [/bookings]
-- Route group: [(protected)]
-- New page files: [yes]
-- Target page file: [D:\DATN\danangtrip-web\src\app\[locale]\(main)\(protected)\bookings\page.tsx]
-- Related page file: [D:\DATN\danangtrip-web\src\app\[locale]\(main)\(protected)\profile\page.tsx]
-- Server or client ownership: [server page shell + client bookings list]
-- New i18n namespace: [tour]
-- Skill path: [D:\DATN\danangtrip-web\.agent\skills\04-layout-routing\SKILL.md]
-- Output: [.agent/artifacts/routing/YYYY-MM-DD__user-bookings-list__route-plan.md]
-```
-
-Expected output:
-
-- App Router file structure
-- metadata plan
-- server vs client boundaries
-- i18n key impact
-- route config impact
-
-### Skill 05 - UI Components
-
-```text
-Activate 05-ui-components
-
-Context:
-- Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [user-bookings-list]
-- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__user-bookings-list__screen-analysis.md]
-- DESIGN.md: [D:\DATN\danangtrip-web\DESIGN.md]
-- Components to focus on: [BookingsListPageShell, BookingFilterTabs, BookingCardList, BookingHistoryCard, CancelBookingDialog, BookingsEmptyState]
-- Existing reusable components: [PaymentSummaryCard patterns, existing protected layout patterns, shared Button/Input/Modal primitives in repo]
-- Skill path: [D:\DATN\danangtrip-web\.agent\skills\05-ui-components\SKILL.md]
-- Output: [.agent/artifacts/ui-specs/YYYY-MM-DD__user-bookings-list__ui-spec.md]
-```
-
-Expected output:
-
-- design token alignment
-- `[REUSE]`, `[NEW]`, `[MOD]` breakdown
-- component layering
-- per-component states
-- placement strategy
-- build order
-
-### Skill 06 - Data Integration
-
-```text
-Activate 06-data-integration
-
-Context:
-- Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [user-bookings-list]
-- API contract: [.agent/artifacts/api-contracts/YYYY-MM-DD__user-bookings-list__api-contract.md]
-- UI spec: [.agent/artifacts/ui-specs/YYYY-MM-DD__user-bookings-list__ui-spec.md]
-- Need server prefetch: [optional, but likely client query in protected screen]
-- Queries: [user bookings list]
-- Mutations: [cancel booking]
-- Skill path: [D:\DATN\danangtrip-web\.agent\skills\06-data-integration\SKILL.md]
-- Output: [.agent/artifacts/integration/YYYY-MM-DD__user-bookings-list__data-integration.md]
-```
-
-Expected output:
-
-- server and client ownership per data source
-- query key hierarchy
-- hydration plan
-- loading, empty, and error state handling
-
-### Skill 07 - Interactions
-
-```text
-Activate 07-interactions
-
-Context:
-- Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [user-bookings-list]
-- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__user-bookings-list__screen-analysis.md]
-- Data integration: [.agent/artifacts/integration/YYYY-MM-DD__user-bookings-list__data-integration.md]
-- Main actions: [change status tab, paginate, open cancel dialog, submit cancel reason, move to booking detail, go to tours when empty]
-- Forms present: [cancel booking confirm flow]
-- Skill path: [D:\DATN\danangtrip-web\.agent\skills\07-interactions\SKILL.md]
-- Output: [.agent/artifacts/interaction-specs/YYYY-MM-DD__user-bookings-list__interaction-spec.md]
-```
-
-Expected output:
-
-- action breakdown
-- URL-synced state plan
-- debounce strategy
-- form flow if applicable
-- i18n keys to add
-
-### Skill 08 - Auth And Permissions
-
-```text
-Activate 08-auth-permissions
-
-Context:
-- Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [user-bookings-list]
-- Route plan: [.agent/artifacts/routing/YYYY-MM-DD__user-bookings-list__route-plan.md]
-- Feature type: [protected route]
-- Gated UI actions: [list load, cancel booking, move to detail]
-- Skill path: [D:\DATN\danangtrip-web\.agent\skills\08-auth-permissions\SKILL.md]
-- Output: [.agent/artifacts/auth/YYYY-MM-DD__user-bookings-list__auth-permissions-review.md]
-```
-
-Expected output:
-
-- protected route review
-- guarded UI actions
-- middleware behavior
-- redirect flow
-- risks and assumptions
-
-### Skill 09 - Testing
-
-```text
-Activate 09-testing
-
-Context:
-- Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [user-bookings-list]
-- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__user-bookings-list__screen-analysis.md]
-- Interaction spec: [.agent/artifacts/interaction-specs/YYYY-MM-DD__user-bookings-list__interaction-spec.md]
-- Auth review: [.agent/artifacts/auth/YYYY-MM-DD__user-bookings-list__auth-permissions-review.md]
-- Skill path: [D:\DATN\danangtrip-web\.agent\skills\09-testing\SKILL.md]
-- Output: [.agent/artifacts/test-cases/YYYY-MM-DD__user-bookings-list__test-report.md]
-```
-
-Expected output:
-
-- lint, typecheck, build, and route checks
-- UI visual validation
-- interaction validation
-- i18n validation
-- auth and permission validation
-- explicit PASS, FAIL, SKIPPED evidence
-
-### Skill 10 - Optimization And Deploy
-
-```text
-Activate 10-optimization-deploy
-
-Context:
-- Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [user-bookings-list]
-- Test report: [.agent/artifacts/test-cases/YYYY-MM-DD__user-bookings-list__test-report.md]
-- Test verdict: [READY | READY WITH RISKS | NOT READY]
-- Existing artifacts: [analysis, api-contract, route-plan, ui-spec, data-integration, interaction-spec, auth-review, test-report]
-- Skill path: [D:\DATN\danangtrip-web\.agent\skills\10-optimization-deploy\SKILL.md]
-- Output deploy: [.agent/artifacts/deploy/YYYY-MM-DD__user-bookings-list__deploy-report.md]
-- Output review: [.agent/artifacts/review/YYYY-MM-DD__user-bookings-list__review.md]
-```
-
-Expected output:
-
-- deploy-readiness verdict
-- build and runtime constraints
-- performance and UX checks relevant to the task
-- final review summary
-- residual risks and next actions
+- `src/services/booking.service.ts`
+- `src/features/tour/hooks/useBookingQueries.ts`
+- `src/features/tour/components/BookingDetailClient.tsx`
 

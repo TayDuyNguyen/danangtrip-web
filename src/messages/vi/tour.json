@@ -122,7 +122,7 @@
     "error_title": "Không thể tải chi tiết tour",
     "error_desc": "Đã xảy ra lỗi ngoài ý muốn. Vui lòng thử lại.",
     "retry": "Thử lại",
-    "location_short": "?? N?ng, Vi?t Nam"
+    "location_short": "Đà Nẵng, Việt Nam"
   },
   "booking": {
     "title": "Đặt tour: {name}",
@@ -166,26 +166,26 @@
     "cancel_confirm": "Bạn có chắc chắn muốn hủy giao dịch này?",
     "cancel_reason": "Lý do hủy",
     "success_desc": "Cảm ơn bạn đã sử dụng dịch vụ của Đà Nẵng Trip. Đơn hàng của bạn đã được xác nhận.",
-    "back_home": "V? trang ch?",
-    "view_profile": "Xem h? s?",
-    "success_without_booking": "Thanh to?n ?? ???c c?p nh?t th?nh c?ng. B?n c? th? ki?m tra h? s? ?? xem th?ng tin ??n h?ng m?i nh?t.",
-    "expired_title": "Giao d?ch ?? h?t h?n",
-    "expired_message": "Phi?n thanh to?n ?? qu? 15 ph?t. Vui l?ng b?t ??u l?i m?t l?n thanh to?n m?i.",
+    "back_home": "Về trang chủ",
+    "view_profile": "Xem hồ sơ",
+    "success_without_booking": "Thanh toán đã được cập nhật thành công. Bạn có thể kiểm tra hồ sơ để xem thông tin đơn hàng mới nhất.",
+    "expired_title": "Giao dịch đã hết hạn",
+    "expired_message": "Phiên thanh toán đã quá 15 phút. Vui lòng bắt đầu lại một lần thanh toán mới.",
     "methods": {
-      "momo": "V? MoMo",
-      "vnpay": "C?ng VNPay",
+      "momo": "Ví MoMo",
+      "vnpay": "Cổng VNPay",
       "zalopay": "ZaloPay",
-      "bank_transfer": "Chuy?n kho?n ng?n h?ng",
-      "credit_card": "Th? t?n d?ng",
-      "cash": "Ti?n m?t",
+      "bank_transfer": "Chuyển khoản ngân hàng",
+      "credit_card": "Thẻ tín dụng",
+      "cash": "Tiền mặt",
       "paypal": "PayPal"
     },
     "errors": {
-      "missing_context": "Trang thanh to?n ?ang thi?u m? ??n h?ng ho?c m? giao d?ch ?? ti?p t?c.",
-      "payment_not_found": "Kh?ng t?m th?y phi?n thanh to?n ph? h?p cho y?u c?u n?y.",
-      "payment_link": "Kh?ng th? l?y li?n k?t thanh to?n.",
-      "create_failed": "Kh?i t?o thanh to?n th?t b?i.",
-      "retry_failed": "Th? l?i thanh to?n th?t b?i."
+      "missing_context": "Trang thanh toán đang thiếu mã đơn hàng hoặc mã giao dịch để tiếp tục.",
+      "payment_not_found": "Không tìm thấy phiên thanh toán phù hợp cho yêu cầu này.",
+      "payment_link": "Không thể lấy liên kết thanh toán.",
+      "create_failed": "Khởi tạo thanh toán thất bại.",
+      "retry_failed": "Thử lại thanh toán thất bại."
     }
   },
   "history": {
@@ -229,6 +229,47 @@
     "adult_count": "{count} người lớn",
     "child_count": "{count} trẻ em",
     "infant_count": "{count} em bé",
-    "no_note": "Không có ghi chú"
+    "no_note": "Không có ghi chú",
+    "detail_title": "Chi tiết đơn hàng",
+    "button_print_invoice": "In hóa đơn",
+    "button_cancel_booking": "Hủy đặt tour",
+    "invoice_title": "HÓA ĐƠN ĐẶT TOUR",
+    "cancellation_reason_label": "Lý do hủy đơn",
+    "rebook_button": "Đặt lại tour",
+    "back_to_list": "Quay lại danh sách",
+    "section_price": "Chi tiết thanh toán",
+    "price_adult_detail": "{count} người lớn × {price}",
+    "price_child_detail": "{count} trẻ em × {price}",
+    "price_infant_detail": "{count} em bé × {price}",
+    "coupon_discount": "Giảm giá coupon",
+    "payment_method_label": "Phương thức TT",
+    "payment_status_label": "Trạng thái TT",
+    "booking_status_label": "Trạng thái đơn",
+    "booking_states": {
+      "pending": "Chờ xác nhận",
+      "confirmed": "Đã xác nhận",
+      "completed": "Hoàn tất",
+      "cancelled": "Đã hủy"
+    },
+    "payment_states": {
+      "refunded": "Đã hoàn tiền",
+      "partially_paid": "Thanh toán một phần"
+    },
+    "section_customer": "Thông tin khách hàng",
+    "representative_name": "Tên người đại diện",
+    "representative_phone": "Số điện thoại",
+    "representative_email": "Địa chỉ email",
+    "representative_address": "Địa chỉ",
+    "representative_note": "Ghi chú đặc biệt",
+    "section_tour": "Thông tin tour",
+    "tour_duration": "Thời lượng",
+    "departure_point": "Điểm khởi hành",
+    "status_booked": "Đã đặt tour",
+    "status_confirmed": "Đã xác nhận",
+    "status_cancelled_label": "Đã hủy đơn",
+    "status_departure": "Khởi hành",
+    "status_completed": "Hoàn thành",
+    "section_timeline": "Trạng thái đơn hàng",
+    "error_desc": "Có lỗi xảy ra khi tải chi tiết đơn hàng. Vui lòng thử lại."
   }
 }

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
-import { useBookingDetail } from "../hooks/useBookingQueries";
+import { useBookingDetail, useBookingDetailByCode } from "../hooks/useBookingQueries";
 import { BookingStatusTimeline } from "./BookingStatusTimeline";
 import { BookingTourInfoCard } from "./BookingTourInfoCard";
 import { BookingCustomerInfoCard } from "./BookingCustomerInfoCard";
@@ -15,15 +15,19 @@ import { Button } from "@/components/ui";
 import { toast } from "sonner";
 
 interface BookingDetailClientProps {
-  id: string;
+  id?: string;
+  bookingCode?: string;
 }
 
-export function BookingDetailClient({ id }: BookingDetailClientProps) {
+export function BookingDetailClient({ id, bookingCode }: BookingDetailClientProps) {
   const t = useTranslations("tour.history");
   const locale = useLocale();
   const router = useRouter();
 
-  const { data: response, isLoading, error, refetch } = useBookingDetail(id);
+  const detailQuery = useBookingDetail(id as string);
+  const detailByCodeQuery = useBookingDetailByCode(bookingCode as string);
+
+  const { data: response, isLoading, error, refetch } = bookingCode ? detailByCodeQuery : detailQuery;
   const [isCancelOpen, setIsCancelOpen] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
 
@@ -74,7 +78,7 @@ export function BookingDetailClient({ id }: BookingDetailClientProps) {
   const handleDownloadInvoice = async () => {
     setIsDownloading(true);
     try {
-      const res = await bookingService.invoice(id);
+      const res = await bookingService.invoice(booking.id);
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(res.data, null, 2));
       const downloadAnchor = document.createElement("a");
       downloadAnchor.setAttribute("href", dataStr);
