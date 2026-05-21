@@ -18,3 +18,10 @@ export const bookingSchema = z.object({
 });
 
 export type BookingFormValues = z.infer<typeof bookingSchema>;
+
+export const cancelBookingSchema = z.object({
+  cancellation_reason: z.string().min(10, "cancel_reason_min_error"),
+});
+
+export type CancelBookingFormValues = z.infer<typeof cancelBookingSchema>;
+

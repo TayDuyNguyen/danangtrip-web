@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
@@ -29,7 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: t("title", { name: tour.name }),
       description: tour.description?.slice(0, 160),
     };
-  } catch (error) {
+  } catch {
     return { title: "DanangTrip" };
   }
 }
@@ -51,7 +52,7 @@ export default async function TourBookingPage({ params }: Props) {
       queryKey: ["tours", "detail", slug],
       queryFn: () => Promise.resolve(tour),
     });
-  } catch (error) {
+  } catch {
     notFound();
   }
 
@@ -62,7 +63,13 @@ export default async function TourBookingPage({ params }: Props) {
         <div className="design-container h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
              <div className="bg-primary p-2 rounded-lg">
-                <img src="/icons/explore-white.svg" alt="Explore" className="w-5 h-5" />
+                <Image
+                  src="/icons/explore-white.svg"
+                  alt="Explore"
+                  width={20}
+                  height={20}
+                  className="w-5 h-5"
+                />
              </div>
              <h1 className="text-sm font-black text-on-surface truncate max-w-[200px] md:max-w-md uppercase tracking-tight">
                {t("title", { name: tour!.name })}

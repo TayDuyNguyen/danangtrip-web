@@ -45,6 +45,7 @@ export const PROTECTED_ROUTES = {
   SETTINGS: "/settings",
   PAYMENT: "/payment",
   PAYMENT_RESULT: "/payment/result",
+  BOOKINGS: "/bookings",
 } as const;
 
 // Dashboard routes (require authentication + admin/staff role)

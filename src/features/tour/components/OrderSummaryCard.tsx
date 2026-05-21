@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { formatPriceVND } from "@/utils/format";
 import { cn } from "@/utils/string";
@@ -36,10 +37,12 @@ export function OrderSummaryCard({
           {/* Tour Brief */}
           <div className="flex gap-4 pb-5 border-b border-border/50">
             <div className="w-20 h-20 rounded-xl overflow-hidden shrink-0 border border-border/30">
-                <img 
-                    src={tour.thumbnail || "/images/placeholder-tour.jpg"} 
-                    alt={tour.name} 
-                    className="w-full h-full object-cover"
+                <Image
+                  src={tour.thumbnail || "/images/placeholder-tour.jpg"}
+                  alt={tour.name}
+                  width={80}
+                  height={80}
+                  className="w-full h-full object-cover"
                 />
             </div>
             <div className="flex flex-col justify-center min-w-0">
