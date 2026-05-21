@@ -56,3 +56,10 @@
 - Missing: real API calls for `check-availability` and `bookings/calculate`, error/empty states, and `schedule_id` contract alignment.
 - 2026-05-20: Hardened `tour-departure-select`. Integrated real API calls (`calculate`, `check-availability`), fixed contract naming (`tour_schedule_id`), and added price breakdown UI. Verified with typecheck and lint.
 - Researched API contracts in `danangtrip-api/api-doc`.
+- 2026-05-20: Completed 01-screen-analysis for user-bookings-list feature. Produced screen analysis artifact and task checklist.
+- 2026-05-20: Completed 03-types-api-contract for user-bookings-list. Added cancelBookingSchema to booking.schema.ts and implemented useUserBookings / useCancelBooking query hooks. Verified with typecheck.
+- 2026-05-20: Completed 05-ui-components for user-bookings-list. Implemented CancelBookingDialog, BookingHistoryCard, and BookingsHistoryClient components. Created new server component bookings/page.tsx. Added bookings link in Header dropdown navigation. Verified with 100% successful typecheck and lint.
+- 2026-05-20: Re-performed and completed 05-ui-components for user-bookings-list. Resolved 3 specific React 19 ESLint errors (impure Date.now() call, synchronous setState-in-effect cascading renders, and err: any explicit type). Cleaned up unused imports and variables, verifying that all lint and typecheck checks pass successfully with 0 errors.
+- 2026-05-20: Completed 06-data-integration for user-bookings-list. Verified query and mutation hooks are correctly integrated into BookingsHistoryClient and CancelBookingDialog. Confirmed data-integration artifact matches implementation.
+- 2026-05-20: Completed 07-interactions for user-bookings-list. Documented tab changes, debounced search filtering, pagination, and cancel validation flow in the interaction spec.
+- 2026-05-20: Completed 08-auth-permissions for user-bookings-list. Secured the "/bookings" route in middleware.ts and verified client-side redirect fallback logic in ProtectedLayout.

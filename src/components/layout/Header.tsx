@@ -15,6 +15,7 @@ import LanguageSwitcher from "./LanguageSwitcher";
 
 const Header = () => {
   const t = useTranslations("common");
+  const tTour = useTranslations("tour");
   const pathname = usePathname();
   const { isAuthenticated, user, logout } = useAuthStore();
 
@@ -109,6 +110,12 @@ const Header = () => {
                   className="block px-4 py-2 text-sm text-[#d4d4d4] hover:bg-[#171717]"
                 >
                   {t("auth.profile")}
+                </Link>
+                <Link
+                  href={ROUTES.BOOKINGS}
+                  className="block px-4 py-2 text-sm text-[#d4d4d4] hover:bg-[#171717]"
+                >
+                  {tTour("history.header_link")}
                 </Link>
                 <button
                   onClick={logout}

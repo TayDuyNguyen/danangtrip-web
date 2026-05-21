@@ -1,6 +1,5 @@
 "use client";
 import React, {
-  type ReactNode,
   type TextareaHTMLAttributes,
   useId,
 } from "react";

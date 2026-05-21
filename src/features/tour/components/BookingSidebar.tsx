@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { ROUTES } from "@/config";
 import { formatNumber } from "@/utils/format";
 import { Calendar, Users, InfoCircle } from "@/components/icons/solar";
 import { Button } from "@/components/ui";

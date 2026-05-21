@@ -187,5 +187,48 @@
       "create_failed": "Kh?i t?o thanh to?n th?t b?i.",
       "retry_failed": "Th? l?i thanh to?n th?t b?i."
     }
+  },
+  "history": {
+    "header_link": "Đơn đặt tour của tôi",
+    "meta_title": "Đơn đặt tour của tôi | DanangTrip",
+    "meta_description": "Xem danh sách và quản lý các đơn đặt tour của bạn tại DanangTrip.",
+    "page_title": "Đơn đặt tour của tôi",
+    "search_placeholder": "Tìm theo mã đơn đặt hoặc tên tour...",
+    "tabs": {
+      "all": "Tất cả",
+      "pending": "Chờ xác nhận",
+      "confirmed": "Đã xác nhận",
+      "completed": "Hoàn tất",
+      "cancelled": "Đã hủy"
+    },
+    "booking_code": "Mã đơn hàng",
+    "travel_date": "Ngày khởi hành",
+    "booked_date": "Ngày đặt",
+    "quantity": "Số lượng khách",
+    "total_amount": "Tổng tiền",
+    "action_detail": "Xem chi tiết",
+    "action_cancel": "Hủy đơn",
+    "action_review": "Đánh giá",
+    "action_rebook": "Đặt lại",
+    "cancel_title": "Yêu cầu hủy đơn",
+    "cancel_confirm_question": "Bạn có chắc chắn muốn hủy đơn hàng này không?",
+    "cancel_reason_label": "Lý do hủy đơn",
+    "cancel_reason_placeholder": "Vui lòng nhập lý do hủy đơn (tối thiểu 10 ký tự)...",
+    "cancel_warning": "Lưu ý: Hủy đơn trước 24 giờ khởi hành được miễn phí. Hủy trong vòng 24 giờ sẽ chịu phí 50% tổng tiền thanh toán.",
+    "cancel_success": "Đơn hàng đã được yêu cầu hủy thành công.",
+    "cancel_failed": "Hủy đơn hàng thất bại. Vui lòng thử lại.",
+    "cancel_reason_min_error": "Lý do hủy tour phải có ít nhất 10 ký tự.",
+    "button_close": "Đóng",
+    "button_submitting": "Đang gửi yêu cầu...",
+    "button_submit": "Xác nhận hủy",
+    "empty_title": "Không tìm thấy đơn hàng nào",
+    "empty_desc": "Bạn chưa có đơn đặt tour nào hoặc không có đơn hàng phù hợp với bộ lọc.",
+    "empty_cta": "Khám phá Tour ngay",
+    "error_load": "Không thể tải danh sách đơn đặt tour. Vui lòng thử lại.",
+    "button_retry": "Thử lại",
+    "adult_count": "{count} người lớn",
+    "child_count": "{count} trẻ em",
+    "infant_count": "{count} em bé",
+    "no_note": "Không có ghi chú"
   }
 }

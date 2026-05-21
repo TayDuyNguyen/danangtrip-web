@@ -23,7 +23,7 @@ export function BookingProgressSteps({ currentStep }: BookingProgressStepsProps)
         {/* Connecting Lines */}
         <div className="absolute top-1/2 left-0 w-full h-[1px] bg-border -translate-y-1/2 z-0" />
         
-        {steps.map((step, index) => {
+        {steps.map((step) => {
           const isActive = currentStep === step.id;
           const isCompleted = currentStep > step.id;
 

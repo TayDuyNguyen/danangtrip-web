@@ -1,8 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { cn } from "@/utils/string";
-import { CheckCircle2 } from "@/components/icons/solar";
 
 interface PaymentMethodSelectorProps {
   value: string;
@@ -10,7 +10,7 @@ interface PaymentMethodSelectorProps {
 }
 
 export function PaymentMethodSelector({ value, onChange }: PaymentMethodSelectorProps) {
-  const t = useTranslations("tour.booking");
+  useTranslations("tour.booking");
 
   const methods = [
     {
@@ -58,9 +58,11 @@ export function PaymentMethodSelector({ value, onChange }: PaymentMethodSelector
             />
             <div className="flex items-center gap-3">
               {method.icon && (
-                <img
+                <Image
                   src={method.icon}
                   alt={method.name}
+                  width={32}
+                  height={32}
                   className="w-8 h-8 rounded-lg object-contain bg-white p-0.5"
                 />
               )}
