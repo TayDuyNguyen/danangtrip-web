@@ -218,6 +218,47 @@
     "adult_count": "{count} adults",
     "child_count": "{count} children",
     "infant_count": "{count} infants",
-    "no_note": "No note"
+    "no_note": "No note",
+    "detail_title": "Booking Details",
+    "button_print_invoice": "Print Invoice",
+    "button_cancel_booking": "Cancel Booking",
+    "invoice_title": "BOOKING INVOICE",
+    "cancellation_reason_label": "Cancellation Reason",
+    "rebook_button": "Rebook Tour",
+    "back_to_list": "Back to list",
+    "section_price": "Payment Summary",
+    "price_adult_detail": "{count} adult(s) × {price}",
+    "price_child_detail": "{count} child(ren) × {price}",
+    "price_infant_detail": "{count} infant(s) × {price}",
+    "coupon_discount": "Coupon Discount",
+    "payment_method_label": "Payment Method",
+    "payment_status_label": "Payment Status",
+    "booking_status_label": "Booking Status",
+    "booking_states": {
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "payment_states": {
+      "refunded": "Refunded",
+      "partially_paid": "Partially Paid"
+    },
+    "section_customer": "Customer Information",
+    "representative_name": "Representative Name",
+    "representative_phone": "Phone Number",
+    "representative_email": "Email Address",
+    "representative_address": "Address",
+    "representative_note": "Special Notes",
+    "section_tour": "Tour Information",
+    "tour_duration": "Duration",
+    "departure_point": "Departure Point",
+    "status_booked": "Tour Booked",
+    "status_confirmed": "Confirmed",
+    "status_cancelled_label": "Cancelled",
+    "status_departure": "Departure",
+    "status_completed": "Completed",
+    "section_timeline": "Booking Timeline",
+    "error_desc": "An error occurred while loading booking details. Please try again."
   }
 }

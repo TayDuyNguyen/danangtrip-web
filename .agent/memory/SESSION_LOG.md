@@ -63,3 +63,15 @@
 - 2026-05-20: Completed 06-data-integration for user-bookings-list. Verified query and mutation hooks are correctly integrated into BookingsHistoryClient and CancelBookingDialog. Confirmed data-integration artifact matches implementation.
 - 2026-05-20: Completed 07-interactions for user-bookings-list. Documented tab changes, debounced search filtering, pagination, and cancel validation flow in the interaction spec.
 - 2026-05-20: Completed 08-auth-permissions for user-bookings-list. Secured the "/bookings" route in middleware.ts and verified client-side redirect fallback logic in ProtectedLayout.
+
+## 2026-05-21
+- Initiated pipeline for the recommended screen: `user-booking-by-code` (Đơn đặt theo mã đơn).
+- Completed 01-screen-analysis for `user-booking-by-code`. Produced screen analysis artifact in repository and identified 100% display logic reuse from `user-booking-detail` by modifying `BookingDetailClient.tsx` to support both `id` and `bookingCode`.
+- Completed 04-layout-routing for `user-booking-by-code`. Confirmed that dynamic route files, route config, and locale key mappings are fully synchronized and pass route and type validation checks.
+- Completed 05-ui-components for `user-booking-by-code`. Formulated the UI Spec, mapped responsive layouts, loading states, and successfully reused 100% of the `BookingDetailClient.tsx` visual blocks for rendering the booking details from booking code.
+- Completed 06-data-integration for `user-booking-by-code`. Linked TanStack Query pipeline `useBookingDetailByCode` and mapped secondary actions like cancel booking mutation (`useCancelBooking`) and invoice download, verifying robust reactive data updates and cache invalidation.
+- Completed 07-interactions for `user-booking-by-code`. Specified and verified navigation, print style sheet custom rules (`print:hidden`), JSON export downloads, and multi-line cancel validation dialog flows (minimum 10 characters).
+- Completed 08-auth-permissions for `user-booking-by-code`. Audited dynamic route security integration under route group `(protected)` and middleware filters `/bookings`, and verified API-level cross-user authorization safety with fallback UI error boundaries.
+- Completed 09-testing for `user-booking-by-code`. Executed Phase 1 static gates, visual QA validation, dynamic param workflows, auth fallbacks, and boundary edge cases. Verified all blocking checks successfully.
+- Completed 10-optimization-deploy for `user-booking-by-code`. Ran full Next.js production builds and `prepush:check` quality gates. Created deploy-report and feature review walkthrough artifacts, and prepared Git push release package.
+- Re-ran Step 10 for `user-booking-by-code`. Fixed `ProtectedLayout` lint blocker (`react-hooks/set-state-in-effect`) by using `useSyncExternalStore` for mounted snapshot behavior, then verified `npm.cmd run prepush:check` passes. Updated deploy/review artifacts with branch `feat/DATN-80/user-booking-by-code` and commit handoff recommendation.
