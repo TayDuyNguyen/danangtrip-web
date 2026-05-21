@@ -11,7 +11,7 @@ export const runtime = "experimental-edge";
 
 const i18nMiddleware = createMiddleware(routing);
 
-const protectedRoutes = ["/profile", "/settings"];
+const protectedRoutes = ["/profile", "/settings", "/dashboard", "/payment", "/bookings"];
 const authRoutes = ["/login", "/register"];
 
 export function middleware(request: NextRequest) {
@@ -26,14 +26,18 @@ export function middleware(request: NextRequest) {
     return routes.some((route) => cleanPath === route || cleanPath.startsWith(`${route}/`));
   };
 
-  const isProtectedRoute = isMatch(protectedRoutes);
+  const cleanPath = pathname.replace(/^\/(en|vi)/, "") || "/";
+  const isBookingRoute = /^\/tours\/[^/]+\/book\/?$/.test(cleanPath);
+
+  const isProtectedRoute = isMatch(protectedRoutes) || isBookingRoute;
   const isAuthRoute = isMatch(authRoutes);
 
   if (!token && isProtectedRoute) {
     const locale = pathname.startsWith("/en") ? "en" : "vi";
     const loginPath = locale === "en" ? "/en/login" : "/login";
     const url = new URL(loginPath, request.url);
-    url.searchParams.set("callbackUrl", pathname);
+    const fullPath = pathname + request.nextUrl.search;
+    url.searchParams.set("callbackUrl", fullPath);
     return NextResponse.redirect(url);
   }
 

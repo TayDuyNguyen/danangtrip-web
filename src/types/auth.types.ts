@@ -16,18 +16,36 @@ export interface LoginResponse {
 
 export interface RegisterRequest {
   username: string;
-  full_name?: string;
+  full_name: string;
   email: string;
   password: string;
   password_confirmation: string;
   phone?: string | null;
 }
 
-export interface RegisterResponse {
-  user: User;
-  token?: string;
-}
+export type RegisterResponse =
+  | User
+  | {
+      user: User;
+      token?: string;
+    };
 
 export type RefreshTokenResponse = LoginResponse;
 export type FormRegister = RegisterRequest;
 export type LoginForm = LoginRequest;
+
+export interface ForgotPasswordRequest {
+  email: string;
+}
+
+export interface ResetPasswordRequest {
+  token: string;
+  email: string;
+  password: string;
+  password_confirmation: string;
+}
+
+export interface VerifyEmailRequest {
+  token?: string;
+  code?: string;
+}

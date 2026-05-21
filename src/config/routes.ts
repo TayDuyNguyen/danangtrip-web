@@ -8,10 +8,14 @@ export const PUBLIC_ROUTES = {
   LOCATIONS: "/locations",
   LOCATION_DETAIL: (slug: string) => `/locations/${slug}`,
   TOURS: "/tours",
+  TOUR_DETAIL: (slug: string) => `/tours/${slug}`,
+  TOUR_DEPARTURES: (slug: string) => `/tours/${slug}/departures`,
   BLOG: "/blog",
+  BLOG_DETAIL: (slug: string) => `/blog/${slug}`,
   CONTACT: "/contact",
   ABOUT: "/about",
   SEARCH: "/search",
+  DESTINATION_DA_NANG: "/du-lich-da-nang",
 } as const;
 
 // Planned / future pages only — do not merge into ROUTES (see PROJECT_RULES §8).
@@ -39,6 +43,10 @@ export const AUTH_ROUTES = {
 export const PROTECTED_ROUTES = {
   PROFILE: "/profile",
   SETTINGS: "/settings",
+  PAYMENT: "/payment",
+  PAYMENT_RESULT: "/payment/result",
+  BOOKINGS: "/bookings",
+  BOOKING_BY_CODE: (bookingCode: string) => `/bookings/code/${bookingCode}`,
 } as const;
 
 // Dashboard routes (require authentication + admin/staff role)

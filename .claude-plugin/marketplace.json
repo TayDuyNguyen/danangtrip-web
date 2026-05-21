@@ -1,0 +1,19 @@
+﻿{
+  "name": "danangtrip-web-agent-kit",
+  "owner": {
+    "name": "Local Workspace"
+  },
+  "metadata": {
+    "description": "Project-local skill pack for DanangTrip Web. Commands and skills route all agent workflows through .agent rules, memory, and the 10-step delivery pipeline."
+  },
+  "plugins": [
+    {
+      "name": "danangtrip-web-agent-kit",
+      "source": {
+        "source": "local",
+        "path": "D:\\DATN\\danangtrip-web"
+      },
+      "description": "Project-local skill pack for DanangTrip Web. Commands and skills route all agent workflows through .agent rules, memory, and the 10-step delivery pipeline."
+    }
+  ]
+}

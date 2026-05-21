@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useMemo } from 'react';
-import { MapPin, Phone, Globe, Clock, CheckCircle2 } from 'lucide-react';
+import { MapPin, Phone, Globe, Clock, CheckCircle2 } from "@/components/icons/solar";
 import { Badge, RatingStars } from '@/components/ui';
 import type { Location } from '@/types';
 import { useTranslations } from 'next-intl';
@@ -26,7 +26,7 @@ const LocationInfo: React.FC<LocationInfoProps> = ({ location }) => {
       <div className="space-y-4">
         <div className="flex flex-wrap gap-2">
           {location.category ? (
-            <Badge variant="primary" className="bg-[#00A19D] text-white uppercase tracking-wider">
+            <Badge variant="success" className="uppercase tracking-wider">
               {location.category}
             </Badge>
           ) : null}
@@ -48,7 +48,7 @@ const LocationInfo: React.FC<LocationInfoProps> = ({ location }) => {
           />
           <div className="h-4 w-px bg-border" />
           <div className="flex items-center gap-1.5 text-on-surface-variant">
-            <MapPin className="h-4 w-4 text-[#FF5A5F]" />
+            <MapPin className="h-4 w-4 text-primary" />
             <span className="text-sm font-medium">{location.address}</span>
           </div>
         </div>
@@ -73,7 +73,7 @@ const LocationInfo: React.FC<LocationInfoProps> = ({ location }) => {
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
             {location.amenities.map((amenity) => (
               <div key={String(amenity.id)} className="flex items-center gap-2 text-on-surface-variant">
-                <CheckCircle2 className="h-5 w-5 shrink-0 text-[#00A19D]" />
+                <CheckCircle2 className="h-5 w-5 shrink-0 text-success" />
                 <span className="text-sm font-medium">{amenity.name}</span>
               </div>
             ))}
@@ -84,8 +84,8 @@ const LocationInfo: React.FC<LocationInfoProps> = ({ location }) => {
       {/* Contact Info */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {location.phone && (
-          <a href={`tel:${location.phone.replace(/\s/g, '')}`} className="flex items-center gap-3 rounded-xl border border-border bg-surface-container-lowest p-4 transition-all hover:border-[#00A19D] hover:shadow-md">
-            <div className="rounded-lg bg-[#00A19D]/10 p-2 text-[#00A19D]">
+          <a href={`tel:${location.phone.replace(/\s/g, '')}`} className="flex items-center gap-3 rounded-xl border border-border bg-surface-container-lowest p-4 transition-all hover:border-success hover:shadow-md">
+            <div className="rounded-lg bg-success/10 p-2 text-success">
               <Phone className="h-5 w-5" />
             </div>
             <div>
@@ -96,8 +96,8 @@ const LocationInfo: React.FC<LocationInfoProps> = ({ location }) => {
         )}
         
         {location.website && (
-          <a href={location.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded-xl border border-border bg-surface-container-lowest p-4 transition-all hover:border-[#00A19D] hover:shadow-md">
-            <div className="rounded-lg bg-indigo-50 p-2 text-indigo-600">
+          <a href={location.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded-xl border border-border bg-surface-container-lowest p-4 transition-all hover:border-primary hover:shadow-md">
+            <div className="rounded-lg bg-primary/10 p-2 text-primary">
               <Globe className="h-5 w-5" />
             </div>
             <div>
@@ -108,8 +108,8 @@ const LocationInfo: React.FC<LocationInfoProps> = ({ location }) => {
         )}
 
         {openingHoursDisplay ? (
-          <div className="flex items-start gap-3 rounded-xl border border-border bg-surface-container-lowest p-4 transition-all hover:border-[#FF5A5F] hover:shadow-md">
-            <div className="rounded-lg bg-[#FF5A5F]/10 p-2 text-[#FF5A5F]">
+          <div className="flex items-start gap-3 rounded-xl border border-border bg-surface-container-lowest p-4 transition-all hover:border-primary hover:shadow-md">
+            <div className="rounded-lg bg-primary/10 p-2 text-primary">
               <Clock className="h-5 w-5" />
             </div>
             <div className="min-w-0 flex-1">

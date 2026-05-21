@@ -5,6 +5,7 @@ import { tourService } from "@/services/tour.service";
 import type { Tour, TourCategory } from "@/types";
 import { shouldRetryQuery } from "@/lib/react-query";
 import { extractItems } from "@/utils";
+import { tourMapper } from "@/features/tour/utils/tour-mapper";
 
 export const useTours = () => {
   // 1. Query for Featured Tours
@@ -12,7 +13,8 @@ export const useTours = () => {
     queryKey: ["home", "tours", "featured"],
     queryFn: async () => {
       const res = await tourService.getFeatured(8);
-      return extractItems<Tour>(res.data);
+      const items = extractItems<Tour>(res.data);
+      return tourMapper.mapTours(items);
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
     retry: shouldRetryQuery,
@@ -23,7 +25,8 @@ export const useTours = () => {
     queryKey: ["home", "tours", "hot"],
     queryFn: async () => {
       const res = await tourService.getHot(8);
-      return extractItems<Tour>(res.data);
+      const items = extractItems<Tour>(res.data);
+      return tourMapper.mapTours(items);
     },
     staleTime: 5 * 60 * 1000,
     retry: shouldRetryQuery,
@@ -40,10 +43,9 @@ export const useTours = () => {
     retry: shouldRetryQuery,
   });
 
-  // Mock Fallbacks if API fails
-  const featuredTours: Tour[] = featuredQuery.data || [];
-  const hotTours: Tour[] = hotQuery.data || [];
-  const tourCategories: TourCategory[] = categoriesQuery.data || [];
+  const featuredTours: Tour[] = featuredQuery.data ?? [];
+  const hotTours: Tour[] = hotQuery.data ?? [];
+  const tourCategories: TourCategory[] = categoriesQuery.data ?? [];
 
   const isLoading = featuredQuery.isLoading || hotQuery.isLoading || categoriesQuery.isLoading;
 

@@ -1,6 +1,6 @@
 "use client";
 import { Fragment } from 'react';
-import { IoChevronBack, IoChevronForward } from 'react-icons/io5';
+import { IoChevronBack, IoChevronForward } from "@/components/icons/solar";
 import { cn } from "@/utils/string";
 
 export interface PaginationProps {

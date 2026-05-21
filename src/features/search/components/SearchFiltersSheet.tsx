@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { 
   IoCloseOutline, 
   IoStar
-} from "react-icons/io5";
+} from "@/components/icons/solar";
 import { SearchFilters } from "../types/search.types";
 import { cn } from "@/utils/string";
 import { DANANG_DISTRICTS } from "@/utils/constants";

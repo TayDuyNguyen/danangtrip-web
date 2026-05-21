@@ -14,6 +14,7 @@ import LocationGallery from "@/features/locations/components/detail/LocationGall
 import LocationInfo from "@/features/locations/components/detail/LocationInfo";
 import LocationSidebar from "@/features/locations/components/detail/LocationSidebar";
 import LocationReviews from "@/features/locations/components/detail/LocationReviews";
+import { getApiErrorMessage } from "@/utils";
 
 type Props = {
   location: Location;
@@ -56,7 +57,7 @@ export default function LocationDetailClient({ location, locale }: Props) {
   const favoriteQuery = useQuery({
     queryKey: ["locations", location.id, "favorite-check"],
     queryFn: async () => {
-      const res = await favoriteService.checkFavorite(location.id);
+      const res = await favoriteService.checkFavorite({ location_id: location.id });
       if (!res.success || res.data === undefined) {
         throw res;
       }
@@ -67,29 +68,29 @@ export default function LocationDetailClient({ location, locale }: Props) {
   });
 
   const addFavorite = useMutation({
-    mutationFn: () => favoriteService.addFavorite(location.id),
+    mutationFn: () => favoriteService.addFavorite({ location_id: location.id }),
     onSuccess: (res) => {
       if (res.success) {
         toast.success(t("common.favorite.add_success"));
         void queryClient.invalidateQueries({ queryKey: ["locations", location.id, "favorite-check"] });
       } else {
-        toast.error(res.message || t("common.favorite.error"));
+        toast.error(getApiErrorMessage(res, t("common.favorite.error")));
       }
     },
-    onError: () => toast.error(t("common.favorite.error")),
+    onError: (error) => toast.error(getApiErrorMessage(error, t("common.favorite.error"))),
   });
 
   const removeFavorite = useMutation({
-    mutationFn: () => favoriteService.removeFavorite(location.id),
+    mutationFn: () => favoriteService.removeFavorite({ location_id: location.id }),
     onSuccess: (res) => {
       if (res.success) {
         toast.success(t("common.favorite.remove_success"));
         void queryClient.invalidateQueries({ queryKey: ["locations", location.id, "favorite-check"] });
       } else {
-        toast.error(res.message || t("common.favorite.error"));
+        toast.error(getApiErrorMessage(res, t("common.favorite.error")));
       }
     },
-    onError: () => toast.error(t("common.favorite.error")),
+    onError: (error) => toast.error(getApiErrorMessage(error, t("common.favorite.error"))),
   });
 
   const isFavorite = Boolean(favoriteQuery.data);

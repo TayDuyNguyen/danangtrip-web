@@ -7,6 +7,10 @@ description: "DanangTrip Web repository rules for architecture, code quality, de
 This is the repository operating contract for AI and contributors working in this codebase.
 Use this file together with `AGENTS.md`.
 
+Fast companion doc:
+- `.agent/rules/REPO_FACTS.md` for compact repository reality checks before using skill templates.
+- `.agent/memory/WORKING_STATE.md` and `.agent/memory/HANDOFF.md` for continuity across sessions.
+
 Goals:
 - Keep architecture consistent.
 - Reduce regressions in routes, i18n, auth, and UI behavior.
@@ -27,7 +31,9 @@ These rules apply to:
 - `src/messages`
 - `src/config`
 - `src/lib`
+- `src/types`
 - `src/utils`
+- `src/providers`
 
 Priority:
 1. Correctness and safety
@@ -54,6 +60,16 @@ Priority:
 - Template-driven code that does not match this repository.
 - New abstractions without at least two real consumers.
 - Large cross-layer edits without clear justification.
+
+### Working Memory Protocol
+- Before non-trivial work, read:
+  - `.agent/rules/REPO_FACTS.md`
+  - `.agent/memory/WORKING_STATE.md`
+  - `.agent/memory/HANDOFF.md`
+  - the most recent relevant files in `.agent/memory/decisions/` and `.agent/artifacts/`
+- When the active task changes, update `.agent/memory/WORKING_STATE.md`.
+- When pausing unfinished work, update `.agent/memory/HANDOFF.md`.
+- When a repo-wide decision is made, record it under `.agent/memory/decisions/`.
 
 ---
 
@@ -189,7 +205,7 @@ Rules:
 - **Namespace Pattern**: Use the pattern that best fits the component's needs:
   - **Scoped** (`useTranslations("login")`): when a component only needs keys from **one namespace**. Use relative key paths (`t("email_label")`). This is the default recommended by next-intl.
   - **Unscoped** (`useTranslations()`): when a component needs keys from **multiple namespaces** simultaneously. Use fully qualified paths (`t("home.featured_locations.tagline")`).
-- **No phantom namespaces**: The namespace string passed to `useTranslations()` must correspond to a real key in the loaded messages object (e.g., `"common"`, `"home"`, `"login"`, `"register"`, `"search"`). Sub-objects like `"accessibility"` or `"search.tabs"` are **not valid top-level namespaces**.
+- **No phantom namespaces**: The namespace string passed to `useTranslations()` must resolve to a real object path in the loaded messages (top-level or nested), for example `"common"`, `"home"`, `"tour.card"`, `"tour.filters"`.
 
 ### Should
 - Keep translation keys stable and descriptive.
@@ -199,7 +215,7 @@ Rules:
 ### Avoid
 - Mixing translated and hardcoded text in the same reusable component.
 - Adding one locale without updating the other.
-- Passing sub-paths as the scoped namespace (e.g., `useTranslations("search.tabs")` — invalid, use `useTranslations("search")` then `t("tabs.all")`).
+- Using a namespace path that does not exist in messages (e.g., typo or stale key path).
 
 ---
 
@@ -295,13 +311,13 @@ Current repository baseline:
 - Lack of tests is not a reason to skip verification.
 - When tests do not exist, report the verification you performed and the remaining risk.
 
-Core quality gates before calling work complete:
+Core quality gate before calling work complete:
 
 ```bash
-npm run lint
-npx tsc --noEmit
-npm run build
+npm run prepush:check
 ```
+
+This command runs linting, typechecking, route integrity check, and the full production build. It MUST pass before any feature is considered "done".
 
 Additional checks when relevant:
 
@@ -374,6 +390,9 @@ For reviews, prioritize:
 - Keep commits focused.
 - Use conventional commit style when creating commits.
 - Separate refactor work from feature work unless tightly coupled.
+- **Bắt buộc sinh báo cáo review trước**: Bạn phải tạo file `review.md` (theo chuẩn skill 10-optimization-deploy) TRƯỚC khi tính đến chuyện push code.
+- **Phải được USER duyệt**: Bạn tuyệt đối KHÔNG được tự ý `git push`. Phải trình báo cáo cho USER và chờ USER duyệt mới được push.
+- **Quy tắc đặt tên nhánh (Branch Naming)**: Phải đặt tên nhánh theo đúng format `<viết tắt chức năng>/DATN-<số thứ tự>/<nội dung ngắn gọn>` (ví dụ: `feat/DATN-54/api-align-location-and-tour-category`, `fix/DATN-55/button-loading-bug`).
 
 ### Should
 - Review the diff before commit.
@@ -388,12 +407,13 @@ For reviews, prioritize:
 ## 18. Definition of Done
 
 Work is done only when:
-1. The requested behavior works.
-2. Touched code follows repository boundaries.
-3. Routes, auth, and locale behavior are not knowingly regressed.
-4. Required translation files are synchronized when text changes.
-5. Validation status is reported honestly.
-6. Residual risks or skipped checks are stated explicitly.
+1. The requested behavior works and is verified.
+2. `npm run prepush:check` passes successfully without errors.
+3. Touched code follows repository boundaries and PROJECT_RULES.
+4. Routes, auth, and locale behavior are not knowingly regressed.
+5. Required translation files are synchronized when text changes.
+6. Validation status (review.md & deploy-report.md) is reported and approved by USER.
+7. Residual risks or skipped checks are stated explicitly.
 
 ---
 
@@ -435,7 +455,7 @@ If a rule is not realistic or not enforceable, rewrite it to be practical instea
 ### Strict Data Policy
 - **Empty States Over Mocks**: Components should **hide their entire section** or show a clean empty state if the database is empty. 
 - **No Invisible Mocks**: Hardcoded fake data (e.g., "15k users") is forbidden in production-ready components. The UI must accurately reflect the Backend database.
-- **Graceful Error Handling**: If an API fails, provide appropriate error feedback or hide the affected section silently.
+- **Graceful Error Handling**: If an API fails, show clear feedback for user-critical flows; for non-critical decorative sections, hiding the section is acceptable if behavior remains understandable.
 
 ### Premium Visual Standards
 - **Entrance Animations**: Use `reveal-up` CSS classes with staggered `reveal-delay-X` for all top-level sections to create a premium reveal effect.

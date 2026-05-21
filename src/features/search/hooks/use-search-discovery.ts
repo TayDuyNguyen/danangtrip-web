@@ -12,8 +12,7 @@ export const useSearchDiscovery = () => {
       try {
         const res = await searchService.getPopular(10, 30);
         return extractItems<string>(res.data);
-      } catch (err) {
-        console.error("Failed to fetch popular searches", err);
+      } catch {
         return [];
       }
     },
@@ -26,8 +25,7 @@ export const useSearchDiscovery = () => {
       try {
         const res = await searchService.getTrending(10);
         return extractItems<string>(res.data);
-      } catch (err) {
-        console.error("Failed to fetch trending searches", err);
+      } catch {
         return [];
       }
     },

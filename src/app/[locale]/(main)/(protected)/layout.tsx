@@ -1,44 +1,85 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useSyncExternalStore, Suspense } from "react";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { useAuthStore } from "@/store/auth.store";
+import { useTranslations } from "next-intl";
+import { useSearchParams } from "next/navigation";
+import { getAccessToken } from "@/utils/auth.helper";
+
+const emptySubscribe = () => () => {};
+const clientSnapshot = () => true;
+const serverSnapshot = () => false;
+
+function AuthChecker({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const { isAuthenticated, isLoading } = useAuthStore();
+  const t = useTranslations("common");
+  const isMounted = useSyncExternalStore(emptySubscribe, clientSnapshot, serverSnapshot);
+
+  useEffect(() => {
+    if (!isMounted) return;
+
+    const hasToken = !!getAccessToken();
+    if (!isLoading && !isAuthenticated && !hasToken) {
+      const queryString = searchParams.toString();
+      const callbackUrl = queryString ? `${pathname}?${queryString}` : pathname;
+      router.push(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
+    }
+  }, [isMounted, isAuthenticated, isLoading, router, pathname, searchParams]);
+
+  if (!isMounted) {
+    return (
+      <div className="design-page min-h-screen animate-pulse" aria-busy="true" aria-label={t("common.auth_checking")}>
+        <div className="design-container py-10 space-y-6">
+          <div className="h-9 w-56 rounded-lg bg-surface-container-high" />
+          <div className="h-48 w-full max-w-2xl rounded-xl border border-border bg-surface-container-low" />
+          <div className="h-32 w-full max-w-2xl rounded-xl border border-border bg-surface-container-low" />
+        </div>
+      </div>
+    );
+  }
+
+  const hasToken = !!getAccessToken();
+  const showLoading = isLoading || (!isAuthenticated && hasToken);
+
+  if (showLoading) {
+    return (
+      <div className="design-page min-h-screen animate-pulse" aria-busy="true" aria-label={t("common.auth_checking")}>
+        <div className="design-container py-10 space-y-6">
+          <div className="h-9 w-56 rounded-lg bg-surface-container-high" />
+          <div className="h-48 w-full max-w-2xl rounded-xl border border-border bg-surface-container-low" />
+          <div className="h-32 w-full max-w-2xl rounded-xl border border-border bg-surface-container-low" />
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="design-page min-h-screen flex items-center justify-center px-6">
+        <p className="text-sm text-on-surface-subtle text-center">{t("common.redirecting_login")}</p>
+      </div>
+    );
+  }
+
+  return <>{children}</>;
+}
 
 export default function ProtectedLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const { isAuthenticated, isLoading } = useAuthStore();
-
-  useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      router.push(`/login?callbackUrl=${encodeURIComponent(pathname)}`);
-    }
-  }, [isAuthenticated, isLoading, router, pathname]);
-
-  // Show loading state while checking auth
-  if (isLoading) {
-    return (
-      <div className="design-page min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#8b6a55]"></div>
-      </div>
-    );
-  }
-
-  // Don't render children if not authenticated
-  if (!isAuthenticated) {
-    return null;
-  }
-
   return (
     <div className="design-page min-h-screen">
       <div className="design-container py-6">
-        {children}
+        <Suspense fallback={null}>
+          <AuthChecker>{children}</AuthChecker>
+        </Suspense>
       </div>
     </div>
   );
 }
-

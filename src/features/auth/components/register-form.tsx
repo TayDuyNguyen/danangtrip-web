@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
-import { IoMailOutline, IoLockClosedOutline, IoPersonOutline } from "react-icons/io5";
+import { IoMailOutline, IoLockClosedOutline, IoPersonOutline } from "@/components/icons/solar";
 import { useAuth } from "../hooks/use-auth";
 import { Input } from "@/components/ui";
 import { useFieldFocus } from "@/hooks/use-field-focus";
@@ -36,6 +36,7 @@ export function RegisterForm({ onSuccess, redirectUrl }: RegisterFormProps) {
 
     const result = await register({
       username: formData.name,
+      full_name: formData.name,
       email: formData.email,
       password: formData.password,
       password_confirmation: formData.confirmPassword,

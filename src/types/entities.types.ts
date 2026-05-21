@@ -13,6 +13,22 @@ export interface SubCategory {
   slug: string;
 }
 
+export interface LandingPage {
+  id: number;
+  title: string;
+  slug: string;
+  hero_title: string;
+  hero_subtitle: string;
+  hero_image: string | null;
+  content: string | null;
+  faqs: Array<{ question: string; answer: string }> | null;
+  meta_title: string | null;
+  meta_description: string | null;
+  status: 'published' | 'draft';
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Category {
   id: number;
   name: string;
@@ -102,6 +118,32 @@ export interface TourCategory {
   updated_at: string;
 }
 
+export interface TourSchedule {
+  id: number;
+  tour_id: number;
+  start_date: string;
+  end_date: string;
+  max_people: number;
+  booked_people: number;
+  current_people?: number;
+  min_people?: number;
+  status: 'available' | 'cancelled';
+  booking_availability: 'open' | 'sold_out';
+  price_adult?: string | number | null;
+  price_child?: string | number | null;
+  price_infant?: string | number | null;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface TourAvailability {
+  is_available: boolean;
+  available_seats: number;
+  requested_seats: number;
+}
+
+export type RatingStats = Record<string, number>;
+
 export interface Tour {
   id: number;
   name: string;
@@ -134,9 +176,25 @@ export interface Tour {
   booking_count: number;
   avg_rating: string;
   review_count: number;
+  reviews?: LocationReview[];
+  category?: TourCategory;
+  schedules?: TourSchedule[];
   created_by: number | null;
   created_at: string;
   updated_at: string;
+}
+
+export interface BlogAuthor {
+  id: number;
+  username?: string;
+  full_name: string;
+  avatar: string | null;
+  bio?: string | null;
+  social_links?: {
+    facebook?: string;
+    twitter?: string;
+    instagram?: string;
+  };
 }
 
 export interface BlogPost {
@@ -152,7 +210,7 @@ export interface BlogPost {
   published_at: string | null;
   created_at: string;
   updated_at: string;
-  author: { id: number; username: string; full_name: string; avatar: string | null; };
+  author: BlogAuthor;
   categories: Array<{ id: number; name: string; slug: string; }>;
 }
 

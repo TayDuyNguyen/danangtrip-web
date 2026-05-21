@@ -8,9 +8,10 @@ import {
   IoFlashOutline,
   IoOptionsOutline,
   IoCloseOutline
-} from "react-icons/io5";
+} from "@/components/icons/solar";
 import { ROUTES } from "@/config";
 import { cn } from "@/utils/string";
+import { formatNumber } from "@/utils/format";
 import { SearchFilters } from "../types/search.types";
 import { debounce } from "@/utils/debounce";
 import { useSearchDiscovery } from "../hooks/use-search-discovery";
@@ -94,7 +95,7 @@ export const SearchResultHeader = ({
         <div className="flex items-center gap-3">
           <button
             onClick={onOpenFilters}
-            className="flex items-center gap-2 px-6 py-3 bg-surface-container-low hover:bg-surface-container-high text-foreground font-black rounded-2xl transition-all scale-100 active:scale-95 shadow-sm"
+            className="flex items-center gap-2 px-6 py-3 bg-surface-container-low hover:bg-surface-container-high text-foreground font-black rounded-xl transition-all scale-100 active:scale-95 shadow-sm"
           >
             <IoOptionsOutline className="text-xl" />
             {tSearch("filters.title")}
@@ -112,13 +113,13 @@ export const SearchResultHeader = ({
         <div className="flex flex-wrap items-center gap-3 animate-in fade-in slide-in-from-top-2 duration-300">
           {activeFilters.minPrice !== undefined && (
             <Tag
-              label={`${tSearch("filters.price_range")}: >${activeFilters.minPrice.toLocaleString()}đ`}
+              label={`${tSearch("filters.price_range")}: >${formatNumber(activeFilters.minPrice)}đ`}
               onRemove={() => onRemoveFilter("minPrice")}
             />
           )}
           {activeFilters.maxPrice !== undefined && (
             <Tag
-              label={`${tSearch("filters.price_range")}: <${activeFilters.maxPrice.toLocaleString()}đ`}
+              label={`${tSearch("filters.price_range")}: <${formatNumber(activeFilters.maxPrice)}đ`}
               onRemove={() => onRemoveFilter("maxPrice")}
             />
           )}
@@ -161,7 +162,7 @@ export const SearchResultHeader = ({
 
           {isLoadingTrending ? (
             Array(4).fill(0).map((_, i) => (
-              <div key={i} className="h-10 w-24 bg-surface-container-low rounded-2xl animate-pulse" />
+              <div key={i} className="h-10 w-24 bg-surface-container-low rounded-xl animate-pulse" />
             ))
           ) : trending.map((item: string, idx: number) => {
             const isSelected = query === item;
@@ -170,7 +171,7 @@ export const SearchResultHeader = ({
                 key={idx}
                 href={`${ROUTES.SEARCH}?q=${encodeURIComponent(item)}`}
                 className={cn(
-                  "flex items-center gap-2 px-5 py-2 rounded-2xl text-sm font-black transition-all duration-300 scale-100 hover:scale-105",
+                  "flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-black transition-all duration-300 scale-100 hover:scale-105",
                   isSelected
                     ? "bg-[#8b6a55] shadow-black/30"
                     : "bg-surface-container-low text-on-surface-subtle hover:bg-surface-container-high"

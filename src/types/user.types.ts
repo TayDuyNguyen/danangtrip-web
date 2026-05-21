@@ -31,17 +31,30 @@ export interface UserProfile {
 
 export interface UpdateUserInput {
   name?: string;
+  full_name?: string;
   phone?: string;
   avatar?: string;
+  birthdate?: string | null;
+  gender?: "male" | "female" | "other" | null;
+  city?: string | null;
 }
 
 export interface UpdateProfileInput {
+  full_name?: string;
+  phone?: string | null;
+  birthdate?: string | null;
+  city?: string | null;
   bio?: string;
   address?: string;
-  city?: string;
   country?: string;
   dateOfBirth?: string;
   gender?: "male" | "female" | "other";
+}
+
+export interface ChangePasswordInput {
+  current_password: string;
+  password: string;
+  password_confirmation: string;
 }
 
 export interface UserPreferences {

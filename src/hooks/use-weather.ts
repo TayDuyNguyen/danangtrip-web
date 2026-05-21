@@ -2,8 +2,9 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { weatherService } from "@/services/weather.service";
-import type { ApiResponse, Weather } from "@/types";
+import type { Weather } from "@/types";
 import { shouldRetryQuery } from "@/lib/react-query";
+import { getApiErrorMessage } from "@/utils";
 
 /**
  * Shared weather query (deduped via TanStack Query). No mock fallback.
@@ -27,11 +28,7 @@ export const useWeather = () => {
   return {
     weather,
     isLoading: query.isLoading,
-    error: query.error
-      ? (query.error as ApiResponse).error ||
-        (query.error as ApiResponse).message ||
-        "Weather load failed"
-      : null,
+    error: query.error ? getApiErrorMessage(query.error, "Weather load failed") : null,
     refresh: () => query.refetch(),
   };
 };

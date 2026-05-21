@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
-import { IoAlertCircleOutline, IoRefreshOutline, IoHomeOutline } from "react-icons/io5";
+import { IoAlertCircleOutline, IoRefreshOutline, IoHomeOutline } from "@/components/icons/solar";
 
 interface ErrorPageProps {
   error: Error & { digest?: string };
@@ -12,11 +11,6 @@ interface ErrorPageProps {
 
 export default function Error({ error, reset }: ErrorPageProps) {
   const t = useTranslations("common");
-
-  useEffect(() => {
-    // Log the error to an error reporting service
-    console.error("Application error:", error);
-  }, [error]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#080808] p-4">

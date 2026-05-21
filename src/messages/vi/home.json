@@ -20,7 +20,8 @@
   "weather": {
     "sunny": "Nắng đẹp",
     "cloudy": "Nhiều mây",
-    "rainy": "Có mưa"
+    "rainy": "Có mưa",
+    "unknown": "Không xác định"
   },
   "categories_title": "Bạn muốn khám phá gì?",
   "categories_title_prefix": "Khám phá theo",
@@ -91,6 +92,7 @@
   "testimonials": "Đánh giá của khách hàng",
   "testimonials_desc": "Những chia sẻ thật lòng từ những du khách đã đồng hành cùng chúng tôi trên hành trình khám phá Đà Nẵng.",
   "reviews": {
+    "display_star_count": "5",
     "1": {
       "name": "Nguyễn Văn An",
       "role": "Khách du lịch từ Hà Nội",

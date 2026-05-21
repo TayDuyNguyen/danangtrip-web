@@ -1,4 +1,52 @@
 {
   "title": "Liên hệ",
-  "subtitle": "Cần hỗ trợ đặt tour hoặc hợp tác? Hãy liên hệ với DaNangTrip."
+  "subtitle": "Cần hỗ trợ đặt tour hoặc hợp tác? Hãy liên hệ với Đà Nẵng Trip.",
+  "hero": {
+    "title": "Liên hệ với chúng tôi",
+    "subtitle": "Đội ngũ Đà Nẵng Trip luôn sẵn sàng lắng nghe và hỗ trợ bạn trong mọi hành trình."
+  },
+  "info": {
+    "title": "Thông tin liên hệ",
+    "address": "Địa chỉ",
+    "phone": "Số điện thoại",
+    "email": "Email",
+    "working_hours": "Giờ làm việc",
+    "working_hours_desc": "Thứ 2 - Chủ nhật: 08:00 - 21:00"
+  },
+  "form": {
+    "title": "Gửi tin nhắn cho chúng tôi",
+    "subtitle": "Chúng tôi sẽ phản hồi thắc mắc của bạn sớm nhất có thể (thường trong vòng 24h).",
+    "name": "Họ và tên",
+    "name_placeholder": "Nhập họ và tên của bạn",
+    "email": "Email",
+    "email_placeholder": "Nhập địa chỉ email",
+    "phone": "Số điện thoại",
+    "phone_placeholder": "Nhập số điện thoại (tùy chọn)",
+    "subject": "Chủ đề",
+    "subject_placeholder": "Bạn muốn liên hệ về việc gì?",
+    "message": "Nội dung",
+    "message_placeholder": "Nhập nội dung tin nhắn...",
+    "submit": "Gửi tin nhắn",
+    "submitting": "Đang gửi...",
+    "submit_another": "Gửi tin nhắn khác"
+  },
+  "success": {
+    "title": "Đã gửi thành công!",
+    "message": "Cảm ơn bạn đã liên hệ. Chúng tôi đã nhận được thông tin và sẽ phản hồi sớm nhất có thể."
+  },
+  "error": {
+    "title": "Gửi thất bại",
+    "message": "Đã có lỗi xảy ra khi gửi tin nhắn. Vui lòng thử lại sau hoặc liên hệ hotline."
+  },
+  "validation": {
+    "name_min_2": "Họ và tên phải có ít nhất 2 ký tự",
+    "name_max_100": "Họ và tên không được quá 100 ký tự",
+    "email_invalid": "Email không hợp lệ",
+    "email_min_5": "Email phải có ít nhất 5 ký tự",
+    "email_max_100": "Email không được quá 100 ký tự",
+    "phone_invalid": "Số điện thoại không đúng định dạng Việt Nam",
+    "subject_max_200": "Tiêu đề không được quá 200 ký tự",
+    "message_min_10": "Nội dung phải có ít nhất 10 ký tự",
+    "message_max_1000": "Nội dung không được quá 1000 ký tự"
+  }
 }

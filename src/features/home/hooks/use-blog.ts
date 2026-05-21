@@ -12,7 +12,7 @@ export const useBlog = () => {
   const query = useQuery({
     queryKey: ["home", "blog", "latest"],
     queryFn: async () => {
-      const response = await blogService.getLatest(1, 3);
+      const response = await blogService.getLatest({ page: 1, per_page: 3 });
       if (response.success && response.data) {
         return response.data.data || [];
       }

@@ -8,7 +8,7 @@ export default function MainLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="design-page min-h-screen">
+    <div className="design-page layout-main-shell min-h-screen">
       <AmbientBackground />
       <Header />
       <div className="pt-20">{children}</div>

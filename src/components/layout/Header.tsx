@@ -8,13 +8,14 @@ import {
   IoCloseOutline,
   IoPersonOutline,
   IoChevronForward,
-} from "react-icons/io5";
+} from "@/components/icons/solar";
 import { useAuthStore } from "@/store/auth.store";
 import { ROUTES, NAV_LINKS } from "@/config";
 import LanguageSwitcher from "./LanguageSwitcher";
 
 const Header = () => {
   const t = useTranslations("common");
+  const tTour = useTranslations("tour");
   const pathname = usePathname();
   const { isAuthenticated, user, logout } = useAuthStore();
 
@@ -66,8 +67,8 @@ const Header = () => {
             <Link
               key={link.path}
               href={link.path}
-              className={`text-[13px] uppercase tracking-[0.18em] font-semibold transition-all duration-300 hover:text-[#8b6a55] relative group truncate ${
-                isActive(link.path) ? "text-[#8b6a55]" : "text-[#d4d4d4]"
+              className={`text-[13px] uppercase tracking-[0.18em] font-semibold transition-all duration-300 hover:text-primary relative group truncate ${
+                isActive(link.path) ? "text-primary" : "text-on-surface-subtle"
               }`}
             >
               {t(link.name)}
@@ -109,6 +110,12 @@ const Header = () => {
                   className="block px-4 py-2 text-sm text-[#d4d4d4] hover:bg-[#171717]"
                 >
                   {t("auth.profile")}
+                </Link>
+                <Link
+                  href={ROUTES.BOOKINGS}
+                  className="block px-4 py-2 text-sm text-[#d4d4d4] hover:bg-[#171717]"
+                >
+                  {tTour("history.header_link")}
                 </Link>
                 <button
                   onClick={logout}

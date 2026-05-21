@@ -11,7 +11,7 @@ import {
   IoLocationOutline,
   IoHeartOutline,
   IoHeart
-} from "react-icons/io5";
+} from "@/components/icons/solar";
 import { useLocations } from "../hooks/use-locations";
 import { useAddFavoriteLocation } from "../hooks/use-add-favorite-location";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
@@ -21,7 +21,7 @@ const FeaturedLocations = () => {
   const { featuredLocations: locations, categories, isLoading, isFetching } = useLocations(activeCategoryId);
   const t = useTranslations();
   const { mutateAsync: addFavorite } = useAddFavoriteLocation();
-  const { elementRef, isVisible } = useScrollReveal(0.1);
+  const { elementRef, isVisible } = useScrollReveal();
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showLeftBtn, setShowLeftBtn] = useState(false);
   const [showRightBtn, setShowRightBtn] = useState(true);
@@ -60,7 +60,7 @@ const FeaturedLocations = () => {
   };
 
   return (
-    <section className="py-[120px] bg-surface font-sans overflow-hidden">
+    <section className="py-[120px] bg-surface/12 backdrop-blur-[1px] font-sans overflow-hidden">
       <div className="container mx-auto px-4" ref={elementRef}>
         {/* Header */}
         <div className={`flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
@@ -80,6 +80,7 @@ const FeaturedLocations = () => {
         {/* Categories / Tabs */}
         <div className={`flex gap-4 mb-12 overflow-x-auto pb-4 no-scrollbar transition-all duration-700 delay-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
           <button
+            suppressHydrationWarning
             onClick={() => setActiveCategoryId(undefined)}
             className={`px-8 py-3 rounded-full text-[14px] font-bold transition-all whitespace-nowrap shadow-sm hover:shadow-md ${activeCategoryId === undefined
               ? "bg-[#8b6a55] text-white shadow-black/30"
@@ -92,6 +93,7 @@ const FeaturedLocations = () => {
           {categories.slice(0, 5).map((cat) => (
             <button
               key={cat.id}
+              suppressHydrationWarning
               onClick={() => setActiveCategoryId(cat.id)}
               className={`px-8 py-3 rounded-full text-[14px] font-bold transition-all whitespace-nowrap shadow-sm hover:shadow-md ${activeCategoryId === cat.id
                 ? "bg-[#8b6a55] text-white shadow-black/30"
@@ -109,6 +111,7 @@ const FeaturedLocations = () => {
           <div className="absolute -inset-x-4 top-[40%] -translate-y-1/2 flex justify-between items-center pointer-events-none z-30">
             <div className="w-full flex justify-between px-2">
               <button
+                suppressHydrationWarning
                 onClick={() => scroll("left")}
                 className={`w-12 h-12 rounded-full bg-[#171717]/90 backdrop-blur-md border border-[#262626] items-center justify-center text-white hover:bg-[#8b6a55] hover:text-white shadow-[0_8px_30px_rgb(0,0,0,0.35)] transition-all pointer-events-auto active:scale-95 ${showLeftBtn ? "flex opacity-100 translate-x-0" : "hidden opacity-0 -translate-x-4"}`}
                 aria-label={t("common.accessibility.previous")}
@@ -117,6 +120,7 @@ const FeaturedLocations = () => {
               </button>
 
               <button
+                suppressHydrationWarning
                 onClick={() => scroll("right")}
                 className={`w-12 h-12 rounded-full bg-[#171717]/90 backdrop-blur-md border border-[#262626] items-center justify-center text-white hover:bg-[#8b6a55] hover:text-white shadow-[0_8px_30px_rgb(0,0,0,0.35)] transition-all pointer-events-auto active:scale-95 ${showRightBtn && locations.length > 0 ? "flex opacity-100 translate-x-0" : "hidden opacity-0 translate-x-4"}`}
                 aria-label={t("common.accessibility.next")}
@@ -162,6 +166,7 @@ const FeaturedLocations = () => {
 
                       {/* Favorite Button */}
                       <button
+                        suppressHydrationWarning
                         onClick={(e) => handleFavoriteClick(e, loc.id)}
                         className="absolute top-6 right-6 w-12 h-12 bg-[#111111]/70 backdrop-blur-md rounded-full flex items-center justify-center text-white border border-[#262626] hover:bg-[#171717] hover:text-[#8b6a55] transition-all z-20 group/fav active:scale-90 shadow-lg"
                       >
