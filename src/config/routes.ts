@@ -48,6 +48,7 @@ export const PROTECTED_ROUTES = {
   BOOKINGS: "/bookings",
   BOOKING_BY_CODE: (bookingCode: string) => `/bookings/code/${bookingCode}`,
   FAVORITES: "/favorites",
+  NOTIFICATIONS: "/notifications",
 } as const;
 
 // Dashboard routes (require authentication + admin/staff role)
@@ -121,4 +122,3 @@ export const isProtectedRoute = (path: string): boolean => {
 export const isDashboardRoute = (path: string): boolean => {
   return path.startsWith("/dashboard");
 };
-

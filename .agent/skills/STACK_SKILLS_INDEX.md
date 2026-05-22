@@ -296,64 +296,64 @@ Date locked for this index: `2026-05-22`
 ### Single Chosen Screen Only
 
 - Repo: `danangtrip-web`
-- Only screen/work item to implement now: `Yêu thích`
-- Feature slug: `favorites`
-- Main route: `/favorites`
-- Main file target: `src/app/[locale]/(main)/(protected)/favorites/page.tsx`
-- Rule: do not switch to notifications, profile password, verify email, cart, or unrelated booking/account screens until this favorites screen is finished through `10-optimization-deploy`.
+- Only screen/work item to implement now: `Thông báo`
+- Feature slug: `notifications`
+- Main route: `/notifications`
+- Main file target: `src/app/[locale]/(main)/(protected)/notifications/page.tsx`
+- Rule: do not switch to profile password, verify email, cart, or unrelated booking/account screens until this notifications screen is finished through `10-optimization-deploy`.
 
 ### Candidate Screens Reviewed
 
 | Candidate | Priority | Why it is relevant now | Why it is not the current first pick |
 | --- | --- | --- | --- |
-| `favorites` | High | `user-bookings-list`, `user-booking-detail`, and `user-booking-by-code` are complete, and the progress report now treats invoice as already present in code. Favorites is the next unfinished user utility with ready API support. | Selected as the current first pick. |
-| `notifications` | High | Notifications API exists and app store has notification state. | Useful, but it sits after the favorites screen in the current rollout order. |
-| `user-profile-password` | High | Account security API exists. | Better after booking aftercare is fully closed. |
-| `user-verify-email` | High | Auth API exists. | Account utility; not as directly tied to booking fulfillment. |
+| `notifications` | High | `favorites` is now complete and notifications has ready API support plus clear protected-user utility value. | Selected as the current first pick. |
+| `user-profile-password` | High | Account security API exists and naturally follows notifications in the user-utility rollout. | Useful, but notifications is the nearer follow-up after favorites completion. |
+| `user-verify-email` | High | Auth API exists. | Important, but still less central than the notifications center for active signed-in users. |
+| `user-profile` hardening | Medium | Existing route/page already exists and may still need pipeline hardening later. | Not a new current-screen prompt; notifications is the next unfinished screen. |
 
 ### Selected Next Screen
 
-- Screen: `Yêu thích`
-- Feature slug: `favorites`
-- Main route: `/favorites`
-- Primary implementation target: `src/app/[locale]/(main)/(protected)/favorites/page.tsx`
+- Screen: `Thông báo`
+- Feature slug: `notifications`
+- Main route: `/notifications`
+- Primary implementation target: `src/app/[locale]/(main)/(protected)/notifications/page.tsx`
 - Decision basis:
-  - `project_delivery_progress_report.md` now marks `favorites` as the next real web screen because `user-booking-invoice` already exists in code.
-  - Favorites has ready API support and is still missing a real protected route/page in the current repo.
-  - This keeps delivery moving into the next unfinished user utility instead of reopening an already coded invoice action.
+  - `project_delivery_progress_report.md` now marks `favorites` as complete and `notifications` as the next real web screen.
+  - Notifications has ready API support and remains missing as a real protected route/page in the current repo.
+  - This keeps delivery moving into the next unfinished protected user utility after the saved-items flow is closed.
 
 ### Cross-Project Rollout Order
 
-1. `danangtrip-web` implements `favorites`
-2. `danangtrip-admin` implements `admin_reports_bookings`
-3. Continue with user utilities (`favorites`, `notifications`) or report group based on the next progress report update
+1. `danangtrip-web` implements `notifications`
+2. `danangtrip-admin` implements `admin_reports_revenue`
+3. Continue with account/security utilities or the remaining admin report group based on the next progress report update
 
 Dependency rule:
-- Keep favorite state semantics aligned with the real favorites API contract and any favorite toggles already present on locations/tours.
-- Preserve protected route behavior and locale-aware navigation for the new `/favorites` page.
+- Keep notification state semantics aligned with the real notifications API contract and any existing global notification store behavior.
+- Preserve protected route behavior and locale-aware navigation for the new `/notifications` page.
 
 ## Recommended Current Screen Prompt
 
-Use this ready prompt for the next recommended `danangtrip-web` work: favorites delivery.
+Use this ready prompt for the next recommended `danangtrip-web` work: notifications delivery.
 
 ```text
 SYSTEM EXECUTION CONTRACT
 
 Act as the execution agent for repository: `D:\DATN\danangtrip-web`
 
-Your job is to implement the recommended user screen: `Yêu thích`
-Feature slug: `favorites`
-Primary route: `/favorites`
+Your job is to implement the recommended user screen: `Thông báo`
+Feature slug: `notifications`
+Primary route: `/notifications`
 Primary targets:
-- `src/app/[locale]/(main)/(protected)/favorites/page.tsx`
-- `src/features` area that owns favorite list cards and state wiring
-- related services/hooks/types for favorites API integration
-Feature type: protected user list screen for saved tours/locations.
+- `src/app/[locale]/(main)/(protected)/notifications/page.tsx`
+- `src/features` area that owns notifications list cards and state wiring
+- related services/hooks/types for notifications API integration
+Feature type: protected user notifications center.
 
 SINGLE-SCOPE LOCK
-- You are working on exactly one feature only: `Yêu thích`.
-- You MUST NOT switch to notifications, profile password, verify email, cart, or unrelated booking/account screens in this run.
-- If an adjacent issue appears in tour/location cards, record it as dependency/follow-up unless it blocks favorites correctness.
+- You are working on exactly one feature only: `Thông báo`.
+- You MUST NOT switch to profile password, verify email, cart, or unrelated booking/account screens in this run.
+- If an adjacent issue appears in shared header, badge, or notification store behavior, record it as dependency/follow-up unless it blocks notifications correctness.
 
 MANDATORY READ ORDER BEFORE ANY WORK
 1. `D:\DATN\danangtrip-web\AGENTS.md`
@@ -367,14 +367,13 @@ MANDATORY READ ORDER BEFORE ANY WORK
 
 SCREEN REFERENCES
 - Progress report: `D:\DATN\DATN_Tài liệu\docs\project_delivery_progress_report.md`
-- Primary doc: `D:\DATN\DATN_Tài liệu\docs\page\user_favorites.md`
-- Related detail docs: `D:\DATN\DATN_Tài liệu\docs\page\user_tour_detail.md; D:\DATN\DATN_Tài liệu\docs\page\user_location_detail.md`
+- Primary doc: `D:\DATN\DATN_Tài liệu\docs\page\user_notifications.md`
+- Related detail docs: `D:\DATN\DATN_Tài liệu\docs\page\user_profile.md; D:\DATN\DATN_Tài liệu\docs\page\user_booking_detail.md`
 - Related supporting docs: `D:\DATN\DATN_Tài liệu\docs\reference\list_page_user.md`
 - User page list: `D:\DATN\DATN_Tài liệu\docs\reference\list_page_user.md`
 - API list: `D:\DATN\DATN_Tài liệu\docs\api\api_list.md`
 - Backend API repo: `D:\DATN\danangtrip-api`
 - Backend routes: `D:\DATN\danangtrip-api\routes\api.php`
-- Backend booking docs: `D:\DATN\danangtrip-api\api-doc\bookings.js`
 
 REPO CONTEXT TO READ
 - `D:\DATN\danangtrip-web\DESIGN.md`
@@ -384,21 +383,21 @@ REPO CONTEXT TO READ
 - `D:\DATN\danangtrip-web\src\config\routes.ts`
 - `D:\DATN\danangtrip-web\src\app\[locale]\(main)\(protected)\profile\page.tsx`
 - `D:\DATN\danangtrip-web\src\types`
-- `D:\DATN\danangtrip-web\src\messages\vi\tour.json`
-- `D:\DATN\danangtrip-web\src\messages\en\tour.json`
+- `D:\DATN\danangtrip-web\src\messages\vi`
+- `D:\DATN\danangtrip-web\src\messages\en`
 
 REQUIRED API FLOW
-- Load the current user's favorites through the real favorites endpoint(s) in repo/API reality.
-- Support empty, loading, filtered empty, and API-error states.
-- Reuse existing card patterns for saved tours/locations where possible.
+- Load the current user's notifications through the real notifications endpoint(s) in repo/API reality.
+- Support empty, loading, unread, read, filtered empty, and API-error states.
+- Reuse any existing notification badge/store state if already present in the repo.
 - Keep auth protection under existing `(protected)` route behavior and axios auth headers.
-- If favorite removal is part of the scope, make sure list state updates without full page inconsistency.
+- If mark-as-read or mark-all-as-read is part of the scope, make sure unread counts stay consistent without full page inconsistency.
 
 EXPECTED UX
-- User can view a clean list of saved tours/locations.
-- User can remove an item from favorites if the real contract supports it.
-- User can navigate from a favorite item into its detail page.
-- Loading, empty, and API-error states are explicit and localized.
+- User can view a clean notifications list with time, title, content, and state cues.
+- User can mark one or many notifications as read if the real contract supports it.
+- User can navigate from a notification into its linked destination if the payload carries a target.
+- Loading, empty, unread/read, and API-error states are explicit and localized.
 - Behavior remains consistent across locales and protected auth flow.
 
 PIPELINE ORDER
@@ -414,16 +413,16 @@ Execute in this exact order, stopping after each step for approval:
 9. `10-optimization-deploy`
 
 ARTIFACT TARGETS
-- Analysis: `.agent/artifacts/analysis/YYYY-MM-DD__favorites__screen-analysis.md`
-- API contract: `.agent/artifacts/api-contracts/YYYY-MM-DD__favorites__api-contract.md`
-- Routing: `.agent/artifacts/routing/YYYY-MM-DD__favorites__route-plan.md`
-- UI spec: `.agent/artifacts/ui-specs/YYYY-MM-DD__favorites__ui-spec.md`
-- Data integration: `.agent/artifacts/integration/YYYY-MM-DD__favorites__data-integration.md`
-- Interaction spec: `.agent/artifacts/interaction-specs/YYYY-MM-DD__favorites__interaction-spec.md`
-- Auth review: `.agent/artifacts/auth/YYYY-MM-DD__favorites__auth-permissions-review.md`
-- Test report: `.agent/artifacts/test-cases/YYYY-MM-DD__favorites__test-report.md`
-- Deploy report: `.agent/artifacts/deploy/YYYY-MM-DD__favorites__deploy-report.md`
-- Final review: `.agent/artifacts/review/YYYY-MM-DD__favorites__review.md`
+- Analysis: `.agent/artifacts/analysis/YYYY-MM-DD__notifications__screen-analysis.md`
+- API contract: `.agent/artifacts/api-contracts/YYYY-MM-DD__notifications__api-contract.md`
+- Routing: `.agent/artifacts/routing/YYYY-MM-DD__notifications__route-plan.md`
+- UI spec: `.agent/artifacts/ui-specs/YYYY-MM-DD__notifications__ui-spec.md`
+- Data integration: `.agent/artifacts/integration/YYYY-MM-DD__notifications__data-integration.md`
+- Interaction spec: `.agent/artifacts/interaction-specs/YYYY-MM-DD__notifications__interaction-spec.md`
+- Auth review: `.agent/artifacts/auth/YYYY-MM-DD__notifications__auth-permissions-review.md`
+- Test report: `.agent/artifacts/test-cases/YYYY-MM-DD__notifications__test-report.md`
+- Deploy report: `.agent/artifacts/deploy/YYYY-MM-DD__notifications__deploy-report.md`
+- Final review: `.agent/artifacts/review/YYYY-MM-DD__notifications__review.md`
 
 BEGIN NOW
 Start with step `01-screen-analysis`.
@@ -431,35 +430,35 @@ Start with step `01-screen-analysis`.
 
 ## Manual Activation Templates - Current Recommended Screen
 
-### Current Recommended Screen - Favorites
+### Current Recommended Screen - Notifications
 
 ```text
 Activate full pipeline for current recommended screen
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [favorites]
-- Screen name: [Yêu thích]
-- Primary target route: [/favorites]
-- Primary target page file: [D:\DATN\danangtrip-web\src\app\[locale]\(main)\(protected)\favorites\page.tsx]
+- Feature slug: [notifications]
+- Screen name: [Thông báo]
+- Primary target route: [/notifications]
+- Primary target page file: [D:\DATN\danangtrip-web\src\app\[locale]\(main)\(protected)\notifications\page.tsx]
 - Route group: [(protected)]
 - Auth requirement: [Protected user route]
 - DESIGN.md: [D:\DATN\danangtrip-web\DESIGN.md]
-- Primary docs: [D:\DATN\DATN_Tài liệu\docs\page\user_favorites.md]
-- Related docs: [D:\DATN\DATN_Tài liệu\docs\page\user_tour_detail.md; D:\DATN\DATN_Tài liệu\docs\page\user_location_detail.md]
+- Primary docs: [D:\DATN\DATN_Tài liệu\docs\page\user_notifications.md]
+- Related docs: [D:\DATN\DATN_Tài liệu\docs\page\user_profile.md; D:\DATN\DATN_Tài liệu\docs\page\user_booking_detail.md]
 - API docs: [D:\DATN\DATN_Tài liệu\docs\api\api_list.md]
 - Backend API repo: [D:\DATN\danangtrip-api]
 - Existing UI references: [D:\DATN\danangtrip-web\src\app\[locale]\(main)\(protected)\profile\page.tsx; D:\DATN\danangtrip-web\src\features]
 - Services/types to inspect: [D:\DATN\danangtrip-web\src\services; D:\DATN\danangtrip-web\src\types; D:\DATN\danangtrip-web\src\config\routes.ts]
-- Main endpoints: [favorites list endpoint in repo/API reality; optional remove favorite endpoint]
-- Contract note: [resolve whether favorites cover tours, locations, or both before wiring UI]
-- Output prefix: [.agent/artifacts/<group>/YYYY-MM-DD__favorites__...md]
+- Main endpoints: [notifications list endpoint(s) in repo/API reality; optional mark-read endpoint(s)]
+- Contract note: [resolve unread state, target link shape, and bulk mark-read capability before wiring UI]
+- Output prefix: [.agent/artifacts/<group>/YYYY-MM-DD__notifications__...md]
 
 Execution:
 - Start with `01-screen-analysis`.
 - Before each step, read the matching `SKILL.md`.
-- Treat the favorites doc as the main list-screen UX reference.
-- Reuse existing tour/location cards before creating new primitives.
+- Treat the notifications doc as the main list-screen UX reference.
+- Reuse existing protected-page list and badge patterns before creating new primitives.
 - Stop after each pipeline step for approval.
 ```
 
@@ -470,15 +469,15 @@ Activate 01-screen-analysis
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [favorites]
-- Screen name: [Yêu thích]
+- Feature slug: [notifications]
+- Screen name: [Thông báo]
 - Figma/Stitch: [NONE]
-- Input source: [D:\DATN\DATN_Tài liệu\docs\page\user_favorites.md]
-- Related sources: [D:\DATN\DATN_Tài liệu\docs\page\user_tour_detail.md; D:\DATN\DATN_Tài liệu\docs\page\user_location_detail.md]
-- Prototype note: [Use favorites doc and existing tour/location card references]
+- Input source: [D:\DATN\DATN_Tài liệu\docs\page\user_notifications.md]
+- Related sources: [D:\DATN\DATN_Tài liệu\docs\page\user_profile.md; D:\DATN\DATN_Tài liệu\docs\page\user_booking_detail.md]
+- Prototype note: [Use notifications doc and existing protected utility/list references]
 - DESIGN.md: [D:\DATN\danangtrip-web\DESIGN.md]
 - API docs: [D:\DATN\DATN_Tài liệu\docs\api\api_list.md]
-- Output: [.agent/artifacts/analysis/YYYY-MM-DD__favorites__screen-analysis.md]
+- Output: [.agent/artifacts/analysis/YYYY-MM-DD__notifications__screen-analysis.md]
 ```
 
 ### Skill 02 - Project Setup Audit
@@ -488,9 +487,9 @@ Activate 02-project-setup
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [favorites]
-- Audit reason: [next protected user utility screen after booking aftercare flow]
-- Output: [.agent/artifacts/setup/YYYY-MM-DD__favorites__project-setup-report.md]
+- Feature slug: [notifications]
+- Audit reason: [next protected user utility screen after favorites completion]
+- Output: [.agent/artifacts/setup/YYYY-MM-DD__notifications__project-setup-report.md]
 ```
 
 ### Skill 03 - Types And API Contract
@@ -500,15 +499,15 @@ Activate 03-types-api-contract
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [favorites]
-- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__favorites__screen-analysis.md]
+- Feature slug: [notifications]
+- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__notifications__screen-analysis.md]
 - API docs: [D:\DATN\DATN_Tài liệu\docs\api\api_list.md]
-- Relevant endpoints: [favorites list endpoint(s), optional remove favorite endpoint]
+- Relevant endpoints: [notifications list endpoint(s), unread-count endpoint if any, optional mark-read endpoint(s)]
 - Existing services: [D:\DATN\danangtrip-web\src\services]
 - Existing hooks: [D:\DATN\danangtrip-web\src\features]
 - Existing types: [D:\DATN\danangtrip-web\src\types]
-- Contract check: [favorite item shape, target entity type, pagination/filter params if any]
-- Output: [.agent/artifacts/api-contracts/YYYY-MM-DD__favorites__api-contract.md]
+- Contract check: [notification item shape, unread state, target link payload, pagination/filter params if any]
+- Output: [.agent/artifacts/api-contracts/YYYY-MM-DD__notifications__api-contract.md]
 ```
 
 ### Skill 04 - Layout And Routing
@@ -518,14 +517,14 @@ Activate 04-layout-routing
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [favorites]
-- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__favorites__screen-analysis.md]
-- Target route: [/favorites]
+- Feature slug: [notifications]
+- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__notifications__screen-analysis.md]
+- Target route: [/notifications]
 - Route group: [(protected)]
 - New page files: [yes]
-- Target files: [D:\DATN\danangtrip-web\src\app\[locale]\(main)\(protected)\favorites\page.tsx]
-- Server or client ownership: [server page shell + client favorites list]
-- Output: [.agent/artifacts/routing/YYYY-MM-DD__favorites__route-plan.md]
+- Target files: [D:\DATN\danangtrip-web\src\app\[locale]\(main)\(protected)\notifications\page.tsx]
+- Server or client ownership: [server page shell + client notifications list]
+- Output: [.agent/artifacts/routing/YYYY-MM-DD__notifications__route-plan.md]
 ```
 
 ### Skill 05 - UI Components
@@ -535,12 +534,12 @@ Activate 05-ui-components
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [favorites]
-- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__favorites__screen-analysis.md]
+- Feature slug: [notifications]
+- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__notifications__screen-analysis.md]
 - DESIGN.md: [D:\DATN\danangtrip-web\DESIGN.md]
-- Components to focus on: [FavoritesPageShell, FavoriteCardList, FavoriteCard, FavoritesEmptyState]
-- Existing reusable components: [existing tour/location cards, shared Button, empty-state patterns]
-- Output: [.agent/artifacts/ui-specs/YYYY-MM-DD__favorites__ui-spec.md]
+- Components to focus on: [NotificationsPageShell, NotificationList, NotificationItem, NotificationsEmptyState, NotificationsFilterBar]
+- Existing reusable components: [shared protected page shells, Button, empty-state patterns, badge/indicator patterns]
+- Output: [.agent/artifacts/ui-specs/YYYY-MM-DD__notifications__ui-spec.md]
 ```
 
 ### Skill 06 - Data Integration
@@ -550,12 +549,12 @@ Activate 06-data-integration
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [favorites]
-- API contract: [.agent/artifacts/api-contracts/YYYY-MM-DD__favorites__api-contract.md]
-- UI spec: [.agent/artifacts/ui-specs/YYYY-MM-DD__favorites__ui-spec.md]
-- Queries: [favorites list]
-- Mutations/actions: [remove favorite if supported]
-- Output: [.agent/artifacts/integration/YYYY-MM-DD__favorites__data-integration.md]
+- Feature slug: [notifications]
+- API contract: [.agent/artifacts/api-contracts/YYYY-MM-DD__notifications__api-contract.md]
+- UI spec: [.agent/artifacts/ui-specs/YYYY-MM-DD__notifications__ui-spec.md]
+- Queries: [notifications list; unread count if applicable]
+- Mutations/actions: [mark single notification as read; mark all as read if supported]
+- Output: [.agent/artifacts/integration/YYYY-MM-DD__notifications__data-integration.md]
 ```
 
 ### Skill 07 - Interactions
@@ -565,12 +564,12 @@ Activate 07-interactions
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [favorites]
-- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__favorites__screen-analysis.md]
-- Data integration: [.agent/artifacts/integration/YYYY-MM-DD__favorites__data-integration.md]
-- Main actions: [view list, remove favorite if supported, navigate to detail]
-- Forms present: [none]
-- Output: [.agent/artifacts/interaction-specs/YYYY-MM-DD__favorites__interaction-spec.md]
+- Feature slug: [notifications]
+- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__notifications__screen-analysis.md]
+- Data integration: [.agent/artifacts/integration/YYYY-MM-DD__notifications__data-integration.md]
+- Main actions: [view list, mark read, mark all as read if supported, navigate to linked destination]
+- Forms present: [filters only if repo/API supports them]
+- Output: [.agent/artifacts/interaction-specs/YYYY-MM-DD__notifications__interaction-spec.md]
 ```
 
 ### Skill 08 - Auth And Permissions
@@ -580,11 +579,11 @@ Activate 08-auth-permissions
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [favorites]
-- Route plan: [.agent/artifacts/routing/YYYY-MM-DD__favorites__route-plan.md]
-- Feature type: [protected favorites screen]
-- Gated UI actions: [view favorites, remove favorite if supported]
-- Output: [.agent/artifacts/auth/YYYY-MM-DD__favorites__auth-permissions-review.md]
+- Feature slug: [notifications]
+- Route plan: [.agent/artifacts/routing/YYYY-MM-DD__notifications__route-plan.md]
+- Feature type: [protected notifications screen]
+- Gated UI actions: [view notifications, mark read if supported]
+- Output: [.agent/artifacts/auth/YYYY-MM-DD__notifications__auth-permissions-review.md]
 ```
 
 ### Skill 09 - Testing
@@ -594,11 +593,11 @@ Activate 09-testing
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [favorites]
-- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__favorites__screen-analysis.md]
-- Interaction spec: [.agent/artifacts/interaction-specs/YYYY-MM-DD__favorites__interaction-spec.md]
-- Auth review: [.agent/artifacts/auth/YYYY-MM-DD__favorites__auth-permissions-review.md]
-- Output: [.agent/artifacts/test-cases/YYYY-MM-DD__favorites__test-report.md]
+- Feature slug: [notifications]
+- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__notifications__screen-analysis.md]
+- Interaction spec: [.agent/artifacts/interaction-specs/YYYY-MM-DD__notifications__interaction-spec.md]
+- Auth review: [.agent/artifacts/auth/YYYY-MM-DD__notifications__auth-permissions-review.md]
+- Output: [.agent/artifacts/test-cases/YYYY-MM-DD__notifications__test-report.md]
 ```
 
 ### Skill 10 - Optimization And Deploy
@@ -608,12 +607,12 @@ Activate 10-optimization-deploy
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [favorites]
-- Test report: [.agent/artifacts/test-cases/YYYY-MM-DD__favorites__test-report.md]
+- Feature slug: [notifications]
+- Test report: [.agent/artifacts/test-cases/YYYY-MM-DD__notifications__test-report.md]
 - Test verdict: [READY | READY WITH RISKS | NOT READY]
 - Existing artifacts: [analysis, api-contract, route-plan, ui-spec, data-integration, interaction-spec, auth-review, test-report]
-- Output deploy: [.agent/artifacts/deploy/YYYY-MM-DD__favorites__deploy-report.md]
-- Output review: [.agent/artifacts/review/YYYY-MM-DD__favorites__review.md]
+- Output deploy: [.agent/artifacts/deploy/YYYY-MM-DD__notifications__deploy-report.md]
+- Output review: [.agent/artifacts/review/YYYY-MM-DD__notifications__review.md]
 ```
 
 ## Files Commonly Read Before Most Tasks
