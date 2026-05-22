@@ -1,0 +1,29 @@
+{
+  "meta_title": "Địa điểm yêu thích",
+  "meta_description": "Quản lý danh sách địa điểm du lịch yêu thích của bạn tại Đà Nẵng.",
+  "page_title": "Địa điểm yêu thích",
+  "location_count": "{count, plural, =0 {Chưa có địa điểm nào} =1 {1 địa điểm} other {# địa điểm}}",
+  "grid_view": "Dạng lưới",
+  "list_view": "Dạng danh sách",
+  "empty_state": "Chưa có địa điểm yêu thích nào",
+  "empty_state_desc": "Hãy khám phá và lưu lại những địa điểm du lịch bạn yêu thích để dễ dàng lên kế hoạch cho chuyến đi nhé!",
+  "explore_button": "Khám phá địa điểm ngay",
+  "undo": "Hoàn tác",
+  "toast_removed": "Đã xóa khỏi danh sách yêu thích",
+  "toast_added_back": "Đã khôi phục địa điểm",
+  "toast_remove_error": "Không thể xóa địa điểm. Vui lòng thử lại sau.",
+  "toast_undo_error": "Không thể hoàn tác hành động. Vui lòng thử lại sau.",
+  "retry": "Tải lại",
+  "confirm_delete_title": "Xóa yêu thích",
+  "confirm_delete_desc": "Bạn có chắc chắn muốn xóa địa điểm này khỏi danh sách yêu thích?",
+  "cancel": "Hủy",
+  "confirm": "Xác nhận",
+  "detail": "Xem chi tiết",
+  "sort": {
+    "label": "Sắp xếp theo",
+    "newest": "Mới nhất",
+    "oldest": "Cũ nhất",
+    "name_asc": "Tên A-Z",
+    "rating_desc": "Đánh giá cao nhất"
+  }
+}
