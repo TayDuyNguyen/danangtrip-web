@@ -42,6 +42,7 @@ export const AUTH_ROUTES = {
 // Protected routes (require authentication)
 export const PROTECTED_ROUTES = {
   PROFILE: "/profile",
+  PASSWORD: "/profile/password",
   SETTINGS: "/settings",
   PAYMENT: "/payment",
   PAYMENT_RESULT: "/payment/result",

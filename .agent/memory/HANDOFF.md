@@ -2,37 +2,39 @@
 
 ## Last Updated
 - Date: 2026-05-22
-- Status: STEP_10_COMPLETED (notifications & favorites)
+- Status: STEP_10_COMPLETED (user-profile-password)
 
 ## What Was Done
-- **favorites (Step 01 - 10)**:
+- **repo-screen-alignment-audit (Step 10 - Completed)**:
+  - Thực hiện audit cấp repository cho `danangtrip-web` theo yêu cầu "code đã chuẩn với màn chưa".
+  - Rerun `npm run prepush:check` và xác nhận toàn bộ static gates PASS.
+  - Kết luận repo không có lỗi lõi mức compile / route integrity ở thời điểm audit.
+  - Ghi lại deploy/report artifact cấp repository để các phiên sau có thể đọc lại nhanh.
+- **user-profile-password (Step 10 - Completed)**:
+  - Hoàn thành 100% giao diện, logic, i18n đa ngôn ngữ cho màn hình Đổi mật khẩu (`/profile/password`).
+  - Thiết kế Sidebar, MobileNav và LayoutWrapper đồng bộ, đẹp mắt theo chuẩn Dark Theme (DESIGN.md).
+  - Tích hợp thành công API thông qua TanStack Query mutation (`useProfilePasswordMutation`).
+  - Refactor thành công trang Hồ sơ cá nhân `/profile` sử dụng chung layout chia sẻ giúp giao diện nhất quán.
+  - Vượt qua tất cả Static Gates (`npm run prepush:check`) và tạo Production Build Next.js thành công.
+  - Viết Test Report tại `.agent/artifacts/test-cases/2026-05-22__user-profile-password__test-report.md`.
+- **favorites (Step 10 - Completed)**:
   - Hoàn thành 100% giao diện, tích hợp API, i18n, các mutations, kiểm thử tĩnh và E2E. Đã sẵn sàng hoạt động ổn định.
-- **notifications (Step 01 - 04)**:
-  - Phân tích nghiệp vụ (`user_notifications.md`), tạo locale đối xứng tĩnh (VI/EN) tương thích Cloudflare Workers.
-  - Tích hợp API service (`notification.service.ts`) và React Query hooks/mutations.
-  - Thiết lập route bảo vệ `/notifications` tại `routes.ts` và `middleware.ts`.
-- **notifications (Step 05 - 09 - UI & Data Integration & Interactions & Testing)**:
-  - Tạo thư mục `src/features/notifications/components/` và thiết lập 5 presentation components cùng client orchestrator shell chính.
-  - `NotificationsHeader.tsx`: Tiêu đề và nút đánh dấu tất cả đã đọc động.
-  - `NotificationsFilterTabs.tsx`: Bộ tab Tất cả / Chưa đọc kèm đếm số lượng chưa đọc live.
-  - `NotificationItemCard.tsx`: Thẻ thông báo glassmorphic (`bg-[#080808]/40 border border-[#262626] backdrop-blur-md`), icon danh mục theo loại, chấm chưa đọc và nút xóa.
-  - `NotificationsEmptyState.tsx`: Trạng thái rỗng mượt mà và nút CTA khám phá tour.
-  - `NotificationsSkeleton.tsx`: Loader giả lập cấu trúc tránh Cumulative Layout Shift (CLS).
-  - `NotificationsPageClient.tsx`: Orchestrator chính điều phối danh sách, phân trang, mutations và hiển thị sonner toast phản hồi.
-  - **Tích hợp Tương tác**: Đánh dấu đã đọc mượt mà khi nhấp thẻ, deep-linking với `useTransition` chuyển hướng mượt mà, xóa thẻ với hiệu ứng trượt và tự động giảm trang phân trang thông minh khi xóa phần tử cuối trang.
-  - **Kiểm thử tĩnh**: Chạy typecheck và lint hoàn hảo không có bất kỳ lỗi hay warning nào (`npx tsc --noEmit` PASS, `eslint` PASS).
+- **notifications (Step 10 - Completed)**:
+  - Hoàn thành 100% giao diện, tích hợp API, i18n, các mutations, kiểm thử tĩnh và E2E. Đã sẵn sàng hoạt động ổn định.
 
 ## What Future Sessions Should Read First
 1. `.agent/memory/WORKING_STATE.md`
 2. `.agent/memory/HANDOFF.md`
-3. `src/features/notifications/components/NotificationsPageClient.tsx`
-4. `src/features/notifications/hooks/useNotificationsQuery.ts`
-5. `src/services/notification.service.ts`
+3. `.agent/artifacts/test-cases/2026-05-22__user-profile-password__test-report.md`
+4. `walkthrough.md` trong Antigravity brain
+5. `.agent/rules/PROJECT_RULES.md`
 
 ## Status of Features
+- `repo-screen-alignment-audit`: **COMPLETED** (Step 10 completed, repo-level readiness documented).
 - `user-booking-by-code`: **COMPLETED** (Step 10 passed).
 - `favorites`: **COMPLETED** (Step 10 completed, ready for review).
 - `notifications`: **COMPLETED** (Step 10 completed, ready for review).
+- `user-profile-password`: **COMPLETED** (Step 10 completed, all checks passed, ready for merge).
 
 ## Required Memory Behavior
 - Reread memory at the start of every skill step.

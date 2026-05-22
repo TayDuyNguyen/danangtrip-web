@@ -1,4 +1,44 @@
 {
   "title": "Cài đặt tài khoản",
-  "subtitle": "Khu vực này quản lý tuỳ chọn tài khoản và ưu tiên trải nghiệm."
+  "subtitle": "Khu vực này quản lý tuỳ chọn tài khoản và ưu tiên trải nghiệm.",
+  "sidebar": {
+    "profile": "Hồ sơ cá nhân",
+    "change_password": "Đổi mật khẩu",
+    "bookings": "Đơn đặt tour",
+    "favorites": "Địa điểm yêu thích",
+    "notifications": "Thông báo"
+  },
+  "breadcrumb": {
+    "home": "Trang chủ",
+    "profile": "Hồ sơ cá nhân",
+    "change_password": "Đổi mật khẩu"
+  },
+  "change_password": {
+    "page_title": "Đổi mật khẩu",
+    "meta_description": "Thay đổi mật khẩu tài khoản DaNangTrip của bạn một cách an toàn.",
+    "heading": "Đổi mật khẩu",
+    "description": "Bảo vệ tài khoản của bạn bằng mật khẩu mạnh và duy nhất.",
+    "current_password_label": "Mật khẩu hiện tại",
+    "current_password_placeholder": "Nhập mật khẩu hiện tại",
+    "new_password_label": "Mật khẩu mới",
+    "new_password_placeholder": "Nhập mật khẩu mới",
+    "confirm_password_label": "Xác nhận mật khẩu mới",
+    "confirm_password_placeholder": "Nhập lại mật khẩu mới",
+    "strength_label": "Độ mạnh mật khẩu",
+    "strength_weak": "Yếu",
+    "strength_fair": "Trung bình",
+    "strength_good": "Tốt",
+    "strength_strong": "Mạnh",
+    "checklist_min_length": "Ít nhất 8 ký tự",
+    "checklist_uppercase": "Có ít nhất 1 chữ hoa",
+    "checklist_lowercase": "Có ít nhất 1 chữ thường",
+    "checklist_number": "Có ít nhất 1 số",
+    "checklist_special": "Có ít nhất 1 ký tự đặc biệt (@$!%*?&)",
+    "checklist_match": "Mật khẩu xác nhận khớp",
+    "submit_button": "Đổi mật khẩu",
+    "cancel_button": "Hủy",
+    "success_toast": "Đổi mật khẩu thành công!",
+    "error_wrong_current": "Mật khẩu hiện tại không đúng.",
+    "error_generic": "Có lỗi xảy ra. Vui lòng thử lại sau."
+  }
 }

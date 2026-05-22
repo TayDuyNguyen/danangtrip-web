@@ -1,0 +1,968 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: visual-change-password.spec.ts >> Visual Test: Change Password Feature
+- Location: tests\visual-change-password.spec.ts:4:5
+
+# Error details
+
+```
+TimeoutError: page.fill: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator('input[type="email"]')
+
+```
+
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - banner [ref=e4]:
+        - generic [ref=e5]:
+          - link "D Đà Nẵng Trip" [ref=e6] [cursor=pointer]:
+            - /url: /
+            - generic [ref=e8]: D
+            - generic [ref=e9]: Đà Nẵng Trip
+          - navigation [ref=e10]:
+            - link "Trang chủ" [ref=e11] [cursor=pointer]:
+              - /url: /
+              - text: Trang chủ
+            - link "Địa điểm" [ref=e13] [cursor=pointer]:
+              - /url: /locations
+              - text: Địa điểm
+            - link "Tour du lịch" [ref=e14] [cursor=pointer]:
+              - /url: /tours
+              - text: Tour du lịch
+            - link "Blog" [ref=e15] [cursor=pointer]:
+              - /url: /blog
+              - text: Blog
+            - link "Liên hệ" [ref=e16] [cursor=pointer]:
+              - /url: /contact
+              - text: Liên hệ
+          - generic [ref=e17]:
+            - button "Tiếng Việt vi" [ref=e20]:
+              - img "Tiếng Việt" [ref=e22]
+              - generic [ref=e23]: vi
+              - img [ref=e24]
+            - button [ref=e27]:
+              - img [ref=e28]
+      - main [ref=e31]:
+        - generic [ref=e32]:
+          - img "Đà Nẵng Trip Hero" [ref=e34]
+          - generic [ref=e36]:
+            - generic [ref=e37]:
+              - paragraph [ref=e38]: Khám phá vẻ đẹp bất tận
+              - heading "Khám phá Đà Nẵng" [level=1] [ref=e39]
+              - paragraph [ref=e40]: Tìm kiếm địa điểm và tour du lịch tuyệt vời để bắt đầu chuyến hành trình của bạn
+            - generic [ref=e41]:
+              - generic [ref=e42]:
+                - img [ref=e43]
+                - textbox "Bạn muốn đi đâu?" [ref=e45]
+              - generic [ref=e48]:
+                - log [ref=e50]
+                - generic [ref=e51] [cursor=pointer]:
+                  - generic [ref=e52]:
+                    - generic [ref=e53]: Tất cả
+                    - combobox [ref=e54]
+                  - img [ref=e57]
+              - button "Tìm kiếm" [ref=e60]
+          - generic [ref=e61]:
+            - generic [ref=e62]: 01d
+            - generic [ref=e63]: 0°C · Không xác định
+        - generic [ref=e65]:
+          - generic [ref=e66]:
+            - img [ref=e68]
+            - generic [ref=e70]:
+              - generic [ref=e71]: 100+
+              - generic [ref=e72]: Địa điểm
+          - generic [ref=e73]:
+            - img [ref=e75]
+            - generic [ref=e77]:
+              - generic [ref=e78]: 100+
+              - generic [ref=e79]: Tour du lịch
+          - generic [ref=e80]:
+            - img [ref=e82]
+            - generic [ref=e84]:
+              - generic [ref=e85]: 100+
+              - generic [ref=e86]: Bài viết
+        - generic [ref=e88]:
+          - generic [ref=e89]:
+            - generic [ref=e92]: Khám phá vẻ đẹp bất tận
+            - heading "Khám phá theo Danh mục" [level=2] [ref=e94]
+            - paragraph [ref=e95]: Dễ dàng tìm thấy hành trình phù hợp với sở thích của bạn qua các chủ đề du lịch đặc sắc
+          - generic [ref=e96]:
+            - button "Trước" [ref=e97]:
+              - img [ref=e98]
+            - button "Tiếp theo" [ref=e100]:
+              - img [ref=e101]
+            - generic [ref=e103]:
+              - link "Cà phê & Trà sữa" [ref=e104] [cursor=pointer]:
+                - /url: /locations?categories=3
+                - img [ref=e107]
+                - heading "Cà phê & Trà sữa" [level=3] [ref=e110]
+              - link "Nhà hàng quốc tế" [ref=e111] [cursor=pointer]:
+                - /url: /locations?categories=2
+                - img [ref=e114]
+                - heading "Nhà hàng quốc tế" [level=3] [ref=e117]
+              - link "Updated 090807" [ref=e118] [cursor=pointer]:
+                - /url: /locations?categories=1
+                - img [ref=e121]
+                - heading "Updated 090807" [level=3] [ref=e124]
+              - link "Bar & Pub" [ref=e125] [cursor=pointer]:
+                - /url: /locations?categories=4
+                - img [ref=e128]
+                - heading "Bar & Pub" [level=3] [ref=e131]
+              - link "Khách sạn & Homestay" [ref=e132] [cursor=pointer]:
+                - /url: /locations?categories=6
+                - img [ref=e135]
+                - heading "Khách sạn & Homestay" [level=3] [ref=e138]
+              - link "Resort & Villa" [ref=e139] [cursor=pointer]:
+                - /url: /locations?categories=5
+                - img [ref=e142]
+                - heading "Resort & Villa" [level=3] [ref=e145]
+              - link "Điểm check-in nổi tiếng" [ref=e146] [cursor=pointer]:
+                - /url: /locations?categories=7
+                - img [ref=e149]
+                - heading "Điểm check-in nổi tiếng" [level=3] [ref=e152]
+              - link "Bảo tàng & Di tích" [ref=e153] [cursor=pointer]:
+                - /url: /locations?categories=8
+                - img [ref=e156]
+                - heading "Bảo tàng & Di tích" [level=3] [ref=e159]
+              - link "Hang động & Núi non" [ref=e160] [cursor=pointer]:
+                - /url: /locations?categories=9
+                - img [ref=e163]
+                - heading "Hang động & Núi non" [level=3] [ref=e166]
+              - link "Công viên & Vườn hoa" [ref=e167] [cursor=pointer]:
+                - /url: /locations?categories=10
+                - img [ref=e170]
+                - heading "Công viên & Vườn hoa" [level=3] [ref=e173]
+              - link "Điểm du lịch tâm linh" [ref=e174] [cursor=pointer]:
+                - /url: /locations?categories=11
+                - img [ref=e177]
+                - heading "Điểm du lịch tâm linh" [level=3] [ref=e180]
+              - link "Làng nghề truyền thống" [ref=e181] [cursor=pointer]:
+                - /url: /locations?categories=12
+                - img [ref=e184]
+                - heading "Làng nghề truyền thống" [level=3] [ref=e187]
+              - link "Trung tâm thương mại" [ref=e188] [cursor=pointer]:
+                - /url: /locations?categories=13
+                - img [ref=e191]
+                - heading "Trung tâm thương mại" [level=3] [ref=e194]
+              - link "Spa & Massage" [ref=e195] [cursor=pointer]:
+                - /url: /locations?categories=19
+                - img [ref=e198]
+                - heading "Spa & Massage" [level=3] [ref=e201]
+              - link "Chợ địa phương" [ref=e202] [cursor=pointer]:
+                - /url: /locations?categories=14
+                - img [ref=e205]
+                - heading "Chợ địa phương" [level=3] [ref=e208]
+              - link "Cửa hàng đặc sản" [ref=e209] [cursor=pointer]:
+                - /url: /locations?categories=15
+                - img [ref=e212]
+                - heading "Cửa hàng đặc sản" [level=3] [ref=e215]
+              - link "Công viên nước & Vui chơi" [ref=e216] [cursor=pointer]:
+                - /url: /locations?categories=16
+                - img [ref=e219]
+                - heading "Công viên nước & Vui chơi" [level=3] [ref=e222]
+              - link "Sân Golf & Tennis" [ref=e223] [cursor=pointer]:
+                - /url: /locations?categories=17
+                - img [ref=e226]
+                - heading "Sân Golf & Tennis" [level=3] [ref=e229]
+              - link "Phòng Gym & Yoga" [ref=e230] [cursor=pointer]:
+                - /url: /locations?categories=18
+                - img [ref=e233]
+                - heading "Phòng Gym & Yoga" [level=3] [ref=e236]
+              - link "Bệnh viện & Phòng khám" [ref=e237] [cursor=pointer]:
+                - /url: /locations?categories=20
+                - img [ref=e240]
+                - heading "Bệnh viện & Phòng khám" [level=3] [ref=e243]
+              - link "Nha khoa & Thẩm mỹ" [ref=e244] [cursor=pointer]:
+                - /url: /locations?categories=21
+                - img [ref=e247]
+                - heading "Nha khoa & Thẩm mỹ" [level=3] [ref=e250]
+              - link "Trường học & Trung tâm" [ref=e251] [cursor=pointer]:
+                - /url: /locations?categories=22
+                - img [ref=e254]
+                - heading "Trường học & Trung tâm" [level=3] [ref=e257]
+              - link "Ngân hàng & ATM" [ref=e258] [cursor=pointer]:
+                - /url: /locations?categories=23
+                - img [ref=e261]
+                - heading "Ngân hàng & ATM" [level=3] [ref=e264]
+              - link "Sân bay & Ga tàu" [ref=e265] [cursor=pointer]:
+                - /url: /locations?categories=24
+                - img [ref=e268]
+                - heading "Sân bay & Ga tàu" [level=3] [ref=e271]
+              - link "Thuê xe & Sửa xe" [ref=e272] [cursor=pointer]:
+                - /url: /locations?categories=25
+                - img [ref=e275]
+                - heading "Thuê xe & Sửa xe" [level=3] [ref=e278]
+              - link "Vận chuyển & Giao hàng" [ref=e279] [cursor=pointer]:
+                - /url: /locations?categories=26
+                - img [ref=e282]
+                - heading "Vận chuyển & Giao hàng" [level=3] [ref=e285]
+              - link "Cơ quan hành chính" [ref=e286] [cursor=pointer]:
+                - /url: /locations?categories=27
+                - img [ref=e289]
+                - heading "Cơ quan hành chính" [level=3] [ref=e292]
+              - link "Bưu điện & Viễn thông" [ref=e293] [cursor=pointer]:
+                - /url: /locations?categories=28
+                - img [ref=e296]
+                - heading "Bưu điện & Viễn thông" [level=3] [ref=e299]
+              - link "Điện máy & Công nghệ" [ref=e300] [cursor=pointer]:
+                - /url: /locations?categories=29
+                - img [ref=e303]
+                - heading "Điện máy & Công nghệ" [level=3] [ref=e306]
+              - link "Bất động sản" [ref=e307] [cursor=pointer]:
+                - /url: /locations?categories=30
+                - img [ref=e310]
+                - heading "Bất động sản" [level=3] [ref=e313]
+              - link "Luật sư & Công chứng" [ref=e314] [cursor=pointer]:
+                - /url: /locations?categories=31
+                - img [ref=e317]
+                - heading "Luật sư & Công chứng" [level=3] [ref=e320]
+              - link "Xăng dầu & Năng lượng" [ref=e321] [cursor=pointer]:
+                - /url: /locations?categories=32
+                - img [ref=e324]
+                - heading "Xăng dầu & Năng lượng" [level=3] [ref=e327]
+              - link "Giặt ủi & Vệ sinh" [ref=e328] [cursor=pointer]:
+                - /url: /locations?categories=33
+                - img [ref=e331]
+                - heading "Giặt ủi & Vệ sinh" [level=3] [ref=e334]
+              - link "Thú y & Chăm sóc thú cưng" [ref=e335] [cursor=pointer]:
+                - /url: /locations?categories=34
+                - img [ref=e338]
+                - heading "Thú y & Chăm sóc thú cưng" [level=3] [ref=e341]
+              - link "Studio & Phim trường" [ref=e342] [cursor=pointer]:
+                - /url: /locations?categories=35
+                - img [ref=e345]
+                - heading "Studio & Phim trường" [level=3] [ref=e348]
+              - link "Hải sản tươi sống" [ref=e349] [cursor=pointer]:
+                - /url: /locations?categories=36
+                - img [ref=e352]
+                - heading "Hải sản tươi sống" [level=3] [ref=e355]
+              - link "Hoa tươi & Quà tặng" [ref=e356] [cursor=pointer]:
+                - /url: /locations?categories=37
+                - img [ref=e359]
+                - heading "Hoa tươi & Quà tặng" [level=3] [ref=e362]
+              - link "Sách & Văn phòng phẩm" [ref=e363] [cursor=pointer]:
+                - /url: /locations?categories=38
+                - img [ref=e366]
+                - heading "Sách & Văn phòng phẩm" [level=3] [ref=e369]
+              - link "Thời trang & Phụ kiện" [ref=e370] [cursor=pointer]:
+                - /url: /locations?categories=39
+                - img [ref=e373]
+                - heading "Thời trang & Phụ kiện" [level=3] [ref=e376]
+              - link "Mỹ phẩm & Làm đẹp" [ref=e377] [cursor=pointer]:
+                - /url: /locations?categories=40
+                - img [ref=e380]
+                - heading "Mỹ phẩm & Làm đẹp" [level=3] [ref=e383]
+              - link "Đồ gia dụng & Nội thất" [ref=e384] [cursor=pointer]:
+                - /url: /locations?categories=41
+                - img [ref=e387]
+                - heading "Đồ gia dụng & Nội thất" [level=3] [ref=e390]
+              - link "Xây dựng & Vật liệu" [ref=e391] [cursor=pointer]:
+                - /url: /locations?categories=42
+                - img [ref=e394]
+                - heading "Xây dựng & Vật liệu" [level=3] [ref=e397]
+              - link "Tổ chức sự kiện" [ref=e398] [cursor=pointer]:
+                - /url: /locations?categories=43
+                - img [ref=e401]
+                - heading "Tổ chức sự kiện" [level=3] [ref=e404]
+              - link "Dịch vụ tang lễ" [ref=e405] [cursor=pointer]:
+                - /url: /locations?categories=44
+                - img [ref=e408]
+                - heading "Dịch vụ tang lễ" [level=3] [ref=e411]
+              - link "Quảng cáo & In ấn" [ref=e412] [cursor=pointer]:
+                - /url: /locations?categories=45
+                - img [ref=e415]
+                - heading "Quảng cáo & In ấn" [level=3] [ref=e418]
+              - link "Bảo vệ & An ninh" [ref=e419] [cursor=pointer]:
+                - /url: /locations?categories=46
+                - img [ref=e422]
+                - heading "Bảo vệ & An ninh" [level=3] [ref=e425]
+              - link "Tài chính & Bảo hiểm" [ref=e426] [cursor=pointer]:
+                - /url: /locations?categories=47
+                - img [ref=e429]
+                - heading "Tài chính & Bảo hiểm" [level=3] [ref=e432]
+              - link "Du lịch lữ hành" [ref=e433] [cursor=pointer]:
+                - /url: /locations?categories=48
+                - img [ref=e436]
+                - heading "Du lịch lữ hành" [level=3] [ref=e439]
+              - link "Dịch thuật & Visa" [ref=e440] [cursor=pointer]:
+                - /url: /locations?categories=49
+                - img [ref=e443]
+                - heading "Dịch thuật & Visa" [level=3] [ref=e446]
+              - link "Coworking Space" [ref=e447] [cursor=pointer]:
+                - /url: /locations?categories=50
+                - img [ref=e450]
+                - heading "Coworking Space" [level=3] [ref=e453]
+              - link "Nghệ thuật & Triển lãm" [ref=e454] [cursor=pointer]:
+                - /url: /locations?categories=51
+                - img [ref=e457]
+                - heading "Nghệ thuật & Triển lãm" [level=3] [ref=e460]
+              - link "Nhà hát & Rạp phim" [ref=e461] [cursor=pointer]:
+                - /url: /locations?categories=52
+                - img [ref=e464]
+                - heading "Nhà hát & Rạp phim" [level=3] [ref=e467]
+              - link "Thư viện & Không gian đọc" [ref=e468] [cursor=pointer]:
+                - /url: /locations?categories=53
+                - img [ref=e471]
+                - heading "Thư viện & Không gian đọc" [level=3] [ref=e474]
+              - link "Sân khấu & Ca nhạc" [ref=e475] [cursor=pointer]:
+                - /url: /locations?categories=54
+                - img [ref=e478]
+                - heading "Sân khấu & Ca nhạc" [level=3] [ref=e481]
+              - link "Trung tâm hội nghị" [ref=e482] [cursor=pointer]:
+                - /url: /locations?categories=55
+                - img [ref=e485]
+                - heading "Trung tâm hội nghị" [level=3] [ref=e488]
+              - link "Dịch vụ lưu trú cao cấp" [ref=e489] [cursor=pointer]:
+                - /url: /locations?categories=56
+                - img [ref=e492]
+                - heading "Dịch vụ lưu trú cao cấp" [level=3] [ref=e495]
+              - link "Cắm trại & Dã ngoại" [ref=e496] [cursor=pointer]:
+                - /url: /locations?categories=57
+                - img [ref=e499]
+                - heading "Cắm trại & Dã ngoại" [level=3] [ref=e502]
+              - link "Leo núi & Khám phá" [ref=e503] [cursor=pointer]:
+                - /url: /locations?categories=58
+                - img [ref=e506]
+                - heading "Leo núi & Khám phá" [level=3] [ref=e509]
+              - link "Lặn biển & Thể thao nước" [ref=e510] [cursor=pointer]:
+                - /url: /locations?categories=59
+                - img [ref=e513]
+                - heading "Lặn biển & Thể thao nước" [level=3] [ref=e516]
+              - link "Bay khinh khí cầu/Dù lượn" [ref=e517] [cursor=pointer]:
+                - /url: /locations?categories=60
+                - img [ref=e520]
+                - heading "Bay khinh khí cầu/Dù lượn" [level=3] [ref=e523]
+              - link "Trải nghiệm nông nghiệp" [ref=e524] [cursor=pointer]:
+                - /url: /locations?categories=61
+                - img [ref=e527]
+                - heading "Trải nghiệm nông nghiệp" [level=3] [ref=e530]
+              - link "Lớp học nấu ăn" [ref=e531] [cursor=pointer]:
+                - /url: /locations?categories=62
+                - img [ref=e534]
+                - heading "Lớp học nấu ăn" [level=3] [ref=e537]
+              - link "Thưởng thức trà đạo" [ref=e538] [cursor=pointer]:
+                - /url: /locations?categories=63
+                - img [ref=e541]
+                - heading "Thưởng thức trà đạo" [level=3] [ref=e544]
+              - link "Khám phá phố cổ" [ref=e545] [cursor=pointer]:
+                - /url: /locations?categories=64
+                - img [ref=e548]
+                - heading "Khám phá phố cổ" [level=3] [ref=e551]
+              - link "Chợ đêm & Phố đi bộ" [ref=e552] [cursor=pointer]:
+                - /url: /locations?categories=65
+                - img [ref=e555]
+                - heading "Chợ đêm & Phố đi bộ" [level=3] [ref=e558]
+              - link "Dịch vụ xe điện" [ref=e559] [cursor=pointer]:
+                - /url: /locations?categories=66
+                - img [ref=e562]
+                - heading "Dịch vụ xe điện" [level=3] [ref=e565]
+              - link "Tour trực thăng" [ref=e566] [cursor=pointer]:
+                - /url: /locations?categories=67
+                - img [ref=e569]
+                - heading "Tour trực thăng" [level=3] [ref=e572]
+              - link "Chụp ảnh cưới" [ref=e573] [cursor=pointer]:
+                - /url: /locations?categories=68
+                - img [ref=e576]
+                - heading "Chụp ảnh cưới" [level=3] [ref=e579]
+              - link "Dịch vụ trông trẻ" [ref=e580] [cursor=pointer]:
+                - /url: /locations?categories=69
+                - img [ref=e583]
+                - heading "Dịch vụ trông trẻ" [level=3] [ref=e586]
+              - link "Hỗ trợ người khuyết tật" [ref=e587] [cursor=pointer]:
+                - /url: /locations?categories=70
+                - img [ref=e590]
+                - heading "Hỗ trợ người khuyết tật" [level=3] [ref=e593]
+              - link "Thông tin du khách" [ref=e594] [cursor=pointer]:
+                - /url: /locations?categories=71
+                - img [ref=e597]
+                - heading "Thông tin du khách" [level=3] [ref=e600]
+              - link "Đổi ngoại tệ" [ref=e601] [cursor=pointer]:
+                - /url: /locations?categories=72
+                - img [ref=e604]
+                - heading "Đổi ngoại tệ" [level=3] [ref=e607]
+              - link "Vé tham quan & Show" [ref=e608] [cursor=pointer]:
+                - /url: /locations?categories=73
+                - img [ref=e611]
+                - heading "Vé tham quan & Show" [level=3] [ref=e614]
+              - link "Trang trí nội thất" [ref=e615] [cursor=pointer]:
+                - /url: /locations?categories=74
+                - img [ref=e618]
+                - heading "Trang trí nội thất" [level=3] [ref=e621]
+              - link "Hiệu thuốc & Dược phẩm" [ref=e622] [cursor=pointer]:
+                - /url: /locations?categories=76
+                - img [ref=e625]
+                - heading "Hiệu thuốc & Dược phẩm" [level=3] [ref=e628]
+              - link "Phòng thí nghiệm" [ref=e629] [cursor=pointer]:
+                - /url: /locations?categories=77
+                - img [ref=e632]
+                - heading "Phòng thí nghiệm" [level=3] [ref=e635]
+              - link "Chăm sóc người già" [ref=e636] [cursor=pointer]:
+                - /url: /locations?categories=78
+                - img [ref=e639]
+                - heading "Chăm sóc người già" [level=3] [ref=e642]
+              - link "Công ty phần mềm" [ref=e643] [cursor=pointer]:
+                - /url: /locations?categories=79
+                - img [ref=e646]
+                - heading "Công ty phần mềm" [level=3] [ref=e649]
+              - link "Khởi nghiệp & Tech hub" [ref=e650] [cursor=pointer]:
+                - /url: /locations?categories=80
+                - img [ref=e653]
+                - heading "Khởi nghiệp & Tech hub" [level=3] [ref=e656]
+              - link "Thiết kế đồ họa" [ref=e657] [cursor=pointer]:
+                - /url: /locations?categories=81
+                - img [ref=e660]
+                - heading "Thiết kế đồ họa" [level=3] [ref=e663]
+              - link "Văn phòng đại diện" [ref=e664] [cursor=pointer]:
+                - /url: /locations?categories=82
+                - img [ref=e667]
+                - heading "Văn phòng đại diện" [level=3] [ref=e670]
+              - link "Khu công nghiệp" [ref=e671] [cursor=pointer]:
+                - /url: /locations?categories=83
+                - img [ref=e674]
+                - heading "Khu công nghiệp" [level=3] [ref=e677]
+              - link "Kho bãi & Logistic" [ref=e678] [cursor=pointer]:
+                - /url: /locations?categories=84
+                - img [ref=e681]
+                - heading "Kho bãi & Logistic" [level=3] [ref=e684]
+              - link "Dịch vụ hải quan" [ref=e685] [cursor=pointer]:
+                - /url: /locations?categories=85
+                - img [ref=e688]
+                - heading "Dịch vụ hải quan" [level=3] [ref=e691]
+              - link "Nông sản sạch" [ref=e692] [cursor=pointer]:
+                - /url: /locations?categories=86
+                - img [ref=e695]
+                - heading "Nông sản sạch" [level=3] [ref=e698]
+              - link "Thực phẩm chức năng" [ref=e699] [cursor=pointer]:
+                - /url: /locations?categories=87
+                - img [ref=e702]
+                - heading "Thực phẩm chức năng" [level=3] [ref=e705]
+              - link "Rượu vang & Đồ uống cao cấp" [ref=e706] [cursor=pointer]:
+                - /url: /locations?categories=88
+                - img [ref=e709]
+                - heading "Rượu vang & Đồ uống cao cấp" [level=3] [ref=e712]
+              - link "Sửa chữa điện tử" [ref=e713] [cursor=pointer]:
+                - /url: /locations?categories=89
+                - img [ref=e716]
+                - heading "Sửa chữa điện tử" [level=3] [ref=e719]
+              - link "Phát triển bền vững" [ref=e720] [cursor=pointer]:
+                - /url: /locations?categories=90
+                - img [ref=e723]
+                - heading "Phát triển bền vững" [level=3] [ref=e726]
+              - link "Hoạt động cộng đồng" [ref=e727] [cursor=pointer]:
+                - /url: /locations?categories=91
+                - img [ref=e730]
+                - heading "Hoạt động cộng đồng" [level=3] [ref=e733]
+              - link "Tổ chức phi lợi nhuận" [ref=e734] [cursor=pointer]:
+                - /url: /locations?categories=92
+                - img [ref=e737]
+                - heading "Tổ chức phi lợi nhuận" [level=3] [ref=e740]
+              - link "Nghiên cứu văn hóa" [ref=e741] [cursor=pointer]:
+                - /url: /locations?categories=93
+                - img [ref=e744]
+                - heading "Nghiên cứu văn hóa" [level=3] [ref=e747]
+              - link "Khảo cổ học" [ref=e748] [cursor=pointer]:
+                - /url: /locations?categories=94
+                - img [ref=e751]
+                - heading "Khảo cổ học" [level=3] [ref=e754]
+              - link "Dịch vụ cứu hộ" [ref=e755] [cursor=pointer]:
+                - /url: /locations?categories=96
+                - img [ref=e758]
+                - heading "Dịch vụ cứu hộ" [level=3] [ref=e761]
+              - link "Phòng cháy chữa cháy" [ref=e762] [cursor=pointer]:
+                - /url: /locations?categories=97
+                - img [ref=e765]
+                - heading "Phòng cháy chữa cháy" [level=3] [ref=e768]
+              - link "An toàn lao động" [ref=e769] [cursor=pointer]:
+                - /url: /locations?categories=98
+                - img [ref=e772]
+                - heading "An toàn lao động" [level=3] [ref=e775]
+              - link "Tư vấn quản trị" [ref=e776] [cursor=pointer]:
+                - /url: /locations?categories=100
+                - img [ref=e779]
+                - heading "Tư vấn quản trị" [level=3] [ref=e782]
+              - link "Test save 090406" [ref=e783] [cursor=pointer]:
+                - /url: /locations?categories=101
+                - img [ref=e786]
+                - heading "Test save 090406" [level=3] [ref=e789]
+        - generic [ref=e791]:
+          - generic [ref=e793]:
+            - generic [ref=e796]: Khám phá Đà Nẵng
+            - heading "Địa điểm Nổi bật" [level=2] [ref=e797]
+          - generic [ref=e798]:
+            - button "Tất cả" [ref=e799]
+            - button "Cà phê & Trà sữa" [ref=e800]
+            - button "Nhà hàng quốc tế" [ref=e801]
+            - button "Updated 090807" [ref=e802]
+            - button "Bar & Pub" [ref=e803]
+            - button "Khách sạn & Homestay" [ref=e804]
+          - generic [ref=e805]:
+            - button "Tiếp theo" [ref=e806]:
+              - img [ref=e807]
+            - generic [ref=e809]:
+              - link "Cong Coffee 98-96 Bach Dang, Da Nang Cong Coffee" [ref=e811] [cursor=pointer]:
+                - /url: /locations?q=Cong%20Coffee
+                - generic [ref=e812]:
+                  - img "Cong Coffee" [ref=e813]
+                  - button [ref=e815]:
+                    - img [ref=e816]
+                  - generic [ref=e818]:
+                    - generic [ref=e819]:
+                      - img [ref=e820]
+                      - text: 98-96 Bach Dang, Da Nang
+                    - heading "Cong Coffee" [level=3] [ref=e822]
+              - link "Helio Night Market 2 Thang 9, Da Nang Helio Night Market" [ref=e824] [cursor=pointer]:
+                - /url: /locations?q=Helio%20Night%20Market
+                - generic [ref=e825]:
+                  - img "Helio Night Market" [ref=e826]
+                  - button [ref=e828]:
+                    - img [ref=e829]
+                  - generic [ref=e831]:
+                    - generic [ref=e832]:
+                      - img [ref=e833]
+                      - text: 2 Thang 9, Da Nang
+                    - heading "Helio Night Market" [level=3] [ref=e835]
+              - link "Con Market 290 Hung Vuong, Da Nang Con Market" [ref=e837] [cursor=pointer]:
+                - /url: /locations?q=Con%20Market
+                - generic [ref=e838]:
+                  - img "Con Market" [ref=e839]
+                  - button [ref=e841]:
+                    - img [ref=e842]
+                  - generic [ref=e844]:
+                    - generic [ref=e845]:
+                      - img [ref=e846]
+                      - text: 290 Hung Vuong, Da Nang
+                    - heading "Con Market" [level=3] [ref=e848]
+              - link "Han Market 119 Tran Phu, Da Nang Han Market" [ref=e850] [cursor=pointer]:
+                - /url: /locations?q=Han%20Market
+                - generic [ref=e851]:
+                  - img "Han Market" [ref=e852]
+                  - button [ref=e854]:
+                    - img [ref=e855]
+                  - generic [ref=e857]:
+                    - generic [ref=e858]:
+                      - img [ref=e859]
+                      - text: 119 Tran Phu, Da Nang
+                    - heading "Han Market" [level=3] [ref=e861]
+              - link "International Fireworks Festival Han River Port, Da Nang International Fireworks Festival" [ref=e863] [cursor=pointer]:
+                - /url: /locations?q=International%20Fireworks%20Festival
+                - generic [ref=e864]:
+                  - img "International Fireworks Festival" [ref=e865]
+                  - button [ref=e867]:
+                    - img [ref=e868]
+                  - generic [ref=e870]:
+                    - generic [ref=e871]:
+                      - img [ref=e872]
+                      - text: Han River Port, Da Nang
+                    - heading "International Fireworks Festival" [level=3] [ref=e874]
+              - link "Lunar New Year Festival 29/3 Park, Da Nang Lunar New Year Festival" [ref=e876] [cursor=pointer]:
+                - /url: /locations?q=Lunar%20New%20Year%20Festival
+                - generic [ref=e877]:
+                  - img "Lunar New Year Festival" [ref=e878]
+                  - button [ref=e880]:
+                    - img [ref=e881]
+                  - generic [ref=e883]:
+                    - generic [ref=e884]:
+                      - img [ref=e885]
+                      - text: 29/3 Park, Da Nang
+                    - heading "Lunar New Year Festival" [level=3] [ref=e887]
+              - link "New Year Festival 2026 East Sea Park, Da Nang New Year Festival 2026" [ref=e889] [cursor=pointer]:
+                - /url: /locations?q=New%20Year%20Festival%202026
+                - generic [ref=e890]:
+                  - img "New Year Festival 2026" [ref=e891]
+                  - button [ref=e893]:
+                    - img [ref=e894]
+                  - generic [ref=e896]:
+                    - generic [ref=e897]:
+                      - img [ref=e898]
+                      - text: East Sea Park, Da Nang
+                    - heading "New Year Festival 2026" [level=3] [ref=e900]
+              - link "InterContinental Resort Son Tra Peninsula, Da Nang InterContinental Resort" [ref=e902] [cursor=pointer]:
+                - /url: /locations?q=InterContinental%20Resort
+                - generic [ref=e903]:
+                  - img "InterContinental Resort" [ref=e904]
+                  - button [ref=e906]:
+                    - img [ref=e907]
+                  - generic [ref=e909]:
+                    - generic [ref=e910]:
+                      - img [ref=e911]
+                      - text: Son Tra Peninsula, Da Nang
+                    - heading "InterContinental Resort" [level=3] [ref=e913]
+        - generic [ref=e915]:
+          - generic [ref=e916]:
+            - heading "Danh mục Tour" [level=2] [ref=e917]
+            - link "Xem tất cả" [ref=e918] [cursor=pointer]:
+              - /url: /tours
+          - generic [ref=e919]:
+            - link "Tour Phố Cổ Hội An Khám phá ngay" [ref=e920] [cursor=pointer]:
+              - /url: /tours?tour_category_id=2
+              - img [ref=e922]
+              - generic [ref=e924]: Tour Phố Cổ Hội An
+              - generic [ref=e925]: Khám phá ngay
+            - link "Tour Bà Nà Hills Khám phá ngay" [ref=e926] [cursor=pointer]:
+              - /url: /tours?tour_category_id=1
+              - img [ref=e928]
+              - generic [ref=e930]: Tour Bà Nà Hills
+              - generic [ref=e931]: Khám phá ngay
+            - link "Tour Cố Đô Huế Khám phá ngay" [ref=e932] [cursor=pointer]:
+              - /url: /tours?tour_category_id=3
+              - img [ref=e934]
+              - generic [ref=e936]: Tour Cố Đô Huế
+              - generic [ref=e937]: Khám phá ngay
+            - link "Tour Biển & Đảo Khám phá ngay" [ref=e938] [cursor=pointer]:
+              - /url: /tours?tour_category_id=4
+              - img [ref=e940]
+              - generic [ref=e942]: Tour Biển & Đảo
+              - generic [ref=e943]: Khám phá ngay
+            - link "Tour Khám Phá Thiên Nhiên Khám phá ngay" [ref=e944] [cursor=pointer]:
+              - /url: /tours?tour_category_id=5
+              - img [ref=e946]
+              - generic [ref=e948]: Tour Khám Phá Thiên Nhiên
+              - generic [ref=e949]: Khám phá ngay
+            - link "Tour Ẩm Thực Khám phá ngay" [ref=e950] [cursor=pointer]:
+              - /url: /tours?tour_category_id=6
+              - img [ref=e952]
+              - generic [ref=e954]: Tour Ẩm Thực
+              - generic [ref=e955]: Khám phá ngay
+        - generic [ref=e957]:
+          - generic [ref=e958]:
+            - generic [ref=e959]:
+              - generic [ref=e962]: Khám phá
+              - heading "Tour Nổi bật" [level=2] [ref=e963]
+            - link "Xem tất cả →" [ref=e964] [cursor=pointer]:
+              - /url: /tours
+              - text: Xem tất cả
+              - generic [ref=e965]: →
+          - generic [ref=e966]:
+            - generic [ref=e967]:
+              - generic [ref=e968]:
+                - img "Tour Bà Nà Hills 1 Ngày (Buffet Trưa)" [ref=e969]
+                - generic [ref=e970]: ⭐ Xu hướng
+              - generic [ref=e971]:
+                - generic [ref=e972]: Tour Đặc biệt
+                - heading "Tour Bà Nà Hills 1 Ngày (Buffet Trưa)" [level=3] [ref=e973]
+                - generic [ref=e974]:
+                  - generic [ref=e975]:
+                    - img [ref=e976]
+                    - generic [ref=e978]: 1 ngày
+                  - generic [ref=e979]:
+                    - img [ref=e980]
+                    - generic [ref=e982]: 45 khách
+                - generic [ref=e985]: 1.250.000 ₫
+                - link "Đặt ngay" [ref=e986] [cursor=pointer]:
+                  - /url: /tours/tour-ba-na-hills-1-ngay
+            - generic [ref=e987]:
+              - generic [ref=e988]:
+                - img "Tour Cố Đô Huế 1 Ngày từ Đà Nẵng" [ref=e989]
+                - generic [ref=e990]: ⭐ Xu hướng
+              - generic [ref=e991]:
+                - generic [ref=e992]: Tour Đặc biệt
+                - heading "Tour Cố Đô Huế 1 Ngày từ Đà Nẵng" [level=3] [ref=e993]
+                - generic [ref=e994]:
+                  - generic [ref=e995]:
+                    - img [ref=e996]
+                    - generic [ref=e998]: 1 ngày
+                  - generic [ref=e999]:
+                    - img [ref=e1000]
+                    - generic [ref=e1002]: 40 khách
+                - generic [ref=e1005]: 1.050.000 ₫
+                - link "Đặt ngay" [ref=e1006] [cursor=pointer]:
+                  - /url: /tours/tour-hue-1-ngay
+        - generic [ref=e1008]:
+          - generic [ref=e1009]:
+            - generic [ref=e1010]:
+              - generic [ref=e1011]:
+                - img [ref=e1012]
+                - generic [ref=e1014]: Trending Now
+              - heading "Tour Hot Nhất Tuần" [level=2] [ref=e1015]
+            - link "Khám phá thêm →" [ref=e1016] [cursor=pointer]:
+              - /url: /tours
+              - text: Khám phá thêm
+              - generic [ref=e1017]: →
+          - generic [ref=e1018]:
+            - generic [ref=e1019]:
+              - generic [ref=e1020]:
+                - img "Tour Bà Nà Hills 1 Ngày (Buffet Trưa)" [ref=e1021]
+                - generic [ref=e1022]: Hot
+              - generic [ref=e1023]:
+                - heading "Tour Bà Nà Hills 1 Ngày (Buffet Trưa)" [level=3] [ref=e1024]
+                - generic [ref=e1025]:
+                  - generic [ref=e1026]:
+                    - img [ref=e1027]
+                    - generic [ref=e1029]: 1 ngày
+                  - generic [ref=e1030]:
+                    - img [ref=e1031]
+                    - generic [ref=e1033]: 45 khách
+                - generic [ref=e1034]:
+                  - generic [ref=e1036]:
+                    - generic [ref=e1037]: Giá từ
+                    - generic [ref=e1038]: 1.250.000 ₫
+                  - link "→" [ref=e1039] [cursor=pointer]:
+                    - /url: /tours/tour-ba-na-hills-1-ngay
+                    - generic [ref=e1040]: →
+            - generic [ref=e1041]:
+              - generic [ref=e1042]:
+                - img "Tour Đêm Phố Cổ Hội An & Ăn Tối" [ref=e1043]
+                - generic [ref=e1044]: Hot
+              - generic [ref=e1045]:
+                - heading "Tour Đêm Phố Cổ Hội An & Ăn Tối" [level=3] [ref=e1046]
+                - generic [ref=e1047]:
+                  - generic [ref=e1048]:
+                    - img [ref=e1049]
+                    - generic [ref=e1051]: 5 giờ
+                  - generic [ref=e1052]:
+                    - img [ref=e1053]
+                    - generic [ref=e1055]: 25 khách
+                - generic [ref=e1056]:
+                  - generic [ref=e1058]:
+                    - generic [ref=e1059]: Giá từ
+                    - generic [ref=e1060]: 600.000 ₫
+                  - link "→" [ref=e1061] [cursor=pointer]:
+                    - /url: /tours/tour-dem-hoi-an
+                    - generic [ref=e1062]: →
+            - generic [ref=e1063]:
+              - generic [ref=e1064]:
+                - img "Tour Bà Nà Hills Đêm (Sun World Night)" [ref=e1065]
+                - generic [ref=e1066]: Hot
+              - generic [ref=e1067]:
+                - heading "Tour Bà Nà Hills Đêm (Sun World Night)" [level=3] [ref=e1068]
+                - generic [ref=e1069]:
+                  - generic [ref=e1070]:
+                    - img [ref=e1071]
+                    - generic [ref=e1073]: 1 ngày
+                  - generic [ref=e1074]:
+                    - img [ref=e1075]
+                    - generic [ref=e1077]: 50 khách
+                - generic [ref=e1078]:
+                  - generic [ref=e1080]:
+                    - generic [ref=e1081]: Giá từ
+                    - generic [ref=e1082]: 950.000 ₫
+                  - link "→" [ref=e1083] [cursor=pointer]:
+                    - /url: /tours/tour-ba-na-night
+                    - generic [ref=e1084]: →
+            - generic [ref=e1085]:
+              - generic [ref=e1086]:
+                - img "Street Food Tour Đà Nẵng bằng Xe Máy" [ref=e1087]
+                - generic [ref=e1088]: Hot
+              - generic [ref=e1089]:
+                - heading "Street Food Tour Đà Nẵng bằng Xe Máy" [level=3] [ref=e1090]
+                - generic [ref=e1091]:
+                  - generic [ref=e1092]:
+                    - img [ref=e1093]
+                    - generic [ref=e1095]: 4 giờ
+                  - generic [ref=e1096]:
+                    - img [ref=e1097]
+                    - generic [ref=e1099]: 10 khách
+                - generic [ref=e1100]:
+                  - generic [ref=e1102]:
+                    - generic [ref=e1103]: Giá từ
+                    - generic [ref=e1104]: 650.000 ₫
+                  - link "→" [ref=e1105] [cursor=pointer]:
+                    - /url: /tours/tour-street-food-danang
+                    - generic [ref=e1106]: →
+        - generic [ref=e1108]:
+          - generic [ref=e1109]:
+            - generic [ref=e1110]:
+              - generic [ref=e1113]: Cập nhật mới nhất
+              - heading "Cẩm nang Du lịch" [level=2] [ref=e1114]
+            - link "Tất cả bài viết" [ref=e1115] [cursor=pointer]:
+              - /url: /blog
+              - text: Tất cả bài viết
+              - img [ref=e1116]
+          - generic [ref=e1118]:
+            - article [ref=e1119]:
+              - link "Why You Must Add Central Vietnam to Your Southeast Asia Itinerary Cẩm Nang Du Lịch 12/5/2026 Why You Must Add Central Vietnam to Your Southeast Asia Itinerary DT Lê Thị Thanh Thảo Đọc thêm" [ref=e1120] [cursor=pointer]:
+                - /url: /blog?q=Why%20You%20Must%20Add%20Central%20Vietnam%20to%20Your%20Southeast%20Asia%20Itinerary
+                - generic [ref=e1121]:
+                  - img "Why You Must Add Central Vietnam to Your Southeast Asia Itinerary" [ref=e1122]
+                  - generic [ref=e1124]: Cẩm Nang Du Lịch
+                - generic [ref=e1125]:
+                  - generic [ref=e1126]:
+                    - img [ref=e1127]
+                    - text: 12/5/2026
+                  - heading "Why You Must Add Central Vietnam to Your Southeast Asia Itinerary" [level=3] [ref=e1129]
+                  - generic [ref=e1130]:
+                    - generic [ref=e1131]:
+                      - generic [ref=e1133]: DT
+                      - generic [ref=e1134]: Lê Thị Thanh Thảo
+                    - generic [ref=e1135]:
+                      - text: Đọc thêm
+                      - img [ref=e1136]
+            - article [ref=e1138]:
+              - link "5 Reasons Why Central Vietnam Exceeded My Expectations Cẩm Nang Du Lịch 12/5/2026 5 Reasons Why Central Vietnam Exceeded My Expectations DT Lê Thị Thanh Thảo Đọc thêm" [ref=e1139] [cursor=pointer]:
+                - /url: /blog?q=5%20Reasons%20Why%20Central%20Vietnam%20Exceeded%20My%20Expectations
+                - generic [ref=e1140]:
+                  - img "5 Reasons Why Central Vietnam Exceeded My Expectations" [ref=e1141]
+                  - generic [ref=e1143]: Cẩm Nang Du Lịch
+                - generic [ref=e1144]:
+                  - generic [ref=e1145]:
+                    - img [ref=e1146]
+                    - text: 12/5/2026
+                  - heading "5 Reasons Why Central Vietnam Exceeded My Expectations" [level=3] [ref=e1148]
+                  - generic [ref=e1149]:
+                    - generic [ref=e1150]:
+                      - generic [ref=e1152]: DT
+                      - generic [ref=e1153]: Lê Thị Thanh Thảo
+                    - generic [ref=e1154]:
+                      - text: Đọc thêm
+                      - img [ref=e1155]
+            - article [ref=e1157]:
+              - link "A Love Letter to the People of Central Vietnam Lịch Trình Gợi Ý 12/5/2026 A Love Letter to the People of Central Vietnam DT Lê Thị Thanh Thảo Đọc thêm" [ref=e1158] [cursor=pointer]:
+                - /url: /blog?q=A%20Love%20Letter%20to%20the%20People%20of%20Central%20Vietnam
+                - generic [ref=e1159]:
+                  - img "A Love Letter to the People of Central Vietnam" [ref=e1160]
+                  - generic [ref=e1162]: Lịch Trình Gợi Ý
+                - generic [ref=e1163]:
+                  - generic [ref=e1164]:
+                    - img [ref=e1165]
+                    - text: 12/5/2026
+                  - heading "A Love Letter to the People of Central Vietnam" [level=3] [ref=e1167]
+                  - generic [ref=e1168]:
+                    - generic [ref=e1169]:
+                      - generic [ref=e1171]: DT
+                      - generic [ref=e1172]: Lê Thị Thanh Thảo
+                    - generic [ref=e1173]:
+                      - text: Đọc thêm
+                      - img [ref=e1174]
+      - contentinfo [ref=e1176]:
+        - generic [ref=e1178]:
+          - generic [ref=e1179]:
+            - generic [ref=e1180]:
+              - link "D Đà Nẵng Trip" [ref=e1181] [cursor=pointer]:
+                - /url: /
+                - generic [ref=e1183]: D
+                - generic [ref=e1184]: Đà Nẵng Trip
+              - paragraph [ref=e1185]: Nền tảng du lịch năng động nhất Đà Nẵng, mang đến cho bạn những trải nghiệm độc bản, sôi động và đầy hứng khởi tại thành phố đáng sống nhất Việt Nam.
+              - generic [ref=e1186]:
+                - img [ref=e1188]
+                - img [ref=e1191]
+                - img [ref=e1194]
+                - link [ref=e1196] [cursor=pointer]:
+                  - /url: /contact
+                  - img [ref=e1197]
+            - generic [ref=e1199]:
+              - heading "Khám phá" [level=4] [ref=e1200]
+              - list [ref=e1201]:
+                - listitem [ref=e1202]:
+                  - link "Địa điểm" [ref=e1203] [cursor=pointer]:
+                    - /url: /locations
+                - listitem [ref=e1204]:
+                  - link "Tour du lịch" [ref=e1205] [cursor=pointer]:
+                    - /url: /tours
+                - listitem [ref=e1206]:
+                  - link "Blog" [ref=e1207] [cursor=pointer]:
+                    - /url: /blog
+                - listitem [ref=e1208]:
+                  - link "Liên hệ" [ref=e1209] [cursor=pointer]:
+                    - /url: /contact
+            - generic [ref=e1210]:
+              - heading "Hỗ trợ" [level=4] [ref=e1211]
+              - list [ref=e1212]:
+                - listitem [ref=e1213]:
+                  - link "Liên hệ" [ref=e1214] [cursor=pointer]:
+                    - /url: /contact
+                - listitem [ref=e1215]:
+                  - link "Trung tâm hỗ trợ" [ref=e1216] [cursor=pointer]:
+                    - /url: /contact
+                - listitem [ref=e1217]:
+                  - generic [ref=e1218]: Điều khoản dịch vụ — Sắp ra mắt
+                - listitem [ref=e1219]:
+                  - generic [ref=e1220]: Chính sách bảo mật — Sắp ra mắt
+            - generic [ref=e1221]:
+              - heading "Liên hệ" [level=4] [ref=e1222]
+              - list [ref=e1223]:
+                - listitem [ref=e1224]:
+                  - generic [ref=e1225]: "Hotline:"
+                  - link "0123 456 789" [ref=e1226] [cursor=pointer]:
+                    - /url: tel:0123 456 789
+                - listitem [ref=e1227]:
+                  - generic [ref=e1228]: "Email:"
+                  - link "info@danangtrip.com" [ref=e1229] [cursor=pointer]:
+                    - /url: mailto:info@danangtrip.com
+                - listitem [ref=e1230]:
+                  - generic [ref=e1231]: "Địa chỉ:"
+                  - generic [ref=e1232]: 99 Phố Tiếp, Quận Thanh Khê, Đà Nẵng
+          - paragraph [ref=e1234]: © 2026 Đà Nẵng Trip
+    - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e1240] [cursor=pointer]:
+    - img [ref=e1241]
+  - alert [ref=e1244]
+```
+
+# Test source
+
+```ts
+  1  | import { test, expect } from '@playwright/test';
+  2  | import * as path from 'path';
+  3  | 
+  4  | test('Visual Test: Change Password Feature', async ({ page }) => {
+  5  |   const brainDir = 'C:\\Users\\TUF\\.gemini\\antigravity\\brain\\2662a242-c72a-459e-bc74-454898c72ea0';
+  6  |   const screenshot1 = path.join(brainDir, 'change_password_1_initial.png');
+  7  |   const screenshot2 = path.join(brainDir, 'change_password_2_filled_strong.png');
+  8  |   const screenshot3 = path.join(brainDir, 'change_password_3_success_toast.png');
+  9  | 
+  10 |   console.log('1. Navigating to http://localhost:3000/vi/login');
+  11 |   await page.goto('http://localhost:3000/vi/login');
+  12 |   await page.waitForLoadState('networkidle');
+  13 | 
+  14 |   console.log('2. Entering email and password to log in...');
+> 15 |   await page.fill('input[type="email"]', 'hatran@gmail.com');
+     |              ^ TimeoutError: page.fill: Timeout 30000ms exceeded.
+  16 |   await page.fill('input[type="password"]', 'password');
+  17 |   
+  18 |   const loginApiDone = page.waitForResponse(
+  19 |     r => r.url().includes('/auth/login') && r.status() === 200,
+  20 |     { timeout: 40000 }
+  21 |   );
+  22 |   await page.click('button[type="submit"]');
+  23 |   await loginApiDone;
+  24 |   await page.waitForTimeout(4000); // Wait for Next.js to fully redirect and update UI
+  25 | 
+  26 |   console.log('3. Navigating to http://localhost:3000/vi/profile/password');
+  27 |   await page.goto('http://localhost:3000/vi/profile/password');
+  28 |   await page.waitForLoadState('networkidle');
+  29 |   await page.waitForTimeout(2000); // Ensure form is rendered
+  30 | 
+  31 |   console.log('4. Saving screenshot 1: Initial empty form...');
+  32 |   await page.screenshot({ path: screenshot1, fullPage: true });
+  33 | 
+  34 |   console.log('5. Filling in Current Password...');
+  35 |   await page.fill('#current-password', 'password');
+  36 | 
+  37 |   console.log('6. Filling in New Password and Confirm Password (Strong)...');
+  38 |   await page.fill('#new-password', 'SecurePass123!');
+  39 |   await page.fill('#confirm-password', 'SecurePass123!');
+  40 |   await page.waitForTimeout(1000); // Allow UI to update strength meter
+  41 | 
+  42 |   console.log('7. Saving screenshot 2: Strong strength meter and checklist...');
+  43 |   await page.screenshot({ path: screenshot2, fullPage: true });
+  44 | 
+  45 |   console.log('8. Clicking submit to change password...');
+  46 |   const changePasswordApiDone = page.waitForResponse(
+  47 |     r => r.url().includes('/user/password') && r.status() === 200,
+  48 |     { timeout: 40000 }
+  49 |   );
+  50 |   await page.click('#password-change-submit');
+  51 |   await changePasswordApiDone;
+  52 | 
+  53 |   console.log('9. Waiting for the success toast to appear...');
+  54 |   const successToast = page.locator(':text("Đổi mật khẩu thành công!")');
+  55 |   await expect(successToast).toBeVisible({ timeout: 15000 });
+  56 | 
+  57 |   console.log('10. Saving screenshot 3: Success toast and cleared form...');
+  58 |   await page.screenshot({ path: screenshot3, fullPage: true });
+  59 | 
+  60 |   console.log('Visual Test Completed successfully.');
+  61 | });
+  62 | 
+```
