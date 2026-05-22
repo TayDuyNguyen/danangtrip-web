@@ -46,6 +46,5 @@ export interface ResetPasswordRequest {
 }
 
 export interface VerifyEmailRequest {
-  token?: string;
-  code?: string;
+  otp: string;
 }

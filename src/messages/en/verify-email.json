@@ -1,0 +1,50 @@
+{
+  "meta_title": "Email Verification | DaNangTrip",
+  "meta_description": "Verify your DaNangTrip account using the email link or an OTP code.",
+  "brand_name": "DaNangTrip",
+  
+  "verifying": {
+    "title": "Verifying your email...",
+    "subtitle": "Please wait a moment while we process your request."
+  },
+  
+  "otp": {
+    "title": "Verify your email",
+    "subtitle": "We have sent a verification code to:",
+    "description": "Please enter the 6-digit OTP code to activate your account.",
+    "placeholder": "Enter OTP code",
+    "submit_btn": "Verify",
+    "submitting": "Processing..."
+  },
+  
+  "success": {
+    "title": "Email verified successfully!",
+    "subtitle": "Your account has been successfully activated.",
+    "redirect": "Redirecting automatically in {seconds} seconds...",
+    "home_btn": "Back to Home"
+  },
+  
+  "failure": {
+    "title": "Verification Failed",
+    "token_expired": "The verification code has expired or is invalid. Please request a new email.",
+    "token_invalid": "The verification token is incorrect or has already been used.",
+    "otp_invalid": "The OTP code is incorrect. Please try again.",
+    "otp_attempts_left": "Incorrect OTP code. You have {count} attempts left.",
+    "general_error": "An error occurred during verification. Please try again later.",
+    "retry_btn": "Try OTP again"
+  },
+  
+  "resend": {
+    "prompt": "Didn't receive the email?",
+    "btn": "Resend email",
+    "countdown": "Resend in {seconds}s",
+    "success_toast": "Verification email resent!"
+  },
+  
+  "already_verified": {
+    "title": "Email already verified",
+    "subtitle": "Your account is already active. You can now use all our services.",
+    "home_btn": "Back to Home"
+  },
+  "back_to_login": "Back to Login"
+}
