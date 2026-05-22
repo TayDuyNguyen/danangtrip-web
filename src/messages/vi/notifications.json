@@ -1,0 +1,41 @@
+{
+  "meta_title": "Thông báo của tôi",
+  "meta_description": "Xem và quản lý các thông báo cá nhân, đơn đặt phòng, đánh giá và khuyến mãi tại DanangTrip.",
+  "page_title": "Thông báo",
+  "unread_count": "{count, plural, =0 {Không có thông báo chưa đọc} =1 {1 thông báo chưa đọc} other {# thông báo chưa đọc}}",
+  "mark_all_read": "Đánh dấu tất cả đã đọc",
+  "mark_as_read": "Đánh dấu đã đọc",
+  "delete": "Xóa thông báo",
+  "delete_all": "Xóa tất cả",
+  "retry": "Tải lại",
+  "view_detail": "Xem chi tiết",
+  "empty_state_all": "Không có thông báo nào",
+  "empty_state_all_desc": "Bạn chưa nhận được bất kỳ thông báo nào. Các cập nhật về đơn hàng, khuyến mãi và hệ thống sẽ xuất hiện ở đây.",
+  "empty_state_unread": "Tuyệt vời! Không có thông báo chưa đọc",
+  "empty_state_unread_desc": "Bạn đã đọc tất cả các thông báo. Hãy tiếp tục khám phá Đà Nẵng nhé!",
+  "explore_button": "Khám phá ngay",
+  "time_ago": {
+    "just_now": "Vừa xong",
+    "minutes": "{count} phút trước",
+    "hours": "{count} giờ trước",
+    "days": "{count} ngày trước",
+    "months": "{count} tháng trước"
+  },
+  "types": {
+    "all": "Tất cả",
+    "unread": "Chưa đọc",
+    "booking": "Giao dịch & Đặt phòng",
+    "rating": "Đánh giá & Phản hồi",
+    "system": "Hệ thống & Tài khoản",
+    "promotion": "Ưu đãi & Khuyến mãi"
+  },
+  "toasts": {
+    "marked_read": "Đã đánh dấu thông báo là đã đọc",
+    "marked_all_read": "Đã đánh dấu tất cả thông báo là đã đọc",
+    "removed": "Đã xóa thông báo thành công",
+    "mark_read_error": "Không thể đánh dấu đã đọc. Vui lòng thử lại.",
+    "mark_all_read_error": "Không thể đánh dấu tất cả. Vui lòng thử lại.",
+    "remove_error": "Không thể xóa thông báo. Vui lòng thử lại.",
+    "load_error": "Không thể tải danh sách thông báo. Vui lòng thử lại."
+  }
+}
