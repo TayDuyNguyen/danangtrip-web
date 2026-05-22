@@ -77,6 +77,9 @@
 - Re-ran Step 10 for `user-booking-by-code`. Fixed `ProtectedLayout` lint blocker (`react-hooks/set-state-in-effect`) by using `useSyncExternalStore` for mounted snapshot behavior, then verified `npm.cmd run prepush:check` passes. Updated deploy/review artifacts with branch `feat/DATN-80/user-booking-by-code` and commit handoff recommendation.
 
 ## 2026-05-22
+- Completed repository-level `10-optimization-deploy` audit for `repo-screen-alignment-audit`.
+- Re-ran `npm run prepush:check` for `danangtrip-web`; lint, typecheck, route integrity, and production build all passed.
+- Created deploy/review artifacts documenting that the repo is technically healthy, with remaining gaps limited to visual fidelity rather than core route or compile errors.
 - Completed 01-screen-analysis for `favorites`. Produced the screen analysis artifact in the repository and updated memory files to transition into the next implementation steps.
 - Completed 03-types-api-contract for `favorites`. Created `favorite.types.ts`, exported from central types registry, extended `favoriteService` with `getFavorites`, added `/favorites` route configuration, and drafted API contract documentation. Verified typescript compilation with `npx tsc --noEmit`.
 - Completed 04-layout-routing for `favorites`. Created locale translation files `favorites.json` for both `vi` and `en`, statically registered them in `request.ts`, and built the Next.js Server Component page shell in `favorites/page.tsx` with dynamic SEO metadata support. Verified compile integrity via typecheck.
@@ -86,3 +89,6 @@
 - Completed 08-auth-permissions for `favorites`. Secured the "/favorites" route in middleware.ts, created the Auth Review artifact, and verified with 100% successful typecheck and lint checks.
 - Completed 09-testing for `favorites`. Ran Phase 1 static gates (lint, typecheck, check:routes, build, prepush:check — all PASS). Phase 2-5 code-audit QA found and fixed 3 bugs: hardcoded "Tải lại" → i18n, setPage-during-render → derived state, duplicate district rendering → removed. Re-verified all checks pass clean. Verdict: READY WITH RISKS.
 - Completed 05-ui-components, 06-data-integration, and 07-interactions for `notifications`. Designed and built 5 premium glassmorphic UI components (`NotificationsHeader`, `NotificationsFilterTabs`, `NotificationItemCard`, `NotificationsEmptyState`, `NotificationsSkeleton`) and the client controller shell `NotificationsPageClient.tsx`. Fully integrated React Query hooks and mutations, optimistic list deletion handling, single and bulk mark-as-read state cache invalidation, and custom redirect transition deep-linking. Verified clean typecheck compile and ESLint syntax checks (0 errors, 0 warnings).
+- Completed 01-screen-analysis for `user-profile-password`. Generated the screen analysis artifact and implementation plan, mapped the design requirements to dark theme styling matching DESIGN.md, and validated the existing PUT /user/password API contract.
+- Completed 03-types-api-contract for `user-profile-password`. Created `profile.validator.ts` containing the `changePasswordSchema` validation rules and inferred TypeScript types. Produced the API Contract artifact and verified TypeScript compilation successfully.
+
