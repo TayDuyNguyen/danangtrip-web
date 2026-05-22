@@ -296,64 +296,64 @@ Date locked for this index: `2026-05-22`
 ### Single Chosen Screen Only
 
 - Repo: `danangtrip-web`
-- Only screen/work item to implement now: `Thông báo`
-- Feature slug: `notifications`
-- Main route: `/notifications`
-- Main file target: `src/app/[locale]/(main)/(protected)/notifications/page.tsx`
-- Rule: do not switch to profile password, verify email, cart, or unrelated booking/account screens until this notifications screen is finished through `10-optimization-deploy`.
+- Only screen/work item to implement now: `Đổi mật khẩu`
+- Feature slug: `user-profile-password`
+- Main route: `/profile/password`
+- Main file target: `src/app/[locale]/(main)/(protected)/profile/password/page.tsx`
+- Rule: do not switch to verify email, cart, or unrelated booking/account screens until this password screen is finished through `10-optimization-deploy`.
 
 ### Candidate Screens Reviewed
 
 | Candidate | Priority | Why it is relevant now | Why it is not the current first pick |
 | --- | --- | --- | --- |
-| `notifications` | High | `favorites` is now complete and notifications has ready API support plus clear protected-user utility value. | Selected as the current first pick. |
-| `user-profile-password` | High | Account security API exists and naturally follows notifications in the user-utility rollout. | Useful, but notifications is the nearer follow-up after favorites completion. |
-| `user-verify-email` | High | Auth API exists. | Important, but still less central than the notifications center for active signed-in users. |
-| `user-profile` hardening | Medium | Existing route/page already exists and may still need pipeline hardening later. | Not a new current-screen prompt; notifications is the next unfinished screen. |
+| `user-profile-password` | High | Notifications is now complete and the password screen is the next account-security utility with a ready API contract. | Selected as the current first pick. |
+| `user-verify-email` | High | Auth API exists and naturally complements the account/security rollout. | Useful, but password change is the more immediate authenticated-user utility. |
+| `user-login/register` hardening | Medium | Auth entry routes still deserve delivery hardening later. | Not the next current-screen prompt while an unfinished protected security screen remains. |
+| `user-profile` hardening | Medium | Existing route/page already exists and may still need pipeline hardening later. | Not a new current-screen prompt; password change is the next unfinished screen. |
 
 ### Selected Next Screen
 
-- Screen: `Thông báo`
-- Feature slug: `notifications`
-- Main route: `/notifications`
-- Primary implementation target: `src/app/[locale]/(main)/(protected)/notifications/page.tsx`
+- Screen: `Đổi mật khẩu`
+- Feature slug: `user-profile-password`
+- Main route: `/profile/password`
+- Primary implementation target: `src/app/[locale]/(main)/(protected)/profile/password/page.tsx`
 - Decision basis:
-  - `project_delivery_progress_report.md` now marks `favorites` as complete and `notifications` as the next real web screen.
-  - Notifications has ready API support and remains missing as a real protected route/page in the current repo.
-  - This keeps delivery moving into the next unfinished protected user utility after the saved-items flow is closed.
+  - `project_delivery_progress_report.md` now marks `notifications` as complete and `user-profile-password` as the next real web screen.
+  - Password change has a ready API contract and remains missing as a real protected route/page in the current repo.
+  - This keeps delivery moving from utility center work into account-security closure for signed-in users.
 
 ### Cross-Project Rollout Order
 
-1. `danangtrip-web` implements `notifications`
-2. `danangtrip-admin` implements `admin_reports_revenue`
+1. `danangtrip-web` implements `user-profile-password`
+2. `danangtrip-admin` implements `admin_reports_locations`
 3. Continue with account/security utilities or the remaining admin report group based on the next progress report update
 
 Dependency rule:
-- Keep notification state semantics aligned with the real notifications API contract and any existing global notification store behavior.
-- Preserve protected route behavior and locale-aware navigation for the new `/notifications` page.
+- Keep password validation and mutation semantics aligned with the real user password API contract and existing auth store behavior.
+- Preserve protected route behavior and locale-aware navigation for the new `/profile/password` page.
 
 ## Recommended Current Screen Prompt
 
-Use this ready prompt for the next recommended `danangtrip-web` work: notifications delivery.
+Use this ready prompt for the next recommended `danangtrip-web` work: profile-password delivery.
 
 ```text
 SYSTEM EXECUTION CONTRACT
 
 Act as the execution agent for repository: `D:\DATN\danangtrip-web`
 
-Your job is to implement the recommended user screen: `Thông báo`
-Feature slug: `notifications`
-Primary route: `/notifications`
+Your job is to implement the recommended user screen: `Đổi mật khẩu`
+Feature slug: `user-profile-password`
+Primary route: `/profile/password`
 Primary targets:
-- `src/app/[locale]/(main)/(protected)/notifications/page.tsx`
-- `src/features` area that owns notifications list cards and state wiring
-- related services/hooks/types for notifications API integration
-Feature type: protected user notifications center.
+- `src/app/[locale]/(main)/(protected)/profile/password/page.tsx`
+- `src/features` area that owns profile-security form state and mutation wiring
+- related services/hooks/types for password-update API integration
+Feature type: protected user security settings screen.
 
 SINGLE-SCOPE LOCK
-- You are working on exactly one feature only: `Thông báo`.
-- You MUST NOT switch to profile password, verify email, cart, or unrelated booking/account screens in this run.
-- If an adjacent issue appears in shared header, badge, or notification store behavior, record it as dependency/follow-up unless it blocks notifications correctness.
+- You are working on exactly one feature only: `Đổi mật khẩu`.
+- You MUST NOT switch to verify email, cart, or unrelated booking/account screens in this run.
+- If an adjacent issue appears in shared auth/profile state, record it as dependency/follow-up unless it blocks password-screen correctness.
 
 MANDATORY READ ORDER BEFORE ANY WORK
 1. `D:\DATN\danangtrip-web\AGENTS.md`
@@ -367,8 +367,8 @@ MANDATORY READ ORDER BEFORE ANY WORK
 
 SCREEN REFERENCES
 - Progress report: `D:\DATN\DATN_Tài liệu\docs\project_delivery_progress_report.md`
-- Primary doc: `D:\DATN\DATN_Tài liệu\docs\page\user_notifications.md`
-- Related detail docs: `D:\DATN\DATN_Tài liệu\docs\page\user_profile.md; D:\DATN\DATN_Tài liệu\docs\page\user_booking_detail.md`
+- Primary doc: `D:\DATN\DATN_Tài liệu\docs\page\user_profile_password.md`
+- Related detail docs: `D:\DATN\DATN_Tài liệu\docs\page\user_profile.md; D:\DATN\DATN_Tài liệu\docs\page\user_verify_email.md`
 - Related supporting docs: `D:\DATN\DATN_Tài liệu\docs\reference\list_page_user.md`
 - User page list: `D:\DATN\DATN_Tài liệu\docs\reference\list_page_user.md`
 - API list: `D:\DATN\DATN_Tài liệu\docs\api\api_list.md`
@@ -387,17 +387,17 @@ REPO CONTEXT TO READ
 - `D:\DATN\danangtrip-web\src\messages\en`
 
 REQUIRED API FLOW
-- Load the current user's notifications through the real notifications endpoint(s) in repo/API reality.
-- Support empty, loading, unread, read, filtered empty, and API-error states.
-- Reuse any existing notification badge/store state if already present in the repo.
+- Submit password change through the real password-update endpoint in repo/API reality.
+- Support pristine, submitting, success, validation-error, API-error, and auth-expired states.
+- Reuse any existing profile/auth settings shell if already present in the repo.
 - Keep auth protection under existing `(protected)` route behavior and axios auth headers.
-- If mark-as-read or mark-all-as-read is part of the scope, make sure unread counts stay consistent without full page inconsistency.
+- If the real contract requires current password + new password + confirm password, keep client validation aligned with that contract.
 
 EXPECTED UX
-- User can view a clean notifications list with time, title, content, and state cues.
-- User can mark one or many notifications as read if the real contract supports it.
-- User can navigate from a notification into its linked destination if the payload carries a target.
-- Loading, empty, unread/read, and API-error states are explicit and localized.
+- User can update password from a protected account-security screen.
+- User sees clear validation for current password, new password, and confirm password.
+- Success and error feedback are explicit and localized.
+- Loading/submitting state prevents double-submit.
 - Behavior remains consistent across locales and protected auth flow.
 
 PIPELINE ORDER
@@ -413,16 +413,16 @@ Execute in this exact order, stopping after each step for approval:
 9. `10-optimization-deploy`
 
 ARTIFACT TARGETS
-- Analysis: `.agent/artifacts/analysis/YYYY-MM-DD__notifications__screen-analysis.md`
-- API contract: `.agent/artifacts/api-contracts/YYYY-MM-DD__notifications__api-contract.md`
-- Routing: `.agent/artifacts/routing/YYYY-MM-DD__notifications__route-plan.md`
-- UI spec: `.agent/artifacts/ui-specs/YYYY-MM-DD__notifications__ui-spec.md`
-- Data integration: `.agent/artifacts/integration/YYYY-MM-DD__notifications__data-integration.md`
-- Interaction spec: `.agent/artifacts/interaction-specs/YYYY-MM-DD__notifications__interaction-spec.md`
-- Auth review: `.agent/artifacts/auth/YYYY-MM-DD__notifications__auth-permissions-review.md`
-- Test report: `.agent/artifacts/test-cases/YYYY-MM-DD__notifications__test-report.md`
-- Deploy report: `.agent/artifacts/deploy/YYYY-MM-DD__notifications__deploy-report.md`
-- Final review: `.agent/artifacts/review/YYYY-MM-DD__notifications__review.md`
+- Analysis: `.agent/artifacts/analysis/YYYY-MM-DD__user-profile-password__screen-analysis.md`
+- API contract: `.agent/artifacts/api-contracts/YYYY-MM-DD__user-profile-password__api-contract.md`
+- Routing: `.agent/artifacts/routing/YYYY-MM-DD__user-profile-password__route-plan.md`
+- UI spec: `.agent/artifacts/ui-specs/YYYY-MM-DD__user-profile-password__ui-spec.md`
+- Data integration: `.agent/artifacts/integration/YYYY-MM-DD__user-profile-password__data-integration.md`
+- Interaction spec: `.agent/artifacts/interaction-specs/YYYY-MM-DD__user-profile-password__interaction-spec.md`
+- Auth review: `.agent/artifacts/auth/YYYY-MM-DD__user-profile-password__auth-permissions-review.md`
+- Test report: `.agent/artifacts/test-cases/YYYY-MM-DD__user-profile-password__test-report.md`
+- Deploy report: `.agent/artifacts/deploy/YYYY-MM-DD__user-profile-password__deploy-report.md`
+- Final review: `.agent/artifacts/review/YYYY-MM-DD__user-profile-password__review.md`
 
 BEGIN NOW
 Start with step `01-screen-analysis`.
@@ -430,35 +430,35 @@ Start with step `01-screen-analysis`.
 
 ## Manual Activation Templates - Current Recommended Screen
 
-### Current Recommended Screen - Notifications
+### Current Recommended Screen - User Profile Password
 
 ```text
 Activate full pipeline for current recommended screen
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [notifications]
-- Screen name: [Thông báo]
-- Primary target route: [/notifications]
-- Primary target page file: [D:\DATN\danangtrip-web\src\app\[locale]\(main)\(protected)\notifications\page.tsx]
+- Feature slug: [user-profile-password]
+- Screen name: [Đổi mật khẩu]
+- Primary target route: [/profile/password]
+- Primary target page file: [D:\DATN\danangtrip-web\src\app\[locale]\(main)\(protected)\profile\password\page.tsx]
 - Route group: [(protected)]
 - Auth requirement: [Protected user route]
 - DESIGN.md: [D:\DATN\danangtrip-web\DESIGN.md]
-- Primary docs: [D:\DATN\DATN_Tài liệu\docs\page\user_notifications.md]
-- Related docs: [D:\DATN\DATN_Tài liệu\docs\page\user_profile.md; D:\DATN\DATN_Tài liệu\docs\page\user_booking_detail.md]
+- Primary docs: [D:\DATN\DATN_Tài liệu\docs\page\user_profile_password.md]
+- Related docs: [D:\DATN\DATN_Tài liệu\docs\page\user_profile.md; D:\DATN\DATN_Tài liệu\docs\page\user_verify_email.md]
 - API docs: [D:\DATN\DATN_Tài liệu\docs\api\api_list.md]
 - Backend API repo: [D:\DATN\danangtrip-api]
 - Existing UI references: [D:\DATN\danangtrip-web\src\app\[locale]\(main)\(protected)\profile\page.tsx; D:\DATN\danangtrip-web\src\features]
 - Services/types to inspect: [D:\DATN\danangtrip-web\src\services; D:\DATN\danangtrip-web\src\types; D:\DATN\danangtrip-web\src\config\routes.ts]
-- Main endpoints: [notifications list endpoint(s) in repo/API reality; optional mark-read endpoint(s)]
-- Contract note: [resolve unread state, target link shape, and bulk mark-read capability before wiring UI]
-- Output prefix: [.agent/artifacts/<group>/YYYY-MM-DD__notifications__...md]
+- Main endpoints: [password update endpoint in repo/API reality]
+- Contract note: [resolve required fields, password rules, and post-success UX before wiring UI]
+- Output prefix: [.agent/artifacts/<group>/YYYY-MM-DD__user-profile-password__...md]
 
 Execution:
 - Start with `01-screen-analysis`.
 - Before each step, read the matching `SKILL.md`.
-- Treat the notifications doc as the main list-screen UX reference.
-- Reuse existing protected-page list and badge patterns before creating new primitives.
+- Treat the password doc as the main form UX reference.
+- Reuse existing protected-page shell and auth/profile form patterns before creating new primitives.
 - Stop after each pipeline step for approval.
 ```
 
@@ -469,15 +469,15 @@ Activate 01-screen-analysis
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [notifications]
-- Screen name: [Thông báo]
+- Feature slug: [user-profile-password]
+- Screen name: [Đổi mật khẩu]
 - Figma/Stitch: [NONE]
-- Input source: [D:\DATN\DATN_Tài liệu\docs\page\user_notifications.md]
-- Related sources: [D:\DATN\DATN_Tài liệu\docs\page\user_profile.md; D:\DATN\DATN_Tài liệu\docs\page\user_booking_detail.md]
-- Prototype note: [Use notifications doc and existing protected utility/list references]
+- Input source: [D:\DATN\DATN_Tài liệu\docs\page\user_profile_password.md]
+- Related sources: [D:\DATN\DATN_Tài liệu\docs\page\user_profile.md; D:\DATN\DATN_Tài liệu\docs\page\user_verify_email.md]
+- Prototype note: [Use password doc and existing protected profile/auth references]
 - DESIGN.md: [D:\DATN\danangtrip-web\DESIGN.md]
 - API docs: [D:\DATN\DATN_Tài liệu\docs\api\api_list.md]
-- Output: [.agent/artifacts/analysis/YYYY-MM-DD__notifications__screen-analysis.md]
+- Output: [.agent/artifacts/analysis/YYYY-MM-DD__user-profile-password__screen-analysis.md]
 ```
 
 ### Skill 02 - Project Setup Audit
@@ -487,9 +487,9 @@ Activate 02-project-setup
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [notifications]
-- Audit reason: [next protected user utility screen after favorites completion]
-- Output: [.agent/artifacts/setup/YYYY-MM-DD__notifications__project-setup-report.md]
+- Feature slug: [user-profile-password]
+- Audit reason: [next protected account-security screen after notifications completion]
+- Output: [.agent/artifacts/setup/YYYY-MM-DD__user-profile-password__project-setup-report.md]
 ```
 
 ### Skill 03 - Types And API Contract
@@ -499,15 +499,15 @@ Activate 03-types-api-contract
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [notifications]
-- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__notifications__screen-analysis.md]
+- Feature slug: [user-profile-password]
+- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__user-profile-password__screen-analysis.md]
 - API docs: [D:\DATN\DATN_Tài liệu\docs\api\api_list.md]
-- Relevant endpoints: [notifications list endpoint(s), unread-count endpoint if any, optional mark-read endpoint(s)]
+- Relevant endpoints: [password update endpoint]
 - Existing services: [D:\DATN\danangtrip-web\src\services]
 - Existing hooks: [D:\DATN\danangtrip-web\src\features]
 - Existing types: [D:\DATN\danangtrip-web\src\types]
-- Contract check: [notification item shape, unread state, target link payload, pagination/filter params if any]
-- Output: [.agent/artifacts/api-contracts/YYYY-MM-DD__notifications__api-contract.md]
+- Contract check: [request body fields, password rules, validation messages, success response shape]
+- Output: [.agent/artifacts/api-contracts/YYYY-MM-DD__user-profile-password__api-contract.md]
 ```
 
 ### Skill 04 - Layout And Routing
@@ -517,14 +517,14 @@ Activate 04-layout-routing
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [notifications]
-- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__notifications__screen-analysis.md]
-- Target route: [/notifications]
+- Feature slug: [user-profile-password]
+- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__user-profile-password__screen-analysis.md]
+- Target route: [/profile/password]
 - Route group: [(protected)]
 - New page files: [yes]
-- Target files: [D:\DATN\danangtrip-web\src\app\[locale]\(main)\(protected)\notifications\page.tsx]
-- Server or client ownership: [server page shell + client notifications list]
-- Output: [.agent/artifacts/routing/YYYY-MM-DD__notifications__route-plan.md]
+- Target files: [D:\DATN\danangtrip-web\src\app\[locale]\(main)\(protected)\profile\password\page.tsx]
+- Server or client ownership: [server page shell + client password form]
+- Output: [.agent/artifacts/routing/YYYY-MM-DD__user-profile-password__route-plan.md]
 ```
 
 ### Skill 05 - UI Components
@@ -534,12 +534,12 @@ Activate 05-ui-components
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [notifications]
-- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__notifications__screen-analysis.md]
+- Feature slug: [user-profile-password]
+- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__user-profile-password__screen-analysis.md]
 - DESIGN.md: [D:\DATN\danangtrip-web\DESIGN.md]
-- Components to focus on: [NotificationsPageShell, NotificationList, NotificationItem, NotificationsEmptyState, NotificationsFilterBar]
-- Existing reusable components: [shared protected page shells, Button, empty-state patterns, badge/indicator patterns]
-- Output: [.agent/artifacts/ui-specs/YYYY-MM-DD__notifications__ui-spec.md]
+- Components to focus on: [ProfilePasswordPageShell, PasswordChangeForm, PasswordFieldGroup, PasswordRulesHint, SuccessState]
+- Existing reusable components: [shared protected page shells, Button, form-field patterns, auth/profile inputs]
+- Output: [.agent/artifacts/ui-specs/YYYY-MM-DD__user-profile-password__ui-spec.md]
 ```
 
 ### Skill 06 - Data Integration
@@ -549,12 +549,12 @@ Activate 06-data-integration
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [notifications]
-- API contract: [.agent/artifacts/api-contracts/YYYY-MM-DD__notifications__api-contract.md]
-- UI spec: [.agent/artifacts/ui-specs/YYYY-MM-DD__notifications__ui-spec.md]
-- Queries: [notifications list; unread count if applicable]
-- Mutations/actions: [mark single notification as read; mark all as read if supported]
-- Output: [.agent/artifacts/integration/YYYY-MM-DD__notifications__data-integration.md]
+- Feature slug: [user-profile-password]
+- API contract: [.agent/artifacts/api-contracts/YYYY-MM-DD__user-profile-password__api-contract.md]
+- UI spec: [.agent/artifacts/ui-specs/YYYY-MM-DD__user-profile-password__ui-spec.md]
+- Queries: [none unless screen reuses profile prefill]
+- Mutations/actions: [submit password change]
+- Output: [.agent/artifacts/integration/YYYY-MM-DD__user-profile-password__data-integration.md]
 ```
 
 ### Skill 07 - Interactions
@@ -564,12 +564,12 @@ Activate 07-interactions
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [notifications]
-- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__notifications__screen-analysis.md]
-- Data integration: [.agent/artifacts/integration/YYYY-MM-DD__notifications__data-integration.md]
-- Main actions: [view list, mark read, mark all as read if supported, navigate to linked destination]
-- Forms present: [filters only if repo/API supports them]
-- Output: [.agent/artifacts/interaction-specs/YYYY-MM-DD__notifications__interaction-spec.md]
+- Feature slug: [user-profile-password]
+- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__user-profile-password__screen-analysis.md]
+- Data integration: [.agent/artifacts/integration/YYYY-MM-DD__user-profile-password__data-integration.md]
+- Main actions: [input current password, input new password, confirm password, submit change]
+- Forms present: [password form]
+- Output: [.agent/artifacts/interaction-specs/YYYY-MM-DD__user-profile-password__interaction-spec.md]
 ```
 
 ### Skill 08 - Auth And Permissions
@@ -579,11 +579,11 @@ Activate 08-auth-permissions
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [notifications]
-- Route plan: [.agent/artifacts/routing/YYYY-MM-DD__notifications__route-plan.md]
-- Feature type: [protected notifications screen]
-- Gated UI actions: [view notifications, mark read if supported]
-- Output: [.agent/artifacts/auth/YYYY-MM-DD__notifications__auth-permissions-review.md]
+- Feature slug: [user-profile-password]
+- Route plan: [.agent/artifacts/routing/YYYY-MM-DD__user-profile-password__route-plan.md]
+- Feature type: [protected password settings screen]
+- Gated UI actions: [view password form, submit password update]
+- Output: [.agent/artifacts/auth/YYYY-MM-DD__user-profile-password__auth-permissions-review.md]
 ```
 
 ### Skill 09 - Testing
@@ -593,11 +593,11 @@ Activate 09-testing
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [notifications]
-- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__notifications__screen-analysis.md]
-- Interaction spec: [.agent/artifacts/interaction-specs/YYYY-MM-DD__notifications__interaction-spec.md]
-- Auth review: [.agent/artifacts/auth/YYYY-MM-DD__notifications__auth-permissions-review.md]
-- Output: [.agent/artifacts/test-cases/YYYY-MM-DD__notifications__test-report.md]
+- Feature slug: [user-profile-password]
+- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__user-profile-password__screen-analysis.md]
+- Interaction spec: [.agent/artifacts/interaction-specs/YYYY-MM-DD__user-profile-password__interaction-spec.md]
+- Auth review: [.agent/artifacts/auth/YYYY-MM-DD__user-profile-password__auth-permissions-review.md]
+- Output: [.agent/artifacts/test-cases/YYYY-MM-DD__user-profile-password__test-report.md]
 ```
 
 ### Skill 10 - Optimization And Deploy
@@ -607,12 +607,12 @@ Activate 10-optimization-deploy
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [notifications]
-- Test report: [.agent/artifacts/test-cases/YYYY-MM-DD__notifications__test-report.md]
+- Feature slug: [user-profile-password]
+- Test report: [.agent/artifacts/test-cases/YYYY-MM-DD__user-profile-password__test-report.md]
 - Test verdict: [READY | READY WITH RISKS | NOT READY]
 - Existing artifacts: [analysis, api-contract, route-plan, ui-spec, data-integration, interaction-spec, auth-review, test-report]
-- Output deploy: [.agent/artifacts/deploy/YYYY-MM-DD__notifications__deploy-report.md]
-- Output review: [.agent/artifacts/review/YYYY-MM-DD__notifications__review.md]
+- Output deploy: [.agent/artifacts/deploy/YYYY-MM-DD__user-profile-password__deploy-report.md]
+- Output review: [.agent/artifacts/review/YYYY-MM-DD__user-profile-password__review.md]
 ```
 
 ## Files Commonly Read Before Most Tasks
