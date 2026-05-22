@@ -37,6 +37,7 @@ export const PLANNED_ROUTES = {
 export const AUTH_ROUTES = {
   LOGIN: "/login",
   REGISTER: "/register",
+  VERIFY_EMAIL: "/verify-email",
 } as const;
 
 // Protected routes (require authentication)

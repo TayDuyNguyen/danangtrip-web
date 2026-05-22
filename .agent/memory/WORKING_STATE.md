@@ -1,44 +1,54 @@
 # Working State
 
 ## Current Status
+
 - Date: 2026-05-22
-- Active feature/task: repo-screen-alignment-audit
+- Active feature/task: `user-verify-email`
 - Status: Completed
-- Current step: 10-optimization-deploy
-- Next step: None
-- Objective: Chốt bước 10 ở mức repository để xác nhận code hiện tại có lỗi lõi hay không và mức khớp màn hình tổng quát của `danangtrip-web`.
-- Expected artifact: `.agent/artifacts/review/2026-05-22__repo-screen-alignment-audit__review.md`
-- Mode: Review / handoff
+- Current step: Step 10 completed
+- Next step: User review / push approval
+- Objective: Completed authenticated OTP email verification flow and Step 10 handoff artifacts.
+- Expected artifacts:
+  - `.agent/artifacts/deploy/2026-05-22__user-verify-email__deploy-report.md`
+  - `.agent/artifacts/review/2026-05-22__user-verify-email__review.md`
+- Mode: Handoff
 - Owner: AI collaborator
 
-### Progress Breakdown (user-profile-password)
-- [x] **01-screen-analysis**: Completed (Analysis report generated)
-- [x] **02-project-setup**: Completed (Audit report generated)
-- [x] **03-types-api-contract**: Completed (Validator & API contract generated)
-- [x] **04-layout-routing**: Completed (Routes config & Layout wrapper generated)
-- [x] **05-ui-components**: Completed (ProfileSidebar, ProfileMobileNav, PasswordChangeForm generated)
-- [x] **06-data-integration**: Completed (useProfilePasswordMutation generated)
-- [x] **07-interactions**: Completed (PasswordChangeFormContainer handles feedback & errors)
-- [x] **08-auth-permissions**: Completed (Middleware & client Auth checkers verified)
-- [x] **09-testing**: Completed (prepush:check passed & Test report generated)
-- [x] **10-optimization-deploy**: Completed (Next.js production build succeeded & Walkthrough created)
+## Progress Breakdown
 
-## Context Summary
-- Đã hoàn thành phân tích giao diện màn hình Đổi mật khẩu (/profile/password) kế thừa thiết kế của Hồ sơ cá nhân.
-- Xác định được mismatch giữa tài liệu đặc tả nghiệp vụ (Light Theme) và Repository (Dark Theme) để thực hiện ánh xạ giao diện tối phù hợp với DESIGN.md.
-- Đã tạo Zod validation schema `changePasswordSchema` trong `profile.validator.ts` và export kiểu dữ liệu `ChangePasswordFormInput`.
-- Đã biên soạn tài liệu API Contract tại `.agent/artifacts/api-contracts/2026-05-22__user-profile-password__api-contract.md`.
-- Đã phát triển thành công biểu mẫu đổi mật khẩu với đầy đủ chức năng đo độ mạnh, checklist, i18n đa ngôn ngữ, container kết nối API.
-- Đã đồng bộ hóa trang hồ sơ cá nhân hiện tại sử dụng layout chia sẻ mới.
-- Dự án đã vượt qua tất cả các Quality Gates (Lint, Typecheck, Build, Routes Integrity) một cách sạch sẽ.
+- [x] 01-screen-analysis
+- [x] 02-project-setup
+- [x] 03-types-api-contract
+- [x] 04-layout-routing
+- [x] 05-ui-components
+- [x] 06-data-integration
+- [x] 07-interactions
+- [x] 08-auth-permissions
+- [x] 09-testing
+- [x] 10-optimization-deploy
+
+## Current Reality
+
+- Route exists at `src/app/[locale]/(auth)/verify-email/page.tsx`.
+- UI exists at `src/features/auth/components/verify-email-form.tsx` and `otp-input-group.tsx`.
+- Backend contract was corrected: verify email uses authenticated `POST /auth/verify-email` with `{ otp: string }`.
+- Resend uses authenticated `POST /auth/resend-verification`.
+- `token` query param is only a page-level compatibility alias and is sent as `otp`.
+
+## Validation
+
+- `npm.cmd run lint`: PASS
+- `npm.cmd run typecheck`: PASS
+- `npm.cmd run build`: PASS
+- `npm.cmd run prepush:check`: PASS
 
 ## Known Issues / Risks
-- Repo pass toàn bộ static gates nhưng chưa đạt mức bám 1:1 với toàn bộ chiều sâu visual spec trong `DESIGN.md`.
-- Worktree hiện có nhiều thay đổi đang mở ngoài phạm vi audit này; Step 10 chỉ xác nhận gate hiện tại vẫn pass.
 
-## Recent Accomplishments
-- Đã chạy lại `npm run prepush:check` cho toàn repo `danangtrip-web` và xác nhận `lint`, `typecheck`, `check:routes`, `build` đều PASS.
-- Đã tạo artifact Step 10 cấp repository:
-  - `.agent/artifacts/deploy/2026-05-22__repo-screen-alignment-audit__deploy-report.md`
-  - `.agent/artifacts/review/2026-05-22__repo-screen-alignment-audit__review.md`
-- Kết luận hiện tại: repo kỹ thuật ổn, còn khoảng cách chủ yếu ở visual fidelity so với `DESIGN.md`, không phải lỗi lõi compile/route.
+- `.codegraph` is stale for newly added verify-email files and should be regenerated.
+- Full successful backend OTP smoke requires a logged-in user and valid OTP in backend cache.
+- Public token-link verification is not supported by current backend routes.
+
+## Suggested Git Handoff
+
+- Branch: `feat/DATN-84/user-verify-email`
+- Commit: `feat(auth): add authenticated email verification flow`
