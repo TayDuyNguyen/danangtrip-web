@@ -296,69 +296,64 @@ Date locked for this index: `2026-05-22`
 ### Single Chosen Screen Only
 
 - Repo: `danangtrip-web`
-- Only screen/work item to implement now: `Hóa đơn booking PDF`
-- Feature slug: `user-booking-invoice`
-- Main route/action: `/bookings/{id}/invoice`
-- Main file targets:
-  - `src/features/tour/components/BookingDetailClient.tsx`
-  - `src/services/booking.service.ts`
-  - `src/features/tour/hooks/useBookingQueries.ts`
-- Rule: do not switch to favorites, notifications, profile password, verify email, or unrelated booking screens until this invoice work is finished through `10-optimization-deploy`.
+- Only screen/work item to implement now: `Yêu thích`
+- Feature slug: `favorites`
+- Main route: `/favorites`
+- Main file target: `src/app/[locale]/(main)/(protected)/favorites/page.tsx`
+- Rule: do not switch to notifications, profile password, verify email, cart, or unrelated booking/account screens until this favorites screen is finished through `10-optimization-deploy`.
 
 ### Candidate Screens Reviewed
 
 | Candidate | Priority | Why it is relevant now | Why it is not the current first pick |
 | --- | --- | --- | --- |
-| `user-booking-invoice` | High | `user-bookings-list`, `user-booking-detail`, and `user-booking-by-code` are complete. Docs state the invoice endpoint returns a PDF file, while repo reality still treats invoice mostly as JSON/print action inside detail. | Selected as the current first pick. |
-| `user-favorites` | High | Favorites API exists and favorite labels already appear in UI. | Less critical than closing the post-booking invoice contract. |
-| `user-notifications` | High | Notifications API exists and app store has notification state. | Useful, but invoice belongs to the active paid-booking flow. |
+| `favorites` | High | `user-bookings-list`, `user-booking-detail`, and `user-booking-by-code` are complete, and the progress report now treats invoice as already present in code. Favorites is the next unfinished user utility with ready API support. | Selected as the current first pick. |
+| `notifications` | High | Notifications API exists and app store has notification state. | Useful, but it sits after the favorites screen in the current rollout order. |
 | `user-profile-password` | High | Account security API exists. | Better after booking aftercare is fully closed. |
 | `user-verify-email` | High | Auth API exists. | Account utility; not as directly tied to booking fulfillment. |
 
 ### Selected Next Screen
 
-- Screen: `Hóa đơn booking PDF`
-- Feature slug: `user-booking-invoice`
-- Main route/action: `/bookings/{id}/invoice`
-- Primary implementation target: `BookingDetailClient` invoice action and booking service PDF handling
+- Screen: `Yêu thích`
+- Feature slug: `favorites`
+- Main route: `/favorites`
+- Primary implementation target: `src/app/[locale]/(main)/(protected)/favorites/page.tsx`
 - Decision basis:
-  - `project_delivery_progress_report.md` marks `user-booking-invoice` as the next current web work after `user-booking-by-code` merge.
-  - `user_booking_invoice.md` explicitly says API `GET /user/bookings/{id}/invoice` returns `application/pdf`, not JSON.
-  - Current repo has `bookingService.invoice(id)` and invoice buttons in `BookingDetailClient`, but Step 10 review showed this path still needs hardening against the real PDF contract.
-  - This is a bounded, high-value fix that closes the paid booking journey before moving to favorites/notifications.
+  - `project_delivery_progress_report.md` now marks `favorites` as the next real web screen because `user-booking-invoice` already exists in code.
+  - Favorites has ready API support and is still missing a real protected route/page in the current repo.
+  - This keeps delivery moving into the next unfinished user utility instead of reopening an already coded invoice action.
 
 ### Cross-Project Rollout Order
 
-1. `danangtrip-web` implements `user-booking-invoice`
-2. `danangtrip-admin` implements `admin_reports_ratings`
+1. `danangtrip-web` implements `favorites`
+2. `danangtrip-admin` implements `admin_reports_bookings`
 3. Continue with user utilities (`favorites`, `notifications`) or report group based on the next progress report update
 
 Dependency rule:
-- Keep invoice button behavior consistent across `/bookings/{id}` and `/bookings/code/{bookingCode}` because both reuse `BookingDetailClient`.
-- Do not introduce a separate invoice page unless implementation proves a route is necessary; docs define this as an action trigger, not a full standalone screen.
+- Keep favorite state semantics aligned with the real favorites API contract and any favorite toggles already present on locations/tours.
+- Preserve protected route behavior and locale-aware navigation for the new `/favorites` page.
 
 ## Recommended Current Screen Prompt
 
-Use this ready prompt for the next recommended `danangtrip-web` work: booking invoice PDF delivery.
+Use this ready prompt for the next recommended `danangtrip-web` work: favorites delivery.
 
 ```text
 SYSTEM EXECUTION CONTRACT
 
 Act as the execution agent for repository: `D:\DATN\danangtrip-web`
 
-Your job is to implement or harden the recommended user booking action: `Hóa đơn booking PDF`
-Feature slug: `user-booking-invoice`
-Primary route/action: `/bookings/{id}/invoice`
+Your job is to implement the recommended user screen: `Yêu thích`
+Feature slug: `favorites`
+Primary route: `/favorites`
 Primary targets:
-- `src/services/booking.service.ts`
-- `src/features/tour/components/BookingDetailClient.tsx`
-- `src/features/tour/hooks/useBookingQueries.ts` if a mutation/download hook is needed
-Feature type: protected invoice download/preview action for paid booking details.
+- `src/app/[locale]/(main)/(protected)/favorites/page.tsx`
+- `src/features` area that owns favorite list cards and state wiring
+- related services/hooks/types for favorites API integration
+Feature type: protected user list screen for saved tours/locations.
 
 SINGLE-SCOPE LOCK
-- You are working on exactly one feature only: `Hóa đơn booking PDF`.
-- You MUST NOT switch to favorites, notifications, profile password, verify email, cart, or unrelated booking screens in this run.
-- If an adjacent issue appears in booking detail or booking-by-code, record it as dependency/follow-up unless it blocks invoice correctness.
+- You are working on exactly one feature only: `Yêu thích`.
+- You MUST NOT switch to notifications, profile password, verify email, cart, or unrelated booking/account screens in this run.
+- If an adjacent issue appears in tour/location cards, record it as dependency/follow-up unless it blocks favorites correctness.
 
 MANDATORY READ ORDER BEFORE ANY WORK
 1. `D:\DATN\danangtrip-web\AGENTS.md`
@@ -371,12 +366,12 @@ MANDATORY READ ORDER BEFORE ANY WORK
 8. Screen/API references listed below
 
 SCREEN REFERENCES
-- Progress report: `D:\DATN\DATN_Document\docs\project_delivery_progress_report.md`
-- Primary doc: `D:\DATN\DATN_Document\docs\page\user_booking_invoice.md`
-- Related detail doc: `D:\DATN\DATN_Document\docs\page\user_booking_detail.md`
-- Related code lookup doc: `D:\DATN\DATN_Document\docs\page\user_booking_by_code.md`
-- User page list: `D:\DATN\DATN_Document\docs\reference\list_page_user.md`
-- API list: `D:\DATN\DATN_Document\docs\api\api_list.md`
+- Progress report: `D:\DATN\DATN_Tài liệu\docs\project_delivery_progress_report.md`
+- Primary doc: `D:\DATN\DATN_Tài liệu\docs\page\user_favorites.md`
+- Related detail docs: `D:\DATN\DATN_Tài liệu\docs\page\user_tour_detail.md; D:\DATN\DATN_Tài liệu\docs\page\user_location_detail.md`
+- Related supporting docs: `D:\DATN\DATN_Tài liệu\docs\reference\list_page_user.md`
+- User page list: `D:\DATN\DATN_Tài liệu\docs\reference\list_page_user.md`
+- API list: `D:\DATN\DATN_Tài liệu\docs\api\api_list.md`
 - Backend API repo: `D:\DATN\danangtrip-api`
 - Backend routes: `D:\DATN\danangtrip-api\routes\api.php`
 - Backend booking docs: `D:\DATN\danangtrip-api\api-doc\bookings.js`
@@ -384,28 +379,27 @@ SCREEN REFERENCES
 REPO CONTEXT TO READ
 - `D:\DATN\danangtrip-web\DESIGN.md`
 - `D:\DATN\danangtrip-web\src\config\api.ts`
-- `D:\DATN\danangtrip-web\src\services\booking.service.ts`
-- `D:\DATN\danangtrip-web\src\features\tour\hooks\useBookingQueries.ts`
-- `D:\DATN\danangtrip-web\src\features\tour\components\BookingDetailClient.tsx`
-- `D:\DATN\danangtrip-web\src\app\[locale]\(main)\(protected)\bookings\[id]\page.tsx`
-- `D:\DATN\danangtrip-web\src\app\[locale]\(main)\(protected)\bookings\code\[bookingCode]\page.tsx`
-- `D:\DATN\danangtrip-web\src\types\booking.types.ts`
+- `D:\DATN\danangtrip-web\src\services`
+- `D:\DATN\danangtrip-web\src\features`
+- `D:\DATN\danangtrip-web\src\config\routes.ts`
+- `D:\DATN\danangtrip-web\src\app\[locale]\(main)\(protected)\profile\page.tsx`
+- `D:\DATN\danangtrip-web\src\types`
 - `D:\DATN\danangtrip-web\src\messages\vi\tour.json`
 - `D:\DATN\danangtrip-web\src\messages\en\tour.json`
 
 REQUIRED API FLOW
-- Download or preview invoice through `GET /user/bookings/{id}/invoice`.
-- Treat the response as `application/pdf` / Blob, not JSON.
-- Handle paid-only invoice constraints with user-facing localized toast/error state.
+- Load the current user's favorites through the real favorites endpoint(s) in repo/API reality.
+- Support empty, loading, filtered empty, and API-error states.
+- Reuse existing card patterns for saved tours/locations where possible.
 - Keep auth protection under existing `(protected)` route behavior and axios auth headers.
-- If backend returns JSON error for invoice failures, safely parse the error message without breaking Blob download flow.
+- If favorite removal is part of the scope, make sure list state updates without full page inconsistency.
 
 EXPECTED UX
-- Invoice button appears only where booking details are available and uses the internal booking id.
-- Loading state disables the invoice button and displays localized progress copy.
-- Success downloads PDF with deterministic filename such as `invoice-{booking_code}.pdf` or opens preview if that is the chosen implementation.
-- Error states cover unpaid booking, forbidden/unauthorized, not found, server error, and network failure.
-- Behavior is consistent when opened from booking detail by id and booking detail by code.
+- User can view a clean list of saved tours/locations.
+- User can remove an item from favorites if the real contract supports it.
+- User can navigate from a favorite item into its detail page.
+- Loading, empty, and API-error states are explicit and localized.
+- Behavior remains consistent across locales and protected auth flow.
 
 PIPELINE ORDER
 Execute in this exact order, stopping after each step for approval:
@@ -420,16 +414,16 @@ Execute in this exact order, stopping after each step for approval:
 9. `10-optimization-deploy`
 
 ARTIFACT TARGETS
-- Analysis: `.agent/artifacts/analysis/YYYY-MM-DD__user-booking-invoice__screen-analysis.md`
-- API contract: `.agent/artifacts/api-contracts/YYYY-MM-DD__user-booking-invoice__api-contract.md`
-- Routing: `.agent/artifacts/routing/YYYY-MM-DD__user-booking-invoice__route-plan.md`
-- UI spec: `.agent/artifacts/ui-specs/YYYY-MM-DD__user-booking-invoice__ui-spec.md`
-- Data integration: `.agent/artifacts/integration/YYYY-MM-DD__user-booking-invoice__data-integration.md`
-- Interaction spec: `.agent/artifacts/interaction-specs/YYYY-MM-DD__user-booking-invoice__interaction-spec.md`
-- Auth review: `.agent/artifacts/auth/YYYY-MM-DD__user-booking-invoice__auth-permissions-review.md`
-- Test report: `.agent/artifacts/test-cases/YYYY-MM-DD__user-booking-invoice__test-report.md`
-- Deploy report: `.agent/artifacts/deploy/YYYY-MM-DD__user-booking-invoice__deploy-report.md`
-- Final review: `.agent/artifacts/review/YYYY-MM-DD__user-booking-invoice__review.md`
+- Analysis: `.agent/artifacts/analysis/YYYY-MM-DD__favorites__screen-analysis.md`
+- API contract: `.agent/artifacts/api-contracts/YYYY-MM-DD__favorites__api-contract.md`
+- Routing: `.agent/artifacts/routing/YYYY-MM-DD__favorites__route-plan.md`
+- UI spec: `.agent/artifacts/ui-specs/YYYY-MM-DD__favorites__ui-spec.md`
+- Data integration: `.agent/artifacts/integration/YYYY-MM-DD__favorites__data-integration.md`
+- Interaction spec: `.agent/artifacts/interaction-specs/YYYY-MM-DD__favorites__interaction-spec.md`
+- Auth review: `.agent/artifacts/auth/YYYY-MM-DD__favorites__auth-permissions-review.md`
+- Test report: `.agent/artifacts/test-cases/YYYY-MM-DD__favorites__test-report.md`
+- Deploy report: `.agent/artifacts/deploy/YYYY-MM-DD__favorites__deploy-report.md`
+- Final review: `.agent/artifacts/review/YYYY-MM-DD__favorites__review.md`
 
 BEGIN NOW
 Start with step `01-screen-analysis`.
@@ -437,36 +431,35 @@ Start with step `01-screen-analysis`.
 
 ## Manual Activation Templates - Current Recommended Screen
 
-### Current Recommended Screen - User Booking Invoice
+### Current Recommended Screen - Favorites
 
 ```text
 Activate full pipeline for current recommended screen
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [user-booking-invoice]
-- Screen/action name: [Hóa đơn booking PDF]
-- Primary route/action: [/bookings/{id}/invoice]
-- Primary target files: [D:\DATN\danangtrip-web\src\services\booking.service.ts; D:\DATN\danangtrip-web\src\features\tour\components\BookingDetailClient.tsx]
+- Feature slug: [favorites]
+- Screen name: [Yêu thích]
+- Primary target route: [/favorites]
+- Primary target page file: [D:\DATN\danangtrip-web\src\app\[locale]\(main)\(protected)\favorites\page.tsx]
 - Route group: [(protected)]
-- Auth requirement: [Protected user route/action]
+- Auth requirement: [Protected user route]
 - DESIGN.md: [D:\DATN\danangtrip-web\DESIGN.md]
-- Primary docs: [D:\DATN\DATN_Document\docs\page\user_booking_invoice.md]
-- Related docs: [D:\DATN\DATN_Document\docs\page\user_booking_detail.md; D:\DATN\DATN_Document\docs\page\user_booking_by_code.md]
-- API docs: [D:\DATN\DATN_Document\docs\api\api_list.md]
+- Primary docs: [D:\DATN\DATN_Tài liệu\docs\page\user_favorites.md]
+- Related docs: [D:\DATN\DATN_Tài liệu\docs\page\user_tour_detail.md; D:\DATN\DATN_Tài liệu\docs\page\user_location_detail.md]
+- API docs: [D:\DATN\DATN_Tài liệu\docs\api\api_list.md]
 - Backend API repo: [D:\DATN\danangtrip-api]
-- Backend booking docs: [D:\DATN\danangtrip-api\api-doc\bookings.js]
-- Existing UI references: [D:\DATN\danangtrip-web\src\features\tour\components\BookingDetailClient.tsx]
-- Services/types to inspect: [D:\DATN\danangtrip-web\src\services\booking.service.ts; D:\DATN\danangtrip-web\src\types\booking.types.ts; D:\DATN\danangtrip-web\src\config\api.ts]
-- Main endpoint: [GET /user/bookings/{id}/invoice]
-- Contract note: [invoice endpoint returns PDF/Blob; do not treat success response as Booking JSON]
-- Output prefix: [.agent/artifacts/<group>/YYYY-MM-DD__user-booking-invoice__...md]
+- Existing UI references: [D:\DATN\danangtrip-web\src\app\[locale]\(main)\(protected)\profile\page.tsx; D:\DATN\danangtrip-web\src\features]
+- Services/types to inspect: [D:\DATN\danangtrip-web\src\services; D:\DATN\danangtrip-web\src\types; D:\DATN\danangtrip-web\src\config\routes.ts]
+- Main endpoints: [favorites list endpoint in repo/API reality; optional remove favorite endpoint]
+- Contract note: [resolve whether favorites cover tours, locations, or both before wiring UI]
+- Output prefix: [.agent/artifacts/<group>/YYYY-MM-DD__favorites__...md]
 
 Execution:
 - Start with `01-screen-analysis`.
 - Before each step, read the matching `SKILL.md`.
-- Treat the invoice doc as an action-flow spec; do not create a standalone page unless the route contract requires it.
-- Reuse booking detail and booking-by-code UI affordances.
+- Treat the favorites doc as the main list-screen UX reference.
+- Reuse existing tour/location cards before creating new primitives.
 - Stop after each pipeline step for approval.
 ```
 
@@ -477,15 +470,15 @@ Activate 01-screen-analysis
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [user-booking-invoice]
-- Screen/action name: [Hóa đơn booking PDF]
+- Feature slug: [favorites]
+- Screen name: [Yêu thích]
 - Figma/Stitch: [NONE]
-- Input source: [D:\DATN\DATN_Document\docs\page\user_booking_invoice.md]
-- Related sources: [D:\DATN\DATN_Document\docs\page\user_booking_detail.md; D:\DATN\DATN_Document\docs\page\user_booking_by_code.md]
-- Prototype note: [Use screen doc and completed BookingDetailClient as main references]
+- Input source: [D:\DATN\DATN_Tài liệu\docs\page\user_favorites.md]
+- Related sources: [D:\DATN\DATN_Tài liệu\docs\page\user_tour_detail.md; D:\DATN\DATN_Tài liệu\docs\page\user_location_detail.md]
+- Prototype note: [Use favorites doc and existing tour/location card references]
 - DESIGN.md: [D:\DATN\danangtrip-web\DESIGN.md]
-- API docs: [D:\DATN\DATN_Document\docs\api\api_list.md]
-- Output: [.agent/artifacts/analysis/YYYY-MM-DD__user-booking-invoice__screen-analysis.md]
+- API docs: [D:\DATN\DATN_Tài liệu\docs\api\api_list.md]
+- Output: [.agent/artifacts/analysis/YYYY-MM-DD__favorites__screen-analysis.md]
 ```
 
 ### Skill 02 - Project Setup Audit
@@ -495,9 +488,9 @@ Activate 02-project-setup
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [user-booking-invoice]
-- Audit reason: [PDF invoice action hardening after booking detail and booking-by-code completion]
-- Output: [.agent/artifacts/setup/YYYY-MM-DD__user-booking-invoice__project-setup-report.md]
+- Feature slug: [favorites]
+- Audit reason: [next protected user utility screen after booking aftercare flow]
+- Output: [.agent/artifacts/setup/YYYY-MM-DD__favorites__project-setup-report.md]
 ```
 
 ### Skill 03 - Types And API Contract
@@ -507,15 +500,15 @@ Activate 03-types-api-contract
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [user-booking-invoice]
-- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__user-booking-invoice__screen-analysis.md]
-- API docs: [D:\DATN\DATN_Document\docs\api\api_list.md]
-- Relevant endpoints: [GET /user/bookings/{id}/invoice]
-- Existing services: [D:\DATN\danangtrip-web\src\services\booking.service.ts]
-- Existing hooks: [D:\DATN\danangtrip-web\src\features\tour\hooks\useBookingQueries.ts]
-- Existing types: [D:\DATN\danangtrip-web\src\types\booking.types.ts]
-- Contract check: [PDF Blob response, filename derivation, auth headers, JSON error body fallback]
-- Output: [.agent/artifacts/api-contracts/YYYY-MM-DD__user-booking-invoice__api-contract.md]
+- Feature slug: [favorites]
+- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__favorites__screen-analysis.md]
+- API docs: [D:\DATN\DATN_Tài liệu\docs\api\api_list.md]
+- Relevant endpoints: [favorites list endpoint(s), optional remove favorite endpoint]
+- Existing services: [D:\DATN\danangtrip-web\src\services]
+- Existing hooks: [D:\DATN\danangtrip-web\src\features]
+- Existing types: [D:\DATN\danangtrip-web\src\types]
+- Contract check: [favorite item shape, target entity type, pagination/filter params if any]
+- Output: [.agent/artifacts/api-contracts/YYYY-MM-DD__favorites__api-contract.md]
 ```
 
 ### Skill 04 - Layout And Routing
@@ -525,14 +518,14 @@ Activate 04-layout-routing
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [user-booking-invoice]
-- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__user-booking-invoice__screen-analysis.md]
-- Target route/action: [/bookings/{id}/invoice]
+- Feature slug: [favorites]
+- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__favorites__screen-analysis.md]
+- Target route: [/favorites]
 - Route group: [(protected)]
-- New page files: [no by default]
-- Target files: [D:\DATN\danangtrip-web\src\features\tour\components\BookingDetailClient.tsx; D:\DATN\danangtrip-web\src\services\booking.service.ts]
-- Server or client ownership: [client button action using authenticated API client]
-- Output: [.agent/artifacts/routing/YYYY-MM-DD__user-booking-invoice__route-plan.md]
+- New page files: [yes]
+- Target files: [D:\DATN\danangtrip-web\src\app\[locale]\(main)\(protected)\favorites\page.tsx]
+- Server or client ownership: [server page shell + client favorites list]
+- Output: [.agent/artifacts/routing/YYYY-MM-DD__favorites__route-plan.md]
 ```
 
 ### Skill 05 - UI Components
@@ -542,12 +535,12 @@ Activate 05-ui-components
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [user-booking-invoice]
-- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__user-booking-invoice__screen-analysis.md]
+- Feature slug: [favorites]
+- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__favorites__screen-analysis.md]
 - DESIGN.md: [D:\DATN\danangtrip-web\DESIGN.md]
-- Components to focus on: [Invoice button loading state, disabled state, error toast affordance, optional preview/download choice]
-- Existing reusable components: [BookingDetailClient, shared Button, toast patterns]
-- Output: [.agent/artifacts/ui-specs/YYYY-MM-DD__user-booking-invoice__ui-spec.md]
+- Components to focus on: [FavoritesPageShell, FavoriteCardList, FavoriteCard, FavoritesEmptyState]
+- Existing reusable components: [existing tour/location cards, shared Button, empty-state patterns]
+- Output: [.agent/artifacts/ui-specs/YYYY-MM-DD__favorites__ui-spec.md]
 ```
 
 ### Skill 06 - Data Integration
@@ -557,12 +550,12 @@ Activate 06-data-integration
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [user-booking-invoice]
-- API contract: [.agent/artifacts/api-contracts/YYYY-MM-DD__user-booking-invoice__api-contract.md]
-- UI spec: [.agent/artifacts/ui-specs/YYYY-MM-DD__user-booking-invoice__ui-spec.md]
-- Queries: [none required unless invoice metadata is added]
-- Mutations/actions: [download invoice PDF Blob]
-- Output: [.agent/artifacts/integration/YYYY-MM-DD__user-booking-invoice__data-integration.md]
+- Feature slug: [favorites]
+- API contract: [.agent/artifacts/api-contracts/YYYY-MM-DD__favorites__api-contract.md]
+- UI spec: [.agent/artifacts/ui-specs/YYYY-MM-DD__favorites__ui-spec.md]
+- Queries: [favorites list]
+- Mutations/actions: [remove favorite if supported]
+- Output: [.agent/artifacts/integration/YYYY-MM-DD__favorites__data-integration.md]
 ```
 
 ### Skill 07 - Interactions
@@ -572,12 +565,12 @@ Activate 07-interactions
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [user-booking-invoice]
-- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__user-booking-invoice__screen-analysis.md]
-- Data integration: [.agent/artifacts/integration/YYYY-MM-DD__user-booking-invoice__data-integration.md]
-- Main actions: [click invoice button, download PDF, optional open preview tab, retry after failure]
+- Feature slug: [favorites]
+- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__favorites__screen-analysis.md]
+- Data integration: [.agent/artifacts/integration/YYYY-MM-DD__favorites__data-integration.md]
+- Main actions: [view list, remove favorite if supported, navigate to detail]
 - Forms present: [none]
-- Output: [.agent/artifacts/interaction-specs/YYYY-MM-DD__user-booking-invoice__interaction-spec.md]
+- Output: [.agent/artifacts/interaction-specs/YYYY-MM-DD__favorites__interaction-spec.md]
 ```
 
 ### Skill 08 - Auth And Permissions
@@ -587,11 +580,11 @@ Activate 08-auth-permissions
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [user-booking-invoice]
-- Route plan: [.agent/artifacts/routing/YYYY-MM-DD__user-booking-invoice__route-plan.md]
-- Feature type: [protected invoice download action]
-- Gated UI actions: [invoice download/preview]
-- Output: [.agent/artifacts/auth/YYYY-MM-DD__user-booking-invoice__auth-permissions-review.md]
+- Feature slug: [favorites]
+- Route plan: [.agent/artifacts/routing/YYYY-MM-DD__favorites__route-plan.md]
+- Feature type: [protected favorites screen]
+- Gated UI actions: [view favorites, remove favorite if supported]
+- Output: [.agent/artifacts/auth/YYYY-MM-DD__favorites__auth-permissions-review.md]
 ```
 
 ### Skill 09 - Testing
@@ -601,11 +594,11 @@ Activate 09-testing
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [user-booking-invoice]
-- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__user-booking-invoice__screen-analysis.md]
-- Interaction spec: [.agent/artifacts/interaction-specs/YYYY-MM-DD__user-booking-invoice__interaction-spec.md]
-- Auth review: [.agent/artifacts/auth/YYYY-MM-DD__user-booking-invoice__auth-permissions-review.md]
-- Output: [.agent/artifacts/test-cases/YYYY-MM-DD__user-booking-invoice__test-report.md]
+- Feature slug: [favorites]
+- Analysis file: [.agent/artifacts/analysis/YYYY-MM-DD__favorites__screen-analysis.md]
+- Interaction spec: [.agent/artifacts/interaction-specs/YYYY-MM-DD__favorites__interaction-spec.md]
+- Auth review: [.agent/artifacts/auth/YYYY-MM-DD__favorites__auth-permissions-review.md]
+- Output: [.agent/artifacts/test-cases/YYYY-MM-DD__favorites__test-report.md]
 ```
 
 ### Skill 10 - Optimization And Deploy
@@ -615,12 +608,12 @@ Activate 10-optimization-deploy
 
 Context:
 - Repo: [D:\DATN\danangtrip-web]
-- Feature slug: [user-booking-invoice]
-- Test report: [.agent/artifacts/test-cases/YYYY-MM-DD__user-booking-invoice__test-report.md]
+- Feature slug: [favorites]
+- Test report: [.agent/artifacts/test-cases/YYYY-MM-DD__favorites__test-report.md]
 - Test verdict: [READY | READY WITH RISKS | NOT READY]
 - Existing artifacts: [analysis, api-contract, route-plan, ui-spec, data-integration, interaction-spec, auth-review, test-report]
-- Output deploy: [.agent/artifacts/deploy/YYYY-MM-DD__user-booking-invoice__deploy-report.md]
-- Output review: [.agent/artifacts/review/YYYY-MM-DD__user-booking-invoice__review.md]
+- Output deploy: [.agent/artifacts/deploy/YYYY-MM-DD__favorites__deploy-report.md]
+- Output review: [.agent/artifacts/review/YYYY-MM-DD__favorites__review.md]
 ```
 
 ## Files Commonly Read Before Most Tasks

@@ -2,35 +2,36 @@
 
 ## Current Status
 - Date: 2026-05-22
-- Active feature/task: user-booking-invoice
-- Status: Active
-- Current step: 01-screen-analysis
-- Next step: 03-types-api-contract
-- Objective: Screen analysis for Hóa đơn booking PDF
-- Expected artifact: `.agent/artifacts/analysis/2026-05-22__user-booking-invoice__screen-analysis.md`
-- Mode: Planning/Analysis (non-code-producing)
+- Active feature/task: favorites
+- Status: Step 10 Completed
+- Current step: 10-optimization-deploy (Completed)
+- Next step: Await user review / branch handoff
+- Objective: Finalized deploy and review handoff for favorites
+- Expected artifact: `.agent/artifacts/deploy/2026-05-22__favorites__deploy-report.md`
+- Mode: Code-producing
 - Owner: AI collaborator
 
-### Progress Breakdown (user-booking-invoice)
-- [/] **01-screen-analysis**: In progress
-- [ ] **03-types-api-contract**: Pending
-- [ ] **04-layout-routing**: Pending
-- [ ] **05-ui-components**: Pending
-- [ ] **06-data-integration**: Pending
-- [ ] **07-interactions**: Pending
-- [ ] **08-auth-permissions**: Pending
-- [ ] **09-testing**: Pending
-- [ ] **10-optimization-deploy**: Pending
+### Progress Breakdown (favorites)
+- [x] **01-screen-analysis**: Completed
+- [x] **03-types-api-contract**: Completed
+- [x] **04-layout-routing**: Completed
+- [x] **05-ui-components**: Completed
+- [x] **06-data-integration**: Completed
+- [x] **07-interactions**: Completed
+- [x] **08-auth-permissions**: Completed
+- [x] **09-testing**: Completed
+- [x] **10-optimization-deploy**: Completed
 
 ## Context Summary
-- Transitioning to implementation of the "Hóa đơn booking PDF" action trigger (`user-booking-invoice`).
-- The endpoint `/user/bookings/{id}/invoice` returns `application/pdf` (binary file).
-- The action trigger will be embedded in `BookingDetailClient.tsx` for details by ID and details by booking code.
+- Triển khai màn hình "Địa điểm Yêu thích" (/favorites) cho danangtrip-web.
+- Phù hợp với tài liệu nghiệp vụ `user_favorites.md`.
+- Sử dụng các API `/user/favorites`, `/user/favorites/check`.
+- Kế hoạch triển khai đã được hệ thống phê duyệt và bắt đầu thực hiện.
 
 ## Known Issues / Risks
-- The transport service `bookingService.invoice` and the UI button callback are currently hardcoded to fetch JSON.
-- We must handle binary downloading correctly (using `responseType: "blob"` in axios) and handle non-blocking error formats if the API returns JSON errors on failure.
+- Step 09 verdict remains `READY WITH RISKS` because console/hydration validation was code-audit based rather than MCP browser verified.
+- Repo-level Next warnings remain: deprecated `middleware` naming and experimental edge-runtime notices.
 
 ## Recent Accomplishments
-- Completed the `user-booking-by-code` screen successfully through Step 10.
-- Loaded context and initiated Step 01 analysis for `user-booking-invoice`.
+- Đã hoàn thành `user-booking-by-code` (Step 10 passed).
+- Hoàn tất Step 10 cho `favorites`, bao gồm deploy report và review report.
