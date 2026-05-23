@@ -12,6 +12,7 @@ import {
   Heart,
   Bell,
   Sparkles,
+  Star,
 } from "lucide-react";
 import { cn } from "@/utils/string";
 
@@ -34,6 +35,12 @@ const SIDEBAR_ITEMS: SidebarItem[] = [
     labelKey: "sidebar.change_password",
     href: PROTECTED_ROUTES.PASSWORD,
     icon: Lock,
+  },
+  {
+    key: "ratings",
+    labelKey: "sidebar.ratings",
+    href: PROTECTED_ROUTES.RATINGS,
+    icon: Star,
   },
   {
     key: "recommendations",

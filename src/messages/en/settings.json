@@ -4,6 +4,7 @@
   "sidebar": {
     "profile": "Personal Profile",
     "change_password": "Change Password",
+    "ratings": "My Ratings",
     "bookings": "My Bookings",
     "favorites": "Saved Places",
     "notifications": "Notifications",
@@ -12,7 +13,12 @@
   "breadcrumb": {
     "home": "Home",
     "profile": "Personal Profile",
-    "change_password": "Change Password"
+    "change_password": "Change Password",
+    "ratings": "My Ratings",
+    "recommendations": "Recommended for you",
+    "bookings": "My Bookings",
+    "booking_detail": "Booking Detail",
+    "favorites": "Saved Places"
   },
   "change_password": {
     "page_title": "Change Password",

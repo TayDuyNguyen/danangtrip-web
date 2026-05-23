@@ -1,0 +1,68 @@
+{
+  "title": "Đánh giá của tôi",
+  "meta_description": "Xem, sửa và xóa tất cả các đánh giá bạn đã viết trên DaNangTrip.",
+  "breadcrumb": {
+    "home": "Trang chủ",
+    "profile": "Trang cá nhân",
+    "ratings": "Đánh giá của tôi"
+  },
+  "header": {
+    "title": "Đánh giá của tôi",
+    "count_single": "{count} đánh giá",
+    "count_plural": "{count} đánh giá"
+  },
+  "tabs": {
+    "all": "Tất cả ({count})",
+    "location": "Địa điểm ({count})",
+    "tour": "Tour ({count})"
+  },
+  "empty": {
+    "title": "Chưa có đánh giá nào",
+    "subtitle": "Hãy đặt các tour tuyệt vời hoặc ghé thăm các địa điểm nổi tiếng và chia sẻ trải nghiệm của bạn!",
+    "cta": "Khám phá Tour"
+  },
+  "card": {
+    "type_location": "Địa điểm",
+    "type_tour": "Tour du lịch",
+    "status_approved": "ĐÃ DUYỆT",
+    "status_pending": "CHỜ DUYỆT",
+    "status_rejected": "TỪ CHỐI",
+    "rejected_reason": "Lý do từ chối: {reason}",
+    "helpful_count": "{count} người thấy hữu ích",
+    "edit_tooltip": "Sửa đánh giá",
+    "delete_tooltip": "Xóa đánh giá",
+    "read_more": "Xem thêm",
+    "read_less": "Thu gọn",
+    "unnamed_item": "Không rõ tên"
+  },
+  "modal_edit": {
+    "title": "Sửa đánh giá",
+    "score_label": "Điểm đánh giá",
+    "comment_label": "Nội dung đánh giá",
+    "comment_placeholder": "Chia sẻ trải nghiệm chân thực của bạn tại đây (tối thiểu 10 ký tự, tối đa 500 ký tự)...",
+    "char_counter": "{count}/500 ký tự",
+    "images_label": "Ảnh đính kèm",
+    "upload_placeholder": "Thêm ảnh",
+    "upload_hint": "Tối đa 5 ảnh. Dung lượng < 5MB/ảnh.",
+    "submit": "Lưu thay đổi",
+    "cancel": "Hủy bỏ",
+    "updating": "Đang cập nhật..."
+  },
+  "dialog_delete": {
+    "title": "Xóa đánh giá?",
+    "message": "Bạn có chắc chắn muốn xóa đánh giá này? Hành động này sẽ xóa vĩnh viễn và không thể khôi phục lại.",
+    "confirm": "Xóa đánh giá",
+    "cancel": "Hủy bỏ",
+    "deleting": "Đang xóa..."
+  },
+  "toasts": {
+    "update_success": "Cập nhật đánh giá thành công!",
+    "update_error": "Không thể cập nhật đánh giá. Vui lòng kiểm tra lại thông tin.",
+    "delete_success": "Đã xóa đánh giá thành công!",
+    "delete_error": "Không thể xóa đánh giá lúc này. Vui lòng thử lại sau.",
+    "image_size_error": "Kích thước ảnh vượt quá 5MB. Vui lòng chọn ảnh khác.",
+    "image_limit_error": "Chỉ được tải lên tối đa 5 ảnh.",
+    "load_error": "Không thể tải danh sách đánh giá. Vui lòng thử lại.",
+    "retry_button": "Thử lại"
+  }
+}

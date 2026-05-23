@@ -57,7 +57,7 @@ export function BookingDetailClient({ id, bookingCode }: BookingDetailClientProp
         <div className="flex gap-4">
           <Button
             variant="secondary"
-            onClick={() => router.push("/bookings")}
+            onClick={() => router.push("/profile/bookings")}
             className="px-6 py-2.5 rounded-full"
           >
             {t("back_to_list")}
@@ -155,7 +155,7 @@ export function BookingDetailClient({ id, bookingCode }: BookingDetailClientProp
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-6 print:hidden">
         <div className="flex items-center gap-4">
           <button
-            onClick={() => router.push("/bookings")}
+            onClick={() => router.push("/profile/bookings")}
             className="p-2.5 rounded-full border border-border bg-surface-container hover:bg-surface-container-high transition-colors active:scale-95"
             aria-label="Back"
           >

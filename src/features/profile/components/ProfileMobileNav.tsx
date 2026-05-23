@@ -11,12 +11,14 @@ import {
   Heart,
   Bell,
   Sparkles,
+  Star,
 } from "lucide-react";
 import { cn } from "@/utils/string";
 
 const MOBILE_TABS = [
   { key: "profile", labelKey: "sidebar.profile", href: PROTECTED_ROUTES.PROFILE, Icon: User },
   { key: "change_password", labelKey: "sidebar.change_password", href: PROTECTED_ROUTES.PASSWORD, Icon: Lock },
+  { key: "ratings", labelKey: "sidebar.ratings", href: PROTECTED_ROUTES.RATINGS, Icon: Star },
   { key: "recommendations", labelKey: "sidebar.recommendations", href: PROTECTED_ROUTES.RECOMMENDATIONS, Icon: Sparkles },
   { key: "bookings", labelKey: "sidebar.bookings", href: PROTECTED_ROUTES.BOOKINGS, Icon: BookOpen },
   { key: "favorites", labelKey: "sidebar.favorites", href: PROTECTED_ROUTES.FAVORITES, Icon: Heart },

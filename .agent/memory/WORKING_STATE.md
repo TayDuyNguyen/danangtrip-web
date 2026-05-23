@@ -3,11 +3,11 @@
 ## Current Status
 
 - Date: 2026-05-23
-- Active feature/task: `user-recommendations`
+- Active feature/task: `user-my-ratings`
 - Status: Completed
 - Current step: Step 10: `10-optimization-deploy` completed and verified
 - Next step: Final user review & git commit push
-- Objective: Completed the protected recommendations page `/recommendations`, integrated Dynamic Reason Tags on cards, wired React Query cache fetching, and passed ESLint, typecheck, route integrity, and Next production builds.
+- Objective: Completed the protected ratings page `/profile/ratings`, integrated tabs, dynamic star score selection modal, character counters, deletion confirm dialogs, and backend type-filtering parameters.
 - Mode: Handoff
 - Owner: AI collaborator
 
@@ -26,38 +26,32 @@
 
 ## Current Reality
 
-- Route exists: none yet (target: `src/app/[locale]/(main)/(protected)/recommendations/page.tsx`).
-- Feature folder: none yet (target: `src/features/recommendations`).
-- Backend endpoint: `GET /recommendations` exists, modified to attach `recommendation_reason` dynamically.
-- Main component exists: none yet.
-- i18n exists: none yet (target: `src/messages/vi/recommendations.json`, `src/messages/en/recommendations.json`).
-- Export registered in feature barrel: none yet (target: `src/features/recommendations/index.ts`).
-- Static translations registered: none yet (target: `src/i18n/request.ts`).
-- Route constant registered: `src/config/routes.ts` (`PROTECTED_ROUTES.RECOMMENDATIONS`).
-- Middleware includes `/recommendations` as a protected route.
-
-## Validation
-
-- Step 01 completion: Static screen analysis generated and matches current Design tokens and backend structure.
+- Route exists: `src/app/[locale]/(main)/(protected)/profile/ratings/page.tsx`
+- Feature folder: `src/features/profile/ratings`
+- Backend endpoint: `GET /user/ratings` enhanced to support `'type' => 'location|tour'`. `PUT /ratings/{id}` and `DELETE /ratings/{id}` are ready.
+- Main component exists: `MyRatingsClient` wrapped by `ProfileLayoutWrapper` layout shell.
+- i18n exists: `src/messages/vi/ratings.json` and `src/messages/en/ratings.json` statically loaded inside `request.ts`.
 
 ## Known Issues / Risks
 
-- Empty recommendations: If the user has a fresh history, a premium empty state will be shown. In subsequent releases, we can implement fallback lists (e.g., featured locations or hot tours) if needed, but for baseline correctness, a clean empty state is implemented.
+- None. ESLint, TypeScript, Route Integrity, and Next Production builds compile with 100% SUCCESS and zero warnings/errors.
 
 ## Artifacts
 
-- Screen Analysis: `.agent/artifacts/analysis/2026-05-23__user-recommendations__screen-analysis.md`
-- Setup Report: `.agent/artifacts/setup/2026-05-23__user-recommendations__project-setup-report.md`
-- API Contract: `.agent/artifacts/api-contracts/2026-05-23__user-recommendations__api-contract.md`
-- Route Plan: `.agent/artifacts/routing/2026-05-23__user-recommendations__route-plan.md`
-- UI Spec: `.agent/artifacts/ui-specs/2026-05-23__user-recommendations__ui-spec.md`
-- Integration: `.agent/artifacts/integration/2026-05-23__user-recommendations__data-integration.md`
-- Interaction: `.agent/artifacts/interaction-specs/2026-05-23__user-recommendations__interaction-spec.md`
-- Auth Review: `.agent/artifacts/auth/2026-05-23__user-recommendations__auth-permissions-review.md`
-- Test Report: `.agent/artifacts/test-cases/2026-05-23__user-recommendations__test-report.md`
+- Screen Analysis: `.agent/artifacts/analysis/2026-05-23__user-my-ratings__screen-analysis.md`
+- Setup Report: `.agent/artifacts/setup/2026-05-23__user-my-ratings__project-setup-report.md`
+- API Contract: `.agent/artifacts/api-contracts/2026-05-23__user-my-ratings__api-contract.md`
+- Route Plan: `.agent/artifacts/routing/2026-05-23__user-my-ratings__route-plan.md`
+- UI Spec: `.agent/artifacts/ui-specs/2026-05-23__user-my-ratings__ui-spec.md`
+- Integration: `.agent/artifacts/integration/2026-05-23__user-my-ratings__data-integration.md`
+- Interaction: `.agent/artifacts/interaction-specs/2026-05-23__user-my-ratings__interaction-spec.md`
+- Auth Review: `.agent/artifacts/auth/2026-05-23__user-my-ratings__auth-permissions-review.md`
+- Test Report: `.agent/artifacts/test-cases/2026-05-23__user-my-ratings__test-report.md`
+- Deploy Report: `.agent/artifacts/deploy/2026-05-23__user-my-ratings__deploy-report.md`
+- Review Report: `.agent/artifacts/review/2026-05-23__user-my-ratings__review.md`
 - Walkthrough: `walkthrough.md`
 
 ## Suggested Git Handoff
 
-- Branch: `feat/DATN-90/user-recommendations`
-- Commit: `feat(recommendations): add screen analysis and data contracts`
+- Branch: `feat/DATN-88/user-my-ratings`
+- Commit: `feat(profile-ratings): implement my ratings screen and backend type-filtering`

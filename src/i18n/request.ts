@@ -20,6 +20,7 @@ import viVerifyEmail from "../messages/vi/verify-email.json";
 import viForgotPassword from "../messages/vi/forgot-password.json";
 import viResetPassword from "../messages/vi/reset-password.json";
 import viRecommendations from "../messages/vi/recommendations.json";
+import viRatings from "../messages/vi/ratings.json";
 
 import enCommon from "../messages/en/common.json";
 import enHome from "../messages/en/home.json";
@@ -39,6 +40,7 @@ import enVerifyEmail from "../messages/en/verify-email.json";
 import enForgotPassword from "../messages/en/forgot-password.json";
 import enResetPassword from "../messages/en/reset-password.json";
 import enRecommendations from "../messages/en/recommendations.json";
+import enRatings from "../messages/en/ratings.json";
 
 const messagesByLocale = {
   vi: {
@@ -60,6 +62,7 @@ const messagesByLocale = {
     forgotPassword: viForgotPassword,
     resetPassword: viResetPassword,
     recommendations: viRecommendations,
+    ratings: viRatings,
   },
   en: {
     common: enCommon,
@@ -80,6 +83,7 @@ const messagesByLocale = {
     forgotPassword: enForgotPassword,
     resetPassword: enResetPassword,
     recommendations: enRecommendations,
+    ratings: enRatings,
   },
 } as const satisfies Record<
   "vi" | "en",
@@ -101,7 +105,8 @@ const messagesByLocale = {
     | "verifyEmail"
     | "forgotPassword"
     | "resetPassword"
-    | "recommendations",
+    | "recommendations"
+    | "ratings",
     Record<string, unknown>
   >
 >;

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { FavoritesPageClient } from "@/features/favorites/components/FavoritesPageClient";
+import { ProfileLayoutWrapper } from "@/features/profile";
 
 interface Props {
   params: Promise<{ locale: string }>;
@@ -21,8 +22,13 @@ export default async function FavoritesPage({ params }: Props) {
   setRequestLocale(locale);
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-12">
+    <ProfileLayoutWrapper
+      breadcrumbs={[
+        { labelKey: "breadcrumb.profile", href: "/profile" },
+        { labelKey: "breadcrumb.favorites" },
+      ]}
+    >
       <FavoritesPageClient />
-    </div>
+    </ProfileLayoutWrapper>
   );
 }

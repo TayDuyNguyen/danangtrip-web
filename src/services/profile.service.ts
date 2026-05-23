@@ -3,7 +3,7 @@ import axiosInstance from "@/lib/axios";
 import type {
   ApiResponse,
   ChangePasswordInput,
-  LocationRatingListItem,
+  UserRatingListItem,
   PaginatedResponse,
   UpdateProfileInput,
   User,
@@ -25,6 +25,15 @@ export const profileService = {
   changePassword: (data: ChangePasswordInput): Promise<ApiResponse<unknown>> =>
     axiosInstance.put(API_ENDPOINTS.USER.CHANGE_PASSWORD, data),
 
-  ratings: (params?: { page?: number; per_page?: number }): Promise<ApiResponse<PaginatedResponse<LocationRatingListItem>>> =>
-    axiosInstance.get(API_ENDPOINTS.USER.RATINGS, { params }),
+  ratings: (params?: {
+    page?: number;
+    per_page?: number;
+    status?: "pending" | "approved" | "rejected" | "";
+    type?: "location" | "tour" | "";
+  }): Promise<ApiResponse<PaginatedResponse<UserRatingListItem>>> => {
+    const cleanParams = Object.fromEntries(
+      Object.entries(params ?? {}).filter(([, value]) => value !== "" && value !== undefined && value !== null)
+    );
+    return axiosInstance.get(API_ENDPOINTS.USER.RATINGS, { params: cleanParams });
+  },
 };

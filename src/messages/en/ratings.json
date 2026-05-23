@@ -1,0 +1,68 @@
+{
+  "title": "My Ratings",
+  "meta_description": "View, edit, and delete all the ratings and reviews you have written on DaNangTrip.",
+  "breadcrumb": {
+    "home": "Home",
+    "profile": "Profile",
+    "ratings": "My Ratings"
+  },
+  "header": {
+    "title": "My Ratings",
+    "count_single": "{count} rating",
+    "count_plural": "{count} ratings"
+  },
+  "tabs": {
+    "all": "All ({count})",
+    "location": "Locations ({count})",
+    "tour": "Tours ({count})"
+  },
+  "empty": {
+    "title": "No ratings yet",
+    "subtitle": "Book amazing tours or visit popular spots to share your valuable experiences with us!",
+    "cta": "Explore Tours"
+  },
+  "card": {
+    "type_location": "Location",
+    "type_tour": "Tour",
+    "status_approved": "APPROVED",
+    "status_pending": "PENDING",
+    "status_rejected": "REJECTED",
+    "rejected_reason": "Rejection reason: {reason}",
+    "helpful_count": "{count} people found helpful",
+    "edit_tooltip": "Edit review",
+    "delete_tooltip": "Delete review",
+    "read_more": "Read more",
+    "read_less": "Collapse",
+    "unnamed_item": "Unnamed Item"
+  },
+  "modal_edit": {
+    "title": "Edit Review",
+    "score_label": "Review Score",
+    "comment_label": "Review Comment",
+    "comment_placeholder": "Share your authentic experience here (min 10 characters, max 500 characters)...",
+    "char_counter": "{count}/500 characters",
+    "images_label": "Attached Images",
+    "upload_placeholder": "Add Image",
+    "upload_hint": "Maximum 5 images. Size < 5MB/image.",
+    "submit": "Save Changes",
+    "cancel": "Cancel",
+    "updating": "Updating..."
+  },
+  "dialog_delete": {
+    "title": "Delete Review?",
+    "message": "Are you sure you want to delete this review? This action will be permanently deleted and cannot be undone.",
+    "confirm": "Delete Review",
+    "cancel": "Cancel",
+    "deleting": "Deleting..."
+  },
+  "toasts": {
+    "update_success": "Review updated successfully!",
+    "update_error": "Failed to update review. Please check your inputs.",
+    "delete_success": "Review deleted successfully!",
+    "delete_error": "Failed to delete review. Please try again later.",
+    "image_size_error": "Image size exceeds 5MB limit. Please choose another file.",
+    "image_limit_error": "You can only upload up to 5 images.",
+    "load_error": "Failed to load ratings history. Please try again.",
+    "retry_button": "Retry"
+  }
+}

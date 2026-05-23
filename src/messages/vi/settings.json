@@ -4,6 +4,7 @@
   "sidebar": {
     "profile": "Hồ sơ cá nhân",
     "change_password": "Đổi mật khẩu",
+    "ratings": "Đánh giá của tôi",
     "bookings": "Đơn đặt tour",
     "favorites": "Địa điểm yêu thích",
     "notifications": "Thông báo",
@@ -12,7 +13,12 @@
   "breadcrumb": {
     "home": "Trang chủ",
     "profile": "Hồ sơ cá nhân",
-    "change_password": "Đổi mật khẩu"
+    "change_password": "Đổi mật khẩu",
+    "ratings": "Đánh giá của tôi",
+    "recommendations": "Gợi ý cho bạn",
+    "bookings": "Đơn đặt tour",
+    "booking_detail": "Chi tiết đơn đặt tour",
+    "favorites": "Địa điểm yêu thích"
   },
   "change_password": {
     "page_title": "Đổi mật khẩu",

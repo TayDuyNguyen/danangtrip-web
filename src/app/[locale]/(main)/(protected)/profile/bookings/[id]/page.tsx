@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { BookingDetailClient } from "@/features/tour/components/BookingDetailClient";
+import { ProfileLayoutWrapper } from "@/features/profile";
 
 interface Props {
   params: Promise<{ locale: string; id: string }>;
@@ -21,8 +22,14 @@ export default async function BookingDetailPage({ params }: Props) {
   setRequestLocale(locale);
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8 md:py-12">
+    <ProfileLayoutWrapper
+      breadcrumbs={[
+        { labelKey: "breadcrumb.profile", href: "/profile" },
+        { labelKey: "breadcrumb.bookings", href: "/profile/bookings" },
+        { labelKey: "breadcrumb.booking_detail" },
+      ]}
+    >
       <BookingDetailClient id={id} />
-    </div>
+    </ProfileLayoutWrapper>
   );
 }
