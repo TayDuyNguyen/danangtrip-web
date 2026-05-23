@@ -33,6 +33,37 @@ export const useLocations = (params: LocationQueryParams) => {
   }, [data, isLoading, error, isPlaceholderData]);
 };
 
+export const useCategoryLocations = (categorySlug: string, params: LocationQueryParams) => {
+  const backendParams = useMemo(() => mapLocationQueryParams(params), [params]);
+
+  const { data, isLoading, error, isPlaceholderData } = useQuery({
+    queryKey: ["locations", "category", categorySlug, backendParams],
+    queryFn: async () => {
+      const response = await locationService.getByCategory(categorySlug, backendParams);
+      return response.data;
+    },
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    enabled: !!categorySlug,
+  });
+
+  return useMemo(() => {
+    const paginator = data;
+    
+    return {
+      locations: paginator?.data || [],
+      pagination: {
+        total: paginator?.total || 0,
+        currentPage: paginator?.current_page || 1,
+        lastPage: paginator?.last_page || 1,
+        perPage: paginator?.per_page || 10,
+      },
+      isLoading,
+      error,
+      isPlaceholderData,
+    };
+  }, [data, isLoading, error, isPlaceholderData]);
+};
+
 export const useLocationCategories = () => {
   return useQuery({
     queryKey: ["locations", "categories"],

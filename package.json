@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "cross-env NODE_OPTIONS='--max-old-space-size=4096' next build --webpack",
-    "dev": "next dev",
+    "dev": "next dev --webpack",
     "build:cloudflare": "opennextjs-cloudflare build",
     "preview:cloudflare": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "deploy:cloudflare": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",

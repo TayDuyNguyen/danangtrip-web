@@ -146,7 +146,7 @@ const CategoryGrid = () => {
               return (
                 <Link
                   key={category.id}
-                  href={`${ROUTES.LOCATIONS}?categories=${category.id}`}
+                  href={`/categories/${category.slug}/locations`}
                   className="group flex flex-col items-center gap-6 shrink-0"
                   style={{ animationDelay: `${(index + 1) * 100}ms` }}
                 >
