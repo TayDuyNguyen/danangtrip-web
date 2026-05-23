@@ -53,6 +53,7 @@ export const PROTECTED_ROUTES = {
   BOOKING_BY_CODE: (bookingCode: string) => `/bookings/code/${bookingCode}`,
   FAVORITES: "/favorites",
   NOTIFICATIONS: "/notifications",
+  RECOMMENDATIONS: "/recommendations",
 } as const;
 
 // Dashboard routes (require authentication + admin/staff role)

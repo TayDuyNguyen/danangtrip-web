@@ -24,7 +24,31 @@ export default function LocationCard({ location }: LocationCardProps) {
   };
 
   const rating = parseFloat(location.avg_rating) || 0;
-  const image = location.thumbnail || (location.images && location.images[0]) || "/images/placeholder.jpg";
+  const isPlaceholder = (url?: string | null) => {
+    if (!url) return true;
+    const lower = url.toLowerCase();
+    return lower.includes("placeholder") || lower.includes("destination") || lower.includes("no-image") || lower.includes("temp");
+  };
+
+  const getValidImage = () => {
+    if (location.thumbnail && !isPlaceholder(location.thumbnail)) {
+      return location.thumbnail;
+    }
+    if (location.images && location.images[0] && !isPlaceholder(location.images[0])) {
+      return location.images[0];
+    }
+    const fallbacks = [
+      "/images/discovery/bana-hills.png",
+      "/images/discovery/dragon-bridge.png",
+      "/images/discovery/hoi-an.png",
+      "/images/discovery/my-khe.png",
+      "/images/discovery/son-tra.png"
+    ];
+    const index = typeof location.id === "number" ? Math.abs(location.id) % fallbacks.length : 0;
+    return fallbacks[index];
+  };
+
+  const image = getValidImage();
 
   return (
     <div className="group relative bg-surface-container-low rounded-xl overflow-hidden border border-[#262626] hover:border-[#8b6a55]/30 transition-all duration-700 hover:shadow-[0_20px_50px_rgba(0,0,0,0.3)] hover:-translate-y-2">

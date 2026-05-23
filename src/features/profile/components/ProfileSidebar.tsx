@@ -11,6 +11,7 @@ import {
   BookOpen,
   Heart,
   Bell,
+  Sparkles,
 } from "lucide-react";
 import { cn } from "@/utils/string";
 
@@ -33,6 +34,12 @@ const SIDEBAR_ITEMS: SidebarItem[] = [
     labelKey: "sidebar.change_password",
     href: PROTECTED_ROUTES.PASSWORD,
     icon: Lock,
+  },
+  {
+    key: "recommendations",
+    labelKey: "sidebar.recommendations",
+    href: PROTECTED_ROUTES.RECOMMENDATIONS,
+    icon: Sparkles,
   },
   {
     key: "bookings",

@@ -6,7 +6,8 @@
     "change_password": "Change Password",
     "bookings": "My Bookings",
     "favorites": "Saved Places",
-    "notifications": "Notifications"
+    "notifications": "Notifications",
+    "recommendations": "Recommended for you"
   },
   "breadcrumb": {
     "home": "Home",

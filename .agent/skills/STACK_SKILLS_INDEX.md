@@ -1,57 +1,55 @@
 # STACK SKILLS INDEX - DanangTrip Web
 
 Master index for the 10 local skills in `.agent/skills/`.
-Current selected web screen: `user-reset-password`.
+Current selected web screen: `user-recommendations`.
 
 ## Current Decision Snapshot
 
 Date locked: `2026-05-23`
 
 - Repo: `D:\DATN\danangtrip-web`
-- Selected screen: `Dat lai mat khau`
-- Feature slug: `user-reset-password`
-- Main route: `/reset-password`
-- Target page path: `src/app/[locale]/(auth)/reset-password/page.tsx`
-- Target component: `src/features/auth/components/reset-password-form.tsx`
-- Primary doc: `D:\DATN\DATN_Document\docs\page\user_reset_password.md`
-- API: `POST /auth/reset-password`
-- Status: selected next screen after `user-forgot-password` Step 10 completion.
-- Implementation reality: reset-password endpoint, type, service, schema, and backend route exist; no `/reset-password` route/page/component/i18n exists in the current web repo.
-- Cross-project order: this web prompt is independent from admin; do not use admin progress to decide web steps.
+- Selected screen: `Gợi ý dành riêng cho bạn`
+- Feature slug: `user-recommendations`
+- Main route: `/recommendations`
+- Target page path: `src/app/[locale]/(main)/(protected)/recommendations/page.tsx`
+- Target feature folder: `src/features/recommendations`
+- Primary doc: `D:\DATN\DATN_Document\docs\page\user_recommendations.md`
+- Primary API: `GET /recommendations?limit=12&type=location|tour`
+- Status: selected next screen after `user-reset-password` Step 10 completion.
+- Implementation reality: `user-reset-password` is now implemented and validated. `/recommendations` has no route/page/component in the web repo.
+- Cross-project rule: this web prompt is independent from admin; do not use admin progress to decide web steps.
 
 ## Why This Is Next
 
 - Current selection rule: only choose screens that do not yet have route/page/component code in the web repo.
-- `user-forgot-password` is completed and validated.
-- `src/config/api.ts` already defines `API_ENDPOINTS.AUTH.RESET_PASSWORD` as `/auth/reset-password`.
-- `src/types/auth.types.ts` already defines `ResetPasswordRequest`.
-- `src/services/auth.service.ts` already exposes `resetPassword(data)`.
-- `src/features/auth/validators/auth.schema.ts` already defines `resetPasswordSchema`, but it currently lacks `email` even though backend requires `email`, `token`, `password`, and `password_confirmation`.
-- Codegraph/repo search confirms there is no `src/app/[locale]/(auth)/reset-password/page.tsx`.
-- Codegraph/repo search confirms there is no `src/features/auth/components/reset-password-form.tsx`.
+- `user-reset-password` is completed with route, component, i18n, artifacts, and validation.
+- `user-booking-invoice` already has feature artifacts and invoice action integration in booking detail, so do not select it as a new standalone screen unless product explicitly asks for a separate route.
+- `user-recommendations.md` is the next ready standalone user screen with a real backend route: `GET /recommendations`.
+- Backend route is protected by auth middleware, so the page belongs under `(protected)`.
+- Existing `src/config/api.ts` does not yet expose `RECOMMENDATIONS`; Step 03 must add it.
 
-## Codegraph Findings
+## Codegraph / Repo Findings
 
-Read `D:\DATN\danangtrip-web\.codegraph\codegraph.db` before changing this feature, but verify against repo reality.
+Read `D:\DATN\danangtrip-web\.codegraph\codegraph.db` before changing this feature, then verify against repo reality.
 
-- Codegraph contains no file path matching `reset-password`.
-- Codegraph contains `ResetPasswordRequest`, `ResetPasswordData`, `resetPasswordSchema`, and `ResetPasswordSchema`.
-- Codegraph contains completed `forgot-password` route and form, so do not rebuild forgot-password.
-- Existing auth visual patterns to reuse: `login-form.tsx`, `register-form.tsx`, `forgot-password-form.tsx`, `verify-email-form.tsx`.
-- Middleware currently lists auth routes as `["/login", "/register", "/forgot-password"]`; Step 08 must verify whether `/reset-password` should be added as an auth/public recovery route.
-- Auth route constants currently include login/register/verify-email/forgot-password; Step 04 should add `RESET_PASSWORD`.
+- Codegraph/repo now contains `reset-password` route/form/i18n; do not rebuild that screen.
+- Repo has no `src/app/[locale]/(main)/(protected)/recommendations/page.tsx`.
+- Repo has no `src/features/recommendations`.
+- Existing reusable card/list patterns likely live in `src/features/locations`, `src/features/tour`, search/list pages, favorites, and home/recommendation snippets if present.
+- `src/middleware.ts` already protects `(protected)` routes such as profile, bookings, favorites, notifications. Step 08 must ensure `/recommendations` is included if needed.
+- Backend route: `routes/api.php` has authenticated `GET /recommendations` mapped to `SearchController@recommendations`.
 
 ## Goals
 
-- Deliver the missing `/reset-password` public auth screen through the 10-step feature pipeline.
-- Read `token` and `email` from URL query when provided; allow email entry when missing.
-- Submit the backend-compatible payload: `email`, `token`, `password`, `password_confirmation`.
-- Handle invalid/missing/expired token states with a link back to `/forgot-password`.
-- On success, show confirmation and provide navigation to `/login`; redirect only if this matches current auth UX.
-- Reuse current auth page visual language and i18n approach.
+- Deliver the missing `/recommendations` protected screen through the 10-step pipeline.
+- Display personalized recommended locations and tours.
+- Support tabs: all, locations, tours.
+- Use backend-compatible query params: `limit` and optional `type`.
+- Render loading, empty, error, fallback/discovery, and authenticated-only states.
+- Reuse existing location/tour card visual language and route links.
+- Do not implement unrelated screens: my ratings, nearby, cart, profile delete, categories pages, admin screens, or reset-password.
 - Produce artifacts for every step and update memory after each step.
-- Do not switch to forgot-password, login, register, verify-email, profile, booking, admin, or dashboard screens.
-- Do not use legacy `DATN_T...` document paths; current docs root is `D:\DATN\DATN_Document`.
+- Use current docs root `D:\DATN\DATN_Document`; do not use legacy document paths.
 
 ## Canonical Read Order
 
@@ -63,13 +61,13 @@ Before every skill step, read in this order:
 4. `.agent/memory/WORKING_STATE.md`
 5. `.agent/memory/HANDOFF.md`
 6. `.agent/memory/SESSION_LOG.md`
-7. Latest relevant `user-reset-password` artifacts if any
+7. Latest relevant `user-recommendations` artifacts if any
 8. `.agent/skills/STACK_SKILLS_INDEX.md`
 9. Current step `SKILL.md`
 10. `D:\DATN\danangtrip-web\.codegraph\codegraph.db`
 11. Real repo sources and docs listed in this prompt
 
-If these sources conflict, follow the earlier item unless repo reality proves it stale. Record stale facts in the artifact.
+If sources conflict, follow repo reality and record stale facts in the artifact.
 
 ## Memory Continuity Rules
 
@@ -84,14 +82,14 @@ If these sources conflict, follow the earlier item unless repo reality proves it
 | --- | --- | --- |
 | `01-screen-analysis` | Analysis only | Do not edit product code; create/update analysis artifact and memory. |
 | `02-project-setup` | Audit/setup | Usually no feature code; config/script fixes only if required. |
-| `03-types-api-contract` | Contract/code foundation | Align reset-password types/schema with backend payload, verify endpoint constants, service call, error mapping, and response shape. |
-| `04-layout-routing` | Routing/code scaffold | Add `/reset-password` route, route constant, metadata, i18n registration, and route-level query handling. |
-| `05-ui-components` | Code-producing | Implement reset-password form, password fields, token/email handling UI, success/error/loading states, and recovery navigation. |
-| `06-data-integration` | Code-producing | Wire API submit, backend-compatible payload mapping, validation, API error mapping, loading, success, and retry behavior. |
-| `07-interactions` | Code-producing | Implement submit behavior, duplicate-submit prevention, password visibility toggles if pattern exists, back-to-login, request-new-link, focus, disabled states. |
-| `08-auth-permissions` | Code-producing when guards are wrong | Verify page is public/auth route, no token auth required, and authenticated-user redirect policy does not block reset links. |
+| `03-types-api-contract` | Contract/code foundation | Add recommendation endpoint, request params, raw/view types, mapper/service/hook if project pattern requires. |
+| `04-layout-routing` | Routing/code scaffold | Add protected route page, route constant, i18n namespace registration, and navigation-safe links. |
+| `05-ui-components` | Code-producing | Implement hero, tabs, grid, location/tour cards, reason tags, skeleton, empty/error/fallback states. |
+| `06-data-integration` | Code-producing | Wire recommendation query, tab params, auth-aware fetch, favorite actions only if contract-safe. |
+| `07-interactions` | Code-producing | Implement tab switching, URL/search state if used, card navigation, retry, favorite toggle, disabled/loading behavior. |
+| `08-auth-permissions` | Code-producing when guards are wrong | Verify protected route, unauthenticated redirect, authenticated API call, token refresh/401 behavior. |
 | `09-testing` | Validation/fix loop | Run checks/tests and fix feature-caused failures. |
-| `10-optimization-deploy` | Finalization/fix loop | Final review, deploy readiness artifacts, memory handoff. |
+| `10-optimization-deploy` | Finalization/fix loop | Final review, deploy readiness artifacts, validation evidence, memory handoff. |
 
 ## Repository Reality
 
@@ -105,7 +103,6 @@ If these sources conflict, follow the earlier item unless repo reality proves it
 | Validation | Zod v4 |
 | HTTP | Axios v1 |
 | i18n | next-intl v4 |
-| Testing | Vitest v4 |
 | Deploy | Cloudflare Workers via OpenNext |
 
 ## Pipeline Map
@@ -131,19 +128,19 @@ SYSTEM EXECUTION CONTRACT
 Act as the execution agent for repository: `D:\DATN\danangtrip-web`
 
 CURRENT SCREEN LOCK
-- Feature slug: `user-reset-password`
-- Screen name: `Dat lai mat khau`
-- Main route: `/reset-password`
-- Target page path: `D:\DATN\danangtrip-web\src\app\[locale]\(auth)\reset-password\page.tsx`
-- Target component: `D:\DATN\danangtrip-web\src\features\auth\components\reset-password-form.tsx`
-- Feature type: public auth recovery screen for setting a new password from a reset email link.
-- Do not switch to forgot-password, login, register, verify-email, profile, booking, admin, or dashboard screens.
+- Feature slug: `user-recommendations`
+- Screen name: `Gợi ý dành riêng cho bạn`
+- Main route: `/recommendations`
+- Target page path: `D:\DATN\danangtrip-web\src\app\[locale]\(main)\(protected)\recommendations\page.tsx`
+- Target feature folder: `D:\DATN\danangtrip-web\src\features\recommendations`
+- Feature type: protected personalized recommendations page.
+- Do not switch to reset-password, forgot-password, profile ratings, category pages, cart, admin, or backend-only tasks.
 
 WHY THIS IS NEXT
-- `user-forgot-password` completed Step 10 and now provides the request-reset entry point.
-- `/reset-password` has no route/page/component/i18n in the web repo.
-- Backend route exists: `POST /auth/reset-password`.
-- Existing frontend API/service/schema support exists but needs contract alignment with backend because backend requires `email`, `token`, `password`, and confirmed password.
+- `user-reset-password` completed Step 10 and exists in repo.
+- `/recommendations` has no route/page/component code.
+- Backend has authenticated `GET /recommendations`.
+- Screen doc exists: `D:\DATN\DATN_Document\docs\page\user_recommendations.md`.
 
 MANDATORY READ ORDER BEFORE ANY WORK
 1. `D:\DATN\danangtrip-web\AGENTS.md`
@@ -152,7 +149,7 @@ MANDATORY READ ORDER BEFORE ANY WORK
 4. `D:\DATN\danangtrip-web\.agent\memory\WORKING_STATE.md`
 5. `D:\DATN\danangtrip-web\.agent\memory\HANDOFF.md`
 6. `D:\DATN\danangtrip-web\.agent\memory\SESSION_LOG.md`
-7. Latest relevant `user-reset-password` artifacts if any
+7. Latest relevant `user-recommendations` artifacts if any
 8. `D:\DATN\danangtrip-web\.agent\skills\STACK_SKILLS_INDEX.md`
 9. Current step `SKILL.md`
 10. `D:\DATN\danangtrip-web\.codegraph\codegraph.db`
@@ -160,13 +157,13 @@ MANDATORY READ ORDER BEFORE ANY WORK
 
 SCREEN AND API REFERENCES
 - Progress report: `D:\DATN\DATN_Document\docs\project_delivery_progress_report.md`
-- Primary screen doc: `D:\DATN\DATN_Document\docs\page\user_reset_password.md`
-- Related docs: `D:\DATN\DATN_Document\docs\page\user_forgot_password.md`; `D:\DATN\DATN_Document\docs\page\user_login.md`; `D:\DATN\DATN_Document\docs\page\user_register.md`
-- User page list: `D:\DATN\DATN_Document\docs\reference\list_page_user.md`
+- Primary screen doc: `D:\DATN\DATN_Document\docs\page\user_recommendations.md`
+- Related docs: `user_home.md`, `user_locations_list.md`, `user_tours_list.md`, `user_favorites.md`
 - API list: `D:\DATN\DATN_Document\docs\api\api_list.md`
-- Backend routes: `D:\DATN\danangtrip-api\routes\api.php`
-- Backend reset request: `D:\DATN\danangtrip-api\app\Http\Requests\Auth\ResetPasswordRequest.php`
-- Backend controller: `D:\DATN\danangtrip-api\app\Http\Controllers\Api\AuthController.php`
+- Backend route: `D:\DATN\danangtrip-api\routes\api.php`
+- Backend controller: `D:\DATN\danangtrip-api\app\Http\Controllers\Api\SearchController.php`
+- Backend request: `D:\DATN\danangtrip-api\app\Http\Requests\Search\RecommendationSearchRequest.php`
+- Backend service: `D:\DATN\danangtrip-api\app\Services\SearchService.php`
 
 REPO CONTEXT TO READ
 - `D:\DATN\danangtrip-web\DESIGN.md`
@@ -175,28 +172,23 @@ REPO CONTEXT TO READ
 - `D:\DATN\danangtrip-web\src\config\routes.ts`
 - `D:\DATN\danangtrip-web\src\middleware.ts`
 - `D:\DATN\danangtrip-web\src\i18n\request.ts`
-- `D:\DATN\danangtrip-web\src\services\auth.service.ts`
-- `D:\DATN\danangtrip-web\src\types\auth.types.ts`
-- `D:\DATN\danangtrip-web\src\features\auth\validators\auth.schema.ts`
-- `D:\DATN\danangtrip-web\src\features\auth\index.ts`
-- `D:\DATN\danangtrip-web\src\features\auth\components\login-form.tsx`
-- `D:\DATN\danangtrip-web\src\features\auth\components\forgot-password-form.tsx`
-- `D:\DATN\danangtrip-web\src\app\[locale]\(auth)\forgot-password\page.tsx`
+- Existing card/list references under `src/features/locations`, `src/features/tour`, `src/features/favorites`, `src/app/[locale]/(main)/(public)/locations/page.tsx`, `src/app/[locale]/(main)/(public)/tours/page.tsx`
 - `D:\DATN\danangtrip-web\src\messages\vi`
 - `D:\DATN\danangtrip-web\src\messages\en`
 
 CONTRACT DETAILS
-- Backend validation requires `email`, `token`, `password`, and Laravel confirmation field for `password`.
-- Frontend schema currently has `token`, `password`, `confirmPassword`; Step 03 must add/validate email and map `confirmPassword` to `password_confirmation` if the API type uses backend field names.
-- The screen should gracefully handle missing `token` or `email` query values.
-- Invalid/expired token states must offer a link to `/forgot-password`.
-- Success state should lead to `/login`.
+- API: `GET /recommendations`
+- Query: `limit` default `12`, max should follow backend request; optional `type=location|tour` if backend supports it.
+- Page requires logged-in user. Do not call it as public guest unless backend allows fallback.
+- Cards must link to `/locations/{slug}` or `/tours/{slug}`.
+- Favorite toggle is optional and must only be wired if existing favorite service contract is safe.
+- Empty result should offer CTA to `/locations` and `/tours`.
 
 EXECUTION RULES
 - Follow the 10-step pipeline strictly.
 - Do not mark a step complete without artifact and memory updates.
-- Keep all edits scoped to `user-reset-password`.
-- Prefer existing auth UI primitives and patterns over creating a parallel design system.
+- Keep all edits scoped to `user-recommendations`.
+- Prefer existing cards/components and i18n patterns over a parallel architecture.
 - Run validation in Step 09 and Step 10 as allowed by the environment.
 ```
 
@@ -205,113 +197,85 @@ EXECUTION RULES
 ### Step 01
 
 ```text
-Activate `01-screen-analysis` for `user-reset-password`.
-Read the mandatory context, codegraph findings, `user_reset_password.md`, backend `ResetPasswordRequest`, and current auth files.
-Work: document screen purpose, route, payload, query params, missing code, existing reusable patterns, backend/frontend contract gaps, risk list, and implementation plan.
-Output: `.agent/artifacts/analysis/2026-05-23__user-reset-password__screen-analysis.md`
+Activate `01-screen-analysis` for `user-recommendations`.
+Read mandatory context, codegraph, `user_recommendations.md`, backend recommendation route/request/service, and existing location/tour card patterns.
+Work: document purpose, protected route, API params, expected response shape, missing files, reusable patterns, risks, and implementation plan.
+Output: `.agent/artifacts/analysis/2026-05-23__user-recommendations__screen-analysis.md`
 ```
 
 ### Step 02
 
 ```text
-Activate `02-project-setup` for `user-reset-password`.
-Inspect package scripts, existing auth folder conventions, i18n registration, route structure, test/build gates, and artifact/memory paths.
-Work: verify setup readiness and note required config or script changes only if blocking.
-Output: `.agent/artifacts/setup/2026-05-23__user-reset-password__project-setup-report.md`
+Activate `02-project-setup` for `user-recommendations`.
+Inspect scripts, route conventions, protected layout, i18n registry, feature folder conventions, and validation gates.
+Work: verify setup readiness and note blocking config/script issues only.
+Output: `.agent/artifacts/setup/2026-05-23__user-recommendations__project-setup-report.md`
 ```
 
 ### Step 03
 
 ```text
-Activate `03-types-api-contract` for `user-reset-password`.
-Inspect: `src/config/api.ts`, `src/types/auth.types.ts`, `src/services/auth.service.ts`, `src/features/auth/validators/auth.schema.ts`, backend `ResetPasswordRequest.php`.
-Work: align frontend request type/schema/service payload with backend `email`, `token`, `password`, `password_confirmation`; preserve existing conventions; document response and errors.
-Output: `.agent/artifacts/api-contracts/2026-05-23__user-reset-password__api-contract.md`
+Activate `03-types-api-contract` for `user-recommendations`.
+Inspect `api.ts`, service patterns, existing location/tour types, favorites contract, backend `RecommendationSearchRequest`, `SearchService`.
+Work: add endpoint/types/service/hook/mapper needed for `GET /recommendations`; document params, response, auth and error behavior.
+Output: `.agent/artifacts/api-contracts/2026-05-23__user-recommendations__api-contract.md`
 ```
 
 ### Step 04
 
 ```text
-Activate `04-layout-routing` for `user-reset-password`.
-Target route: `/reset-password`
-Target page: `src/app/[locale]/(auth)/reset-password/page.tsx`
-Inspect: `src/config/routes.ts`, auth route pages/layouts, `src/i18n/request.ts`, middleware.
-Work: add route/page shell, metadata, route constant, locale behavior, query param handoff, and i18n namespace registration.
-Output: `.agent/artifacts/routing/2026-05-23__user-reset-password__route-plan.md`
+Activate `04-layout-routing` for `user-recommendations`.
+Target route: `/recommendations`.
+Work: add route constant, protected App Router page, metadata, i18n namespace registration, and middleware/protected-route alignment if needed.
+Output: `.agent/artifacts/routing/2026-05-23__user-recommendations__route-plan.md`
 ```
 
 ### Step 05
 
 ```text
-Activate `05-ui-components` for `user-reset-password`.
-Files: reset-password page/form and related auth UI components.
-References: `DESIGN.md`, `login-form.tsx`, `forgot-password-form.tsx`, `user_reset_password.md`.
-Work: implement form UI, token/email state, password and confirmation fields, missing-token state, success state, error state, loading state, back-to-login action, request-new-link action, responsive layout, and i18n strings.
-Output: `.agent/artifacts/ui-specs/2026-05-23__user-reset-password__ui-spec.md`
+Activate `05-ui-components` for `user-recommendations`.
+Work: implement hero, tabs, result grid, location card, tour card, reason tag, skeletons, empty state, error state, login/protected state messaging, and responsive layout.
+Output: `.agent/artifacts/ui-specs/2026-05-23__user-recommendations__ui-spec.md`
 ```
 
 ### Step 06
 
 ```text
-Activate `06-data-integration` for `user-reset-password`.
-Inspect: `auth.service.ts`, auth types/schema, reset-password form code, API error utility.
-Work: wire API submit with backend-compatible payload, validation, API error mapping, loading, success, retry, and disabled states.
-Output: `.agent/artifacts/integration/2026-05-23__user-reset-password__data-integration.md`
+Activate `06-data-integration` for `user-recommendations`.
+Work: wire recommendation query, tab filter params, loading/error/empty/fallback states, retry behavior, and optional favorite toggle only if existing API service supports it safely.
+Output: `.agent/artifacts/integration/2026-05-23__user-recommendations__data-integration.md`
 ```
 
 ### Step 07
 
 ```text
-Activate `07-interactions` for `user-reset-password`.
-Work: implement/fix submit flow, duplicate-submit prevention, Enter-key behavior, password visibility if existing pattern supports it, focus management, back-to-login navigation, request-new-link navigation, toasts/messages, and disabled states.
-Output: `.agent/artifacts/interaction-specs/2026-05-23__user-reset-password__interaction-spec.md`
+Activate `07-interactions` for `user-recommendations`.
+Work: implement tab switching, card navigation, CTA navigation, retry, favorite click behavior if present, disabled states, keyboard/focus and responsive interaction details.
+Output: `.agent/artifacts/interaction-specs/2026-05-23__user-recommendations__interaction-spec.md`
 ```
 
 ### Step 08
 
 ```text
-Activate `08-auth-permissions` for `user-reset-password`.
-Inspect: middleware, auth routes, public route behavior, authenticated-user redirect behavior.
-Work: verify reset-password is reachable without auth, API call does not require token, authenticated users are handled according to repo auth-route policy, and token query links are not blocked. Fix only real auth/permission gaps.
-Output: `.agent/artifacts/auth/2026-05-23__user-reset-password__auth-permissions-review.md`
+Activate `08-auth-permissions` for `user-recommendations`.
+Work: verify protected access, unauthenticated redirect to login with callback, authenticated API header behavior, 401/403 handling, and no accidental public data leakage.
+Output: `.agent/artifacts/auth/2026-05-23__user-recommendations__auth-permissions-review.md`
 ```
 
 ### Step 09
 
 ```text
-Activate `09-testing` for `user-reset-password`.
-Run as feasible: `npm.cmd run lint`, `npm.cmd run typecheck`, `npm.cmd run build`, focused tests if available, `npm.cmd run prepush:check`.
-Work: fix feature-caused failures and document pass/fail/skipped commands with evidence.
-Output: `.agent/artifacts/test-cases/2026-05-23__user-reset-password__test-report.md`
+Activate `09-testing` for `user-recommendations`.
+Run as feasible: `npm.cmd run lint`, `npm.cmd run typecheck`, `npm.cmd run build`, route checks, focused tests if available, and `npm.cmd run prepush:check`.
+Work: fix feature-caused failures and document pass/fail/skipped commands.
+Output: `.agent/artifacts/test-cases/2026-05-23__user-recommendations__test-report.md`
 ```
 
 ### Step 10
 
 ```text
-Activate `10-optimization-deploy` for `user-reset-password`.
+Activate `10-optimization-deploy` for `user-recommendations`.
 Inputs: artifacts 01-09, validation output, final git diff.
-Work: final review for route/API/i18n/UI/interactions/auth/tests, run or cite final validation, create deploy report and final review, update `WORKING_STATE.md`, `SESSION_LOG.md`, and `HANDOFF.md`.
-Completion rule: do not mark complete until deploy and review artifacts exist with validation evidence.
-Outputs: `.agent/artifacts/deploy/2026-05-23__user-reset-password__deploy-report.md`; `.agent/artifacts/review/2026-05-23__user-reset-password__review.md`
+Work: final review for route/API/i18n/UI/interactions/auth/tests, run or cite final validation, create deploy report and review, update memory files.
+Outputs: `.agent/artifacts/deploy/2026-05-23__user-recommendations__deploy-report.md`; `.agent/artifacts/review/2026-05-23__user-recommendations__review.md`
 ```
-
-## Files Commonly Read Before Most Tasks
-
-- `.agent/rules/PROJECT_RULES.md`
-- `.agent/rules/REPO_FACTS.md`
-- `.agent/memory/WORKING_STATE.md`
-- `.agent/memory/HANDOFF.md`
-- `package.json`
-- `src/config/api.ts`
-- `src/config/routes.ts`
-- `src/middleware.ts`
-- `src/i18n/request.ts`
-- `src/services/auth.service.ts`
-- `src/types/auth.types.ts`
-- `src/features/auth/validators/auth.schema.ts`
-- `src/features/auth/index.ts`
-- `src/features/auth/components/login-form.tsx`
-- `src/features/auth/components/forgot-password-form.tsx`
-- `src/app/[locale]/(auth)/forgot-password/page.tsx`
-- `src/messages/vi`
-- `src/messages/en`

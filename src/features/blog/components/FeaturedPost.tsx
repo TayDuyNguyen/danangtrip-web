@@ -21,11 +21,34 @@ export const FeaturedPost = ({ post }: FeaturedPostProps) => {
   const { locale } = useParams();
   const dateLocale = locale === "vi" ? vi : enUS;
 
+  const isPlaceholder = (url?: string | null) => {
+    if (!url) return true;
+    const lower = url.toLowerCase();
+    return lower.includes("placeholder") || lower.includes("destination") || lower.includes("no-image") || lower.includes("temp");
+  };
+
+  const getValidImage = () => {
+    if (post.featured_image && !isPlaceholder(post.featured_image)) {
+      return post.featured_image;
+    }
+    const fallbacks = [
+      "/images/discovery/bana-hills.png",
+      "/images/discovery/dragon-bridge.png",
+      "/images/discovery/hoi-an.png",
+      "/images/discovery/my-khe.png",
+      "/images/discovery/son-tra.png"
+    ];
+    const idx = typeof post.id === "number" ? Math.abs(post.id) % fallbacks.length : 0;
+    return fallbacks[idx];
+  };
+
+  const image = getValidImage();
+
   return (
     <div className="glass-surface rounded-[32px] overflow-hidden flex flex-col md:flex-row h-auto md:h-[400px] reveal-up">
       <div className="relative w-full md:w-1/2 h-64 md:h-full">
         <Image
-          src={post.featured_image || "/images/placeholder.jpg"}
+          src={image}
           alt={post.title}
           fill
           className="object-cover"
