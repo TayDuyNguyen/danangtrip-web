@@ -3,11 +3,11 @@
 ## Current Status
 
 - Date: 2026-05-23
-- Active feature/task: `user-my-ratings`
+- Active feature/task: `user-locations-by-category`
 - Status: Completed
 - Current step: Step 10: `10-optimization-deploy` completed and verified
 - Next step: Final user review & git commit push
-- Objective: Completed the protected ratings page `/profile/ratings`, integrated tabs, dynamic star score selection modal, character counters, deletion confirm dialogs, and backend type-filtering parameters.
+- Objective: Implement public category-filtered locations page with category details hero, subcategory pills, filter/sorting controls, pagination, and full backend query/filter parameters.
 - Mode: Handoff
 - Owner: AI collaborator
 
@@ -26,11 +26,11 @@
 
 ## Current Reality
 
-- Route exists: `src/app/[locale]/(main)/(protected)/profile/ratings/page.tsx`
-- Feature folder: `src/features/profile/ratings`
-- Backend endpoint: `GET /user/ratings` enhanced to support `'type' => 'location|tour'`. `PUT /ratings/{id}` and `DELETE /ratings/{id}` are ready.
-- Main component exists: `MyRatingsClient` wrapped by `ProfileLayoutWrapper` layout shell.
-- i18n exists: `src/messages/vi/ratings.json` and `src/messages/en/ratings.json` statically loaded inside `request.ts`.
+- Route exists: `src/app/[locale]/(main)/(public)/categories/[slug]/locations/page.tsx`
+- Feature folder: `src/features/locations/category`
+- Backend endpoint: `GET /categories/{slug}/locations` fully supports query params mapping (search, subcategory_id, districts, price_level, min_rating, sort_by, sort_order, page, per_page).
+- Main component exists: `CategoryLocationListClient` with premium glassmorphic hero backdrop glow, horizontal scrolling subcategory pills, sidebar filter component with `hideCategories` option, grid layout, and pagination controls.
+- i18n exists: category-scoped keys synchronized in `src/messages/vi/locations.json` and `src/messages/en/locations.json`.
 
 ## Known Issues / Risks
 
@@ -38,20 +38,11 @@
 
 ## Artifacts
 
-- Screen Analysis: `.agent/artifacts/analysis/2026-05-23__user-my-ratings__screen-analysis.md`
-- Setup Report: `.agent/artifacts/setup/2026-05-23__user-my-ratings__project-setup-report.md`
-- API Contract: `.agent/artifacts/api-contracts/2026-05-23__user-my-ratings__api-contract.md`
-- Route Plan: `.agent/artifacts/routing/2026-05-23__user-my-ratings__route-plan.md`
-- UI Spec: `.agent/artifacts/ui-specs/2026-05-23__user-my-ratings__ui-spec.md`
-- Integration: `.agent/artifacts/integration/2026-05-23__user-my-ratings__data-integration.md`
-- Interaction: `.agent/artifacts/interaction-specs/2026-05-23__user-my-ratings__interaction-spec.md`
-- Auth Review: `.agent/artifacts/auth/2026-05-23__user-my-ratings__auth-permissions-review.md`
-- Test Report: `.agent/artifacts/test-cases/2026-05-23__user-my-ratings__test-report.md`
-- Deploy Report: `.agent/artifacts/deploy/2026-05-23__user-my-ratings__deploy-report.md`
-- Review Report: `.agent/artifacts/review/2026-05-23__user-my-ratings__review.md`
+- Task Checklist: `task.md`
 - Walkthrough: `walkthrough.md`
+- Implementation Plan: `implementation_plan.md`
 
 ## Suggested Git Handoff
 
-- Branch: `feat/DATN-88/user-my-ratings`
-- Commit: `feat(profile-ratings): implement my ratings screen and backend type-filtering`
+- Branch: `feat/DATN-89/user-locations-by-category`
+- Commit: `feat(locations-category): implement category-filtered locations page with query parameters on backend and frontend`

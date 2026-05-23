@@ -11,8 +11,11 @@ export const locationService = {
   getAll: (params?: BackendLocationQueryParams): Promise<ApiResponse<PaginatedResponse<Location>>> =>
     axiosInstance.get(API_ENDPOINTS.LOCATIONS.LIST, { params }),
 
-  getByCategory: (categorySlug: string): Promise<ApiResponse<Location[]>> =>
-    axiosInstance.get(`/categories/${categorySlug}/locations`),
+  getByCategory: (
+    categorySlug: string,
+    params?: BackendLocationQueryParams
+  ): Promise<ApiResponse<PaginatedResponse<Location>>> =>
+    axiosInstance.get(`/categories/${categorySlug}/locations`, { params }),
 
   getDetail: (slug: string): Promise<ApiResponse<Location>> =>
     axiosInstance.get(API_ENDPOINTS.LOCATIONS.DETAIL(slug)),

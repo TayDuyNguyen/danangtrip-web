@@ -1,4 +1,14 @@
 {
+  "category": {
+    "breadcrumb_home": "Home",
+    "breadcrumb_locations": "Locations",
+    "results_count": "{count} locations in this category",
+    "results_count_search": "{count} locations matching in {category}",
+    "no_locations": "No locations in this category yet",
+    "reset_filters": "Reset Filters",
+    "fallback_cta": "Back to all locations",
+    "subcategories_title": "Subcategories"
+  },
   "title": "Featured Locations",
   "subtitle": "Discover the most popular destinations in Da Nang.",
   "grid": {

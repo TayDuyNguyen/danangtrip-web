@@ -16,16 +16,17 @@ import {
 import { cn } from "@/utils/string";
 
 interface LocationFiltersProps {
-  activeCategories: number[];
+  activeCategories?: number[];
   activeDistricts: string[];
   activePriceLevel?: number;
   activeRating?: number;
-  categories: Category[];
-  onCategoriesChange: (ids: number[]) => void;
+  categories?: Category[];
+  onCategoriesChange?: (ids: number[]) => void;
   onDistrictsChange: (districts: string[]) => void;
   onPriceLevelChange: (level?: number) => void;
   onRatingChange: (rating?: number) => void;
   onReset: () => void;
+  hideCategories?: boolean;
 }
 
 const CategoryIcon = ({ icon, className }: { icon: string | null; className?: string }) => {
@@ -61,16 +62,17 @@ const SectionHeader = ({ title, isExpanded, onToggle }: SectionHeaderProps) => (
 );
 
 export default function LocationFilters({ 
-  activeCategories, 
+  activeCategories = [], 
   activeDistricts, 
   activePriceLevel,
   activeRating,
-  categories,
+  categories = [],
   onCategoriesChange, 
   onDistrictsChange,
   onPriceLevelChange,
   onRatingChange,
-  onReset
+  onReset,
+  hideCategories = false
 }: LocationFiltersProps) {
   const t = useTranslations("locations");
 
@@ -87,6 +89,7 @@ export default function LocationFilters({
   };
 
   const toggleCategory = (id: number) => {
+    if (!onCategoriesChange) return;
     const newIds = activeCategories.includes(id)
       ? activeCategories.filter(i => i !== id)
       : [...activeCategories, id];
@@ -103,76 +106,78 @@ export default function LocationFilters({
   return (
     <div className="bg-surface-container-lowest rounded-xl p-8 shadow-xl shadow-black/30 border border-[#262626] space-y-10">
       {/* Categories */}
-      <div>
-        <SectionHeader 
-          title={t("filters.categories")} 
-          isExpanded={expanded.categories} 
-          onToggle={() => toggleSection("categories")} 
-        />
-        <div className={cn(
-          "space-y-3 transition-all duration-500 overflow-hidden",
-          expanded.categories ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0 pointer-events-none"
-        )}>
-          {/* All Option */}
-          <label className="flex items-center justify-between group cursor-pointer pb-2">
-            <div className="flex items-center gap-4">
-              <div className="relative flex items-center">
-                <input
-                  type="checkbox"
-                  checked={activeCategories.length === 0}
-                  onChange={() => onCategoriesChange([])}
-                  className="peer appearance-none w-6 h-6 rounded-lg border-2 border-outline-variant/30 checked:bg-[#8b6a55] checked:border-[#8b6a55] transition-all duration-300"
-                />
-                <svg className="absolute w-4 h-4 text-white opacity-0 peer-checked:opacity-100 left-1 pointer-events-none transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="4">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-              <span className={cn(
-                "text-[15px] font-bold transition-colors",
-                activeCategories.length === 0 ? "text-[#8b6a55]" : "text-on-surface"
-              )}>
-                {t("filters.all")}
-              </span>
-            </div>
-          </label>
-
-          {categories.map((cat) => (
-            <label 
-              key={cat.id}
-              className="flex items-center justify-between group cursor-pointer"
-            >
+      {!hideCategories && categories.length > 0 && (
+        <div>
+          <SectionHeader 
+            title={t("filters.categories")} 
+            isExpanded={expanded.categories} 
+            onToggle={() => toggleSection("categories")} 
+          />
+          <div className={cn(
+            "space-y-3 transition-all duration-500 overflow-hidden",
+            expanded.categories ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0 pointer-events-none"
+          )}>
+            {/* All Option */}
+            <label className="flex items-center justify-between group cursor-pointer pb-2">
               <div className="flex items-center gap-4">
                 <div className="relative flex items-center">
                   <input
                     type="checkbox"
-                    checked={activeCategories.includes(cat.id)}
-                    onChange={() => toggleCategory(cat.id)}
+                    checked={activeCategories.length === 0}
+                    onChange={() => onCategoriesChange && onCategoriesChange([])}
                     className="peer appearance-none w-6 h-6 rounded-lg border-2 border-outline-variant/30 checked:bg-[#8b6a55] checked:border-[#8b6a55] transition-all duration-300"
                   />
                   <svg className="absolute w-4 h-4 text-white opacity-0 peer-checked:opacity-100 left-1 pointer-events-none transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="4">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
-                <div className={cn(
-                  "w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300",
-                  activeCategories.includes(cat.id) ? "bg-[#171717] text-[#8b6a55]" : "bg-surface-container-low text-on-surface-variant/50"
-                )}>
-                  <CategoryIcon icon={cat.icon} className="text-xl" />
-                </div>
                 <span className={cn(
                   "text-[15px] font-bold transition-colors",
-                  activeCategories.includes(cat.id) ? "text-[#8b6a55]" : "text-on-surface"
+                  activeCategories.length === 0 ? "text-[#8b6a55]" : "text-on-surface"
                 )}>
-                  {cat.name}
+                  {t("filters.all")}
                 </span>
               </div>
-              <span className="text-xs font-medium text-on-surface-variant/40 group-hover:text-on-surface-variant transition-colors">
-                (28)
-              </span>
             </label>
-          ))}
+
+            {categories.map((cat) => (
+              <label 
+                key={cat.id}
+                className="flex items-center justify-between group cursor-pointer"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="relative flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={activeCategories.includes(cat.id)}
+                      onChange={() => toggleCategory(cat.id)}
+                      className="peer appearance-none w-6 h-6 rounded-lg border-2 border-outline-variant/30 checked:bg-[#8b6a55] checked:border-[#8b6a55] transition-all duration-300"
+                    />
+                    <svg className="absolute w-4 h-4 text-white opacity-0 peer-checked:opacity-100 left-1 pointer-events-none transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="4">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <div className={cn(
+                    "w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300",
+                    activeCategories.includes(cat.id) ? "bg-[#171717] text-[#8b6a55]" : "bg-surface-container-low text-on-surface-variant/50"
+                  )}>
+                    <CategoryIcon icon={cat.icon} className="text-xl" />
+                  </div>
+                  <span className={cn(
+                    "text-[15px] font-bold transition-colors",
+                    activeCategories.includes(cat.id) ? "text-[#8b6a55]" : "text-on-surface"
+                  )}>
+                    {cat.name}
+                  </span>
+                </div>
+                <span className="text-xs font-medium text-on-surface-variant/40 group-hover:text-on-surface-variant transition-colors">
+                  (28)
+                </span>
+              </label>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Districts */}
       <div>

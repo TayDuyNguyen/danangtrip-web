@@ -1,4 +1,14 @@
 {
+  "category": {
+    "breadcrumb_home": "Trang chủ",
+    "breadcrumb_locations": "Địa điểm",
+    "results_count": "{count} địa điểm trong danh mục này",
+    "results_count_search": "{count} địa điểm phù hợp trong {category}",
+    "no_locations": "Chưa có địa điểm nào trong danh mục này",
+    "reset_filters": "Xóa bộ lọc",
+    "fallback_cta": "Quay lại danh sách địa điểm",
+    "subcategories_title": "Danh mục con"
+  },
   "title": "Địa điểm nổi bật",
   "subtitle": "Khám phá những điểm đến được yêu thích nhất tại Đà Nẵng.",
   "grid": {
