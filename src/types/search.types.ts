@@ -13,7 +13,26 @@ export interface SearchRequestParams {
   session_id?: string;
 }
 
+import type { Location, Tour } from "./entities.types";
+
 export interface SearchSuggestionResponse {
   q: string;
   items: string[];
+}
+
+export interface RecommendationParams {
+  limit?: number;
+}
+
+export interface RecommendedLocation extends Location {
+  recommendation_reason?: "viewed" | "similar_favorite" | "popular" | "booked" | string;
+}
+
+export interface RecommendedTour extends Tour {
+  recommendation_reason?: "viewed" | "similar_favorite" | "popular" | "booked" | string;
+}
+
+export interface RecommendationResponse {
+  locations: RecommendedLocation[];
+  tours: RecommendedTour[];
 }

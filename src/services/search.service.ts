@@ -1,7 +1,7 @@
 import { API_ENDPOINTS } from "@/config";
 import axiosInstance from "@/lib/axios";
 import { ApiResponse, PaginatedResponse } from "@/types";
-import type { Location, Tour } from "@/types";
+import type { Location, Tour, RecommendedLocation, RecommendedTour } from "@/types";
 import type { SearchRequestParams, SearchSuggestionResponse } from "@/types/search.types";
 
 export const searchService = {
@@ -33,4 +33,10 @@ export const searchService = {
    */
   getTrending: (limit: number = 10): Promise<ApiResponse<string[]>> =>
     axiosInstance.get(API_ENDPOINTS.SEARCH.TRENDING, { params: { limit: Math.min(Math.max(limit, 1), 50) } }),
+
+  /**
+   * Get personalized recommendations
+   */
+  getRecommendations: (params?: { limit?: number }): Promise<ApiResponse<{ locations: RecommendedLocation[]; tours: RecommendedTour[] }>> =>
+    axiosInstance.get(API_ENDPOINTS.RECOMMENDATIONS, { params }),
 };

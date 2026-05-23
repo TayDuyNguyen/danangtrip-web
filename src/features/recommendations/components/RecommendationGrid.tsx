@@ -1,0 +1,223 @@
+"use client";
+
+import { useState } from "react";
+import { useTranslations } from "next-intl";
+import { IoCompassOutline, IoAlertCircleOutline } from "@/components/icons/solar";
+import { Link } from "@/i18n/navigation";
+import { Button } from "@/components/ui";
+import { useRecommendationsQuery } from "../hooks/useRecommendationsQuery";
+import LocationCard from "@/features/locations/components/LocationCard";
+import TourCard from "@/features/tour/components/TourCard";
+import ReasonTag from "./ReasonTag";
+import { ROUTES } from "@/config";
+
+export default function RecommendationGrid() {
+  const t = useTranslations("recommendations");
+  const [activeTab, setActiveTab] = useState<"all" | "location" | "tour">("all");
+
+  const { data, isLoading, isError, refetch } = useRecommendationsQuery();
+
+  const locations = data?.locations || [];
+  const tours = data?.tours || [];
+
+  // Filter lists based on active tab
+  const showLocations = activeTab === "all" || activeTab === "location";
+  const showTours = activeTab === "all" || activeTab === "tour";
+
+  const hasData = locations.length > 0 || tours.length > 0;
+  const isFilteredEmpty =
+    (activeTab === "location" && locations.length === 0) ||
+    (activeTab === "tour" && tours.length === 0) ||
+    !hasData;
+
+  const handleTabChange = (tab: "all" | "location" | "tour") => {
+    setActiveTab(tab);
+  };
+
+  // Render Skeletons
+  if (isLoading) {
+    return (
+      <div className="space-y-12">
+        <TabSkeleton />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 py-6">
+          {Array.from({ length: 8 }).map((_, index) => (
+            <CardSkeleton key={index} index={index} />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // Render Error
+  if (isError) {
+    return (
+      <div className="space-y-12">
+        <TabSkeleton />
+        <div className="rounded-2xl border border-[#262626] bg-[#080808]/40 p-12 text-center backdrop-blur-md max-w-xl mx-auto my-12 animate-in fade-in slide-in-from-top-4 duration-700">
+          <div className="w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-4">
+            <IoAlertCircleOutline className="w-6 h-6 text-red-500" />
+          </div>
+          <h3 className="text-white font-bold text-lg mb-2">{t("error.title")}</h3>
+          <p className="text-on-surface-subtle text-sm mb-6 max-w-sm mx-auto">{t("error.message")}</p>
+          <Button
+            onClick={() => refetch()}
+            className="rounded-full bg-[#8b6a55] hover:bg-[#a67c63] px-8 py-3 text-xs font-black uppercase tracking-widest text-white transition-all duration-300 shadow-md"
+          >
+            {t("error.retry")}
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  // Render Empty State
+  if (!hasData) {
+    return (
+      <div className="space-y-12">
+        <TabSkeleton />
+        <div className="rounded-2xl border border-[#262626] bg-[#080808]/20 p-16 text-center backdrop-blur-md max-w-xl mx-auto my-12 animate-in fade-in slide-in-from-top-4 duration-700">
+          <div className="w-16 h-16 rounded-full bg-[#8b6a55]/10 flex items-center justify-center mx-auto mb-6">
+            <IoCompassOutline className="w-8 h-8 text-[#8b6a55]" />
+          </div>
+          <h3 className="text-white font-bold text-2xl mb-3">{t("empty.title")}</h3>
+          <p className="text-on-surface-subtle text-sm mb-8 leading-relaxed max-w-sm mx-auto">
+            {t("empty.subtitle")}
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href={ROUTES.LOCATIONS}
+              className="px-6 py-3 bg-[#8b6a55] hover:bg-[#a67c63] text-white text-xs font-black uppercase tracking-widest rounded-full transition-all duration-300 text-center shadow-md active:scale-95"
+            >
+              {t("empty.cta_locations")}
+            </Link>
+            <Link
+              href={ROUTES.TOURS}
+              className="px-6 py-3 bg-[#171717] hover:bg-[#262626] text-white text-xs font-black uppercase tracking-widest rounded-full border border-[#262626] transition-all duration-300 text-center active:scale-95"
+            >
+              {t("empty.cta_tours")}
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-10">
+      {/* Control Tab Bar */}
+      <div className="flex border-b border-[#262626] w-full max-w-md">
+        {(["all", "location", "tour"] as const).map((tab) => (
+          <button
+            key={tab}
+            onClick={() => handleTabChange(tab)}
+            className={`flex-1 py-4 text-center font-bold text-sm tracking-wide transition-all duration-300 relative focus:outline-none ${
+              activeTab === tab
+                ? "text-[#8b6a55]"
+                : "text-on-surface-subtle hover:text-[#8b6a55]/80"
+            }`}
+          >
+            {t(`tabs.${tab === "all" ? "all" : tab === "location" ? "locations" : "tours"}`)}
+            {activeTab === tab && (
+              <span className="absolute bottom-0 inset-x-0 h-0.5 bg-[#8b6a55] animate-in fade-in zoom-in-95 duration-300" />
+            )}
+          </button>
+        ))}
+      </div>
+
+      {/* Grid Results */}
+      {isFilteredEmpty ? (
+        <div className="rounded-2xl border border-[#262626] bg-[#080808]/20 p-16 text-center max-w-md mx-auto my-12">
+          <IoCompassOutline className="w-12 h-12 text-on-surface-subtle/40 mx-auto mb-4" />
+          <p className="text-on-surface-subtle font-medium text-sm">{t("empty.title")}</p>
+        </div>
+      ) : (
+        <div className="space-y-16">
+          {/* Recommended Locations Grid Section */}
+          {showLocations && locations.length > 0 && (
+            <div className="space-y-6">
+              <div className="flex items-center gap-4">
+                <h2 className="text-2xl font-black text-white uppercase tracking-wider">
+                  {t("sections.locations")}
+                </h2>
+                <div className="h-px bg-[#262626] flex-1" />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {locations.map((item, index) => (
+                  <div
+                    key={`loc-${item.id}`}
+                    className="flex flex-col gap-3 reveal-up"
+                    style={{ animationDelay: `${index * 100}ms` }}
+                  >
+                    <LocationCard location={item} />
+                    <div className="pl-2">
+                      <ReasonTag reason={item.recommendation_reason as "viewed" | "similar_favorite" | "popular" | "booked"} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Recommended Tours Grid Section */}
+          {showTours && tours.length > 0 && (
+            <div className="space-y-6">
+              <div className="flex items-center gap-4">
+                <h2 className="text-2xl font-black text-white uppercase tracking-wider">
+                  {t("sections.tours")}
+                </h2>
+                <div className="h-px bg-[#262626] flex-1" />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {tours.map((item, index) => (
+                  <div
+                    key={`tour-${item.id}`}
+                    className="flex flex-col gap-3 reveal-up"
+                    style={{ animationDelay: `${index * 100}ms` }}
+                  >
+                    <TourCard tour={item} />
+                    <div className="pl-2">
+                      <ReasonTag reason={item.recommendation_reason as "viewed" | "similar_favorite" | "popular" | "booked"} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Sub components
+function TabSkeleton() {
+  return (
+    <div className="flex border-b border-[#262626] w-full max-w-md animate-pulse">
+      {Array.from({ length: 3 }).map((_, i) => (
+        <div key={i} className="flex-1 py-4 flex justify-center">
+          <div className="h-4 bg-neutral-900 rounded w-16" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function CardSkeleton({ index }: { index: number }) {
+  return (
+    <div
+      className="p-px rounded-xl bg-linear-to-br from-[rgba(92,56,34,0.1)] to-[rgba(46,58,47,0.05)] animate-pulse"
+      style={{ animationDelay: `${index * 100}ms` }}
+    >
+      <div className="bg-surface border border-border rounded-xl overflow-hidden flex flex-col h-[380px]">
+        <div className="aspect-4/3 w-full bg-neutral-900" />
+        <div className="p-5 space-y-4 flex-1 flex flex-col justify-between">
+          <div className="space-y-2">
+            <div className="h-3 bg-neutral-900 rounded w-1/3" />
+            <div className="h-5 bg-neutral-900 rounded w-3/4" />
+          </div>
+          <div className="h-8 bg-neutral-900 rounded w-full mt-auto" />
+        </div>
+      </div>
+    </div>
+  );
+}

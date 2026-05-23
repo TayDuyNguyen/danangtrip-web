@@ -21,6 +21,29 @@ export const PostCard = ({ post, index = 0 }: PostCardProps) => {
   const { locale } = useParams();
   const dateLocale = locale === "vi" ? vi : enUS;
 
+  const isPlaceholder = (url?: string | null) => {
+    if (!url) return true;
+    const lower = url.toLowerCase();
+    return lower.includes("placeholder") || lower.includes("destination") || lower.includes("no-image") || lower.includes("temp");
+  };
+
+  const getValidImage = () => {
+    if (post.featured_image && !isPlaceholder(post.featured_image)) {
+      return post.featured_image;
+    }
+    const fallbacks = [
+      "/images/discovery/bana-hills.png",
+      "/images/discovery/dragon-bridge.png",
+      "/images/discovery/hoi-an.png",
+      "/images/discovery/my-khe.png",
+      "/images/discovery/son-tra.png"
+    ];
+    const idx = typeof post.id === "number" ? Math.abs(post.id) % fallbacks.length : 0;
+    return fallbacks[idx];
+  };
+
+  const image = getValidImage();
+
   return (
     <Link 
       href={`/${locale}/blog/${post.slug}`}
@@ -29,7 +52,7 @@ export const PostCard = ({ post, index = 0 }: PostCardProps) => {
     >
       <div className="relative aspect-16/10 overflow-hidden">
         <Image
-          src={post.featured_image || "/images/placeholder.jpg"}
+          src={image}
           alt={post.title}
           fill
           className="object-cover transition-transform duration-500 group-hover:scale-110"

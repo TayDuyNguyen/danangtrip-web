@@ -24,6 +24,27 @@ const TourCard = ({ tour, className, index = 0 }: TourCardProps) => {
   const originalPrice = parseFloat(tour.price_adult);
   const discountedPrice = originalPrice * (1 - discountPercent / 100);
 
+  const isPlaceholder = (url?: string | null) => {
+    if (!url) return true;
+    const lower = url.toLowerCase();
+    return lower.includes("placeholder") || lower.includes("destination") || lower.includes("no-image") || lower.includes("temp");
+  };
+
+  const getValidImage = () => {
+    if (tour.thumbnail && !isPlaceholder(tour.thumbnail)) {
+      return tour.thumbnail;
+    }
+    const fallbacks = [
+      "/images/tours/bana-hills.png",
+      "/images/tours/hoian.png",
+      "/images/tours/sontra.png"
+    ];
+    const index = typeof tour.id === "number" ? Math.abs(tour.id) % fallbacks.length : 0;
+    return fallbacks[index];
+  };
+
+  const image = getValidImage();
+
   return (
     <div
       className={cn(
@@ -41,7 +62,7 @@ const TourCard = ({ tour, className, index = 0 }: TourCardProps) => {
         {/* Image Container */}
         <div className="relative aspect-4/3 overflow-hidden">
           <Image
-            src={tour.thumbnail || "/images/placeholder.png"}
+            src={image}
             alt={tour.name}
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-110"

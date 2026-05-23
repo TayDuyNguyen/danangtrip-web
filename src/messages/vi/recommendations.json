@@ -1,0 +1,34 @@
+{
+  "meta_title": "Gợi ý dành riêng cho bạn | DanangTrip",
+  "meta_description": "Khám phá địa điểm du lịch và các tour cá nhân hóa dựa trên lịch sử khám phá và sở thích của bạn tại Đà Nẵng.",
+  "title": "Gợi ý dành riêng cho bạn",
+  "subtitle": "Dựa trên lịch sử khám phá và sở thích của bạn",
+  "breadcrumb": "Trang chủ / Gợi ý cho bạn",
+  "breadcrumb_home": "Trang chủ",
+  "tabs": {
+    "all": "Tất cả",
+    "locations": "Địa điểm",
+    "tours": "Tour"
+  },
+  "reasons": {
+    "viewed": "Bạn đã xem gần đây",
+    "similar_favorite": "Tương tự yêu thích",
+    "popular": "Phổ biến gần bạn",
+    "booked": "Được đặt nhiều"
+  },
+  "empty": {
+    "title": "Chưa có gợi ý nào",
+    "subtitle": "Hãy khám phá thêm địa điểm và tour để chúng tôi có thể đưa ra các gợi ý phù hợp nhất cho bạn!",
+    "cta_locations": "Khám phá Địa điểm",
+    "cta_tours": "Khám phá Tour"
+  },
+  "error": {
+    "title": "Lỗi tải gợi ý",
+    "message": "Đã xảy ra lỗi trong quá trình tải dữ liệu gợi ý. Vui lòng thử lại sau.",
+    "retry": "Thử lại"
+  },
+  "sections": {
+    "locations": "Địa điểm gợi ý",
+    "tours": "Tour du lịch gợi ý"
+  }
+}

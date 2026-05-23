@@ -88,4 +88,5 @@ export const API_ENDPOINTS = {
   LANDING_PAGES: {
     DETAIL: (slug: string) => `/landing-pages/${slug}`,
   },
+  RECOMMENDATIONS: "/recommendations",
 };

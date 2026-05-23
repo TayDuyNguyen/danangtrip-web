@@ -112,6 +112,12 @@ const Header = () => {
                   {t("auth.profile")}
                 </Link>
                 <Link
+                  href={ROUTES.RECOMMENDATIONS}
+                  className="block px-4 py-2 text-sm text-[#d4d4d4] hover:bg-[#171717]"
+                >
+                  {t("auth.recommendations")}
+                </Link>
+                <Link
                   href={ROUTES.BOOKINGS}
                   className="block px-4 py-2 text-sm text-[#d4d4d4] hover:bg-[#171717]"
                 >
@@ -173,7 +179,7 @@ const Header = () => {
               </button>
             </div>
 
-            <nav className="flex flex-col p-6 gap-2">
+            <nav className="flex flex-col p-6 gap-2 max-h-[calc(100vh-80px)] overflow-y-auto">
               {NAV_LINKS.map((link, index: number) => (
                 <Link
                   key={link.path}
@@ -191,6 +197,48 @@ const Header = () => {
                   )}
                 </Link>
               ))}
+
+              {/* Authenticated user links in mobile drawer */}
+              {isAuthenticated && (
+                <div className="mt-4 pt-4 border-t border-[#262626] flex flex-col gap-2">
+                  <div className="px-4 py-2 mb-1">
+                    <p className="text-xs text-[#737373]">{t("auth.profile")}</p>
+                    <p className="text-sm font-semibold truncate text-white">
+                      {user?.name || t("auth.profile")}
+                    </p>
+                  </div>
+                  <Link
+                    href={ROUTES.PROFILE}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-center gap-4 p-4 rounded-xl text-[#d4d4d4] hover:bg-[#171717] transition-all duration-200"
+                  >
+                    <span className="text-lg font-medium">{t("auth.profile")}</span>
+                  </Link>
+                  <Link
+                    href={ROUTES.RECOMMENDATIONS}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-center gap-4 p-4 rounded-xl text-[#d4d4d4] hover:bg-[#171717] transition-all duration-200"
+                  >
+                    <span className="text-lg font-medium">{t("auth.recommendations")}</span>
+                  </Link>
+                  <Link
+                    href={ROUTES.BOOKINGS}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-center gap-4 p-4 rounded-xl text-[#d4d4d4] hover:bg-[#171717] transition-all duration-200"
+                  >
+                    <span className="text-lg font-medium">{tTour("history.header_link")}</span>
+                  </Link>
+                  <button
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      logout();
+                    }}
+                    className="flex items-center gap-4 p-4 rounded-xl text-red-400 hover:bg-red-500/10 transition-all duration-200 text-left w-full"
+                  >
+                    <span className="text-lg font-medium">{t("auth.logout")}</span>
+                  </button>
+                </div>
+              )}
             </nav>
           </div>
         </>

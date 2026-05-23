@@ -68,20 +68,44 @@ export const BlogSidebar = ({ onCategorySelect, selectedCategoryId }: BlogSideba
           {t("popular_posts")}
         </h3>
         <div className="space-y-4">
-          {data.popular_posts.map((post) => (
-            <Link 
-              key={post.id} 
-              href={`/${locale}/blog/${post.slug}`}
-              className="flex gap-4 group"
-            >
-              <div className="relative w-20 h-20 rounded-xl overflow-hidden shrink-0">
-                <Image
-                  src={post.featured_image || "/images/placeholder.jpg"}
-                  alt={post.title}
-                  fill
-                  className="object-cover transition-transform group-hover:scale-110"
-                />
-              </div>
+          {data.popular_posts.map((post) => {
+            const isPlaceholder = (url?: string | null) => {
+              if (!url) return true;
+              const lower = url.toLowerCase();
+              return lower.includes("placeholder") || lower.includes("destination") || lower.includes("no-image") || lower.includes("temp");
+            };
+
+            const getValidImage = () => {
+              if (post.featured_image && !isPlaceholder(post.featured_image)) {
+                return post.featured_image;
+              }
+              const fallbacks = [
+                "/images/discovery/bana-hills.png",
+                "/images/discovery/dragon-bridge.png",
+                "/images/discovery/hoi-an.png",
+                "/images/discovery/my-khe.png",
+                "/images/discovery/son-tra.png"
+              ];
+              const idx = typeof post.id === "number" ? Math.abs(post.id) % fallbacks.length : 0;
+              return fallbacks[idx];
+            };
+
+            const image = getValidImage();
+
+            return (
+              <Link 
+                key={post.id} 
+                href={`/${locale}/blog/${post.slug}`}
+                className="flex gap-4 group"
+              >
+                <div className="relative w-20 h-20 rounded-xl overflow-hidden shrink-0">
+                  <Image
+                    src={image}
+                    alt={post.title}
+                    fill
+                    className="object-cover transition-transform group-hover:scale-110"
+                  />
+                </div>
               <div className="flex-1 space-y-1">
                 <h4 className="text-sm font-medium text-white line-clamp-2 group-hover:text-[#8B6A55] transition-colors">
                   {post.title}
@@ -96,7 +120,8 @@ export const BlogSidebar = ({ onCategorySelect, selectedCategoryId }: BlogSideba
                 </div>
               </div>
             </Link>
-          ))}
+            );
+          })}
         </div>
       </div>
 

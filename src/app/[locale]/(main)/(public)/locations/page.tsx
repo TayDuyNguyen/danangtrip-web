@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: Props) {
 
 export default async function LocationsPage() {
   return (
-    <div className="design-page min-h-screen">
+    <div className="design-page layout-main-shell">
       <div className="design-container pt-8">
         <Suspense fallback={<div className="min-h-screen pt-32 px-12 animate-pulse bg-surface" />}>
           <div className="reveal-up">
