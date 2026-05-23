@@ -46,14 +46,15 @@ export const AUTH_ROUTES = {
 export const PROTECTED_ROUTES = {
   PROFILE: "/profile",
   PASSWORD: "/profile/password",
+  RATINGS: "/profile/ratings",
   SETTINGS: "/settings",
   PAYMENT: "/payment",
   PAYMENT_RESULT: "/payment/result",
-  BOOKINGS: "/bookings",
-  BOOKING_BY_CODE: (bookingCode: string) => `/bookings/code/${bookingCode}`,
-  FAVORITES: "/favorites",
+  BOOKINGS: "/profile/bookings",
+  BOOKING_BY_CODE: (bookingCode: string) => `/profile/bookings/code/${bookingCode}`,
+  FAVORITES: "/profile/favorites",
   NOTIFICATIONS: "/notifications",
-  RECOMMENDATIONS: "/recommendations",
+  RECOMMENDATIONS: "/profile/recommendations",
 } as const;
 
 // Dashboard routes (require authentication + admin/staff role)

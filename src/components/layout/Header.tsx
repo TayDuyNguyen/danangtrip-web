@@ -112,12 +112,6 @@ const Header = () => {
                   {t("auth.profile")}
                 </Link>
                 <Link
-                  href={ROUTES.RECOMMENDATIONS}
-                  className="block px-4 py-2 text-sm text-[#d4d4d4] hover:bg-[#171717]"
-                >
-                  {t("auth.recommendations")}
-                </Link>
-                <Link
                   href={ROUTES.BOOKINGS}
                   className="block px-4 py-2 text-sm text-[#d4d4d4] hover:bg-[#171717]"
                 >
@@ -213,13 +207,6 @@ const Header = () => {
                     className="flex items-center gap-4 p-4 rounded-xl text-[#d4d4d4] hover:bg-[#171717] transition-all duration-200"
                   >
                     <span className="text-lg font-medium">{t("auth.profile")}</span>
-                  </Link>
-                  <Link
-                    href={ROUTES.RECOMMENDATIONS}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="flex items-center gap-4 p-4 rounded-xl text-[#d4d4d4] hover:bg-[#171717] transition-all duration-200"
-                  >
-                    <span className="text-lg font-medium">{t("auth.recommendations")}</span>
                   </Link>
                   <Link
                     href={ROUTES.BOOKINGS}

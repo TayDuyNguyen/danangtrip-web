@@ -90,7 +90,7 @@ function ToursContent() {
         </div>
       </div>
 
-      <div className="design-container mt-12">
+      <div className="design-container mt-12 pb-24">
         <div className="flex flex-col lg:flex-row gap-10">
           {/* Mobile Filter Toggle */}
           <button
