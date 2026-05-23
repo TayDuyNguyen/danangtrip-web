@@ -2,15 +2,12 @@
 
 ## Current Status
 
-- Date: 2026-05-22
-- Active feature/task: `user-verify-email`
+- Date: 2026-05-23
+- Active feature/task: `user-forgot-password`
 - Status: Completed
-- Current step: Step 10 completed
-- Next step: User review / push approval
-- Objective: Completed authenticated OTP email verification flow and Step 10 handoff artifacts.
-- Expected artifacts:
-  - `.agent/artifacts/deploy/2026-05-22__user-verify-email__deploy-report.md`
-  - `.agent/artifacts/review/2026-05-22__user-verify-email__review.md`
+- Current step: Step 10 completed and revalidated
+- Next step: User review / push approval / next screen selection
+- Objective: Completed the forgot-password screen, fixed final resend-toast timing, and verified quality gates.
 - Mode: Handoff
 - Owner: AI collaborator
 
@@ -29,26 +26,33 @@
 
 ## Current Reality
 
-- Route exists at `src/app/[locale]/(auth)/verify-email/page.tsx`.
-- UI exists at `src/features/auth/components/verify-email-form.tsx` and `otp-input-group.tsx`.
-- Backend contract was corrected: verify email uses authenticated `POST /auth/verify-email` with `{ otp: string }`.
-- Resend uses authenticated `POST /auth/resend-verification`.
-- `token` query param is only a page-level compatibility alias and is sent as `otp`.
+- Route exists: `src/app/[locale]/(auth)/forgot-password/page.tsx`.
+- Main component exists: `src/features/auth/components/forgot-password-form.tsx`.
+- i18n exists: `src/messages/vi/forgot-password.json`, `src/messages/en/forgot-password.json`.
+- Login forgot-password link now points to `ROUTES.FORGOT_PASSWORD`.
+- Middleware includes `/forgot-password` as an auth route.
+- Step 10 fix: resend success toast now waits for the resend API success response.
 
 ## Validation
 
-- `npm.cmd run lint`: PASS
-- `npm.cmd run typecheck`: PASS
-- `npm.cmd run build`: PASS
-- `npm.cmd run prepush:check`: PASS
+- `npm.cmd run prepush:check`: PASS after rerun outside sandbox.
+- Gate details: lint PASS, typecheck PASS, route integrity PASS, Next production build PASS.
+- Build route evidence: `ƒ /[locale]/forgot-password`.
 
 ## Known Issues / Risks
 
-- `.codegraph` is stale for newly added verify-email files and should be regenerated.
-- Full successful backend OTP smoke requires a logged-in user and valid OTP in backend cache.
-- Public token-link verification is not supported by current backend routes.
+- First sandbox run failed only because Wrangler could not write AppData logs/registry outside workspace.
+- Next.js middleware-to-proxy deprecation warning remains non-blocking.
+- Experimental edge runtime warnings remain non-blocking.
+- Real email delivery still depends on backend SMTP configuration.
+
+## Artifacts
+
+- Deploy artifact: `.agent/artifacts/deploy/2026-05-23__user-forgot-password__deploy-report.md`
+- Review artifact: `.agent/artifacts/review/2026-05-23__user-forgot-password__review.md`
+- Test artifact: `.agent/artifacts/test-cases/2026-05-23__user-forgot-password__test-report.md`
 
 ## Suggested Git Handoff
 
-- Branch: `feat/DATN-84/user-verify-email`
-- Commit: `feat(auth): add authenticated email verification flow`
+- Branch: `feat/DATN-85/user-forgot-password`
+- Commit: `feat(auth): add forgot password flow`

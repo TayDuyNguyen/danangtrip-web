@@ -17,6 +17,7 @@ import viTour from "../messages/vi/tour.json";
 import viFavorites from "../messages/vi/favorites.json";
 import viNotifications from "../messages/vi/notifications.json";
 import viVerifyEmail from "../messages/vi/verify-email.json";
+import viForgotPassword from "../messages/vi/forgot-password.json";
 
 import enCommon from "../messages/en/common.json";
 import enHome from "../messages/en/home.json";
@@ -33,6 +34,7 @@ import enTour from "../messages/en/tour.json";
 import enFavorites from "../messages/en/favorites.json";
 import enNotifications from "../messages/en/notifications.json";
 import enVerifyEmail from "../messages/en/verify-email.json";
+import enForgotPassword from "../messages/en/forgot-password.json";
 
 const messagesByLocale = {
   vi: {
@@ -51,6 +53,7 @@ const messagesByLocale = {
     favorites: viFavorites,
     notifications: viNotifications,
     verifyEmail: viVerifyEmail,
+    forgotPassword: viForgotPassword,
   },
   en: {
     common: enCommon,
@@ -68,6 +71,7 @@ const messagesByLocale = {
     favorites: enFavorites,
     notifications: enNotifications,
     verifyEmail: enVerifyEmail,
+    forgotPassword: enForgotPassword,
   },
 } as const satisfies Record<
   "vi" | "en",
@@ -86,7 +90,8 @@ const messagesByLocale = {
     | "tour"
     | "favorites"
     | "notifications"
-    | "verifyEmail",
+    | "verifyEmail"
+    | "forgotPassword",
     Record<string, unknown>
   >
 >;
