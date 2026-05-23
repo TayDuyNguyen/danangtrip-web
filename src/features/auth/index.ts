@@ -5,6 +5,7 @@ export { authService } from "@/services/auth.service";
 export { LoginForm } from "./components/login-form";
 export { RegisterForm } from "./components/register-form";
 export { VerifyEmailForm } from "./components/verify-email-form";
+export { ForgotPasswordForm } from "./components/forgot-password-form";
 export type {
   LoginFormData,
   RegisterFormData,
