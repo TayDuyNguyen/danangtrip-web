@@ -3,11 +3,11 @@
 ## Current Status
 
 - Date: 2026-05-23
-- Active feature/task: `user-forgot-password`
+- Active feature/task: `user-reset-password`
 - Status: Completed
 - Current step: Step 10 completed and revalidated
 - Next step: User review / push approval / next screen selection
-- Objective: Completed the forgot-password screen, fixed final resend-toast timing, and verified quality gates.
+- Objective: Completed the reset-password screen, integrated Zod schema validation with email field, registered static i18n, configured routes/middleware, and verified quality gates.
 - Mode: Handoff
 - Owner: AI collaborator
 
@@ -26,33 +26,39 @@
 
 ## Current Reality
 
-- Route exists: `src/app/[locale]/(auth)/forgot-password/page.tsx`.
-- Main component exists: `src/features/auth/components/forgot-password-form.tsx`.
-- i18n exists: `src/messages/vi/forgot-password.json`, `src/messages/en/forgot-password.json`.
-- Login forgot-password link now points to `ROUTES.FORGOT_PASSWORD`.
-- Middleware includes `/forgot-password` as an auth route.
-- Step 10 fix: resend success toast now waits for the resend API success response.
+- Route exists: `src/app/[locale]/(auth)/reset-password/page.tsx`.
+- Main component exists: `src/features/auth/components/reset-password-form.tsx`.
+- i18n exists: `src/messages/vi/reset-password.json`, `src/messages/en/reset-password.json`.
+- Export registered in feature barrel: `src/features/auth/index.ts`.
+- Static translations registered: `src/i18n/request.ts` to ensure Edge Worker compatibility.
+- Route constant registered: `src/config/routes.ts` (`AUTH_ROUTES.RESET_PASSWORD`).
+- Middleware includes `/reset-password` as an auth route.
 
 ## Validation
 
-- `npm.cmd run prepush:check`: PASS after rerun outside sandbox.
+- `npm.cmd run prepush:check`: PASS.
 - Gate details: lint PASS, typecheck PASS, route integrity PASS, Next production build PASS.
-- Build route evidence: `ƒ /[locale]/forgot-password`.
+- Build route evidence: `ƒ /[locale]/reset-password` (Dynamic Server-Rendered on demand).
 
 ## Known Issues / Risks
 
-- First sandbox run failed only because Wrangler could not write AppData logs/registry outside workspace.
-- Next.js middleware-to-proxy deprecation warning remains non-blocking.
-- Experimental edge runtime warnings remain non-blocking.
-- Real email delivery still depends on backend SMTP configuration.
+- Real token verification and email recovery flow depend on backend SMTP setup and Laravel database table matching. Client-side Axios and TanStack Query are perfectly prepared and robustly handle all HTTP failures.
 
 ## Artifacts
 
-- Deploy artifact: `.agent/artifacts/deploy/2026-05-23__user-forgot-password__deploy-report.md`
-- Review artifact: `.agent/artifacts/review/2026-05-23__user-forgot-password__review.md`
-- Test artifact: `.agent/artifacts/test-cases/2026-05-23__user-forgot-password__test-report.md`
+- Screen Analysis: `.agent/artifacts/analysis/2026-05-23__user-reset-password__screen-analysis.md`
+- Setup Report: `.agent/artifacts/setup/2026-05-23__user-reset-password__project-setup-report.md`
+- API Contract: `.agent/artifacts/api-contracts/2026-05-23__user-reset-password__api-contract.md`
+- Route Plan: `.agent/artifacts/routing/2026-05-23__user-reset-password__route-plan.md`
+- UI Spec: `.agent/artifacts/ui-specs/2026-05-23__user-reset-password__ui-spec.md`
+- Integration: `.agent/artifacts/integration/2026-05-23__user-reset-password__data-integration.md`
+- Interaction: `.agent/artifacts/interaction-specs/2026-05-23__user-reset-password__interaction-spec.md`
+- Auth Review: `.agent/artifacts/auth/2026-05-23__user-reset-password__auth-permissions-review.md`
+- Test Report: `.agent/artifacts/test-cases/2026-05-23__user-reset-password__test-report.md`
+- Deploy Report: `.agent/artifacts/deploy/2026-05-23__user-reset-password__deploy-report.md`
+- Quality Review: `.agent/artifacts/review/2026-05-23__user-reset-password__review.md`
 
 ## Suggested Git Handoff
 
-- Branch: `feat/DATN-85/user-forgot-password`
-- Commit: `feat(auth): add forgot password flow`
+- Branch: `feat/DATN-86/user-reset-password`
+- Commit: `feat(auth): add reset password screen and form integration`
