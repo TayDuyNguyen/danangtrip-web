@@ -39,6 +39,7 @@ export const AUTH_ROUTES = {
   REGISTER: "/register",
   VERIFY_EMAIL: "/verify-email",
   FORGOT_PASSWORD: "/forgot-password",
+  RESET_PASSWORD: "/reset-password",
 } as const;
 
 // Protected routes (require authentication)

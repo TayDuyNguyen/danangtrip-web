@@ -58,6 +58,10 @@ export const forgotPasswordSchema = z.object({
 export const resetPasswordSchema = z
   .object({
     token: z.string().min(1, ERROR_MESSAGES.REQUIRED),
+    email: z
+      .string()
+      .min(1, ERROR_MESSAGES.REQUIRED)
+      .regex(EMAIL_REGEX, ERROR_MESSAGES.INVALID_EMAIL),
     password: z
       .string()
       .min(8, ERROR_MESSAGES.INVALID_PASSWORD)
