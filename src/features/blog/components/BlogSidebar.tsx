@@ -47,12 +47,12 @@ export const BlogSidebar = ({ onCategorySelect, selectedCategoryId }: BlogSideba
               key={cat.id}
               onClick={() => onCategorySelect(cat.id)}
               className={`w-full flex justify-between items-center px-4 py-3 rounded-xl transition-all ${
-                selectedCategoryId === cat.id ? "bg-[#8B6A55] text-white" : "text-[#a3a3a3] hover:bg-neutral-900"
+                Number(selectedCategoryId) === cat.id ? "bg-[#8B6A55] text-white" : "text-[#a3a3a3] hover:bg-neutral-900"
               }`}
             >
               <span>{cat.name}</span>
               <span className={`text-xs px-2 py-1 rounded-full ${
-                selectedCategoryId === cat.id ? "bg-white/20" : "bg-neutral-800"
+                Number(selectedCategoryId) === cat.id ? "bg-white/20" : "bg-neutral-800"
               }`}>
                 {cat.post_count}
               </span>

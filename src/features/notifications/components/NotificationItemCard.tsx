@@ -102,6 +102,11 @@ export function NotificationItemCard({
 
     // 2. Redirect if target URL exists
     if (targetUrl) {
+      if (/^https?:\/\//i.test(targetUrl)) {
+        window.location.assign(targetUrl);
+        return;
+      }
+
       startTransition(() => {
         router.push(targetUrl);
       });

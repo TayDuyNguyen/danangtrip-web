@@ -8,7 +8,8 @@ import { useBlogPosts, useBlogSidebar } from "../hooks/useBlog";
 import { PostCard } from "./PostCard";
 import { FeaturedPost } from "./FeaturedPost";
 import { BlogSidebar } from "./BlogSidebar";
-import { PostCardSkeleton, FeaturedPostSkeleton } from "./BlogSkeleton";
+import { BlogCategoryScrollRow } from "./BlogCategoryScrollRow";
+import { PostCardSkeleton, FeaturedPostSkeleton, SidebarSkeleton, CategoryTabsSkeleton } from "./BlogSkeleton";
 import type { BlogFilterParams } from "../types";
 import { Button } from "@/components/ui/Button";
 import { StandardPagination } from "@/components/ui/pagination";
@@ -38,7 +39,7 @@ export const BlogContent = ({ searchQuery = "" }: BlogContentProps) => {
   );
 
   const { data, isLoading } = useBlogPosts(filters);
-  const { data: sidebarData } = useBlogSidebar();
+  const { data: sidebarData, isLoading: isSidebarLoading } = useBlogSidebar();
 
   const navigateQuery = (patch: Record<string, string | undefined>) => {
     const next = new URLSearchParams(searchParams.toString());
@@ -68,21 +69,6 @@ export const BlogContent = ({ searchQuery = "" }: BlogContentProps) => {
       page: page <= 1 ? undefined : String(page),
     });
   };
-
-  if (isLoading) {
-    return (
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-        <div className="lg:col-span-8 space-y-12">
-          <FeaturedPostSkeleton />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {Array.from({ length: 12 }, (_, index) => index + 1).map((i) => (
-              <PostCardSkeleton key={i} />
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   const paginator = data;
   const postsRaw = paginator?.data ?? [];
@@ -114,51 +100,131 @@ export const BlogContent = ({ searchQuery = "" }: BlogContentProps) => {
           })
         : t("result_count", { count: totalResults });
 
+  // Detect if requested category is not found in loaded category list
+  const isInvalidCategory = Boolean(
+    filters.category_id &&
+      !isSidebarLoading &&
+      categories.length > 0 &&
+      !selectedCategoryName
+  );
+
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-      <div className="lg:col-span-8 space-y-12">
-        <p className="text-sm text-[#a3a3a3]">{resultText}</p>
-
-        {featuredPost && <FeaturedPost post={featuredPost} />}
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {gridPosts.map((post, index) => (
-            <PostCard key={post.id} post={post} index={index} />
-          ))}
-        </div>
-
-        {posts.length === 0 && (
-          <div className="glass-surface rounded-3xl p-16 md:p-20 text-center space-y-4">
-            <IoNewspaperOutline className="mx-auto text-6xl text-neutral-600" aria-hidden />
-            <h3 className="text-xl text-white font-semibold">{t("no_posts")}</h3>
-            <p className="text-[#737373] max-w-md mx-auto">{t("no_posts_desc")}</p>
-            <Button
+    <div className="space-y-12">
+      {/* Category Tabs Row */}
+      <div className="border-b border-neutral-800 pb-4 reveal-up" style={{ animationDelay: "100ms" }}>
+        {isSidebarLoading ? (
+          <CategoryTabsSkeleton />
+        ) : (
+          <BlogCategoryScrollRow scrollKey={categories.length}>
+            <button
               type="button"
-              variant="secondary"
-              className="mt-4"
-              onClick={() => router.push(pathname)}
+              onClick={() => handleCategorySelect(undefined)}
+              className={`px-5 py-3 cursor-pointer border-b-2 transition-all text-sm font-semibold whitespace-nowrap ${
+                !filters.category_id
+                  ? "border-[#8B6A55] text-white"
+                  : "border-transparent text-[#a3a3a3] hover:text-white"
+              }`}
             >
-              {t("clear_filters")}
-            </Button>
-          </div>
-        )}
-
-        {posts.length > 0 && lastPage > 1 && q.length === 0 && (
-          <div className="mt-12 flex justify-center reveal-up" style={{ animationDelay: "400ms" }}>
-            <StandardPagination
-              currentPage={currentPage}
-              totalPages={lastPage}
-              onPageChange={handlePageChange}
-            />
-          </div>
+              {t("all_posts")}
+            </button>
+            {categories.map((cat) => (
+              <button
+                key={cat.id}
+                type="button"
+                onClick={() => handleCategorySelect(cat.id)}
+                className={`px-5 py-3 cursor-pointer border-b-2 transition-all text-sm font-semibold whitespace-nowrap ${
+                  Number(filters.category_id) === cat.id
+                    ? "border-[#8B6A55] text-white"
+                    : "border-transparent text-[#a3a3a3] hover:text-white"
+                }`}
+              >
+                {cat.name}
+              </button>
+            ))}
+          </BlogCategoryScrollRow>
         )}
       </div>
 
-      <div className="lg:col-span-4">
-        <BlogSidebar
-          selectedCategoryId={filters.category_id}
-          onCategorySelect={handleCategorySelect}
-        />
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <div className="lg:col-span-8 space-y-12">
+          {isInvalidCategory ? (
+            <div className="glass-surface rounded-3xl p-16 md:p-20 text-center space-y-4 reveal-up" style={{ animationDelay: "200ms" }}>
+              <IoNewspaperOutline className="mx-auto text-6xl text-[#8B6A55]/80" aria-hidden />
+              <h3 className="text-xl text-white font-semibold">{t("invalid_category_title")}</h3>
+              <p className="text-[#737373] max-w-md mx-auto">{t("invalid_category_desc")}</p>
+              <Button
+                type="button"
+                variant="secondary"
+                className="mt-4"
+                onClick={() => router.push(pathname)}
+              >
+                {t("clear_filters")}
+              </Button>
+            </div>
+          ) : isLoading ? (
+            <div className="space-y-12">
+              <FeaturedPostSkeleton />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {Array.from({ length: 6 }, (_, index) => index + 1).map((i) => (
+                  <PostCardSkeleton key={i} />
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-12">
+              <p className="text-sm text-[#a3a3a3]">{resultText}</p>
+
+              {featuredPost && <FeaturedPost post={featuredPost} />}
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {gridPosts.map((post, index) => (
+                  <PostCard key={post.id} post={post} index={index} />
+                ))}
+              </div>
+
+              {posts.length === 0 && (
+                <div className="glass-surface rounded-3xl p-16 md:p-20 text-center space-y-4">
+                  <IoNewspaperOutline className="mx-auto text-6xl text-neutral-600" aria-hidden />
+                  <h3 className="text-xl text-white font-semibold">
+                    {filters.category_id ? t("empty_category_title") : t("no_posts")}
+                  </h3>
+                  <p className="text-[#737373] max-w-md mx-auto">
+                    {filters.category_id ? t("empty_category_desc") : t("no_posts_desc")}
+                  </p>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    className="mt-4"
+                    onClick={() => router.push(pathname)}
+                  >
+                    {t("clear_filters")}
+                  </Button>
+                </div>
+              )}
+
+              {posts.length > 0 && lastPage > 1 && q.length === 0 && (
+                <div className="mt-12 flex justify-center reveal-up" style={{ animationDelay: "400ms" }}>
+                  <StandardPagination
+                    currentPage={currentPage}
+                    totalPages={lastPage}
+                    onPageChange={handlePageChange}
+                  />
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        <div className="lg:col-span-4">
+          {isSidebarLoading ? (
+            <SidebarSkeleton />
+          ) : (
+            <BlogSidebar
+              selectedCategoryId={filters.category_id}
+              onCategorySelect={handleCategorySelect}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

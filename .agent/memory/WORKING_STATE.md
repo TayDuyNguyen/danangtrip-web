@@ -3,13 +3,13 @@
 ## Current Status
 
 - Date: 2026-05-24
-- Active feature/task: `user-tours-by-category`
-- Status: Completed (with Sidebar Filter Extensions)
+- Active feature/task: `user-blog-by-category`
+- Status: Completed
 - Current step: Step 10: `10-optimization-deploy` completed and verified
-- Next step: Final git commit push approval
-- Objective: Deliver public tour categories listing screen `/tour-categories/{slug}/tours` with visual excellence and full sidebar query filtering, backed by extended filtering APIs in danangtrip-api.
-- Mode: Handoff
-- Owner: AI collaborator
+- Next step: Git branch creation, checkout commits, and code push approval
+- Objective: Deliver hardened public blog category discovery screen `/blog?category_id={id}` with Category Tabs row, Sidebar category synchronization, count localization, and empty/invalid query parameter handling.
+- Mode: Execution
+- Owner: Antigravity
 
 ## Progress Breakdown
 
@@ -23,24 +23,16 @@
 - [x] 08-auth-permissions
 - [x] 09-testing
 - [x] 10-optimization-deploy
-- [ ] 03-types-api-contract
-- [ ] 04-layout-routing
-- [ ] 05-ui-components
-- [ ] 06-data-integration
-- [ ] 07-interactions
-- [ ] 08-auth-permissions
-- [ ] 09-testing
-- [ ] 10-optimization-deploy
 
 ## Current Reality
 
-- Frontend route to create: `src/app/[locale]/(main)/(public)/tour-categories/[slug]/tours/page.tsx`
-- Backend API to modify: `ToursBySlugTourCategoryRequest.php` and `TourCategoryRepository.php` under `danangtrip-api`.
-- Goal: Enable high WOW-factor dark glassmorphism design, entrance slide-up transitions, breadcrumbs, result counts, and synchronized translations across languages.
+- Frontend route: `/blog?category_id={id}` (`src/app/[locale]/(main)/(public)/blog/page.tsx`)
+- Feature directory: `src/features/blog`
+- Goal: Harden query parameter logic, display interactive category horizontal scroll tabs, active item highlights, results count text, empty and invalid category views, and i18n synchronization.
 
 ## Known Issues / Risks
 
-- None. Backend extensions are simple, clean additions that match existing `TourRepository` mechanisms perfectly.
+- None. Standard backend blog endpoints fully cover the required filtering fields.
 
 ## Artifacts
 
