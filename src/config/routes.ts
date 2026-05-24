@@ -8,6 +8,7 @@ export const PUBLIC_ROUTES = {
   LOCATIONS: "/locations",
   LOCATION_DETAIL: (slug: string) => `/locations/${slug}`,
   CATEGORY_LOCATIONS: (slug: string) => `/categories/${slug}/locations`,
+  NEARBY: "/nearby",
   TOURS: "/tours",
   TOUR_DETAIL: (slug: string) => `/tours/${slug}`,
   TOUR_DEPARTURES: (slug: string) => `/tours/${slug}/departures`,
@@ -94,6 +95,7 @@ export const ROUTES = {
 export const NAV_LINKS = [
   { name: "nav.home", path: PUBLIC_ROUTES.HOME },
   { name: "nav.locations", path: PUBLIC_ROUTES.LOCATIONS },
+  { name: "nav.nearby", path: PUBLIC_ROUTES.NEARBY },
   { name: "nav.travel", path: PUBLIC_ROUTES.TOURS },
   { name: "nav.blog", path: PUBLIC_ROUTES.BLOG },
   { name: "nav.contact", path: PUBLIC_ROUTES.CONTACT },

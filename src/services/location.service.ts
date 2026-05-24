@@ -38,6 +38,16 @@ export const locationService = {
   getNearbyByLocationId: (id: number, limit = 6): Promise<ApiResponse<Location[]>> =>
     axiosInstance.get(API_ENDPOINTS.LOCATIONS.NEARBY_BY_ID(id), { params: { limit } }),
 
+  getNearby: (params: {
+    lat: number;
+    lng: number;
+    radius?: number;
+    limit?: number;
+    sort_by?: string;
+    sort_order?: string;
+  }): Promise<ApiResponse<Location[]>> =>
+    axiosInstance.get(API_ENDPOINTS.LOCATIONS.NEARBY, { params }),
+
   recordView: (id: number, sessionId?: string): Promise<ApiResponse<null>> =>
     axiosInstance.post(
       API_ENDPOINTS.LOCATIONS.RECORD_VIEW(id),
