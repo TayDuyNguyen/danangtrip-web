@@ -1,5 +1,11 @@
 {
   "title": "Danh sách Tour",
+  "category": {
+    "back_to_all": "← Tất cả Tour",
+    "results_count": "Tìm thấy {count} tour trong danh mục {category}",
+    "empty_title": "Chưa có tour nào trong danh mục này",
+    "empty_desc": "Thử đặt lại các bộ lọc hoặc quay lại xem tất cả các tour khác."
+  },
   "list_subtitle": "Khám phá các tour du lịch tuyệt vời tại Đà Nẵng",
   "subtitle": "Khám phá các tour du lịch tuyệt vời tại Đà Nẵng",
   "landing": {

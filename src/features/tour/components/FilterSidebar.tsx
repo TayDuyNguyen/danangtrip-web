@@ -12,6 +12,7 @@ interface FilterSidebarProps {
   filters: TourFilterParams;
   onFilterChange: (newFilters: Partial<TourFilterParams>) => void;
   onReset: () => void;
+  showCategoryFilter?: boolean;
 }
 
 const SectionHeader = ({ title, isExpanded, onToggle }: { title: string, isExpanded: boolean, onToggle: () => void }) => (
@@ -29,11 +30,26 @@ const SectionHeader = ({ title, isExpanded, onToggle }: { title: string, isExpan
   </button>
 );
 
+const getDateInputClassName = (hasValue: boolean) => cn(
+  "w-full rounded-lg border px-3 py-2 text-sm transition-all duration-200",
+  "bg-surface-container text-on-surface [color-scheme:dark]",
+  "focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/25",
+  "[&::-webkit-calendar-picker-indicator]:cursor-pointer",
+  "[&::-webkit-calendar-picker-indicator]:rounded-md",
+  "[&::-webkit-calendar-picker-indicator]:p-1",
+  "[&::-webkit-calendar-picker-indicator]:transition-all",
+  "[&::-webkit-calendar-picker-indicator]:duration-200",
+  hasValue
+    ? "border-primary shadow-[0_0_0_1px_rgba(20,184,166,0.35)] [&::-webkit-calendar-picker-indicator]:bg-primary [&::-webkit-calendar-picker-indicator]:opacity-100"
+    : "border-border [&::-webkit-calendar-picker-indicator]:bg-primary/20 [&::-webkit-calendar-picker-indicator]:opacity-80 hover:[&::-webkit-calendar-picker-indicator]:bg-primary/30"
+);
+
 export default function FilterSidebar({
   categories,
   filters,
   onFilterChange,
-  onReset
+  onReset,
+  showCategoryFilter = true
 }: FilterSidebarProps) {
   const t = useTranslations("tour.filters");
 
@@ -61,40 +77,42 @@ export default function FilterSidebar({
   return (
     <div className="flex flex-col gap-6">
       {/* Categories */}
-      <div className="border-b border-border pb-4">
-        <SectionHeader
-          title={t("category")}
-          isExpanded={expanded.categories}
-          onToggle={() => toggleSection("categories")}
-        />
-        <div className={cn(
-          "space-y-2 mt-2 transition-all duration-300 overflow-hidden",
-          expanded.categories ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
-        )}>
-          {categories.map((cat) => (
-            <label
-              key={cat.id}
-              className="flex items-center gap-3 cursor-pointer group"
-            >
-              <div className="relative flex items-center">
-                <input
-                  type="checkbox"
-                  checked={filters.tour_category_id === cat.id}
-                  onChange={() => handleCategoryToggle(cat.id)}
-                  className="peer appearance-none w-5 h-5 rounded border border-border checked:bg-primary checked:border-primary transition-all"
-                />
-                <Check className="absolute w-3 h-3 text-on-primary opacity-0 peer-checked:opacity-100 left-1 pointer-events-none transition-opacity" />
-              </div>
-              <span className={cn(
-                "text-sm transition-colors",
-                filters.tour_category_id === cat.id ? "text-primary font-bold" : "text-on-surface-variant group-hover:text-on-surface"
-              )}>
-                {cat.name}
-              </span>
-            </label>
-          ))}
+      {showCategoryFilter && (
+        <div className="border-b border-border pb-4">
+          <SectionHeader
+            title={t("category")}
+            isExpanded={expanded.categories}
+            onToggle={() => toggleSection("categories")}
+          />
+          <div className={cn(
+            "space-y-2 mt-2 transition-all duration-300 overflow-hidden",
+            expanded.categories ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+          )}>
+            {categories.map((cat) => (
+              <label
+                key={cat.id}
+                className="flex items-center gap-3 cursor-pointer group"
+              >
+                <div className="relative flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={filters.tour_category_id === cat.id}
+                    onChange={() => handleCategoryToggle(cat.id)}
+                    className="peer appearance-none w-5 h-5 rounded border border-border checked:bg-primary checked:border-primary transition-all"
+                  />
+                  <Check className="absolute w-3 h-3 text-on-primary opacity-0 peer-checked:opacity-100 left-1 pointer-events-none transition-opacity" />
+                </div>
+                <span className={cn(
+                  "text-sm transition-colors",
+                  filters.tour_category_id === cat.id ? "text-primary font-bold" : "text-on-surface-variant group-hover:text-on-surface"
+                )}>
+                  {cat.name}
+                </span>
+              </label>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Price Range */}
       <div className="border-b border-border pb-4">
@@ -189,7 +207,8 @@ export default function FilterSidebar({
                 type="date"
                 value={filters.available_from || ""}
                 onChange={(e) => onFilterChange({ available_from: e.target.value || undefined })}
-                className="w-full bg-surface-container border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary"
+                aria-label={t("available_from_label")}
+                className={getDateInputClassName(Boolean(filters.available_from))}
               />
             </div>
             <div className="flex flex-col gap-1">
@@ -198,7 +217,8 @@ export default function FilterSidebar({
                 type="date"
                 value={filters.available_to || ""}
                 onChange={(e) => onFilterChange({ available_to: e.target.value || undefined })}
-                className="w-full bg-surface-container border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary"
+                aria-label={t("available_to_label")}
+                className={getDateInputClassName(Boolean(filters.available_to))}
               />
             </div>
           </div>

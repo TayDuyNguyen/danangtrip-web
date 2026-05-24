@@ -13,7 +13,7 @@ import type { BlogFilterParams } from "../types";
 import { Button } from "@/components/ui/Button";
 import { StandardPagination } from "@/components/ui/pagination";
 
-const PER_PAGE = 9;
+const PER_PAGE = 20;
 
 interface BlogContentProps {
   /** Lọc cục bộ theo tiêu đề/excerpt trên trang hiện tại (API public chưa có q= search). */
@@ -75,7 +75,7 @@ export const BlogContent = ({ searchQuery = "" }: BlogContentProps) => {
         <div className="lg:col-span-8 space-y-12">
           <FeaturedPostSkeleton />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
+            {Array.from({ length: 12 }, (_, index) => index + 1).map((i) => (
               <PostCardSkeleton key={i} />
             ))}
           </div>

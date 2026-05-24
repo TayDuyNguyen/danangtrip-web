@@ -10,6 +10,7 @@ export const PUBLIC_ROUTES = {
   CATEGORY_LOCATIONS: (slug: string) => `/categories/${slug}/locations`,
   NEARBY: "/nearby",
   TOURS: "/tours",
+  CATEGORY_TOURS: (slug: string) => `/tour-categories/${slug}/tours`,
   TOUR_DETAIL: (slug: string) => `/tours/${slug}`,
   TOUR_DEPARTURES: (slug: string) => `/tours/${slug}/departures`,
   BLOG: "/blog",

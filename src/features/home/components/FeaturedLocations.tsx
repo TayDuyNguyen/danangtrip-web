@@ -15,6 +15,7 @@ import {
 import { useLocations } from "../hooks/use-locations";
 import { useAddFavoriteLocation } from "../hooks/use-add-favorite-location";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
+import { getHomeLocationImage } from "../utils/home-image-fallbacks";
 
 const FeaturedLocations = () => {
   const [activeCategoryId, setActiveCategoryId] = useState<number | undefined>(undefined);
@@ -82,7 +83,7 @@ const FeaturedLocations = () => {
           <button
             suppressHydrationWarning
             onClick={() => setActiveCategoryId(undefined)}
-            className={`px-8 py-3 rounded-full text-[14px] font-bold transition-all whitespace-nowrap shadow-sm hover:shadow-md ${activeCategoryId === undefined
+            className={`cursor-pointer px-8 py-3 rounded-full text-[14px] font-bold transition-all whitespace-nowrap shadow-sm hover:shadow-md ${activeCategoryId === undefined
               ? "bg-[#8b6a55] text-white shadow-black/30"
               : "bg-surface-container text-on-surface-subtle border border-outline-variant hover:bg-surface-container-high"
               }`}
@@ -95,7 +96,7 @@ const FeaturedLocations = () => {
               key={cat.id}
               suppressHydrationWarning
               onClick={() => setActiveCategoryId(cat.id)}
-              className={`px-8 py-3 rounded-full text-[14px] font-bold transition-all whitespace-nowrap shadow-sm hover:shadow-md ${activeCategoryId === cat.id
+              className={`cursor-pointer px-8 py-3 rounded-full text-[14px] font-bold transition-all whitespace-nowrap shadow-sm hover:shadow-md ${activeCategoryId === cat.id
                 ? "bg-[#8b6a55] text-white shadow-black/30"
                 : "bg-surface-container text-on-surface-subtle border border-outline-variant hover:bg-surface-container-high"
                 }`}
@@ -156,7 +157,7 @@ const FeaturedLocations = () => {
                   <Link href={`${ROUTES.LOCATIONS}?q=${encodeURIComponent(loc.name)}`}>
                     <div className="relative aspect-3/4 rounded-xl overflow-hidden mb-6 shadow-[0_20px_40px_rgba(0,0,0,0.3)] active:scale-[0.98] transition-all duration-500 hover:shadow-[0_30px_60px_rgba(139,106,85,0.2)] border border-[#262626]">
                       <Image
-                        src={loc.thumbnail || "/images/placeholder.png"}
+                        src={getHomeLocationImage(loc.thumbnail, loc.images, loc.id)}
                         alt={loc.name}
                         fill
                         className="object-cover transition-transform duration-1000 group-hover:scale-110"

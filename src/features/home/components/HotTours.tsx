@@ -9,6 +9,7 @@ import { IoTimeOutline, IoPeopleOutline, IoFlame } from "@/components/icons/sola
 import { useTours } from "../hooks/use-tours";
 import { formatPriceVND } from "@/utils/format";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
+import { getHomeTourImage } from "../utils/home-image-fallbacks";
 
 const HotTours = () => {
   const { hotTours: tours } = useTours();
@@ -49,7 +50,7 @@ const HotTours = () => {
               {/* Thumbnail Area */}
               <div className="w-full h-[240px] relative overflow-hidden">
                 <Image
-                  src={tour.thumbnail || "/images/placeholder.png"}
+                  src={getHomeTourImage(tour.thumbnail, tour.id)}
                   alt={tour.name}
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"

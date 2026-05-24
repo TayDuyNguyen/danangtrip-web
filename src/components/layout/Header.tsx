@@ -32,7 +32,29 @@ const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const isActive = (path: string) => pathname === path;
+  const isActive = (path: string) => {
+    if (path === ROUTES.HOME) {
+      return pathname === ROUTES.HOME;
+    }
+
+    if (path === ROUTES.LOCATIONS) {
+      return pathname === ROUTES.LOCATIONS ||
+        pathname.startsWith(`${ROUTES.LOCATIONS}/`) ||
+        pathname.startsWith("/categories/");
+    }
+
+    if (path === ROUTES.TOURS) {
+      return pathname === ROUTES.TOURS ||
+        pathname.startsWith(`${ROUTES.TOURS}/`) ||
+        pathname.startsWith("/tour-categories/");
+    }
+
+    if (path === ROUTES.BLOG) {
+      return pathname === ROUTES.BLOG || pathname.startsWith(`${ROUTES.BLOG}/`);
+    }
+
+    return pathname === path || pathname.startsWith(`${path}/`);
+  };
 
   return (
     <header
