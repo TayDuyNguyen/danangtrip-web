@@ -60,6 +60,7 @@ export const API_ENDPOINTS = {
     RATINGS: (id: number) => `/locations/${id}/ratings`,
     RATING_STATS: (id: number) => `/locations/${id}/rating-stats`,
     NEARBY_BY_ID: (id: number) => `/locations/${id}/nearby`,
+    NEARBY: "/locations/nearby",
     RECORD_VIEW: (id: number) => `/locations/${id}/view`,
   },
   RATINGS: {

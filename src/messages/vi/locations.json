@@ -119,5 +119,57 @@
     "weather_title": "Thời tiết hiện tại",
     "weather_city": "Đà Nẵng",
     "weather_unavailable": "Không tải được dữ liệu thời tiết. Vui lòng thử lại sau."
+  },
+  "nearby": {
+    "title": "Địa điểm gần bạn",
+    "subtitle": "Tìm kiếm địa điểm du lịch, ẩm thực, giải trí dựa trên khoảng cách GPS thực tế.",
+    "breadcrumb_nearby": "Lân cận",
+    "gps_status": {
+      "requesting": "Đang xác định vị trí của bạn...",
+      "active": "Đà Nẵng, Việt Nam · Cập nhật vừa xong",
+      "denied": "Không thể lấy vị trí",
+      "hint": "Vui lòng cho phép truy cập vị trí khi được trình duyệt yêu cầu.",
+      "denied_hint": "Quyền truy cập vị trí bị từ chối. Vui lòng bật lại vị trí trong cài đặt trình duyệt để tiếp tục tìm kiếm tự động."
+    },
+    "radius": {
+      "label": "Bán kính quét:",
+      "unit": "{km} km"
+    },
+    "controls": {
+      "refresh": "Cập nhật vị trí",
+      "retry": "Thử lại",
+      "manual_select": "Nhập vị trí thủ công hoặc Chọn quận",
+      "manual_title": "Chọn vị trí thủ công",
+      "confirm": "Xác nhận",
+      "reset": "Đặt lại bộ lọc"
+    },
+    "map": {
+      "user_marker": "Vị trí của bạn",
+      "user_address": "Đà Nẵng, Việt Nam",
+      "view_details": "Xem chi tiết →",
+      "distance": "Cách bạn {distance} km",
+      "directions": "Đường đi"
+    },
+    "sidebar": {
+      "results_count": "Tìm thấy {count} địa điểm trong bán kính {radius} km",
+      "select_category": "Tất cả danh mục",
+      "sort_by": {
+        "closest": "Gần nhất",
+        "rating": "Đánh giá cao",
+        "popular": "Phổ biến nhất",
+        "newest": "Mới nhất",
+        "price": "Giá cả"
+      }
+    },
+    "empty": {
+      "title": "Không tìm thấy địa điểm nào",
+      "subtitle": "Hãy thử tăng bán kính quét hoặc thay đổi bộ lọc danh mục.",
+      "quick_radius": "Chọn nhanh bán kính quét:"
+    },
+    "fallback_banner": {
+      "title": "Bạn đã từ chối chia sẻ vị trí?",
+      "subtitle": "Đừng lo lắng! Bạn có thể chọn nhanh bất kỳ quận nào của Đà Nẵng ở dưới để khám phá địa điểm ngay.",
+      "select_district": "Khám phá địa điểm tại:"
+    }
   }
 }

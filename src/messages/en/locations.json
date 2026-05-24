@@ -119,5 +119,57 @@
     "weather_title": "Current weather",
     "weather_city": "Da Nang",
     "weather_unavailable": "Weather data is unavailable. Please try again later."
+  },
+  "nearby": {
+    "title": "Places Near You",
+    "subtitle": "Find tourist spots, dining, and entertainment based on your actual GPS distance.",
+    "breadcrumb_nearby": "Nearby",
+    "gps_status": {
+      "requesting": "Pinpointing your location...",
+      "active": "Da Nang, Vietnam · Just updated",
+      "denied": "Location unavailable",
+      "hint": "Please allow location access when requested by the browser.",
+      "denied_hint": "Location permission denied. Please enable location access in browser settings to continue automatic scanning."
+    },
+    "radius": {
+      "label": "Scan Radius:",
+      "unit": "{km} km"
+    },
+    "controls": {
+      "refresh": "Update Location",
+      "retry": "Try Again",
+      "manual_select": "Select Location Manually or Choose District",
+      "manual_title": "Choose Location Manually",
+      "confirm": "Confirm",
+      "reset": "Reset Filters"
+    },
+    "map": {
+      "user_marker": "Your location",
+      "user_address": "Da Nang, Vietnam",
+      "view_details": "View details →",
+      "distance": "{distance} km away",
+      "directions": "Directions"
+    },
+    "sidebar": {
+      "results_count": "Found {count} places within {radius} km",
+      "select_category": "All categories",
+      "sort_by": {
+        "closest": "Closest",
+        "rating": "Top Rated",
+        "popular": "Most Popular",
+        "newest": "Newest",
+        "price": "Price"
+      }
+    },
+    "empty": {
+      "title": "No places found",
+      "subtitle": "Try increasing the scan radius or changing the category filter.",
+      "quick_radius": "Quick-select radius:"
+    },
+    "fallback_banner": {
+      "title": "Did you deny location access?",
+      "subtitle": "No worries! You can select any Da Nang district below to explore exciting locations instantly.",
+      "select_district": "Explore locations in:"
+    }
   }
 }
