@@ -55,3 +55,11 @@ export const SidebarSkeleton = () => (
     </div>
   </div>
 );
+
+export const CategoryTabsSkeleton = () => (
+  <div className="flex items-center gap-3 overflow-x-auto pb-4 no-scrollbar animate-pulse" aria-hidden>
+    {Array.from({ length: 5 }).map((_, i) => (
+      <div key={i} className="h-10 bg-neutral-800 rounded-full w-24 shrink-0" />
+    ))}
+  </div>
+);
