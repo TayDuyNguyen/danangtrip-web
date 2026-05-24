@@ -17,6 +17,9 @@ export const tourService = {
   getAll: (params?: TourFilterParams): Promise<ApiResponse<PaginatedResponse<Tour>>> =>
     axiosInstance.get(API_ENDPOINTS.TOURS.LIST, { params }),
 
+  getByCategorySlug: (slug: string, params?: TourFilterParams): Promise<ApiResponse<PaginatedResponse<Tour>>> =>
+    axiosInstance.get(API_ENDPOINTS.TOURS.BY_CATEGORY_SLUG(slug), { params }),
+
   getDetail: (slug: string): Promise<ApiResponse<Tour>> =>
     axiosInstance.get(API_ENDPOINTS.TOURS.DETAIL(slug)),
 

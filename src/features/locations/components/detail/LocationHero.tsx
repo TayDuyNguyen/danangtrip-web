@@ -68,12 +68,8 @@ export default function LocationHero({
         </div>
       </div>
 
-      <div className="mb-6 hidden items-center justify-between md:flex">
+      <div className="design-container mb-8 hidden items-center justify-between pt-8 md:flex md:pt-12">
         <nav className="flex text-sm text-on-surface-subtle font-medium" aria-label={t('detail.breadcrumb_nav_label')}>
-          <Link href={PUBLIC_ROUTES.HOME} className="hover:text-primary transition-colors">
-            {t('detail.breadcrumb_home')}
-          </Link>
-          <span className="mx-2 text-border">/</span>
           <Link href={PUBLIC_ROUTES.LOCATIONS} className="hover:text-primary transition-colors">
             {t('detail.breadcrumb_locations')}
           </Link>
@@ -84,7 +80,7 @@ export default function LocationHero({
           <Button
             type="button"
             variant="secondary"
-            className="gap-2 rounded-full border-border bg-surface-container-lowest text-on-surface-variant shadow-sm hover:border-primary hover:text-primary transition-colors"
+            className="gap-2 rounded-full border-[#404040] bg-[#171717] text-[#f5f5f5] shadow-[0_10px_30px_rgba(0,0,0,0.35)] hover:border-primary hover:bg-[#1f1f1f] hover:text-primary transition-colors"
             onClick={() => void share()}
           >
             <Share2 className="h-4 w-4" />
@@ -93,7 +89,7 @@ export default function LocationHero({
           <Button
             type="button"
             variant="secondary"
-            className="gap-2 rounded-full border-border bg-surface-container-lowest text-on-surface-variant shadow-sm hover:border-primary hover:text-primary transition-colors"
+            className="gap-2 rounded-full border-[#404040] bg-[#171717] text-[#f5f5f5] shadow-[0_10px_30px_rgba(0,0,0,0.35)] hover:border-primary hover:bg-[#1f1f1f] hover:text-primary transition-colors"
             disabled={favoriteBusy}
             onClick={onFavoriteToggle}
             aria-pressed={isFavorite}

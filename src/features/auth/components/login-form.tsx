@@ -141,7 +141,7 @@ export function LoginForm({ onSuccess, redirectUrl }: LoginFormProps) {
                   {t("remember_me")}
                 </label>
                 <Link
-                  href={ROUTES.CONTACT}
+                  href={ROUTES.FORGOT_PASSWORD}
                   className="text-sm text-[#8b6a55] hover:text-[#c59a5f] hover:underline transition"
                 >
                   {t("forgot_password")}

@@ -1,6 +1,13 @@
 {
   "title": "Danh sách Tour",
+  "category": {
+    "back_to_all": "← Tất cả Tour",
+    "results_count": "Tìm thấy {count} tour trong danh mục {category}",
+    "empty_title": "Chưa có tour nào trong danh mục này",
+    "empty_desc": "Thử đặt lại các bộ lọc hoặc quay lại xem tất cả các tour khác."
+  },
   "list_subtitle": "Khám phá các tour du lịch tuyệt vời tại Đà Nẵng",
+  "subtitle": "Khám phá các tour du lịch tuyệt vời tại Đà Nẵng",
   "landing": {
     "meta_title": "Tour Du Lịch Đà Nẵng - Giá Tốt, Khởi Hành Hàng Ngày | DanangTrip",
     "meta_description": "Tổng hợp các tour du lịch Đà Nẵng hấp dẫn: tour Ngũ Hành Sơn, Hội An, Bà Nà Hills, Cù Lao Chàm. Đặt tour trực tuyến, hỗ trợ 24/7.",
@@ -232,6 +239,10 @@
     "no_note": "Không có ghi chú",
     "detail_title": "Chi tiết đơn hàng",
     "button_print_invoice": "In hóa đơn",
+    "button_download_invoice": "Tải hóa đơn (PDF)",
+    "invoice_downloading": "Đang tải hóa đơn...",
+    "invoice_unpaid_error": "Hóa đơn chỉ có sau khi thanh toán thành công",
+    "invoice_server_error": "Không thể tải hóa đơn. Vui lòng thử lại.",
     "button_cancel_booking": "Hủy đặt tour",
     "invoice_title": "HÓA ĐƠN ĐẶT TOUR",
     "cancellation_reason_label": "Lý do hủy đơn",

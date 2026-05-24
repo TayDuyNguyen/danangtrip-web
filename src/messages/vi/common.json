@@ -5,10 +5,11 @@
     "travel": "Tour du lịch",
     "hotels": "Khách sạn",
     "dining": "Ẩm thực",
-    "blog": "Blog",
+    "blog": "Cẩm nang",
     "contact": "Liên hệ",
     "about_us": "Về chúng tôi",
-    "locations": "Địa điểm"
+    "locations": "Địa điểm",
+    "nearby": "Gần bạn"
   },
   "common": {
     "brand_name": "Đà Nẵng Trip",
@@ -142,7 +143,8 @@
     "register": "Đăng ký",
     "logout": "Đăng xuất",
     "profile": "Tài khoản",
-    "profile_info": "Thông tin cá nhân"
+    "profile_info": "Thông tin cá nhân",
+    "recommendations": "Gợi ý cho bạn"
   },
   "language": {
     "vi": "Tiếng Việt",

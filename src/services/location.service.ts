@@ -11,8 +11,11 @@ export const locationService = {
   getAll: (params?: BackendLocationQueryParams): Promise<ApiResponse<PaginatedResponse<Location>>> =>
     axiosInstance.get(API_ENDPOINTS.LOCATIONS.LIST, { params }),
 
-  getByCategory: (categorySlug: string): Promise<ApiResponse<Location[]>> =>
-    axiosInstance.get(`/categories/${categorySlug}/locations`),
+  getByCategory: (
+    categorySlug: string,
+    params?: BackendLocationQueryParams
+  ): Promise<ApiResponse<PaginatedResponse<Location>>> =>
+    axiosInstance.get(`/categories/${categorySlug}/locations`, { params }),
 
   getDetail: (slug: string): Promise<ApiResponse<Location>> =>
     axiosInstance.get(API_ENDPOINTS.LOCATIONS.DETAIL(slug)),
@@ -34,6 +37,16 @@ export const locationService = {
 
   getNearbyByLocationId: (id: number, limit = 6): Promise<ApiResponse<Location[]>> =>
     axiosInstance.get(API_ENDPOINTS.LOCATIONS.NEARBY_BY_ID(id), { params: { limit } }),
+
+  getNearby: (params: {
+    lat: number;
+    lng: number;
+    radius?: number;
+    limit?: number;
+    sort_by?: string;
+    sort_order?: string;
+  }): Promise<ApiResponse<Location[]>> =>
+    axiosInstance.get(API_ENDPOINTS.LOCATIONS.NEARBY, { params }),
 
   recordView: (id: number, sessionId?: string): Promise<ApiResponse<null>> =>
     axiosInstance.post(

@@ -64,9 +64,10 @@ function ToursContent() {
           : t("sort.newest");
 
   return (
-    <div className="design-page min-h-screen pb-20">
+    <div className="design-page layout-main-shell">
       {/* Header Section */}
-      <div className="bg-surface border-b border-border pt-32 pb-12">
+      <div className="relative pt-32 pb-12 overflow-hidden">
+        <div className="absolute inset-0 bg-linear-to-b from-[#8b6a55]/10 to-transparent pointer-events-none" />
         <div className="design-container">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div className="reveal-up">
@@ -89,7 +90,7 @@ function ToursContent() {
         </div>
       </div>
 
-      <div className="design-container mt-12">
+      <div className="design-container mt-12 pb-24">
         <div className="flex flex-col lg:flex-row gap-10">
           {/* Mobile Filter Toggle */}
           <button

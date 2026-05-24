@@ -13,6 +13,7 @@ import { bookingService } from "@/services/booking.service";
 import { ChevronLeft, InfoCircle } from "@/components/icons/solar";
 import { Button } from "@/components/ui";
 import { toast } from "sonner";
+import { Download, Printer } from "lucide-react";
 
 interface BookingDetailClientProps {
   id?: string;
@@ -56,7 +57,7 @@ export function BookingDetailClient({ id, bookingCode }: BookingDetailClientProp
         <div className="flex gap-4">
           <Button
             variant="secondary"
-            onClick={() => router.push("/bookings")}
+            onClick={() => router.push("/profile/bookings")}
             className="px-6 py-2.5 rounded-full"
           >
             {t("back_to_list")}
@@ -76,19 +77,69 @@ export function BookingDetailClient({ id, bookingCode }: BookingDetailClientProp
   const canCancel = (booking.booking_status === "pending" || booking.booking_status === "confirmed") && !isPast;
 
   const handleDownloadInvoice = async () => {
+    // Pre-flight check: Trạng thái thanh toán phải là "success"
+    if (booking.payment_status !== "success") {
+      toast.warning(t("invoice_unpaid_error"), {
+        style: {
+          background: "#FEF3C7",
+          color: "#F59E0B",
+          borderColor: "#FCD34D",
+        },
+      });
+      return;
+    }
+
     setIsDownloading(true);
     try {
       const res = await bookingService.invoice(booking.id);
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(res.data, null, 2));
+      // res.data ở đây là một Blob nhị phân do responseType: "blob"
+      if (!res.data) throw new Error("Empty invoice response");
+      const blobUrl = window.URL.createObjectURL(res.data);
       const downloadAnchor = document.createElement("a");
-      downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", `invoice-${booking.booking_code}.json`);
+      downloadAnchor.setAttribute("href", blobUrl);
+      downloadAnchor.setAttribute("download", `invoice-${booking.booking_code}.pdf`);
       document.body.appendChild(downloadAnchor);
       downloadAnchor.click();
       downloadAnchor.remove();
-      toast.success(locale === "vi" ? "Đã tải dữ liệu hóa đơn dạng JSON!" : "Invoice JSON data downloaded!");
-    } catch {
-      toast.error(locale === "vi" ? "Tải hóa đơn thất bại." : "Failed to download invoice.");
+      window.URL.revokeObjectURL(blobUrl);
+      
+      toast.success(
+        locale === "vi" ? "Đang tải xuống hóa đơn PDF của bạn..." : "Downloading your PDF invoice...",
+        {
+          style: {
+            background: "#ECFDF5",
+            color: "#10B981",
+            borderColor: "#A7F3D0",
+          },
+        }
+      );
+    } catch (err: unknown) {
+      const apiErr = err as { status?: number; rawData?: unknown; message?: string };
+      if (apiErr?.status === 401) {
+        router.push("/login");
+        return;
+      }
+
+      let errorMessage = t("invoice_server_error");
+      if (apiErr?.rawData instanceof Blob) {
+        try {
+          const errorText = await apiErr.rawData.text();
+          const errorJson = JSON.parse(errorText) as { message?: string; user_message?: string };
+          errorMessage = errorJson.message || errorJson.user_message || errorMessage;
+        } catch (parseErr) {
+          console.error("Failed to parse error blob", parseErr);
+        }
+      } else if (apiErr?.message) {
+        errorMessage = apiErr.message;
+      }
+
+      toast.error(errorMessage, {
+        style: {
+          background: "#FEE2E2",
+          color: "#EF4444",
+          borderColor: "#FCA5A5",
+        },
+      });
     } finally {
       setIsDownloading(false);
     }
@@ -104,7 +155,7 @@ export function BookingDetailClient({ id, bookingCode }: BookingDetailClientProp
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-6 print:hidden">
         <div className="flex items-center gap-4">
           <button
-            onClick={() => router.push("/bookings")}
+            onClick={() => router.push("/profile/bookings")}
             className="p-2.5 rounded-full border border-border bg-surface-container hover:bg-surface-container-high transition-colors active:scale-95"
             aria-label="Back"
           >
@@ -124,17 +175,28 @@ export function BookingDetailClient({ id, bookingCode }: BookingDetailClientProp
             variant="secondary"
             onClick={handleDownloadInvoice}
             disabled={isDownloading}
-            className="px-5 py-2.5 rounded-full text-xs font-semibold text-white border-border bg-surface-container hover:border-primary/50"
+            className={`px-5 py-2.5 rounded-full text-xs font-semibold text-white border border-border bg-surface-container hover:border-primary/50 flex items-center gap-2 transition-all duration-200 ${
+              isDownloading ? "bg-[#3385D6] border-[#3385D6] hover:bg-[#3385D6]/90 cursor-not-allowed" : ""
+            }`}
           >
-            {isDownloading ? t("button_submitting") : t("button_print_invoice")} (JSON)
+            {isDownloading ? (
+              <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            ) : (
+              <Download className="w-4 h-4 text-primary" />
+            )}
+            <span>{isDownloading ? t("invoice_downloading") : t("button_download_invoice")}</span>
           </Button>
 
           <Button
             variant="secondary"
             onClick={handlePrint}
-            className="px-5 py-2.5 rounded-full text-xs font-semibold text-white border-border bg-surface-container hover:border-primary/50"
+            className="px-5 py-2.5 rounded-full text-xs font-semibold text-white border border-border bg-surface-container hover:border-primary/50 flex items-center gap-2 transition-all duration-200"
           >
-            {t("button_print_invoice")}
+            <Printer className="w-4 h-4 text-on-surface-subtle" />
+            <span>{t("button_print_invoice")}</span>
           </Button>
 
           {canCancel && (

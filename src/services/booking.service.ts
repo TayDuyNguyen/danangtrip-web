@@ -27,8 +27,8 @@ export const bookingService = {
   detailByCode: (bookingCode: string): Promise<ApiResponse<Booking>> =>
     axiosInstance.get(API_ENDPOINTS.BOOKINGS.DETAIL_BY_CODE(bookingCode)),
 
-  invoice: (id: number | string): Promise<ApiResponse<Booking>> =>
-    axiosInstance.get(API_ENDPOINTS.BOOKINGS.INVOICE(id)),
+  invoice: (id: number | string): Promise<ApiResponse<Blob>> =>
+    axiosInstance.get(API_ENDPOINTS.BOOKINGS.INVOICE(id), { responseType: "blob" }),
 
   cancel: (id: number | string, data: CancelBookingPayload): Promise<ApiResponse<Booking>> =>
     axiosInstance.post(API_ENDPOINTS.BOOKINGS.CANCEL(id), data),

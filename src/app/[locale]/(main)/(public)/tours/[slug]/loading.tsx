@@ -1,6 +1,6 @@
 export default function TourDetailLoading() {
   return (
-    <div className="design-page min-h-screen bg-surface pb-20 animate-pulse">
+    <div className="design-page layout-main-shell min-h-screen pb-20 animate-pulse">
       <div className="design-container pt-28 md:pt-32">
         <div className="mb-8 h-4 w-64 rounded-md bg-surface-container-high" />
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-12">

@@ -58,6 +58,10 @@ export const forgotPasswordSchema = z.object({
 export const resetPasswordSchema = z
   .object({
     token: z.string().min(1, ERROR_MESSAGES.REQUIRED),
+    email: z
+      .string()
+      .min(1, ERROR_MESSAGES.REQUIRED)
+      .regex(EMAIL_REGEX, ERROR_MESSAGES.INVALID_EMAIL),
     password: z
       .string()
       .min(8, ERROR_MESSAGES.INVALID_PASSWORD)
@@ -69,8 +73,18 @@ export const resetPasswordSchema = z
     path: ["confirmPassword"],
   });
 
+// Verify email schema
+export const verifyEmailSchema = z
+  .object({
+    otp: z
+      .string()
+      .regex(/^\d{6}$/, "error.invalid_otp")
+  })
+
 // Type exports
 export type LoginSchema = z.infer<typeof loginSchema>;
 export type RegisterSchema = z.infer<typeof registerSchema>;
 export type ForgotPasswordSchema = z.infer<typeof forgotPasswordSchema>;
 export type ResetPasswordSchema = z.infer<typeof resetPasswordSchema>;
+export type VerifyEmailSchema = z.infer<typeof verifyEmailSchema>;
+

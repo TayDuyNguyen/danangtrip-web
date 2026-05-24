@@ -27,6 +27,12 @@
   "categories_title_prefix": "Khám phá theo",
   "categories_title_highlight": "Danh mục",
   "categories_subtitle": "Dễ dàng tìm thấy hành trình phù hợp với sở thích của bạn qua các chủ đề du lịch đặc sắc",
+  "location_categories": {
+    "tagline": "Danh mục địa điểm",
+    "title_prefix": "Khám phá địa điểm theo",
+    "title_highlight": "Danh mục",
+    "subtitle": "Chọn nhanh nhóm địa điểm bạn cần: cafe, nhà hàng, bar, khách sạn, mua sắm và các dịch vụ khác tại Đà Nẵng"
+  },
   "featured_locations": {
     "tagline": "Khám phá Đà Nẵng",
     "title_prefix": "Địa điểm",

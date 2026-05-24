@@ -1,4 +1,51 @@
 {
-  "title": "Account settings",
-  "subtitle": "This area manages account options and experience preferences."
+  "title": "Account Settings",
+  "subtitle": "This area manages account options and experience preferences.",
+  "sidebar": {
+    "profile": "Personal Profile",
+    "change_password": "Change Password",
+    "ratings": "My Ratings",
+    "bookings": "My Bookings",
+    "favorites": "Saved Places",
+    "notifications": "Notifications",
+    "recommendations": "Recommended for you"
+  },
+  "breadcrumb": {
+    "home": "Home",
+    "profile": "Personal Profile",
+    "change_password": "Change Password",
+    "ratings": "My Ratings",
+    "recommendations": "Recommended for you",
+    "bookings": "My Bookings",
+    "booking_detail": "Booking Detail",
+    "favorites": "Saved Places"
+  },
+  "change_password": {
+    "page_title": "Change Password",
+    "meta_description": "Securely update your DaNangTrip account password.",
+    "heading": "Change Password",
+    "description": "Keep your account safe with a strong and unique password.",
+    "current_password_label": "Current Password",
+    "current_password_placeholder": "Enter your current password",
+    "new_password_label": "New Password",
+    "new_password_placeholder": "Enter your new password",
+    "confirm_password_label": "Confirm New Password",
+    "confirm_password_placeholder": "Re-enter your new password",
+    "strength_label": "Password Strength",
+    "strength_weak": "Weak",
+    "strength_fair": "Fair",
+    "strength_good": "Good",
+    "strength_strong": "Strong",
+    "checklist_min_length": "At least 8 characters",
+    "checklist_uppercase": "At least 1 uppercase letter",
+    "checklist_lowercase": "At least 1 lowercase letter",
+    "checklist_number": "At least 1 number",
+    "checklist_special": "At least 1 special character (@$!%*?&)",
+    "checklist_match": "Passwords match",
+    "submit_button": "Change Password",
+    "cancel_button": "Cancel",
+    "success_toast": "Password changed successfully!",
+    "error_wrong_current": "Current password is incorrect.",
+    "error_generic": "An error occurred. Please try again later."
+  }
 }

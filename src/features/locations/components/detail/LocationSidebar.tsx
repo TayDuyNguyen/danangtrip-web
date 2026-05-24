@@ -1,12 +1,18 @@
 'use client';
 
 import React from 'react';
+import dynamic from 'next/dynamic';
 import { useTranslations } from 'next-intl';
-import { Map as MapIcon } from "@/components/icons/solar";
 import { Button } from '@/components/ui';
+import { Map as MapIcon } from "@/components/icons/solar";
 import type { Location } from '@/types';
 import WeatherWidget from './WeatherWidget';
 import LocationNearby from './LocationNearby';
+import { getLocationMapsUrl } from './LocationMapPreview';
+
+const LocationMapPreview = dynamic(() => import('./LocationMapPreview'), {
+  ssr: false,
+});
 
 interface LocationSidebarProps {
   location: Location;
@@ -18,6 +24,7 @@ interface LocationSidebarProps {
 export default function LocationSidebar({ location, locale, nearby, nearbyLoading }: LocationSidebarProps) {
   const t = useTranslations('locations');
   const priceMin = location.price_min || 0;
+  const mapsUrl = getLocationMapsUrl(location);
 
   return (
     <div className="sticky top-28 space-y-6">
@@ -44,19 +51,21 @@ export default function LocationSidebar({ location, locale, nearby, nearbyLoadin
 
       {/* Map Preview */}
       <div className="reveal-up reveal-delay-200 overflow-hidden rounded-xl border border-border bg-surface-container-lowest shadow-lg">
-        <div className="relative flex aspect-video w-full items-center justify-center bg-surface-container-low/30">
-          <MapIcon className="h-12 w-12 text-on-surface-variant/50" />
-          <div className="absolute inset-0 bg-linear-to-t from-black/30 to-transparent" />
-          <Button variant="primary" className="absolute bottom-4 left-1/2 -translate-x-1/2 gap-2 rounded-full text-xs shadow-md shadow-black/20 bg-surface-container-lowest text-foreground hover:bg-surface-container-low border-0">
-            <MapIcon className="h-4 w-4 text-primary" />
-            {t('detail.view_on_map')}
-          </Button>
-        </div>
+        <LocationMapPreview location={location} showMapLink={false} />
         <div className="p-5">
           <p className="text-sm font-bold text-foreground leading-tight mb-1">{location.address}</p>
           <p className="line-clamp-1 text-xs text-on-surface-subtle font-medium">
             {location.district}, {t('detail.address_suffix')}
           </p>
+          <a
+            href={mapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full border border-[#404040] bg-[#171717] px-4 py-3 text-sm font-bold text-white transition hover:border-primary hover:text-primary"
+          >
+            <MapIcon className="h-4 w-4 text-primary" />
+            {t('detail.view_on_map')}
+          </a>
         </div>
       </div>
 

@@ -16,6 +16,7 @@ export const API_ENDPOINTS = {
     HOT: "/tours/hot",
     DETAIL: (id: string) => `/tours/${id}`,
     CATEGORIES: "/tour-categories",
+    BY_CATEGORY_SLUG: (slug: string) => `/tour-categories/${slug}/tours`,
     SCHEDULES: (id: number | string) => `/tours/${id}/schedules`,
     CHECK_AVAILABILITY: (id: number | string) => `/tours/${id}/check-availability`,
     RATINGS: (id: number | string) => `/tours/${id}/ratings`,
@@ -60,6 +61,7 @@ export const API_ENDPOINTS = {
     RATINGS: (id: number) => `/locations/${id}/ratings`,
     RATING_STATS: (id: number) => `/locations/${id}/rating-stats`,
     NEARBY_BY_ID: (id: number) => `/locations/${id}/nearby`,
+    NEARBY: "/locations/nearby",
     RECORD_VIEW: (id: number) => `/locations/${id}/view`,
   },
   RATINGS: {
@@ -88,4 +90,5 @@ export const API_ENDPOINTS = {
   LANDING_PAGES: {
     DETAIL: (slug: string) => `/landing-pages/${slug}`,
   },
+  RECOMMENDATIONS: "/recommendations",
 };

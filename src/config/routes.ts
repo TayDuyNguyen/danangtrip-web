@@ -7,7 +7,10 @@ export const PUBLIC_ROUTES = {
   HOME: "/",
   LOCATIONS: "/locations",
   LOCATION_DETAIL: (slug: string) => `/locations/${slug}`,
+  CATEGORY_LOCATIONS: (slug: string) => `/categories/${slug}/locations`,
+  NEARBY: "/nearby",
   TOURS: "/tours",
+  CATEGORY_TOURS: (slug: string) => `/tour-categories/${slug}/tours`,
   TOUR_DETAIL: (slug: string) => `/tours/${slug}`,
   TOUR_DEPARTURES: (slug: string) => `/tours/${slug}/departures`,
   BLOG: "/blog",
@@ -37,16 +40,24 @@ export const PLANNED_ROUTES = {
 export const AUTH_ROUTES = {
   LOGIN: "/login",
   REGISTER: "/register",
+  VERIFY_EMAIL: "/verify-email",
+  FORGOT_PASSWORD: "/forgot-password",
+  RESET_PASSWORD: "/reset-password",
 } as const;
 
 // Protected routes (require authentication)
 export const PROTECTED_ROUTES = {
   PROFILE: "/profile",
+  PASSWORD: "/profile/password",
+  RATINGS: "/profile/ratings",
   SETTINGS: "/settings",
   PAYMENT: "/payment",
   PAYMENT_RESULT: "/payment/result",
-  BOOKINGS: "/bookings",
-  BOOKING_BY_CODE: (bookingCode: string) => `/bookings/code/${bookingCode}`,
+  BOOKINGS: "/profile/bookings",
+  BOOKING_BY_CODE: (bookingCode: string) => `/profile/bookings/code/${bookingCode}`,
+  FAVORITES: "/profile/favorites",
+  NOTIFICATIONS: "/notifications",
+  RECOMMENDATIONS: "/profile/recommendations",
 } as const;
 
 // Dashboard routes (require authentication + admin/staff role)
@@ -85,6 +96,7 @@ export const ROUTES = {
 export const NAV_LINKS = [
   { name: "nav.home", path: PUBLIC_ROUTES.HOME },
   { name: "nav.locations", path: PUBLIC_ROUTES.LOCATIONS },
+  { name: "nav.nearby", path: PUBLIC_ROUTES.NEARBY },
   { name: "nav.travel", path: PUBLIC_ROUTES.TOURS },
   { name: "nav.blog", path: PUBLIC_ROUTES.BLOG },
   { name: "nav.contact", path: PUBLIC_ROUTES.CONTACT },
@@ -120,4 +132,3 @@ export const isProtectedRoute = (path: string): boolean => {
 export const isDashboardRoute = (path: string): boolean => {
   return path.startsWith("/dashboard");
 };
-

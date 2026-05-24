@@ -8,6 +8,7 @@ import { useTranslations, useLocale } from "next-intl";
 import { IoArrowForwardOutline, IoCalendarOutline } from "@/components/icons/solar";
 import { useBlog } from "../hooks/use-blog";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
+import { getHomeBlogImage, isPlaceholderImage } from "../utils/home-image-fallbacks";
 
 const TravelBlog = () => {
   const { latestBlogs: blogs } = useBlog();
@@ -53,7 +54,7 @@ const TravelBlog = () => {
               <Link href={`${ROUTES.BLOG}?q=${encodeURIComponent(post.title)}` as string & {}}>
                 <div className="relative aspect-16/10 overflow-hidden">
                   <Image
-                    src={post.featured_image || "/images/placeholder.png"}
+                    src={getHomeBlogImage(post.featured_image, post.id)}
                     alt={post.title}
                     fill
                     sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
@@ -79,7 +80,7 @@ const TravelBlog = () => {
                   <div className="flex items-center justify-between mt-auto">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-full bg-surface-container overflow-hidden relative">
-                        {post.author?.avatar ? (
+                        {post.author?.avatar && !isPlaceholderImage(post.author.avatar) ? (
                           <Image src={post.author.avatar} alt={post.author.full_name} fill className="object-cover" />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center text-[#8b6a55] font-bold text-[12px]">

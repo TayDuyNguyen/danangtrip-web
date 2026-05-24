@@ -1,5 +1,37 @@
 # Session Log
 
+## 2026-05-23 Step 10 Completion Update - Reset Password Feature
+- Completed full Pipeline (Steps 01-10) for `user-reset-password` (Đặt lại mật khẩu screen).
+- Created screen analysis, project setup, API contract, route plan, UI spec, data integration, interaction spec, auth review, test report, deploy report, and review artifacts under `.agent/artifacts/`.
+- Configured static translation imports in `src/i18n/request.ts` using statically loaded `reset-password.json` locale files for `vi` and `en` locales to ensure Edge bundling compatibility.
+- Implemented state-of-the-art premium glassmorphic `ResetPasswordForm` component with rotating gradient conic border and dynamic error feedback using standard Tailwind CSS v4 design tokens.
+- Secured the `/reset-password` route inside `src/middleware.ts` to block and redirect authenticated users.
+- Reran and passed `npm run prepush:check` gate (100% PASS for ESLint, TypeScript Type Check, Route Integrity, and Production Build).
+- Updated `WORKING_STATE.md` and `task.md` to Completed status.
+
+## 2026-05-23 Step 10 Revalidation Update
+- Revalidated Step 10 for `user-forgot-password` after code review.
+- Fixed resend success toast timing so it appears only after the resend API succeeds.
+- Reran `npm.cmd run prepush:check` outside sandbox after Wrangler AppData write was blocked inside sandbox.
+- Final validation passed: lint, typecheck, route integrity, and Next production build.
+- Updated deploy/review/test artifacts plus working state and handoff.
+
+## 2026-05-23
+- Completed full Pipeline (Steps 01-10) for `user-forgot-password` (Forgot Password screen).
+- Created screen analysis, project setup, API contract, route plan, UI spec, data integration, interaction spec, auth review, test report, deploy report, and review artifacts under `.agent/artifacts/`.
+- Configured static translation imports in `src/i18n/request.ts` using statically loaded `forgot-password.json` locale files for `vi` and `en` locales to ensure Edge bundling compatibility.
+- Implemented state-of-the-art premium glassmorphic `ForgotPasswordForm` component with rotating gradient conic border using standard Tailwind CSS v4 design tokens.
+- Secured the `/forgot-password` route inside `src/middleware.ts` to block and redirect authenticated users.
+- Reran and passed `npm run prepush:check` gate (100% PASS for ESLint, TypeScript Type Check, Route Integrity, and Production Build).
+- Updated `WORKING_STATE.md` and `task.md` to Completed status.
+
+## 2026-05-22 Step 10 Completion Update
+- Completed Step 10 for `user-verify-email`.
+- Corrected stale token/code contract to authenticated OTP payload `{ otp: string }`.
+- Reran and passed `npm.cmd run lint`, `npm.cmd run typecheck`, `npm.cmd run build`, and `npm.cmd run prepush:check`.
+- Refreshed API contract, auth review, integration, interaction, test, deploy, and review artifacts.
+- Updated `WORKING_STATE.md` and `HANDOFF.md` to completed.
+
 ## 2026-05-12
 - Added `REPO_FACTS.md` to anchor real repository stack and working conventions.
 - Added `verify_agent_drift.py` and wired it into `.agent` checklist / verification scripts.
@@ -42,7 +74,6 @@
 - Mapped out Git handoff commands and paused for final user review and push authorization.
 - 2026-05-19: Completed 01-screen-analysis for tour-departure-select.
 - 2026-05-19: Completed 03-types-api-contract for tour-departure-select.
--   2 0 2 6 - 0 5 - 1 9 :   C o m p l e t e d   0 4 - l a y o u t - r o u t i n g   f o r   t o u r - d e p a r t u r e - s e l e c t .  
  -   2 0 2 6 - 0 5 - 1 9 :   C o m p l e t e d   0 5 - u i - c o m p o n e n t s   f o r   t o u r - d e p a r t u r e - s e l e c t .  
 - 2026-05-19: Completed 04-layout-routing for tour-departure-select.
 - 2026-05-19: Completed 05-ui-components for tour-departure-select.
@@ -75,3 +106,32 @@
 - Completed 09-testing for `user-booking-by-code`. Executed Phase 1 static gates, visual QA validation, dynamic param workflows, auth fallbacks, and boundary edge cases. Verified all blocking checks successfully.
 - Completed 10-optimization-deploy for `user-booking-by-code`. Ran full Next.js production builds and `prepush:check` quality gates. Created deploy-report and feature review walkthrough artifacts, and prepared Git push release package.
 - Re-ran Step 10 for `user-booking-by-code`. Fixed `ProtectedLayout` lint blocker (`react-hooks/set-state-in-effect`) by using `useSyncExternalStore` for mounted snapshot behavior, then verified `npm.cmd run prepush:check` passes. Updated deploy/review artifacts with branch `feat/DATN-80/user-booking-by-code` and commit handoff recommendation.
+
+## 2026-05-22
+- Completed repository-level `10-optimization-deploy` audit for `repo-screen-alignment-audit`.
+- Re-ran `npm run prepush:check` for `danangtrip-web`; lint, typecheck, route integrity, and production build all passed.
+- Created deploy/review artifacts documenting that the repo is technically healthy, with remaining gaps limited to visual fidelity rather than core route or compile errors.
+- Completed 01-screen-analysis for `favorites`. Produced the screen analysis artifact in the repository and updated memory files to transition into the next implementation steps.
+- Completed 03-types-api-contract for `favorites`. Created `favorite.types.ts`, exported from central types registry, extended `favoriteService` with `getFavorites`, added `/favorites` route configuration, and drafted API contract documentation. Verified typescript compilation with `npx tsc --noEmit`.
+- Completed 04-layout-routing for `favorites`. Created locale translation files `favorites.json` for both `vi` and `en`, statically registered them in `request.ts`, and built the Next.js Server Component page shell in `favorites/page.tsx` with dynamic SEO metadata support. Verified compile integrity via typecheck.
+- Completed 05-ui-components for `favorites`. Created the UI Spec artifact, validated component placement strategy against DESIGN.md, and verified clean TypeScript compilation (`tsc`) and ESLint checks.
+- Completed 06-data-integration for `favorites`. Created the Data Integration Plan, documented the hierarchical query key strategy, optimistic mutation flow with 5-second undo toast, client-side sorting/pagination handling, and verified no TypeScript or lint regressions.
+- Completed 07-interactions for `favorites`. Created the Interaction Spec artifact, documented view transitions (Grid/List), sorting behaviors, client-side pagination, optimistic delete with 5-second Undo toast, and confirmed zero compilation or lint errors.
+- Completed 08-auth-permissions for `favorites`. Secured the "/favorites" route in middleware.ts, created the Auth Review artifact, and verified with 100% successful typecheck and lint checks.
+- Completed 09-testing for `favorites`. Ran Phase 1 static gates (lint, typecheck, check:routes, build, prepush:check — all PASS). Phase 2-5 code-audit QA found and fixed 3 bugs: hardcoded "Tải lại" → i18n, setPage-during-render → derived state, duplicate district rendering → removed. Re-verified all checks pass clean. Verdict: READY WITH RISKS.
+- Completed 05-ui-components, 06-data-integration, and 07-interactions for `notifications`. Designed and built 5 premium glassmorphic UI components (`NotificationsHeader`, `NotificationsFilterTabs`, `NotificationItemCard`, `NotificationsEmptyState`, `NotificationsSkeleton`) and the client controller shell `NotificationsPageClient.tsx`. Fully integrated React Query hooks and mutations, optimistic list deletion handling, single and bulk mark-as-read state cache invalidation, and custom redirect transition deep-linking. Verified clean typecheck compile and ESLint syntax checks (0 errors, 0 warnings).
+- Completed 01-screen-analysis for `user-profile-password`. Generated the screen analysis artifact and implementation plan, mapped the design requirements to dark theme styling matching DESIGN.md, and validated the existing PUT /user/password API contract.
+- Completed 03-types-api-contract for `user-profile-password`. Created `profile.validator.ts` containing the `changePasswordSchema` validation rules and inferred TypeScript types. Produced the API Contract artifact and verified TypeScript compilation successfully.
+- Completed 06-data-integration for `user-verify-email`. Verified that the mutations for verifying email (`verifyEmail` via both token and OTP code) and resending verification code are fully integrated in `VerifyEmailForm.tsx` using React Query. Verified zero TypeScript and ESLint compilation errors, and generated the integration artifacts under `.agent/artifacts/integration/` and `.agent/artifacts/data-integration/`.
+- Completed 07-interactions for `user-verify-email`. Documented and verified all interaction flows: auto-verify token parsing, manual OTP validation/auto-submit on 6 digit lengths, copy-paste regex filters, 60-second resend cooldown timer, 3-second redirect countdown, and back/retry redirects. Created the interaction spec artifact at `.agent/artifacts/interaction-specs/2026-05-22__user-verify-email__interaction-spec.md`.
+
+## 2026-05-23 Step 10 Completion Update - My Ratings Screen
+- Completed full Pipeline (Steps 01-10) for `user-my-ratings` (Đánh giá của tôi screen).
+- Created screen analysis, project setup, API contract, route plan, UI spec, data integration, interaction spec, auth review, test report, deploy report, and review artifacts under `.agent/artifacts/`.
+- Modified Laravel backend in `danangtrip-api` to add type validation in `RatingsProfileRequest` and support server-side type-filtering inside `RatingRepository::getByUserPaginated` for high performance.
+- Configured static translation imports in `src/i18n/request.ts` using statically loaded `ratings.json` locale files for `vi` and `en` locales to ensure Edge bundling compatibility.
+- Implemented state-of-the-art premium glassmorphic `RatingCard` and Client Controller `MyRatingsClient` components with detailed edit modals (with live char counters and file lists) and delete confirmation dialogs using standard Tailwind CSS v4 design tokens.
+- Registered and exposed `/profile/ratings` under `PROTECTED_ROUTES` in `src/config/routes.ts` and integrated it into the profile side navigation sidebar and mobile horizontal navigation.
+- Reran and passed `npm run prepush:check` quality gate (100% PASS for ESLint, TypeScript Type Check, Route Integrity, and Production Build).
+- Updated `WORKING_STATE.md`, `task.md`, and `HANDOFF.md` to Completed status under branch feat/DATN-88/user-my-ratings.
+

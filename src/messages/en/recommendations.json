@@ -1,0 +1,34 @@
+{
+  "meta_title": "Recommended for You | DanangTrip",
+  "meta_description": "Discover personalized travel locations and tours in Da Nang based on your history and interests.",
+  "title": "Recommended for You",
+  "subtitle": "Based on your discovery history and interests",
+  "breadcrumb_home": "Home",
+  "breadcrumb": "Home / Recommended for You",
+  "tabs": {
+    "all": "All",
+    "locations": "Locations",
+    "tours": "Tours"
+  },
+  "reasons": {
+    "viewed": "Recently viewed",
+    "similar_favorite": "Similar to favorites",
+    "popular": "Popular near you",
+    "booked": "Frequently booked"
+  },
+  "empty": {
+    "title": "No recommendations yet",
+    "subtitle": "Explore more locations and tours so we can tailor the best suggestions for you!",
+    "cta_locations": "Discover Locations",
+    "cta_tours": "Discover Tours"
+  },
+  "error": {
+    "title": "Error loading suggestions",
+    "message": "Something went wrong while loading your recommendations. Please try again.",
+    "retry": "Retry"
+  },
+  "sections": {
+    "locations": "Recommended Locations",
+    "tours": "Recommended Tours"
+  }
+}

@@ -34,6 +34,7 @@ export interface Category {
   name: string;
   slug: string;
   icon: string | null;
+  icon_background?: string | null;
   description: string | null;
   image: string | null;
   sort_order: number;
@@ -41,6 +42,7 @@ export interface Category {
   created_at: string;
   updated_at: string;
   subcategories: SubCategory[];
+  locations_count?: number;
 }
 
 export interface LocationAmenity {
@@ -111,7 +113,8 @@ export interface TourCategory {
   name: string;
   slug: string;
   description: string;
-  icon: string;
+  icon: string | null;
+  icon_background?: string | null;
   sort_order: number;
   status: 'active' | 'inactive';
   created_at: string;
