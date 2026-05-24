@@ -11,16 +11,22 @@ import {
   UilBedDouble,
   UilBoltAlt,
   UilBooks,
+  UilBox,
+  UilBriefcase,
   UilBuilding,
   UilCalendarAlt,
+  UilCamera,
+  UilCarSideview,
   UilChartLine,
   UilCheck,
   UilCheckCircle,
   UilClock,
   UilCloud,
+  UilCodeBranch,
   UilCommentLines,
   UilCommentMessage,
   UilCompass,
+  UilCoffee,
   UilDirection,
   UilEnvelope,
   UilEstate,
@@ -28,24 +34,34 @@ import {
   UilFacebookF,
   UilFire,
   UilGameStructure,
+  UilGlassMartini,
   UilGlobe,
   UilGrid,
+  UilHardHat,
   UilHeadphonesAlt,
   UilHeart,
   UilHeartAlt,
+  UilHome,
   UilInstagram,
   UilLock,
   UilLockAlt,
   UilMap,
   UilMapMarker,
+  UilMapPin,
+  UilMoon,
+  UilMusic,
   UilNewspaper,
   UilPhone,
+  UilPlane,
   UilRefresh,
   UilRestaurant,
   UilRocket,
   UilSearch,
   UilShareAlt,
   UilShieldCheck,
+  UilShield,
+  UilShip,
+  UilShoppingBag,
   UilSlidersV,
   UilSlidersVAlt,
   UilStar,
@@ -53,11 +69,14 @@ import {
   UilThumbsUp,
   UilTimes,
   UilTrees,
+  UilTicket,
   UilTwitter,
+  UilUtensils,
   UilUmbrella,
   UilUser,
   UilUsersAlt,
   UilWallet,
+  UilWrench,
   UilYoutube,
   UilCopy,
 } from "@iconscout/react-unicons";
@@ -102,25 +121,36 @@ export const IoAlertCircleOutline = UilExclamationCircle;
 export const IoArrowForwardOutline = UilArrowRight;
 export const IoBagHandleOutline = UilBag;
 export const IoBedOutline = UilBedDouble;
+export const IoBoxOutline = UilBox;
+export const IoBriefcaseOutline = UilBriefcase;
 export const IoBusinessOutline = UilBuilding;
 export const IoCalendarOutline = UilCalendarAlt;
+export const IoCameraOutline = UilCamera;
+export const IoCarSportOutline = UilCarSideview;
+export const IoBicycleOutline = UilDirection;
+export const IoBoatOutline = UilShip;
 export const IoChevronBack = UilAngleLeft;
 export const IoChevronBackOutline = UilAngleLeft;
 export const IoChevronDownOutline = UilAngleDown;
 export const IoChevronForward = UilAngleRight;
 export const IoChevronForwardOutline = UilAngleRight;
 export const IoCloseOutline = UilTimes;
+export const IoCodeOutline = UilCodeBranch;
 export const IoCompassOutline = UilCompass;
+export const IoCoffeeOutline = UilCoffee;
 export const IoEarthOutline = UilGlobe;
 export const IoFingerPrintOutline = UilLockAlt;
 export const IoFlame = UilFire;
 export const IoFlashOutline = UilBoltAlt;
 export const IoGameControllerOutline = UilGameStructure;
+export const IoGlassOutline = UilGlassMartini;
 export const IoGridOutline = UilGrid;
+export const IoHardHatOutline = UilHardHat;
 export const IoHeadsetOutline = UilHeadphonesAlt;
 export const IoHeart = UilHeart;
 export const IoHeartOutline = UilHeartAlt;
 export const IoHomeOutline = UilEstate;
+export const IoHouseOutline = UilHome;
 export const IoLeafOutline = UilTrees;
 export const IoLibraryOutline = UilBooks;
 export const IoLocationOutline = UilMapMarker;
@@ -130,22 +160,31 @@ export const IoLogoInstagram = UilInstagram;
 export const IoLogoYoutube = UilYoutube;
 export const IoMailOutline = UilEnvelope;
 export const IoMapOutline = UilMap;
+export const IoMapPinOutline = UilMapPin;
 export const IoMenuOutline = UilBars;
+export const IoMoonOutline = UilMoon;
+export const IoMusicOutline = UilMusic;
 export const IoNewspaperOutline = UilNewspaper;
 export const IoOptionsOutline = UilSlidersVAlt;
 export const IoPeopleOutline = UilUsersAlt;
 export const IoPersonOutline = UilUser;
+export const IoPlaneOutline = UilPlane;
 export const IoRefreshOutline = UilRefresh;
 export const IoRestaurantOutline = UilRestaurant;
 export const IoRocketOutline = UilRocket;
+export const IoShieldOutline = UilShield;
 export const IoSearchOutline = UilSearch;
 export const IoShieldCheckmarkOutline = UilShieldCheck;
+export const IoShoppingBagOutline = UilShoppingBag;
 export const IoStar = UilStar;
+export const IoTicketOutline = UilTicket;
 export const IoTimeOutline = UilClock;
 export const IoTrendingUp = UilChartLine;
 export const IoUmbrellaOutline = UilUmbrella;
 export const IoWalkOutline = UilDirection;
 export const IoWalletOutline = UilWallet;
+export const IoWrenchOutline = UilWrench;
+export const IoUtensilsOutline = UilUtensils;
 export const IoLogoTwitter = UilTwitter;
 export const IoCopyOutline = UilCopy;
 export const IoShareOutline = UilShareAlt;

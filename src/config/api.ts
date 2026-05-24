@@ -16,6 +16,7 @@ export const API_ENDPOINTS = {
     HOT: "/tours/hot",
     DETAIL: (id: string) => `/tours/${id}`,
     CATEGORIES: "/tour-categories",
+    BY_CATEGORY_SLUG: (slug: string) => `/tour-categories/${slug}/tours`,
     SCHEDULES: (id: number | string) => `/tours/${id}/schedules`,
     CHECK_AVAILABILITY: (id: number | string) => `/tours/${id}/check-availability`,
     RATINGS: (id: number | string) => `/tours/${id}/ratings`,

@@ -27,6 +27,12 @@
   "categories_title_prefix": "Explore by",
   "categories_title_highlight": "Category",
   "categories_subtitle": "Easily find the right journey for your interests through featured travel themes",
+  "location_categories": {
+    "tagline": "Location categories",
+    "title_prefix": "Explore locations by",
+    "title_highlight": "Category",
+    "subtitle": "Quickly choose the type of place you need: cafes, restaurants, bars, hotels, shopping and local services in Da Nang"
+  },
   "featured_locations": {
     "tagline": "Explore Da Nang",
     "title_prefix": "Featured",

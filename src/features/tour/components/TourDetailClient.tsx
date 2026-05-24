@@ -56,17 +56,11 @@ export default function TourDetailClient({ tour }: Props) {
   const meetingPoint = normalizeText(tour.meeting_point);
 
   return (
-    <div className="design-page min-h-screen pb-20 bg-surface">
+    <div className="design-page layout-main-shell min-h-screen pb-20">
       <div className="design-container pt-28 md:pt-32">
         {/* Breadcrumb */}
         <nav aria-label="Breadcrumb" className="text-sm text-on-surface-subtle mb-8 reveal-up">
           <ol className="flex flex-wrap items-center gap-2">
-            <li>
-              <Link href={ROUTES.HOME} className="hover:text-primary transition-colors">
-                {td("breadcrumb_home")}
-              </Link>
-            </li>
-            <li className="text-on-surface-variant">/</li>
             <li>
               <Link href={ROUTES.TOURS} className="hover:text-primary transition-colors">
                 {td("breadcrumb_tours")}

@@ -115,7 +115,7 @@ export default function LocationDetailClient({ location, locale }: Props) {
   const avgRating = Math.min(5, Math.max(0, parseFloat(location.avg_rating) || 0));
 
   return (
-    <main className="min-h-screen bg-background pb-20">
+    <main className="design-page layout-main-shell min-h-screen pb-20">
       <LocationHero
         locationName={location.name}
         isFavorite={isFavorite}
@@ -123,7 +123,7 @@ export default function LocationDetailClient({ location, locale }: Props) {
         onFavoriteToggle={toggleFavorite}
       />
 
-      <div className="container mx-auto px-4 md:pt-6">
+      <div className="design-container">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
           <div className="space-y-12 lg:col-span-8">
             <section className="reveal-up">

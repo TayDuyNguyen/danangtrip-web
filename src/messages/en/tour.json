@@ -1,5 +1,11 @@
 {
   "title": "Tour List",
+  "category": {
+    "back_to_all": "← All Tours",
+    "results_count": "Found {count} tours in category {category}",
+    "empty_title": "No tours found in this category",
+    "empty_desc": "Try resetting the filters or go back to view all other tours."
+  },
   "landing": {
     "meta_title": "Da Nang Tours - Best Price, Daily Departure | DanangTrip",
     "meta_description": "Explore amazing Da Nang tours: Marble Mountains, Hoi An, Ba Na Hills, Cham Island. Book online, 24/7 support.",
