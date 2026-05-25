@@ -22,3 +22,18 @@ export const changePasswordSchema = z
  * Inferred type from changePasswordSchema
  */
 export type ChangePasswordFormInput = z.infer<typeof changePasswordSchema>;
+
+/**
+ * Validation schema for the Delete Account form
+ */
+export const deleteAccountSchema = z.object({
+  confirmCheckbox: z.boolean().refine((val) => val === true, {
+    message: "error.delete_account_confirm",
+  }),
+  password: z.string().min(1, ERROR_MESSAGES.REQUIRED),
+});
+
+/**
+ * Inferred type from deleteAccountSchema
+ */
+export type DeleteAccountFormInput = z.infer<typeof deleteAccountSchema>;

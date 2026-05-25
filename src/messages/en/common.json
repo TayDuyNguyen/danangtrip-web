@@ -62,7 +62,8 @@
     "url_invalid": "Invalid URL",
     "password_mismatch": "Passwords do not match",
     "range_error": "Value must be between {min} and {max}",
-    "terms_required": "You must agree to the terms of service"
+    "terms_required": "You must agree to the terms of service",
+    "delete_account_confirm": "You must confirm you agree to delete your account"
   },
   "api_errors": {
     "validation_failed": "Please check the information you entered and try again.",

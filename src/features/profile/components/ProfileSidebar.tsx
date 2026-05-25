@@ -13,6 +13,7 @@ import {
   Bell,
   Sparkles,
   Star,
+  Trash2,
 } from "lucide-react";
 import { cn } from "@/utils/string";
 
@@ -66,6 +67,12 @@ const SIDEBAR_ITEMS: SidebarItem[] = [
     href: PROTECTED_ROUTES.NOTIFICATIONS,
     icon: Bell,
   },
+  {
+    key: "delete_account",
+    labelKey: "sidebar.delete_account",
+    href: PROTECTED_ROUTES.DELETE_ACCOUNT,
+    icon: Trash2,
+  },
 ];
 
 export function ProfileSidebar() {
@@ -112,6 +119,7 @@ export function ProfileSidebar() {
         {SIDEBAR_ITEMS.map((item, index) => {
           const Icon = item.icon;
           const active = isActive(item.href);
+          const isDestructive = item.key === "delete_account";
           return (
             <Link
               key={item.key}
@@ -121,7 +129,11 @@ export function ProfileSidebar() {
                 "flex items-center gap-3 px-5 py-3.5 text-sm font-medium transition-all duration-200 relative group",
                 "border-l-2",
                 active
-                  ? "border-l-[#8b6a55] bg-[#8b6a55]/8 text-white"
+                  ? isDestructive
+                    ? "border-l-red-500 bg-red-500/10 text-red-500"
+                    : "border-l-[#8b6a55] bg-[#8b6a55]/8 text-white"
+                  : isDestructive
+                  ? "border-l-transparent text-[#737373] hover:text-red-500 hover:bg-red-500/5"
                   : "border-l-transparent text-[#737373] hover:text-white hover:bg-white/5",
                 index !== 0 && "border-t border-t-[#1a1a1a]"
               )}
@@ -129,7 +141,13 @@ export function ProfileSidebar() {
               <Icon
                 className={cn(
                   "w-4 h-4 shrink-0 transition-colors duration-200",
-                  active ? "text-[#8b6a55]" : "text-[#525252] group-hover:text-[#8b6a55]"
+                  active
+                    ? isDestructive
+                      ? "text-red-500"
+                      : "text-[#8b6a55]"
+                    : isDestructive
+                    ? "text-[#525252] group-hover:text-red-500"
+                    : "text-[#525252] group-hover:text-[#8b6a55]"
                 )}
               />
               <span>{t(item.labelKey)}</span>

@@ -11,6 +11,7 @@ import { SearchResultType, SearchSortOption, SearchFilters } from "../types/sear
 import { useSearch } from "../hooks/use-search";
 import { useSearchDiscoveryGrid } from "../hooks/use-search-discovery-grid";
 import { SearchFiltersSheet } from "./SearchFiltersSheet";
+import { Loading } from "@/components/ui";
 import { Select, type SelectOption } from "@/components/ui/Select";
 import { cn } from "@/utils/string";
 import { IoStar } from "@/components/icons/solar";
@@ -108,7 +109,8 @@ export const SearchResultsClient = ({ initialQuery }: SearchResultsClientProps) 
   };
 
   // --- Data Fetching ---
-  const { results, isLoading, counts, meta } = useSearch({ q, type, sort, filters, page });
+  const { results, isLoading, isFetching, counts, meta } = useSearch({ q, type, sort, filters, page });
+  const isRefreshing = isFetching && !isLoading;
 
   const totalPages = meta?.last_page || 1;
 
@@ -141,45 +143,56 @@ export const SearchResultsClient = ({ initialQuery }: SearchResultsClientProps) 
         activeFilters={filters}
         onRemoveFilter={handleRemoveFilter}
         onClearFilters={clearFilters}
-        isLoading={isLoading}
+        isLoading={isFetching}
       />
 
       {/* Main Results Container */}
       {q.trim() ? (
         <div className={cn("transition-all duration-500", q ? "opacity-100" : "opacity-0 h-0 overflow-hidden")}>
-          {results.length > 0 ? (
-            <>
-              <div className="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-                <SearchTabs 
-                  activeType={type} 
-                  onChange={handleTypeChange} 
-                  counts={counts}
-                />
-                
-                <div className="w-full md:w-64">
-                   <Select 
-                     options={sortOptions}
-                     value={currentSortOption}
-                     onChange={handleSortChange}
-                     containerClassName="bg-surface-container-low rounded-xl border border-[#262626] p-0 px-4"
-                     className="bg-transparent"
-                     placeholder={tSearch("sort.label")}
-                   />
+          {isLoading ? (
+            <div className="flex min-h-[320px] items-center justify-center rounded-xl border border-[#262626] bg-surface-container-low/60">
+              <Loading type="spokes" color="#8b6a55" height={56} width={56} />
+            </div>
+          ) : results.length > 0 ? (
+            <div className="relative">
+              {isRefreshing && (
+                <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center rounded-xl bg-[#080808]/45 backdrop-blur-[1px]">
+                  <Loading type="spokes" color="#8b6a55" height={48} width={48} />
                 </div>
+              )}
+              <div className={cn("transition-opacity duration-200", isRefreshing ? "opacity-60" : "opacity-100")}>
+                <div className="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                  <SearchTabs 
+                    activeType={type} 
+                    onChange={handleTypeChange} 
+                    counts={counts}
+                  />
+                  
+                  <div className="w-full md:w-64">
+                     <Select 
+                       options={sortOptions}
+                       value={currentSortOption}
+                       onChange={handleSortChange}
+                       containerClassName="bg-surface-container-low rounded-xl border border-[#262626] p-0 px-4"
+                       className="bg-transparent"
+                       placeholder={tSearch("sort.label")}
+                     />
+                  </div>
+                </div>
+
+                <SearchGrid 
+                  results={results} 
+                  isLoading={false} 
+                />
+
+                <StandardPagination 
+                  currentPage={page}
+                  totalPages={totalPages}
+                  onPageChange={handlePageChange}
+                />
               </div>
-
-              <SearchGrid 
-                results={results} 
-                isLoading={isLoading} 
-              />
-
-              <StandardPagination 
-                currentPage={page}
-                totalPages={totalPages}
-                onPageChange={handlePageChange}
-              />
-            </>
-          ) : !isLoading && (
+            </div>
+          ) : (
             /* Empty State (Only if Query exists but no results) */
             <div className="flex flex-col items-center justify-center py-20 text-center bg-surface-container-lowest rounded-xl shadow-ambient border border-[#262626]">
               <div className="w-20 h-20 bg-surface-container-low rounded-full flex items-center justify-center mb-6 text-4xl">

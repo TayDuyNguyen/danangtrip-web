@@ -8,7 +8,8 @@
     "bookings": "My Bookings",
     "favorites": "Saved Places",
     "notifications": "Notifications",
-    "recommendations": "Recommended for you"
+    "recommendations": "Recommended for you",
+    "delete_account": "Delete Account"
   },
   "breadcrumb": {
     "home": "Home",
@@ -18,7 +19,8 @@
     "recommendations": "Recommended for you",
     "bookings": "My Bookings",
     "booking_detail": "Booking Detail",
-    "favorites": "Saved Places"
+    "favorites": "Saved Places",
+    "delete_account": "Delete Account"
   },
   "change_password": {
     "page_title": "Change Password",
@@ -46,6 +48,33 @@
     "cancel_button": "Cancel",
     "success_toast": "Password changed successfully!",
     "error_wrong_current": "Current password is incorrect.",
+    "error_generic": "An error occurred. Please try again later."
+  },
+  "delete_account": {
+    "page_title": "Delete Account",
+    "meta_description": "Permanently delete your DaNangTrip account.",
+    "heading": "Delete Account",
+    "subtitle": "This action cannot be undone",
+    "warning_title": "⚠️ Before deleting, please note:",
+    "warning_1": "All personal data will be permanently deleted",
+    "warning_2": "Booking history and ratings will be deleted",
+    "warning_3": "Saved/favorite places will be deleted",
+    "warning_4": "You will not be able to recover this account",
+    "active_bookings_warning": "You have active bookings. Please cancel or complete them before deleting your account.",
+    "view_bookings": "View bookings →",
+    "confirm_checkbox_label": "I understand that deleting my account is permanent and cannot be undone.",
+    "password_label": "Enter password to confirm *",
+    "password_placeholder": "Enter your password...",
+    "cancel_button": "Cancel",
+    "submit_button": "Delete Account",
+    "submitting_button": "Deleting...",
+    "modal_title": "Confirm account deletion?",
+    "modal_body_1": "Your account will be permanently deleted.",
+    "modal_body_2": "This action CANNOT be undone.",
+    "modal_cancel": "Cancel",
+    "modal_confirm": "Delete Permanently",
+    "success_toast": "Your account has been deleted successfully.",
+    "error_wrong_password": "Wrong password.",
     "error_generic": "An error occurred. Please try again later."
   }
 }

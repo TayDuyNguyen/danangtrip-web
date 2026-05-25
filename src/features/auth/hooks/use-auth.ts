@@ -138,9 +138,9 @@ export const useAuth = () => {
   }, [storeLogin, storeLogout, setLoading]);
 
   useEffect(() => {
-    // Re-verify session on mount if a token exists
+    // Re-verify session on mount if a token exists and we are not already authenticated
     const token = getAccessToken();
-    if (token && !isLoading) {
+    if (token && !isAuthenticated && !isLoading) {
       checkAuth();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
