@@ -50,7 +50,7 @@ export function DeleteAccountFormContainer() {
         });
       },
       onError: (error) => {
-        const apiResponse = error as ApiResponse;
+        const apiResponse = error as unknown as ApiResponse;
         const apiMessage = apiResponse?.message;
         const message = apiMessage || getApiErrorMessage(error);
         
