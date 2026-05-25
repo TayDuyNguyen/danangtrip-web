@@ -3,8 +3,21 @@
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 
-const PARTICLE_COUNT = 320;
+const PARTICLE_COUNT = 180;
 const FIELD_RADIUS = 20;
+const MAX_DPR = 1.25;
+const TARGET_FRAME_MS = 1000 / 30;
+const MOBILE_BREAKPOINT = 768;
+
+const prefersReducedMotion = () =>
+  typeof window !== "undefined" &&
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+const getParticleCount = () => {
+  if (typeof window === "undefined") return PARTICLE_COUNT;
+  if (prefersReducedMotion()) return 60;
+  return window.innerWidth < MOBILE_BREAKPOINT ? 90 : PARTICLE_COUNT;
+};
 
 function runCanvas2dFallback(canvas: HTMLCanvasElement): () => void {
   const ctx = canvas.getContext("2d");
@@ -12,7 +25,7 @@ function runCanvas2dFallback(canvas: HTMLCanvasElement): () => void {
     return () => {};
   }
 
-  const particles = Array.from({ length: 180 }, () => ({
+  const particles = Array.from({ length: prefersReducedMotion() ? 48 : 90 }, () => ({
     x: Math.random(),
     y: Math.random(),
     z: 0.2 + Math.random() * 0.8,
@@ -21,11 +34,12 @@ function runCanvas2dFallback(canvas: HTMLCanvasElement): () => void {
   }));
 
   let raf = 0;
+  let timeout = 0;
   let lastTs = performance.now();
   let pulse = 0;
 
   const resize = () => {
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR);
     canvas.width = Math.floor(window.innerWidth * dpr);
     canvas.height = Math.floor(window.innerHeight * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -57,7 +71,9 @@ function runCanvas2dFallback(canvas: HTMLCanvasElement): () => void {
       ctx.fill();
     }
 
-    raf = requestAnimationFrame(draw);
+    timeout = window.setTimeout(() => {
+      raf = requestAnimationFrame(draw);
+    }, TARGET_FRAME_MS);
   };
 
   resize();
@@ -66,6 +82,7 @@ function runCanvas2dFallback(canvas: HTMLCanvasElement): () => void {
 
   return () => {
     window.removeEventListener("resize", resize);
+    window.clearTimeout(timeout);
     cancelAnimationFrame(raf);
   };
 }
@@ -92,8 +109,8 @@ export default function AmbientBackground() {
       renderer = new THREE.WebGLRenderer({
         canvas,
         alpha: true,
-        antialias: true,
-        powerPreference: "high-performance",
+        antialias: false,
+        powerPreference: "low-power",
       });
     } catch {
       return runCanvas2dFallback(canvas);
@@ -107,8 +124,9 @@ export default function AmbientBackground() {
     scene.add(root);
 
     const particlesGeometry = new THREE.BufferGeometry();
-    const positions = new Float32Array(PARTICLE_COUNT * 3);
-    for (let i = 0; i < PARTICLE_COUNT; i += 1) {
+    const particleCount = getParticleCount();
+    const positions = new Float32Array(particleCount * 3);
+    for (let i = 0; i < particleCount; i += 1) {
       const theta = Math.random() * Math.PI * 2;
       const radius = Math.sqrt(Math.random()) * FIELD_RADIUS;
       const x = Math.cos(theta) * radius;
@@ -172,7 +190,7 @@ export default function AmbientBackground() {
       const height = window.innerHeight;
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, MAX_DPR));
       renderer.setSize(width, height, false);
       renderer.setClearColor(0x000000, 0);
     };
@@ -181,10 +199,16 @@ export default function AmbientBackground() {
     window.addEventListener("resize", resize);
     resize();
 
-    const clock = new THREE.Clock();
+    const startTime = performance.now();
     let raf = 0;
-    const animate = () => {
-      const elapsed = clock.getElapsedTime();
+    let lastRender = 0;
+    const animate = (ts = 0) => {
+      if (ts - lastRender < TARGET_FRAME_MS) {
+        raf = requestAnimationFrame(animate);
+        return;
+      }
+      lastRender = ts;
+      const elapsed = (performance.now() - startTime) / 1000;
 
       pointer.x += (pointer.tx - pointer.x) * 0.04;
       pointer.y += (pointer.ty - pointer.y) * 0.04;

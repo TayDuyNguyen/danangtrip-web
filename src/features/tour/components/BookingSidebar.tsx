@@ -1,27 +1,24 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { formatNumber } from "@/utils/format";
 import { Calendar, Users, InfoCircle } from "@/components/icons/solar";
-import { Button } from "@/components/ui";
+import { Button, Select, type SelectOption } from "@/components/ui";
 import { useTourSchedules, useCheckTourAvailability } from "@/features/tour/hooks/useTourDetail";
+import { useAddToCart } from "@/features/cart/hooks/useCartQueries";
+import { toast } from "sonner";
+import type { Tour } from "@/types";
 
 interface BookingSidebarProps {
-  tour: {
-    id: number;
-    slug: string;
-    price_adult: string;
-    price_child: string;
-    price_infant: string;
-    discount_percent: number;
-  };
+  tour: Tour;
 }
 
 export default function BookingSidebar({ tour }: BookingSidebarProps) {
   const t = useTranslations("tour");
   const td = useTranslations("tour.detail");
+  const tb = useTranslations("tour.booking");
   const locale = useLocale();
   
   const discountPercent = tour.discount_percent;
@@ -32,10 +29,30 @@ export default function BookingSidebar({ tour }: BookingSidebarProps) {
   const [adults, setAdults] = useState(1);
   const [children, setChildren] = useState(0);
   const [selectedScheduleId, setSelectedScheduleId] = useState<number | "">("");
+  const [showDateTooltip, setShowDateTooltip] = useState(false);
   const dateFormatter = new Intl.DateTimeFormat(locale === "vi" ? "vi-VN" : "en-US");
 
   const { data: schedules = [], isLoading: loadingSchedules } = useTourSchedules(tour.id);
   const { mutate: checkAvailability, data: availability, isPending: checking } = useCheckTourAvailability(tour.id);
+  const { mutate: addToCart, isPending: addingToCart } = useAddToCart();
+
+  const scheduleOptions = useMemo(() => {
+    return schedules.map((schedule) => ({
+      value: schedule.id,
+      label: `${dateFormatter.format(new Date(schedule.start_date))}${
+        schedule.booking_availability === "sold_out" ? ` (${td("schedule_full")})` : ""
+      }`,
+      isDisabled: schedule.status !== "available" || schedule.booking_availability === "sold_out"
+    }));
+  }, [schedules, dateFormatter, td]);
+
+  const selectedOption = useMemo(() => {
+    return scheduleOptions.find((opt) => opt.value === selectedScheduleId) || null;
+  }, [scheduleOptions, selectedScheduleId]);
+
+  const handleScheduleChange = (option: SelectOption | null) => {
+    setSelectedScheduleId(option ? Number(option.value) : "");
+  };
 
   useEffect(() => {
     if (selectedScheduleId !== "") {
@@ -46,6 +63,29 @@ export default function BookingSidebar({ tour }: BookingSidebarProps) {
       });
     }
   }, [selectedScheduleId, adults, children, checkAvailability]);
+
+  const handleAddToCart = () => {
+    if (selectedScheduleId === "") return;
+
+    const selectedSchedule = schedules.find((s) => s.id === Number(selectedScheduleId));
+
+    addToCart(
+      {
+        tour_id: tour.id,
+        tour_schedule_id: Number(selectedScheduleId),
+        quantity_adult: adults,
+        quantity_child: children,
+        quantity_infant: 0,
+        tour: tour,
+        tour_schedule: selectedSchedule,
+      },
+      {
+        onSuccess: () => {
+          toast.success(tb("add_to_cart_success"));
+        },
+      }
+    );
+  };
 
   // Calculate total price
   const totalAmount = (adults * adultDiscounted) + (children * parseFloat(tour.price_child));
@@ -75,7 +115,7 @@ export default function BookingSidebar({ tour }: BookingSidebarProps) {
             </div>
             <span className="text-xs text-on-surface-variant">{suffix}</span>
           </div>
-
+ 
           {/* Booking Info Fields */}
           <div className="space-y-4">
             <div className="space-y-2">
@@ -83,27 +123,19 @@ export default function BookingSidebar({ tour }: BookingSidebarProps) {
                 <Calendar className="w-4 h-4 text-primary" />
                 {t("filters.departure_date")}
               </label>
-              <select 
-                value={selectedScheduleId}
-                onChange={(e) => setSelectedScheduleId(e.target.value ? Number(e.target.value) : "")}
-                className="w-full bg-surface-container border border-border rounded-lg px-4 py-3 text-sm text-on-surface-variant focus:border-primary/50 outline-none transition-colors"
-                disabled={loadingSchedules}
-                aria-label={td("select_date")}
-              >
-                <option value="">{td("select_date")}</option>
-                {schedules.map((schedule) => (
-                  <option
-                    key={schedule.id}
-                    value={schedule.id}
-                    disabled={schedule.status !== "available" || schedule.booking_availability === "sold_out"}
-                  >
-                    {dateFormatter.format(new Date(schedule.start_date))}{" "}
-                    {schedule.booking_availability === "sold_out" ? `(${td("schedule_full")})` : ""}
-                  </option>
-                ))}
-              </select>
+              <Select
+                options={scheduleOptions}
+                value={selectedOption}
+                onChange={handleScheduleChange}
+                isDisabled={loadingSchedules}
+                isLoading={checking}
+                placeholder={td("select_date")}
+                variant="minimal"
+                containerClassName="bg-surface-container rounded-lg border border-border px-3 py-1"
+                className="bg-transparent text-sm text-on-surface-variant font-medium"
+              />
             </div>
-
+ 
             <div className="space-y-2">
               <label className="text-xs font-bold text-on-surface-subtle uppercase tracking-wider flex items-center gap-2">
                 <Users className="w-4 h-4 text-primary" />
@@ -137,20 +169,23 @@ export default function BookingSidebar({ tour }: BookingSidebarProps) {
               </div>
             </div>
           </div>
-
+ 
           {/* Availability Status */}
-          {selectedScheduleId !== "" && availability && (
-            <div className={`p-3 rounded-lg text-sm ${availability.is_available ? 'bg-green-500/10 text-green-600' : 'bg-red-500/10 text-red-600'}`}>
+          {selectedScheduleId !== "" && (checking || availability) && (
+            <div className={`p-3 rounded-lg text-sm ${checking ? 'bg-surface-container border border-border text-on-surface-subtle' : availability?.is_available ? 'bg-green-500/10 text-green-600' : 'bg-red-500/10 text-red-600'}`}>
               {checking ? (
-                <span>{td("availability_checking")}</span>
-              ) : availability.is_available ? (
+                <span className="flex items-center gap-2">
+                  <span className="w-3.5 h-3.5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                  {td("availability_checking") || "Đang kiểm tra chỗ..."}
+                </span>
+              ) : availability?.is_available ? (
                 <span>{td("availability_seats_left", { seats: availability.available_seats })}</span>
               ) : (
-                <span>{td("availability_not_enough", { seats: availability.available_seats })}</span>
+                <span>{td("availability_not_enough", { seats: availability?.available_seats ?? 0 })}</span>
               )}
             </div>
           )}
-
+ 
           {/* Detailed Pricing */}
           <div className="space-y-3 text-sm border-t border-border pt-6">
             <div className="flex justify-between gap-4 text-on-surface-subtle">
@@ -176,26 +211,59 @@ export default function BookingSidebar({ tour }: BookingSidebarProps) {
               <span className="text-primary">{formatNumber(totalAmount)}đ</span>
             </div>
           </div>
-
-          {/* CTA Button */}
-          <Link
-            href={`/tours/${tour.slug}/book${selectedScheduleId ? `?tour_schedule_id=${selectedScheduleId}&adults=${adults}&children=${children}` : ""}`}
-            className="block"
+ 
+          {/* CTA Buttons */}
+          <div 
+            className="space-y-3 relative"
+            onMouseEnter={() => {
+              if (selectedScheduleId === "") {
+                setShowDateTooltip(true);
+              }
+            }}
+            onMouseLeave={() => setShowDateTooltip(false)}
           >
-            <Button 
-              disabled={!availability?.is_available && selectedScheduleId !== ""}
-              className="w-full h-14 text-base font-bold uppercase tracking-wider shadow-[0_10px_20px_-10px_rgba(139,106,85,0.5)] disabled:opacity-50"
-            >
-              {t("card.book_now")}
-            </Button>
-          </Link>
+            {showDateTooltip && (
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-3.5 py-2 bg-[#171717]/95 backdrop-blur-md border border-[#262626] text-xs text-white rounded-lg whitespace-nowrap shadow-xl animate-in fade-in slide-in-from-bottom-1 duration-200 z-10 flex items-center justify-center font-bold">
+                {locale === "vi" ? "Vui lòng chọn ngày khởi hành" : "Please select departure date"}
+                {/* Tooltip arrow */}
+                <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-[#171717]" />
+              </div>
+            )}
 
+            <Link
+              href={`/tours/${tour.slug}/book${selectedScheduleId ? `?tour_schedule_id=${selectedScheduleId}&adults=${adults}&children=${children}` : ""}`}
+              className="block"
+              onClick={(e) => {
+                if (selectedScheduleId === "") {
+                  e.preventDefault();
+                }
+              }}
+            >
+              <Button 
+                disabled={(!availability?.is_available && selectedScheduleId !== "") || selectedScheduleId === ""}
+                className="w-full h-14 text-base font-bold uppercase tracking-wider shadow-[0_10px_20px_-10px_rgba(139,106,85,0.5)] disabled:opacity-50"
+              >
+                {t("card.book_now")}
+              </Button>
+            </Link>
+
+            <Button
+              type="button"
+              variant="secondary"
+              disabled={(!availability?.is_available && selectedScheduleId !== "") || selectedScheduleId === "" || addingToCart}
+              onClick={handleAddToCart}
+              className="w-full h-12 text-sm font-bold uppercase tracking-wider border-[#262626] text-primary hover:text-white hover:border-[#8b6a55]"
+            >
+              {tb("add_to_cart")}
+            </Button>
+          </div>
+ 
           <p className="text-[11px] text-on-surface-variant leading-relaxed text-center italic">
             {td("book_cta_hint")}
           </p>
         </div>
       </div>
-
+ 
       {/* Support Card */}
       <div className="glass-surface rounded-xl p-6 flex items-center gap-4 border-primary/20">
         <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">

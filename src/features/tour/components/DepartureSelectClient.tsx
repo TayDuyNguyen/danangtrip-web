@@ -166,7 +166,7 @@ export default function DepartureSelectClient({ tour }: Props) {
                 </h2>
                 {isOverCapacity && (
                   <span className="text-sm font-bold text-error animate-pulse">
-                    Vượt quá số chỗ trống! (Còn {availableSeats} chỗ)
+                    {t("departures.over_capacity_remaining", { seats: availableSeats })}
                   </span>
                 )}
               </div>

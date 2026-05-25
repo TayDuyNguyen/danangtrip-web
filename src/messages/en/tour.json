@@ -18,11 +18,13 @@
     "filters_toggle": "Filters",
     "results_count": "Found <highlight>{count}</highlight> matching tours",
     "load_error": "Could not load tours. Please try again.",
-    "retry": "Retry"
+    "retry": "Retry",
+    "hero_badge": "{count} tours found"
   },
   "filters": {
     "title": "Filters",
     "category": "Categories",
+    "all_categories": "All Categories",
     "price": "Price Range",
     "duration": "Duration",
     "departure_date": "Departure Date",
@@ -71,6 +73,7 @@
     "continue": "Continue to Book",
     "no_schedules": "No available schedules.",
     "over_capacity": "Over capacity!",
+    "over_capacity_remaining": "Over capacity! (Only {seats} seats remaining)",
     "calc_error": "Error updating price or availability."
   },
   "detail": {
@@ -117,7 +120,8 @@
     "error_title": "Could not load tour details",
     "error_desc": "Something went wrong. Please try again.",
     "retry": "Retry",
-    "location_short": "Da Nang, Vietnam"
+    "location_short": "Da Nang, Vietnam",
+    "weekdays_short": "Mo,Tu,We,Th,Fr,Sa,Su"
   },
   "booking": {
     "title": "Book tour: {name}",
@@ -125,6 +129,12 @@
     "step_payment": "Payment",
     "step_confirm": "Confirmation",
     "back": "Back",
+    "selected_departure": "Selected departure",
+    "change_departure": "Change departure",
+    "loading_departure": "Loading selected departure...",
+    "seats_left": "{seats} seats left",
+    "add_to_cart": "Add to Cart",
+    "add_to_cart_success": "Added to cart successfully!",
     "customer_info": "Customer Information",
     "customer_note": "This information is used for contact and confirmation",
     "fill_from_profile": "Fill from profile",
@@ -171,9 +181,15 @@
       "vnpay": "VNPay Gateway",
       "zalopay": "ZaloPay",
       "bank_transfer": "Bank Transfer",
+      "bank_transfer_manual": "Manual Bank Transfer",
+      "payos": "payOS Payment Gateway",
       "credit_card": "Credit Card",
       "cash": "Cash",
       "paypal": "PayPal"
+    },
+    "badges": {
+      "automatic": "Automatic (VietQR)",
+      "manual": "Manual"
     },
     "errors": {
       "missing_context": "This payment page is missing the booking or transaction information needed to continue.",

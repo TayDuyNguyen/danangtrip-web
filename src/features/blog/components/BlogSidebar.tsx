@@ -11,12 +11,7 @@ import { format } from "date-fns";
 import { vi, enUS } from "date-fns/locale";
 import { formatCompactNumber } from "@/utils/format";
 
-interface BlogSidebarProps {
-  onCategorySelect: (id: number | string | undefined) => void;
-  selectedCategoryId?: number | string;
-}
-
-export const BlogSidebar = ({ onCategorySelect, selectedCategoryId }: BlogSidebarProps) => {
+export const BlogSidebar = () => {
   const t = useTranslations("blog");
   const { locale } = useParams();
   const dateLocale = locale === "vi" ? vi : enUS;
@@ -27,40 +22,6 @@ export const BlogSidebar = ({ onCategorySelect, selectedCategoryId }: BlogSideba
 
   return (
     <aside className="space-y-12 reveal-up reveal-delay-300">
-      {/* Categories */}
-      <div className="space-y-6">
-        <h3 className="text-xl font-bold text-white flex items-center gap-2">
-          <span className="w-1 h-6 bg-[#8B6A55] rounded-full" />
-          {t("categories")}
-        </h3>
-        <div className="space-y-2">
-          <button
-            onClick={() => onCategorySelect(undefined)}
-            className={`w-full flex justify-between items-center px-4 py-3 rounded-xl transition-all ${
-              !selectedCategoryId ? "bg-[#8B6A55] text-white" : "text-[#a3a3a3] hover:bg-neutral-900"
-            }`}
-          >
-            <span>{t("all_posts")}</span>
-          </button>
-          {data.categories.map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => onCategorySelect(cat.id)}
-              className={`w-full flex justify-between items-center px-4 py-3 rounded-xl transition-all ${
-                Number(selectedCategoryId) === cat.id ? "bg-[#8B6A55] text-white" : "text-[#a3a3a3] hover:bg-neutral-900"
-              }`}
-            >
-              <span>{cat.name}</span>
-              <span className={`text-xs px-2 py-1 rounded-full ${
-                Number(selectedCategoryId) === cat.id ? "bg-white/20" : "bg-neutral-800"
-              }`}>
-                {cat.post_count}
-              </span>
-            </button>
-          ))}
-        </div>
-      </div>
-
       {/* Popular Posts */}
       <div className="space-y-6">
         <h3 className="text-xl font-bold text-white flex items-center gap-2">

@@ -1,8 +1,9 @@
 "use client";
 
-import { useId } from "react";
+import { useId, useEffect, useRef, useState, useMemo } from "react";
 import { UilSearch } from "@iconscout/react-unicons";
 import { cn } from "@/utils/string";
+import { debounce } from "@/utils/debounce";
 
 interface SearchInputProps {
   value: string;
@@ -12,6 +13,8 @@ interface SearchInputProps {
   className?: string;
   /** Accessible name when no visible label is provided */
   "aria-label"?: string;
+  /** Debounce delay in ms. Defaults to 500. Set to 0 to disable built-in debounce. */
+  debounceMs?: number;
 }
 
 export default function SearchInput({
@@ -21,12 +24,61 @@ export default function SearchInput({
   isLoading,
   className,
   "aria-label": ariaLabel,
+  debounceMs = 500,
 }: SearchInputProps) {
   const autoId = useId();
   const inputId = `search-input-${autoId.replace(/:/g, "")}`;
 
+  const [localValue, setLocalValue] = useState(value);
+  const lastRef = useRef(value);
+
+  // Sync external value with local state ONLY if it changed externally (e.g. cleared or updated from elsewhere)
+  useEffect(() => {
+    if (value !== lastRef.current) {
+      setLocalValue(value);
+      lastRef.current = value;
+    }
+  }, [value]);
+
+  // Create a memoized debounced onChange callback
+  const debouncedOnChange = useMemo(() => {
+    if (debounceMs === 0) {
+      return null;
+    }
+    // eslint-disable-next-line react-hooks/refs
+    return debounce((val: string) => {
+      lastRef.current = val;
+      onChange(val);
+    }, debounceMs);
+  }, [onChange, debounceMs]);
+
+  // Clean up debounce on unmount
+  useEffect(() => {
+    return () => {
+      debouncedOnChange?.cancel();
+    };
+  }, [debouncedOnChange]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onChange(e.target.value);
+    const val = e.target.value;
+    setLocalValue(val);
+
+    if (debouncedOnChange) {
+      debouncedOnChange(val);
+    } else {
+      lastRef.current = val;
+      onChange(val);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      if (debouncedOnChange) {
+        debouncedOnChange.cancel();
+      }
+      lastRef.current = localValue;
+      onChange(localValue);
+    }
   };
 
   return (
@@ -52,8 +104,9 @@ export default function SearchInput({
         <input
           id={inputId}
           type="search"
-          value={value}
+          value={localValue}
           onChange={handleChange}
+          onKeyDown={handleKeyDown}
           placeholder={placeholder}
           aria-label={ariaLabel ?? placeholder ?? "Search"}
           className="w-full bg-transparent border-none py-4 pl-12 pr-6 text-base font-semibold placeholder:text-on-surface-variant/40 focus:ring-4 focus:ring-primary/10 transition-all duration-300 outline-none"

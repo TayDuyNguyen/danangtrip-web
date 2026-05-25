@@ -205,17 +205,17 @@ export const SearchResultsClient = ({ initialQuery }: SearchResultsClientProps) 
         </div>
       ) : (
         /* Discovery Section (Shown when query is empty) */
-        <div className="space-y-12 py-6">
+        <div className="space-y-8 py-6">
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-surface-container-low flex items-center justify-center text-[#8b6a55]">
-                <IoStar className="text-xl" />
-              </div>
-              <div>
-                <h2 className="text-2xl font-bold text-foreground">{tSearch("discovery.title")}</h2>
-                <p className="text-on-surface-subtle">{tSearch("discovery.subtitle")}</p>
-              </div>
+              <IoStar className="text-[#f1bb9d] text-3xl shrink-0" />
+              <h1 className="text-3xl md:text-4xl font-light text-white tracking-tight">
+                {tSearch("discovery.title")}
+              </h1>
             </div>
+            <p className="text-on-surface-subtle text-sm max-w-2xl font-normal">
+              {tSearch("discovery.subtitle")}
+            </p>
           </div>
 
           <SearchGrid 

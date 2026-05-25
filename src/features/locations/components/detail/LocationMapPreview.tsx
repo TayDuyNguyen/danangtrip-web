@@ -5,6 +5,7 @@ import L from "leaflet";
 import { useTranslations } from "next-intl";
 import { Map as MapIcon } from "@/components/icons/solar";
 import type { Location } from "@/types";
+import { getLocationMapsUrl } from "@/features/locations/utils/map-url";
 import "leaflet/dist/leaflet.css";
 
 interface LocationMapPreviewProps {
@@ -25,17 +26,6 @@ const createLocationIcon = () =>
     iconSize: [36, 36],
     iconAnchor: [18, 36],
   });
-
-export function getLocationMapsUrl(location: Location) {
-  const lat = Number(location.latitude);
-  const lng = Number(location.longitude);
-
-  if (Number.isFinite(lat) && Number.isFinite(lng)) {
-    return `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
-  }
-
-  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location.address)}`;
-}
 
 export default function LocationMapPreview({ location, showMapLink = true }: LocationMapPreviewProps) {
   const t = useTranslations("locations");

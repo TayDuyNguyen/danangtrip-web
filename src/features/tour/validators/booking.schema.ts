@@ -11,7 +11,7 @@ export const bookingSchema = z.object({
   customer_phone: z.string().regex(/^[0-9]{10,11}$/, "số điện thoại không hợp lệ"),
   customer_address: z.string().optional().nullable(),
   customer_note: z.string().optional().nullable(),
-  payment_method: z.enum(["momo", "vnpay", "zalopay", "bank_transfer"]),
+  payment_method: z.enum(["momo", "vnpay", "zalopay", "bank_transfer", "payos"]),
   agree_terms: z.boolean().refine((val) => val === true, {
     message: "bạn phải đồng ý với điều khoản",
   }),

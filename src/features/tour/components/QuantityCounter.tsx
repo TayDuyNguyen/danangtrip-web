@@ -11,6 +11,7 @@ interface QuantityCounterProps {
   min?: number;
   max?: number;
   className?: string;
+  disabled?: boolean;
 }
 
 export function QuantityCounter({
@@ -21,13 +22,14 @@ export function QuantityCounter({
   min = 0,
   max = 20,
   className,
+  disabled = false,
 }: QuantityCounterProps) {
   const handleDecrement = () => {
-    if (value > min) onChange(value - 1);
+    if (!disabled && value > min) onChange(value - 1);
   };
 
   const handleIncrement = () => {
-    if (value < max) onChange(value + 1);
+    if (!disabled && value < max) onChange(value + 1);
   };
 
   return (
@@ -41,20 +43,20 @@ export function QuantityCounter({
         <button
           type="button"
           onClick={handleDecrement}
-          disabled={value <= min}
+          disabled={disabled || value <= min}
           className="w-8 h-8 rounded-full border border-border flex items-center justify-center text-on-surface-variant hover:border-primary hover:text-primary transition-all disabled:opacity-30 disabled:cursor-not-allowed active:scale-90"
         >
           <Minus className="w-4 h-4" />
         </button>
         
-        <span className="w-6 text-center text-lg font-black tabular-nums">
+        <span className={cn("w-6 text-center text-lg font-black tabular-nums", disabled && "opacity-50")}>
           {value}
         </span>
 
         <button
           type="button"
           onClick={handleIncrement}
-          disabled={value >= max}
+          disabled={disabled || value >= max}
           className="w-8 h-8 rounded-full bg-surface-container-high border border-border flex items-center justify-center text-on-surface hover:bg-primary hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed active:scale-90"
         >
           <Plus className="w-4 h-4" />

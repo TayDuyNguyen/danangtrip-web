@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useId, useState, useEffect } from "react";
 import ReactSelect, {
   type Props as ReactSelectProps,
   type StylesConfig,
@@ -66,6 +66,12 @@ export const Select = ({
   const selectInputId = `${reactId.replace(/:/g, "")}-select-input`;
   const [internalFocused, setInternalFocused] = useState(false);
   const isFocused = externalFocused || internalFocused;
+
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
+  }, []);
 
   const isGlass = variant === "glass";
   const isMinimal = variant === "minimal";
@@ -200,24 +206,39 @@ export const Select = ({
         </label>
       )}
 
-      <ReactSelect
-        instanceId={props.instanceId || reactId}
-        inputId={selectInputId}
-        aria-label={isMinimal && !label ? String(finalPlaceholder) : undefined}
-        components={{ DropdownIndicator }}
-        onFocus={() => setInternalFocused(true)}
-        onBlur={() => setInternalFocused(false)}
-        styles={customStyles}
-        options={options}
-        value={value}
-        onChange={onChange}
-        placeholder={finalPlaceholder}
-        isSearchable={isSearchable}
-        menuPortalTarget={menuPortalTarget}
-        menuPosition={menuPosition}
-        className={className}
-        {...props}
-      />
+      {mounted ? (
+        <ReactSelect
+          instanceId={props.instanceId || reactId}
+          inputId={selectInputId}
+          aria-label={isMinimal && !label ? String(finalPlaceholder) : undefined}
+          components={{ DropdownIndicator }}
+          onFocus={() => setInternalFocused(true)}
+          onBlur={() => setInternalFocused(false)}
+          styles={customStyles}
+          options={options}
+          value={value}
+          onChange={onChange}
+          placeholder={finalPlaceholder}
+          isSearchable={isSearchable}
+          menuPortalTarget={menuPortalTarget}
+          menuPosition={menuPosition}
+          className={className}
+          {...props}
+        />
+      ) : (
+        <div
+          className={cn(
+            "w-full bg-surface-container/30 border-b border-[#262626] flex items-center justify-between text-on-surface-subtle",
+            isMinimal ? "h-[40px] rounded-lg px-3 bg-surface-container" : isGlass ? "h-[40px] px-3" : "h-[56px] px-3",
+            className
+          )}
+        >
+          <span className="text-base text-neutral-500 font-medium truncate">
+            {finalPlaceholder}
+          </span>
+          <UilAngleDown size={16} className="text-on-surface-subtle shrink-0" />
+        </div>
+      )}
 
       <div className="h-5 overflow-hidden">
         {error && (

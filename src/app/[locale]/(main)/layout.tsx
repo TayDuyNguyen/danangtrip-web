@@ -1,6 +1,6 @@
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import AmbientBackground from "@/components/layout/AmbientBackground";
+import AmbientBackgroundLazy from "@/components/layout/AmbientBackgroundLazy";
 
 export default function MainLayout({
   children,
@@ -9,7 +9,7 @@ export default function MainLayout({
 }) {
   return (
     <div className="design-page layout-main-shell min-h-screen">
-      <AmbientBackground />
+      <AmbientBackgroundLazy />
       <Header />
       <div className="pt-20">{children}</div>
       <Footer />

@@ -85,6 +85,7 @@ export const BlogContent = ({ searchQuery = "" }: BlogContentProps) => {
   const featuredPost = posts[0];
   const gridPosts = posts.slice(1);
   const categories = sidebarData?.categories ?? [];
+  const totalPostsCount = categories.reduce((sum, cat) => sum + (cat.post_count ?? 0), 0);
 
   const currentPage = paginator?.current_page ?? 1;
   const lastPage = paginator?.last_page ?? 1;
@@ -125,7 +126,10 @@ export const BlogContent = ({ searchQuery = "" }: BlogContentProps) => {
                   : "border-transparent text-[#a3a3a3] hover:text-white"
               }`}
             >
-              {t("all_posts")}
+              {t("all_posts")}{" "}
+              {totalPostsCount > 0 && (
+                <span className="ml-1 text-xs opacity-60">({totalPostsCount})</span>
+              )}
             </button>
             {categories.map((cat) => (
               <button
@@ -138,7 +142,10 @@ export const BlogContent = ({ searchQuery = "" }: BlogContentProps) => {
                     : "border-transparent text-[#a3a3a3] hover:text-white"
                 }`}
               >
-                {cat.name}
+                {cat.name}{" "}
+                {cat.post_count !== undefined && (
+                  <span className="ml-1 text-xs opacity-60">({cat.post_count})</span>
+                )}
               </button>
             ))}
           </BlogCategoryScrollRow>
@@ -219,10 +226,7 @@ export const BlogContent = ({ searchQuery = "" }: BlogContentProps) => {
           {isSidebarLoading ? (
             <SidebarSkeleton />
           ) : (
-            <BlogSidebar
-              selectedCategoryId={filters.category_id}
-              onCategorySelect={handleCategorySelect}
-            />
+            <BlogSidebar />
           )}
         </div>
       </div>

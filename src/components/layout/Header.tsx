@@ -12,6 +12,7 @@ import {
 import { useAuthStore } from "@/store/auth.store";
 import { ROUTES, NAV_LINKS } from "@/config";
 import LanguageSwitcher from "./LanguageSwitcher";
+import { CartIcon } from "@/features/cart/components/CartIcon";
 
 const Header = () => {
   const t = useTranslations("common");
@@ -109,6 +110,8 @@ const Header = () => {
           <div className="hidden sm:block">
             <LanguageSwitcher isScrolled={isScrolled} />
           </div>
+
+          <CartIcon />
 
           {/* Auth Button */}
           {isAuthenticated ? (

@@ -85,7 +85,7 @@ export function ScheduleCalendar({ schedules, selectedId, onSelect }: ScheduleCa
       </div>
 
       <div className="grid grid-cols-7 gap-1 mb-2 text-center">
-        {["T2", "T3", "T4", "T5", "T6", "T7", "CN"].map(day => (
+        {t("weekdays_short").split(",").map(day => (
           <div key={day} className="text-[10px] font-bold text-on-surface-subtle uppercase opacity-50">
             {day}
           </div>
@@ -107,7 +107,7 @@ export function ScheduleCalendar({ schedules, selectedId, onSelect }: ScheduleCa
                           {format(new Date(s.start_date), "EEEE, dd/MM/yyyy", { locale: dateLocale })}
                       </span>
                       <span className="text-[10px] text-success font-black uppercase">
-                          {s.booking_availability === "open" ? `Còn ${available} chỗ` : t("schedule_full")}
+                          {s.booking_availability === "open" ? t("availability_seats_left", { seats: available }) : t("schedule_full")}
                       </span>
                   </div>
                   <div className="w-16 h-1 bg-surface-container-high rounded-full overflow-hidden">

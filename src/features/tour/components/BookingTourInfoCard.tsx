@@ -13,13 +13,14 @@ interface BookingTourInfoCardProps {
 export function BookingTourInfoCard({ item }: BookingTourInfoCardProps) {
   const t = useTranslations("tour.history");
   const td = useTranslations("tour.detail");
+  const tTour = useTranslations("tour");
   const locale = useLocale();
 
   const tour = item.tour;
-  const tourName = item.item_name || tour?.name || "Tour Du Lịch";
+  const tourName = item.item_name || tour?.name || tTour("detail.breadcrumb_tours") || "Tour";
   const tourThumbnail = tour?.thumbnail || "/images/placeholder-tour.jpg";
-  const duration = tour?.duration || "1 ngày";
-  const meetingPoint = tour?.meeting_point || td("location_short") || "Đà Nẵng, Việt Nam";
+  const duration = tour?.duration || tTour("filters.durations.one_day") || "1 day";
+  const meetingPoint = tour?.meeting_point || td("location_short") || (locale === "vi" ? "Đà Nẵng, Việt Nam" : "Da Nang, Vietnam");
 
   const travelDateFormatter = new Intl.DateTimeFormat(locale === "vi" ? "vi-VN" : "en-US", {
     year: "numeric",

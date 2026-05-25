@@ -152,56 +152,61 @@ const LocationReviews: React.FC<LocationReviewsProps> = ({
   };
 
   return (
-    <div className="space-y-8 py-10">
-      <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
+    <div className="space-y-8">
+      {/* Header — Tour style: bold with primary bar left, rating/actions right */}
+      <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
         <div>
-          <h2 className="text-3xl font-bold text-foreground">{t('detail.reviews_title')}</h2>
-          <p className="mt-2 text-on-surface-variant">{t('detail.reviews_count', { count: totalReviews })}</p>
+          <div className="flex items-center gap-3">
+            <div className="w-1.5 h-6 bg-primary rounded-full" />
+            <h2 className="text-2xl font-black text-white tracking-tight">
+              {t('detail.reviews_title')}
+            </h2>
+          </div>
+          <p className="mt-2 text-sm text-neutral-400 pl-[18px]">
+            {t('detail.reviews_count', { count: totalReviews })}
+          </p>
         </div>
 
-        <div className="flex w-full flex-col gap-4 rounded-xl border border-border bg-surface-container-lowest p-6 shadow-sm md:w-auto md:flex-row md:items-center md:gap-6">
-          <div className="text-center">
-            <p className="text-4xl font-extrabold text-primary">{safeAverage.toFixed(1)}</p>
-            <RatingStars rating={safeAverage} size="md" className="mt-1" />
+        <div className="flex items-center gap-6">
+          {/* Rating Score — Tour style: bold right-aligned */}
+          <div className="text-right">
+            <p className="text-4xl font-black text-primary leading-none mb-1">
+              {safeAverage.toFixed(1)}
+            </p>
+            <RatingStars rating={safeAverage} size="sm" />
           </div>
-          {distribution.length > 0 ? (
-            <div className="hidden h-12 w-px bg-border md:block" />
-          ) : null}
-          {distribution.length > 0 ? (
-            <div className="min-w-[200px] flex-1 space-y-1.5">
-              <p className="text-xs font-bold uppercase tracking-wide text-on-surface-subtle">
-                {t('detail.star_distribution')}
-              </p>
-              {distribution.map(({ star, count, pct }) => (
-                <div key={star} className="flex items-center gap-2 text-xs">
-                  <span className="w-3 font-medium text-on-surface-variant">{star}</span>
-                  <div className="h-2 flex-1 overflow-hidden rounded-full bg-surface-container-low">
-                    <div
-                      className="h-full rounded-full bg-primary/80 transition-all"
-                      style={{ width: `${pct}%` }}
-                    />
-                  </div>
-                  <span className="w-6 text-right text-on-surface-subtle">{count}</span>
-                </div>
-              ))}
-            </div>
-          ) : null}
-          <div className="flex flex-col gap-2 md:items-end">
-            <Button
-              type="button"
-              variant="primary"
-              className="shadow-lg shadow-primary/20"
-              disabled={hasRated}
-              onClick={openWriteModal}
-            >
-              {t('detail.write_review')}
-            </Button>
-            {hasRated ? (
-              <p className="text-center text-xs text-on-surface-subtle md:text-right">{t('detail.already_reviewed')}</p>
-            ) : null}
-          </div>
+          <button
+            type="button"
+            className="px-5 py-2.5 rounded-full border border-white/10 text-sm font-medium text-white hover:bg-white/5 transition-all duration-300 disabled:opacity-40"
+            disabled={hasRated}
+            onClick={openWriteModal}
+          >
+            {t('detail.write_review')}
+          </button>
         </div>
       </div>
+
+      {/* Rating distribution bar */}
+      {distribution.length > 0 && (
+        <div className="glass-retro rounded-xl p-5 space-y-2">
+          {distribution.map(({ star, count, pct }) => (
+            <div key={star} className="flex items-center gap-3 text-xs font-mono">
+              <span className="w-4 text-neutral-500 shrink-0">{star}</span>
+              <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/5">
+                <div
+                  className="h-full rounded-full bg-primary transition-all duration-500"
+                  style={{ width: `${pct}%` }}
+                />
+              </div>
+              <span className="w-5 text-right text-neutral-600">{count}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {hasRated && (
+        <p className="text-xs font-mono text-neutral-500">{t('detail.already_reviewed')}</p>
+      )}
 
       {ratingsQuery.isLoading ? (
         <div className="grid gap-4">
@@ -217,15 +222,15 @@ const LocationReviews: React.FC<LocationReviewsProps> = ({
         </p>
       ) : null}
 
-      <div className="grid gap-6">
+      <div className="grid gap-4">
         {reviews.length > 0 ? (
           reviews.map((review) => (
             <div
               key={review.id}
-              className="group relative rounded-2xl border border-transparent bg-surface-container-lowest p-6 transition-all duration-300 hover:border-border hover:shadow-xl"
+              className="glass-retro rounded-xl p-5 transition-all duration-300 hover:border-white/20"
             >
               <div className="flex items-start gap-4">
-                <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full ring-2 ring-success/20 ring-offset-2 ring-offset-background">
+                <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full border border-white/10">
                   <Image
                     src={review.userAvatar || '/images/testimonials/avatar-1.png'}
                     alt={review.userName}
@@ -237,9 +242,9 @@ const LocationReviews: React.FC<LocationReviewsProps> = ({
                 <div className="flex-1 space-y-2">
                   <div className="flex items-center justify-between gap-2">
                     <div>
-                      <h4 className="font-bold text-foreground">{review.userName}</h4>
-                      <p className="text-xs text-on-surface-subtle">
-                        {format(new Date(review.createdAt), 'dd MMMM, yyyy', {
+                      <h4 className="text-sm font-semibold text-white">{review.userName}</h4>
+                      <p className="text-[10px] font-mono text-neutral-500">
+                        {format(new Date(review.createdAt), "dd 'thg' M, yyyy", {
                           locale: locale === 'vi' ? vi : enUS,
                         })}
                       </p>
@@ -247,12 +252,12 @@ const LocationReviews: React.FC<LocationReviewsProps> = ({
                     <RatingStars rating={review.rating} size="sm" />
                   </div>
 
-                  <p className="leading-relaxed text-on-surface-variant">{review.comment}</p>
+                  <p className="text-sm text-neutral-400 leading-relaxed">{review.comment}</p>
 
                   {review.images && review.images.length > 0 && (
                     <div className="flex flex-wrap gap-2 pt-2">
                       {review.images.map((img, i) => (
-                        <div key={i} className="relative h-20 w-20 overflow-hidden rounded-lg shadow-sm">
+                        <div key={i} className="relative h-16 w-16 overflow-hidden rounded-lg border border-white/10">
                           <Image
                             src={img}
                             alt={t('detail.review_photo_alt', { index: i + 1 })}
@@ -267,14 +272,14 @@ const LocationReviews: React.FC<LocationReviewsProps> = ({
                   <div className="flex items-center gap-4 pt-2">
                     <button
                       type="button"
-                      className="flex items-center gap-1.5 text-xs font-medium text-on-surface-variant transition-colors hover:text-primary disabled:opacity-50"
+                      className="flex items-center gap-1.5 text-xs font-mono text-neutral-600 transition-colors hover:text-primary disabled:opacity-50"
                       disabled={helpfulMutation.isPending}
                       onClick={() => onHelpful(review)}
                     >
-                      <ThumbsUp className="h-4 w-4" />
+                      <ThumbsUp className="h-3.5 w-3.5" />
                       {t('detail.helpful')}
                       {review.helpfulCount != null && review.helpfulCount > 0 ? (
-                        <span className="text-on-surface-subtle">({review.helpfulCount})</span>
+                        <span>({review.helpfulCount})</span>
                       ) : null}
                     </button>
                   </div>
@@ -283,10 +288,10 @@ const LocationReviews: React.FC<LocationReviewsProps> = ({
             </div>
           ))
         ) : !ratingsQuery.isLoading ? (
-          <div className="rounded-2xl border-2 border-dashed border-border py-12 text-center">
-            <MessageSquare className="mx-auto h-12 w-12 text-on-surface-subtle opacity-50" />
-            <p className="mt-4 text-lg font-medium text-on-surface-variant">{t('detail.no_reviews')}</p>
-            <p className="text-sm text-on-surface-subtle">{t('detail.no_reviews_subtitle')}</p>
+          <div className="glass-retro rounded-xl border-dashed py-14 text-center">
+            <MessageSquare className="mx-auto h-10 w-10 text-neutral-600 mb-4" />
+            <p className="text-sm font-semibold text-neutral-300">{t('detail.no_reviews')}</p>
+            <p className="text-xs font-mono text-neutral-600 mt-1">{t('detail.no_reviews_subtitle')}</p>
           </div>
         ) : null}
       </div>

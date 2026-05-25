@@ -54,4 +54,14 @@ export const locationService = {
       {},
       sessionId ? { headers: { "X-Session-Id": sessionId } } : undefined
     ),
+
+  getFilterStats: (): Promise<ApiResponse<{
+    districts: Record<string, number>;
+    price_levels: Record<string, number>;
+    ratings: Record<string, number>;
+  }>> =>
+    axiosInstance.get(API_ENDPOINTS.LOCATIONS.FILTER_STATS),
+
+  getDistricts: (): Promise<ApiResponse<{ id: number; name: string; slug: string }[]>> =>
+    axiosInstance.get("/districts"),
 };

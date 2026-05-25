@@ -33,7 +33,8 @@
   },
   "card": {
     "starting_from": "Chỉ từ",
-    "default_location": "Đà Nẵng, Việt Nam"
+    "default_location": "Đà Nẵng, Việt Nam",
+    "price_level": "Mức giá"
   },
   "empty": {
     "title": "Không tìm thấy kết quả",

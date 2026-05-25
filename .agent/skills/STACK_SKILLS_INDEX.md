@@ -1,43 +1,66 @@
 # STACK SKILLS INDEX - DanangTrip Web
 
 Master index for the 10 local skills in `.agent/skills/`.
-Current selected web task: `user-profile-delete`.
+Current selected web task: `user-cart-api-planning`.
 
 ## Current Decision Snapshot
 
-Date locked: `2026-05-24`
+Date locked: `2026-05-25`
 
 - Repo: `D:\DATN\danangtrip-web`
-- Selected task: `Implement user-profile-delete screen and backend API`
-- Feature slug: `user-profile-delete`
-- Route: `/profile/delete`
-- Backend endpoint: `DELETE /v1/user/account`
-- Primary docs:
-  - `D:\DATN\DATN_Document\docs\page\user_profile_delete.md`
-- Status: Locked for implementation after planning and API readiness verification.
+- Supporting repo: `D:\DATN\danangtrip-api`
+- Selected task: `Plan and prepare user-cart API readiness`
+- Feature slug: `user-cart-api-planning`
+- Candidate screen slug: `user-cart`
+- Candidate route: `/cart`
+- Candidate docs:
+  - `D:\DATN\DATN_Document\docs\page\user_cart.md`
+- Planned API from docs:
+  - `GET /cart`
+  - `POST /cart/items`
+  - `PUT /cart/items/{id}`
+  - `DELETE /cart/items/{id}`
+  - `POST /cart/checkout`
+- Status: planning/API readiness gate selected after `user-profile-delete` completion and merge into `dev`.
 - Cross-project rule: this web prompt is independent from admin; do not use admin progress to decide web steps.
 
 ## Why This Is Next
 
-- Progress report `0.0.11` locked this choice following an API/planning review.
-- `user-profile-delete` is the last critical privacy/account management screen in the user backlog.
-- Cart features are optional as direct tour detail checkout is fully functional.
-- The required backend API endpoint (`DELETE /user/account`) will be implemented in `danangtrip-api` as a prerequisite.
+- Progress report `0.0.12` says `user-profile-delete` is complete and merged.
+- Codegraph snapshot `2026-05-25 22:23`: web `files=339`, `nodes=2818`, `edges=5672`, `unresolved_refs=0`.
+- Codegraph snapshot `2026-05-25 22:23`: api `files=452`, `nodes=4342`, `edges=6218`, `unresolved_refs=0`.
+- Report `0.0.12` identifies `user-cart` as the next web candidate, but codegraph/repo scan does not find cart route/components/API yet.
+- The cart doc is explicitly `Planned`; direct tour detail checkout is already functional.
+- Therefore the next web work must be a planning/API readiness pass first. Do not jump straight into cart UI implementation without a verified backend contract.
 
 ## Codegraph / Repo Findings
 
-- Completed web screens include booking lookup/detail/list, favorites, notifications, profile/password, recommendations, ratings, locations category/nearby, tours category, and blog category.
-- Backend database schema supports user cascading delete:
-  - `ratings`, `favorites`, `notifications`, and `refresh_tokens` are set to cascade delete.
-  - `bookings` will be anonymized (`nullOnDelete()`) to preserve business transactional records.
-- Service layer statistics (average ratings/review count) must be programmatically recalculated for locations/tours when ratings are deleted.
+Read `D:\DATN\danangtrip-web\.codegraph\codegraph.db` and `D:\DATN\danangtrip-api\.codegraph\codegraph.db` before changing this feature, then verify against repo reality.
+
+- Completed web screens include booking lookup/detail/list, favorites, notifications, profile/password/delete, recommendations, ratings, locations category/nearby, tours category, and blog category.
+- `user-profile-delete` is complete:
+  - Web route `/profile/delete` exists.
+  - API route `DELETE /user/account` exists.
+  - Step 09/10 artifacts exist for `2026-05-25__user-profile-delete`.
+- Cart is not code-ready yet:
+  - No confirmed web `/cart` page/component/service.
+  - No confirmed API cart routes in `danangtrip-api`.
+  - Docs list planned endpoints only.
+- Current task should output a decision: implement API + web cart now, postpone cart, or reduce scope to a client-only/local cart only if the product owner explicitly accepts that tradeoff.
 
 ## Goals
 
-- Implement the `DELETE /v1/user/account` endpoint in `danangtrip-api`.
-- Create `/profile/delete` route in `danangtrip-web` with warning boxes, checkbox confirmation, password inputs, and confirm modals.
-- Update profile sidebar navigation.
-- Ensure clean session/token cleanup, redirection to `/`, and localized user feedback.
+- Run a disciplined planning/API readiness pass for `user-cart`.
+- Confirm whether the cart should support:
+  - authenticated user cart only,
+  - guest cart with `X-Session-Id`,
+  - local storage draft cart,
+  - or no cart because direct checkout remains the chosen flow.
+- If cart is approved, define backend contract, data model, route list, request/response schemas, and frontend integration plan.
+- If cart is not approved, record the blocker and recommend the next API-ready web screen/hardening item.
+- Do not implement product code until Step 01-03 confirm the API contract and scope.
+- Produce artifacts for every step and update memory after each step.
+- Use current docs root `D:\DATN\DATN_Document`; do not use legacy document paths.
 
 ## Canonical Read Order
 
@@ -49,7 +72,7 @@ Before every skill step, read in this order:
 4. `.agent/memory/WORKING_STATE.md`
 5. `.agent/memory/HANDOFF.md`
 6. `.agent/memory/SESSION_LOG.md`
-7. Latest relevant planning artifacts if any
+7. Latest relevant `user-cart` or `user-cart-api-planning` artifacts if any
 8. `.agent/skills/STACK_SKILLS_INDEX.md`
 9. Current step `SKILL.md`
 10. `D:\DATN\danangtrip-web\.codegraph\codegraph.db`
@@ -70,15 +93,15 @@ If sources conflict, follow repo reality and record stale facts in the artifact.
 | Skill | Execution mode | Code expectation |
 | --- | --- | --- |
 | `01-screen-analysis` | Analysis only | Do not edit product code; create planning artifact and memory. |
-| `02-project-setup` | Audit/setup | Setup layout, sidebar link, routing constants, and backend boilerplate. |
-| `03-types-api-contract` | Contract review | Define types, API services, request schemas, and request validators. |
-| `04-layout-routing` | Routing review | Establish `/profile/delete` route structure and layout wrappers. |
-| `05-ui-components` | UI build | Build warning boxes, checkboxes, input forms, and confirmation dialogs. |
-| `06-data-integration` | Integration wiring | Integrate with profile query hook and delete account mutation. |
-| `07-interactions` | Interactions | Code validation logic, error overlays, loading spinners, and confirm steps. |
-| `08-auth-permissions` | Auth & Security | Clear cookies/store, handle logout flows, and route access guards. |
-| `09-testing` | Validation | Run full build, check route, typecheck, lint, and run tests. |
-| `10-optimization-deploy` | Handoff | Push code branch, create review report, and draft project handoff details. |
+| `02-project-setup` | Audit/setup | Audit route/API/data-model readiness; no product code unless setup is strictly non-behavioral. |
+| `03-types-api-contract` | Contract gate | Define the cart API contract and decide whether backend implementation is required before UI. |
+| `04-layout-routing` | Conditional scaffold | Only scaffold `/cart` if Step 03 marks backend contract ready or explicitly approves a stub route. |
+| `05-ui-components` | Conditional UI | Only build UI after contract readiness. Otherwise document UI requirements only. |
+| `06-data-integration` | Conditional integration | Only wire services/hooks after backend or mock contract is approved. |
+| `07-interactions` | Conditional interactions | Only implement cart interactions after data integration plan is valid. |
+| `08-auth-permissions` | Auth & Security | Decide guest/user cart identity, session handling, auth guard and checkout ownership. |
+| `09-testing` | Validation | Run applicable checks or produce planning validation if no code is changed. |
+| `10-optimization-deploy` | Handoff | Close planning/implementation decision, review artifacts and progress prompt recommendation. |
 
 ## Repository Reality
 
@@ -114,17 +137,20 @@ If sources conflict, follow repo reality and record stale facts in the artifact.
 ```text
 SYSTEM EXECUTION CONTRACT
 
-Act as the implementation agent for repository: `D:\DATN\danangtrip-web` and `D:\DATN\danangtrip-api`
+Act as the planning and implementation-readiness agent for repositories:
+- `D:\DATN\danangtrip-web`
+- `D:\DATN\danangtrip-api`
 
 CURRENT TASK LOCK
-- Feature slug: `user-profile-delete`
-- Task name: `Implement User Profile Deletion Page and Backend API`
-- Route: `/profile/delete`
-- Backend API: `DELETE /v1/user/account`
+- Feature slug: `user-cart-api-planning`
+- Candidate screen: `user-cart`
+- Candidate route: `/cart`
+- Candidate backend APIs: `GET /cart`, `POST /cart/items`, `PUT /cart/items/{id}`, `DELETE /cart/items/{id}`, `POST /cart/checkout`
 
 WHY THIS IS NEXT
-- API readiness review completed and approved.
-- Accounts deletion is locked as the next target screen.
+- `user-profile-delete` completed Step 10 and merged into `dev`.
+- Progress report `0.0.12` selects user cart as the next web candidate, but marks it as API/planning gated.
+- Codegraph does not currently confirm cart web route or cart backend endpoints.
 
 MANDATORY READ ORDER BEFORE ANY WORK
 1. `D:\DATN\danangtrip-web\AGENTS.md`
@@ -133,17 +159,34 @@ MANDATORY READ ORDER BEFORE ANY WORK
 4. `D:\DATN\danangtrip-web\.agent\memory\WORKING_STATE.md`
 5. `D:\DATN\danangtrip-web\.agent\memory\HANDOFF.md`
 6. `D:\DATN\danangtrip-web\.agent\memory\SESSION_LOG.md`
-7. Latest relevant planning artifacts if any
+7. Latest relevant `user-cart` or `user-cart-api-planning` artifacts if any
 8. `D:\DATN\danangtrip-web\.agent\skills\STACK_SKILLS_INDEX.md`
 9. Current step `SKILL.md`
 10. `D:\DATN\danangtrip-web\.codegraph\codegraph.db`
 11. `D:\DATN\danangtrip-api\.codegraph\codegraph.db`
 
 SCREEN AND API REFERENCES
-- Candidate doc: `D:\DATN\DATN_Document\docs\page\user_profile_delete.md`
-- Backend controller: `D:\DATN\danangtrip-api\app\Http\Controllers\Api\ProfileController.php`
-- Web routes: `src/config/routes.ts`
-- Web sidebar: `src/features/profile/components/ProfileSidebar.tsx`
+- Progress report: `D:\DATN\DATN_Document\docs\project_delivery_progress_report.md`
+- Candidate screen doc: `D:\DATN\DATN_Document\docs\page\user_cart.md`
+- Web route config: `D:\DATN\danangtrip-web\src\config\routes.ts`
+- Tour detail/booking flow: inspect current tour detail and tour booking feature folders.
+- API routes: `D:\DATN\danangtrip-api\routes\api.php`
+- API booking/tour/promotion services and repositories.
+
+PLANNING CONTRACT
+- Do not implement `/cart` UI until API readiness is confirmed.
+- Confirm guest cart vs authenticated cart vs local-only cart.
+- Confirm item fields: tour_id, tour_schedule_id, quantity_adult, quantity_child, quantity_infant, price snapshot behavior, availability validation and promotion validation.
+- Confirm checkout behavior: convert cart items into booking or redirect into existing booking flow.
+- If backend work is required, define the API/data-model tasks first.
+- If product scope rejects cart, record the decision and recommend the next API-ready web task.
+
+EXECUTION RULES
+- Follow the 10-step pipeline strictly.
+- Do not mark a step complete without artifact and memory updates.
+- Keep product code changes blocked until the contract gate says READY.
+- Prefer existing web service/hook/i18n/route patterns and API service/repository/request patterns.
+- Run validation in Step 09 and Step 10 as applicable to the amount of code changed.
 ```
 
 ## Step-by-step Prompts
@@ -151,82 +194,82 @@ SCREEN AND API REFERENCES
 ### Step 01
 
 ```text
-Activate `01-screen-analysis` for `user-profile-delete`.
-Read mandatory context, codegraph, `user_profile_delete.md`, backend controller, and current web profile layout files.
-Work: document purpose, route, layout, styling tokens, responsive states, API specifications, and business validation rules.
-Output: `.agent/artifacts/analysis/2026-05-24__user-profile-delete__screen-analysis.md`
+Activate `01-screen-analysis` for `user-cart-api-planning`.
+Read mandatory context, codegraph, `user_cart.md`, existing tour booking flow, promotion validation if any, and backend route inventory.
+Work: document current repo reality, missing API/routes, user flows, scope options, risks and recommended decision.
+Output: `.agent/artifacts/analysis/2026-05-25__user-cart-api-planning__screen-analysis.md`
 ```
 
 ### Step 02
 
 ```text
-Activate `02-project-setup` for `user-profile-delete`.
-Inspect route conventions, layout boundaries, package dependencies, and create backend stubs/files.
-Work: setup routes, register sidebar links, and draft empty backend controller action + request validator.
-Output: `.agent/artifacts/setup/2026-05-24__user-profile-delete__project-setup-report.md`
+Activate `02-project-setup` for `user-cart-api-planning`.
+Inspect route conventions, feature folder conventions, API layer conventions, backend model/migration/service/repository conventions, and package scripts.
+Work: verify readiness and list exact setup tasks required if cart proceeds.
+Output: `.agent/artifacts/setup/2026-05-25__user-cart-api-planning__project-setup-report.md`
 ```
 
 ### Step 03
 
 ```text
-Activate `03-types-api-contract` for `user-profile-delete`.
-Inspect backend files, validation models, and typescript types.
-Work: implement backend request validation rules and define frontend types and request payloads.
-Output: `.agent/artifacts/api-contracts/2026-05-24__user-profile-delete__api-contract.md`
+Activate `03-types-api-contract` for `user-cart-api-planning`.
+Define the cart contract gate.
+Work: decide guest/user identity model, request/response schemas, backend endpoints, data model, validation rules, checkout conversion flow and error shape.
+Output: `.agent/artifacts/api-contracts/2026-05-25__user-cart-api-planning__api-contract.md`
 ```
 
 ### Step 04
 
 ```text
-Activate `04-layout-routing` for `user-profile-delete`.
-Work: build the App Router folder structure and layout wrappers under `/profile/delete`.
-Output: `.agent/artifacts/routing/2026-05-24__user-profile-delete__route-plan.md`
+Activate `04-layout-routing` for `user-cart-api-planning`.
+If Step 03 is READY, plan or scaffold `/cart` route and route constants. If not READY, document the blocked route plan only.
+Output: `.agent/artifacts/routing/2026-05-25__user-cart-api-planning__route-plan.md`
 ```
 
 ### Step 05
 
 ```text
-Activate `05-ui-components` for `user-profile-delete`.
-Work: construct the warning cards, confirmation checkboxes, password forms, and multi-step modal dialogs.
-Output: `.agent/artifacts/ui-specs/2026-05-24__user-profile-delete__ui-spec.md`
+Activate `05-ui-components` for `user-cart-api-planning`.
+If Step 03 is READY, design/build cart item list, summary, promotion and empty state components. If not READY, produce UI spec only.
+Output: `.agent/artifacts/ui-specs/2026-05-25__user-cart-api-planning__ui-spec.md`
 ```
 
 ### Step 06
 
 ```text
-Activate `06-data-integration` for `user-profile-delete`.
-Work: write the useDeleteAccount mutation query hook and bind request flows.
-Output: `.agent/artifacts/integration/2026-05-24__user-profile-delete__data-integration.md`
+Activate `06-data-integration` for `user-cart-api-planning`.
+If Step 03 is READY, wire cart service/hooks and backend integration. If not READY, document integration blockers and backend tasks.
+Output: `.agent/artifacts/integration/2026-05-25__user-cart-api-planning__data-integration.md`
 ```
 
 ### Step 07
 
 ```text
-Activate `07-interactions` for `user-profile-delete`.
-Work: wire up input validations, show/hide password buttons, warning alerts on active bookings, and toast messages.
-Output: `.agent/artifacts/interaction-specs/2026-05-24__user-profile-delete__interaction-spec.md`
+Activate `07-interactions` for `user-cart-api-planning`.
+If Step 03 is READY, implement quantity updates, remove item, promotion, checkout and stale availability handling. If not READY, document interaction contract only.
+Output: `.agent/artifacts/interaction-specs/2026-05-25__user-cart-api-planning__interaction-spec.md`
 ```
 
 ### Step 08
 
 ```text
-Activate `08-auth-permissions` for `user-profile-delete`.
-Work: handle session clearing (cookies and state), redirect to `/`, and secure the deletion route behind auth middleware.
-Output: `.agent/artifacts/auth/2026-05-24__user-profile-delete__auth-permissions-review.md`
+Activate `08-auth-permissions` for `user-cart-api-planning`.
+Review guest/user cart ownership, `X-Session-Id`, auth guard, checkout permissions and privacy/security implications.
+Output: `.agent/artifacts/auth/2026-05-25__user-cart-api-planning__auth-permissions-review.md`
 ```
 
 ### Step 09
 
 ```text
-Activate `09-testing` for `user-profile-delete`.
-Work: test functional flows, verify error states, check route permissions, run tests, and execute prepush checks.
-Output: `.agent/artifacts/test-cases/2026-05-24__user-profile-delete__test-report.md`
+Activate `09-testing` for `user-cart-api-planning`.
+Run relevant validation for any changed files. If this remains planning-only, validate artifacts and record no-code test status.
+Output: `.agent/artifacts/test-cases/2026-05-25__user-cart-api-planning__test-report.md`
 ```
 
 ### Step 10
 
 ```text
-Activate `10-optimization-deploy` for `user-profile-delete`.
-Work: prepare commit package, test production builds, generate review.md and deploy-report.md files.
-Output: `.agent/artifacts/deploy/2026-05-24__user-profile-delete__deploy-report.md` and `.agent/artifacts/review/2026-05-24__user-profile-delete__review.md`
+Activate `10-optimization-deploy` for `user-cart-api-planning`.
+Perform final readiness review, deploy/planning closeout, memory handoff and prompt/progress update recommendation.
+Output: `.agent/artifacts/deploy/2026-05-25__user-cart-api-planning__deploy-report.md` and `.agent/artifacts/review/2026-05-25__user-cart-api-planning__review.md`
 ```

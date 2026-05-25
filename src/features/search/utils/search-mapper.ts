@@ -14,7 +14,7 @@ const mapSortParams = (sort: SearchSortOption, type: SearchResultType) => {
     case "price_desc":
       return { sort_by: type === "tour" ? "price_adult" : "price_min", sort_order: "desc" as const };
     case "rating_desc":
-      return { sort_by: "avg_rating", sort_order: "desc" as const };
+      return { sort_by: type === "tour" ? "rating_avg" : "avg_rating", sort_order: "desc" as const };
     case "newest":
       return { sort_by: "created_at", sort_order: "desc" as const };
     case "popular":

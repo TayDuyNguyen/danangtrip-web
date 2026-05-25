@@ -18,6 +18,7 @@ export const PUBLIC_ROUTES = {
   CONTACT: "/contact",
   ABOUT: "/about",
   SEARCH: "/search",
+  CART: "/cart",
   DESTINATION_DA_NANG: "/du-lich-da-nang",
 } as const;
 

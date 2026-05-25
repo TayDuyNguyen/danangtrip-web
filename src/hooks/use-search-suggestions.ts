@@ -20,33 +20,33 @@ export const useSearchSuggestions = (query: string, type: string) => {
       const q = debouncedQuery.trim();
       
       const res = await searchService.getSuggestions(q, 5);
-      const items = extractItems<Record<string, unknown> | string>(res.data);
+      const rawData = res.data;
+      const suggestionsPayload = (rawData && typeof rawData === "object" && "suggestions" in rawData)
+        ? (rawData as { suggestions: unknown }).suggestions
+        : rawData;
+      const items = extractItems<Record<string, unknown> | string>(suggestionsPayload);
 
       // Backend có thể trả mảng chuỗi (từ khóa) thay vì entity
       if (items.length > 0 && typeof items[0] === "string") {
         const strings = items as string[];
-        const mapped = strings.map((title, i) => ({
-          id: -(i + 1),
-          type: "location" as SearchSuggestionType,
-          title,
-          slug: "",
-          subtitle: "",
-          thumbnail: null as string | null,
-          rating: 0,
-          reviewCount: 0,
-          viewCount: 0,
-        }));
+        const mapped = strings.map((title, i) => {
+          // Xác định loại (tour hoặc location) dựa trên từ đầu tiên của tiêu đề
+          const isTour = title.toLowerCase().startsWith("tour");
+          return {
+            id: -(i + 1),
+            type: (isTour ? "tour" : "location") as SearchSuggestionType,
+            title,
+            slug: "",
+            subtitle: "",
+            thumbnail: null as string | null,
+            rating: 0,
+            reviewCount: 0,
+            viewCount: 0,
+          };
+        });
 
-        let locations: SearchSuggestionItem[] = [];
-        let tours: SearchSuggestionItem[] = [];
-        if (type === "location") locations = mapped;
-        else if (type === "tour") {
-          tours = mapped.map((m) => ({ ...m, type: "tour" as SearchSuggestionType }));
-        } else {
-          const half = Math.ceil(mapped.length / 2);
-          locations = mapped.slice(0, half);
-          tours = mapped.slice(half).map((m) => ({ ...m, type: "tour" as SearchSuggestionType }));
-        }
+        const locations = type === "tour" ? [] : mapped.filter((m) => m.type === "location");
+        const tours = type === "location" ? [] : mapped.filter((m) => m.type === "tour");
 
         return {
           locations,

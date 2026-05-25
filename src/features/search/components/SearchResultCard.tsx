@@ -19,7 +19,9 @@ export const SearchResultCard = ({ item, isLoading, featured, index }: SearchRes
   const t = useTranslations();
   const locale = useLocale();
   const isTour = item?.type === "tour";
-  const url = `${ROUTES.SEARCH}?q=${encodeURIComponent(item?.title || "")}&type=${isTour ? "tour" : "location"}`;
+  const url = isTour 
+    ? ROUTES.TOUR_DETAIL(item?.slug || "") 
+    : ROUTES.LOCATION_DETAIL(item?.slug || "");
 
   // Use variables for heights to avoid tailwind-intellisense conflicts in ternary
   const skeletonHeightClass = featured ? "h-[240px] md:h-auto" : "h-[200px]";
@@ -28,27 +30,31 @@ export const SearchResultCard = ({ item, isLoading, featured, index }: SearchRes
   if (isLoading || !item) {
     return (
       <div className={cn(
-        "bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm animate-pulse flex flex-col border border-[#262626]",
-        featured && "md:col-span-2 md:row-span-1 md:flex-row"
+        "glass-retro rounded-xl overflow-hidden animate-pulse flex flex-col",
+        featured ? "col-span-1 md:col-span-12 lg:col-span-8 md:flex-row" : "col-span-1 md:col-span-6 lg:col-span-4"
       )}>
         <div className={cn(
-          "bg-surface-container-high",
-          featured ? "md:w-1/2" : "w-full",
-          skeletonHeightClass
+          "bg-surface-container-high/40 relative",
+          featured ? "w-full md:w-1/2 h-64 md:h-auto" : "w-full h-48"
         )} />
-        <div className="p-6 flex-1 space-y-4">
-          <div className="h-4 bg-surface-container-high rounded-full w-1/4" />
-          <div className="h-6 bg-surface-container-high rounded-full w-3/4" />
-          <div className="h-4 bg-surface-container-high rounded-full w-1/2" />
-        <div className="pt-4 flex items-center justify-between">
-          <div className="space-y-1">
-            <div className="h-3 bg-surface-container-high rounded-full w-16" />
-            <div className="h-8 bg-surface-container-high rounded-lg w-24" />
+        <div className={cn(
+          "flex-1 flex flex-col justify-between",
+          featured ? "p-8" : "p-6"
+        )}>
+          <div className="space-y-4">
+            <div className="h-4 bg-surface-container-high/40 rounded w-1/4" />
+            <div className="h-6 bg-surface-container-high/40 rounded w-3/4" />
+            <div className="h-4 bg-surface-container-high/40 rounded w-1/2" />
           </div>
-          <div className="h-10 w-10 bg-surface-container-high rounded-full" />
+          <div className="pt-6 flex items-center justify-between border-t border-[#262626]/40 mt-6">
+            <div className="space-y-2">
+              <div className="h-3 bg-surface-container-high/40 rounded w-16" />
+              <div className="h-6 bg-surface-container-high/40 rounded w-24" />
+            </div>
+            <div className="h-10 w-10 bg-surface-container-high/40 rounded-full" />
+          </div>
         </div>
       </div>
-    </div>
     );
   }
 
@@ -56,117 +62,130 @@ export const SearchResultCard = ({ item, isLoading, featured, index }: SearchRes
     <Link 
       href={url as string & {}}
       className={cn(
-        "group bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 reveal-up flex flex-col scale-100 active:scale-[0.98] border border-[#262626]",
-        featured && "md:col-span-2 md:row-span-1 md:flex-row"
+        "group glass-retro glass-retro-interactive rounded-xl overflow-hidden reveal-up flex flex-col scale-100 active:scale-[0.98]",
+        featured ? "col-span-1 md:col-span-12 lg:col-span-8 flex flex-col md:flex-row" : "col-span-1 md:col-span-6 lg:col-span-4 flex flex-col"
       )}
       style={{ animationDelay: `${index * 100}ms` }}
     >
       {/* Image Section */}
       <div className={cn(
-        "relative overflow-hidden",
-        featured ? "md:w-2/5" : "w-full",
-        imageHeightClass
+        "relative overflow-hidden bg-surface-container-low",
+        featured ? "w-full md:w-1/2 h-64 md:h-auto" : "w-full h-48"
       )}>
         <Image
           src={item.thumbnail || "/images/placeholder.png"}
           alt={item.title}
           fill
-          className="object-cover transition-transform duration-700 group-hover:scale-110"
+          className="object-cover opacity-80 transition-transform duration-700 group-hover:scale-110"
           sizes={featured ? "40vw" : "25vw"}
         />
         
         {/* Badge */}
         <div className="absolute top-4 left-4 z-10 flex gap-2">
-          <span className={cn(
-            "px-4 py-1.5 rounded-full text-[12px] font-bold text-white shadow-lg backdrop-blur-md",
-            isTour ? "bg-[#8b6a55]/80" : "bg-success/80"
-          )}>
-            {isTour ? t("search.badges.tour") : t("search.badges.location")}
-          </span>
+          {isTour ? (
+            <span className="bg-[#8b6a55] text-[#fff4f0] px-2.5 py-1 rounded text-[11px] font-semibold uppercase tracking-wider">
+              {t("search.badges.tour")}
+            </span>
+          ) : (
+            <span className="bg-surface-variant/50 text-[#e5e2e1] border border-border-low px-2.5 py-1 rounded text-[11px] font-semibold uppercase tracking-wider">
+              {t("search.badges.location")}
+            </span>
+          )}
           {item.featured && (
-            <span className="bg-amber-400/80 backdrop-blur-md px-4 py-1.5 rounded-full text-[12px] font-bold text-white shadow-lg">
-              ✨ {t("search.badges.hot")}
+            <span className="bg-[#f1bb9d] text-[#301403] px-2.5 py-1 rounded text-[11px] font-semibold flex items-center gap-1 uppercase tracking-wider">
+              🔥 {t("search.badges.hot")}
             </span>
           )}
         </div>
       </div>
 
       {/* Content Section */}
-      <div className="p-8 flex-1 flex flex-col justify-between">
+      <div className={cn(
+        "flex-grow flex flex-col justify-between",
+        featured ? "p-8 w-full md:w-1/2" : "p-6"
+      )}>
         <div>
-          <div className="flex items-center gap-1 mb-3">
+          <div className="flex items-center gap-1 mb-2">
             {item.rating > 0 && item.reviewCount > 0 && (
               <>
                 <div className="flex items-center text-amber-500">
-                  <IoStar />
-                  <span className="ml-1 text-[13px] font-black text-foreground">{item.rating}</span>
+                  <IoStar className="text-[13px] mr-1" />
+                  <span className="text-[12px] font-bold text-white">{item.rating}</span>
                 </div>
-                <span className="text-on-surface-variant text-[13px]">({item.reviewCount})</span>
-                <span className="mx-2 text-on-surface-subtle">•</span>
+                <span className="text-on-surface-variant text-[12px]">({item.reviewCount})</span>
+                <span className="mx-2 text-on-surface-subtle opacity-30">•</span>
               </>
             )}
-            <span className="text-on-surface-variant text-[13px] font-bold uppercase tracking-wide">
+            <span className="text-on-surface-variant text-[11px] font-bold uppercase tracking-wider">
               {item.categoryName}
             </span>
           </div>
 
           <h3 className={cn(
-            "font-bold text-foreground group-hover:text-[#8b6a55] transition-colors line-clamp-2 leading-tight",
-            featured ? "text-2xl md:text-3xl mb-4" : "text-xl mb-3"
+            "font-light text-white group-hover:text-[#e7bea6] transition-colors line-clamp-2 leading-tight",
+            featured ? "text-2xl md:text-3xl mb-4" : "text-xl mb-4"
           )}>
             {item.title}
           </h3>
 
-          <div className="flex items-center gap-2 text-on-surface-subtle text-sm mb-4 font-medium">
-            <IoLocationOutline className="text-[#8b6a55] shrink-0 text-lg" />
-            <span className="line-clamp-1">
-              {isTour ? t("search.card.default_location") : (item as LocationSearchResult).address}
-            </span>
-          </div>
-
-          {isTour && (item as TourSearchResult).duration && (
-            <div className="flex items-center gap-2 text-on-surface-subtle text-sm mb-4 font-medium">
-              <IoTimeOutline className="text-[#8b6a55] shrink-0 text-lg" />
-              <span>{(item as TourSearchResult).duration}</span>
+          <div className="space-y-2 mb-4">
+            <div className="flex items-center gap-2 text-on-surface-subtle text-[13px] font-normal">
+              <IoLocationOutline className="text-on-surface-variant shrink-0 text-sm" />
+              <span className="line-clamp-1">
+                {isTour ? t("search.card.default_location") : (item as LocationSearchResult).address}
+              </span>
             </div>
-          )}
+
+            {isTour && (item as TourSearchResult).duration && (
+              <div className="flex items-center gap-2 text-on-surface-subtle text-[13px] font-normal">
+                <IoTimeOutline className="text-on-surface-variant shrink-0 text-sm" />
+                <span>{(item as TourSearchResult).duration}</span>
+              </div>
+            )}
+          </div>
         </div>
 
-        <div className="pt-4 flex items-center justify-between">
+        <div className={cn(
+          "flex justify-between items-end border-t border-border-low/40 pt-4 mt-6",
+          featured && "md:border-t-0 md:pt-0 md:mt-8"
+        )}>
           <div>
             {isTour ? (
               <div className="flex flex-col">
-                <span className="text-[11px] text-on-surface-variant font-black uppercase tracking-wider">{t("search.card.starting_from")}</span>
-                <span className="text-2xl font-black text-[#8b6a55]">
+                <span className="text-[10px] text-on-surface-variant font-medium uppercase tracking-widest mb-0.5">{t("search.card.starting_from")}</span>
+                <span className="text-xl font-bold text-[#f1bb9d]">
                   {new Intl.NumberFormat(locale === 'vi' ? 'vi-VN' : 'en-US', { 
                     style: 'currency', 
-                    currency: locale === 'vi' ? 'VND' : 'USD' 
+                    currency: locale === 'vi' ? 'VND' : 'USD',
+                    maximumFractionDigits: 0
                   }).format((item as TourSearchResult).price)}
                 </span>
               </div>
             ) : (
-              <div className="flex items-center gap-1">
-                {[1, 2, 3, 4].map((level) => (
-                  <span 
-                    key={level}
-                    className={cn(
-                      "text-lg font-black",
-                      level <= ((item as LocationSearchResult).priceLevel || 1) ? "text-success" : "text-surface-container-high"
-                    )}
-                  >
-                    $
-                  </span>
-                ))}
+              <div className="flex flex-col">
+                <span className="text-[10px] text-on-surface-variant font-medium uppercase tracking-widest mb-1">{t("search.card.price_level")}</span>
+                <div className="text-[#f1bb9d] font-semibold tracking-widest text-sm flex gap-0.5">
+                  {Array.from({ length: 4 }).map((_, level) => (
+                    <span 
+                      key={level}
+                      className={level < ((item as LocationSearchResult).priceLevel || 1) ? "text-[#f1bb9d]" : "text-on-surface-variant/30"}
+                    >
+                      $
+                    </span>
+                  ))}
+                </div>
               </div>
             )}
           </div>
 
-          <div className="w-12 h-12 rounded-2xl bg-surface-container-low flex items-center justify-center text-foreground group-hover:bg-[#8b6a55] group-hover:text-white transition-all transform group-hover:translate-x-1 shadow-sm group-hover:shadow-black/30">
-            <IoChevronForward className="text-2xl" />
+          <div className={cn(
+            "rounded-full border border-border-low flex items-center justify-center bg-transparent group-hover:bg-[#8b6a55] group-hover:border-[#8b6a55] text-white transition-all duration-300",
+            featured ? "w-10 h-10" : "w-8 h-8"
+          )}>
+            <IoChevronForward className={featured ? "text-lg" : "text-sm"} />
           </div>
         </div>
       </div>
-
     </Link>
   );
 };

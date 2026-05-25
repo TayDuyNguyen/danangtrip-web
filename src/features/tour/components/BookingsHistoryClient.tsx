@@ -52,6 +52,7 @@ function BookingsSearchField({
       placeholder={placeholder}
       isLoading={isLoading}
       aria-label={placeholder}
+      debounceMs={0}
     />
   );
 }
