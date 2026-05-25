@@ -30,6 +30,7 @@ export const API_ENDPOINTS = {
     RATINGS: "/user/ratings",
     FAVORITES: "/user/favorites",
     FAVORITES_CHECK: "/user/favorites/check", // Use query params ?location_id= or ?tour_id=
+    DELETE_ACCOUNT: "/user/account",
   },
   BOOKINGS: {
     CALCULATE: "/bookings/calculate",

@@ -21,7 +21,7 @@ export default async function SearchPage({ searchParams }: Props) {
   const query = resolvedSearchParams.q || "";
 
   return (
-    <main className="design-page min-h-screen pb-20">
+    <main className="design-page layout-main-shell min-h-screen pb-20">
       <div className="design-container pt-8">
         <Suspense
           fallback={<div className="min-h-[50vh] animate-pulse rounded-lg bg-surface-container" aria-hidden />}

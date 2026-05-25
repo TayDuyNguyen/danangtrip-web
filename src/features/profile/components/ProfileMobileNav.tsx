@@ -12,6 +12,7 @@ import {
   Bell,
   Sparkles,
   Star,
+  Trash2,
 } from "lucide-react";
 import { cn } from "@/utils/string";
 
@@ -23,6 +24,7 @@ const MOBILE_TABS = [
   { key: "bookings", labelKey: "sidebar.bookings", href: PROTECTED_ROUTES.BOOKINGS, Icon: BookOpen },
   { key: "favorites", labelKey: "sidebar.favorites", href: PROTECTED_ROUTES.FAVORITES, Icon: Heart },
   { key: "notifications", labelKey: "sidebar.notifications", href: PROTECTED_ROUTES.NOTIFICATIONS, Icon: Bell },
+  { key: "delete_account", labelKey: "sidebar.delete_account", href: PROTECTED_ROUTES.DELETE_ACCOUNT, Icon: Trash2 },
 ] as const;
 
 /** Horizontal scrolling tab strip for mobile/tablet viewports */
@@ -40,6 +42,7 @@ export function ProfileMobileNav() {
     >
       {MOBILE_TABS.map(({ key, labelKey, href, Icon }) => {
         const active = basePath === href;
+        const isDestructive = key === "delete_account";
         return (
           <Link
             key={key}
@@ -48,11 +51,15 @@ export function ProfileMobileNav() {
             className={cn(
               "flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all duration-200",
               active
-                ? "bg-[#8b6a55]/15 text-white border border-[#8b6a55]/40"
+                ? isDestructive
+                  ? "bg-red-500/15 text-red-500 border border-red-500/40"
+                  : "bg-[#8b6a55]/15 text-white border border-[#8b6a55]/40"
+                : isDestructive
+                ? "bg-[#111111] text-red-400 border border-red-500/10 hover:text-red-500 hover:bg-red-500/5"
                 : "bg-[#111111] text-[#737373] border border-[#262626] hover:text-white hover:bg-white/5"
             )}
           >
-            <Icon className={cn("w-3.5 h-3.5", active ? "text-[#8b6a55]" : "text-[#525252]")} />
+            <Icon className={cn("w-3.5 h-3.5", active ? (isDestructive ? "text-red-500" : "text-[#8b6a55]") : "text-[#525252]")} />
             {t(labelKey)}
           </Link>
         );

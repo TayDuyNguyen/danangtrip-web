@@ -58,6 +58,7 @@ export const PROTECTED_ROUTES = {
   FAVORITES: "/profile/favorites",
   NOTIFICATIONS: "/notifications",
   RECOMMENDATIONS: "/profile/recommendations",
+  DELETE_ACCOUNT: "/profile/delete",
 } as const;
 
 // Dashboard routes (require authentication + admin/staff role)

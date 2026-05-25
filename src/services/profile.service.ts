@@ -36,4 +36,7 @@ export const profileService = {
     );
     return axiosInstance.get(API_ENDPOINTS.USER.RATINGS, { params: cleanParams });
   },
+
+  deleteAccount: (password: string): Promise<ApiResponse<unknown>> =>
+    axiosInstance.delete(API_ENDPOINTS.USER.DELETE_ACCOUNT, { data: { password } }),
 };

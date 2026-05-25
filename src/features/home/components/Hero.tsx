@@ -1,6 +1,6 @@
 "use client";
 
-import { memo } from "react";
+import { memo, type FormEvent } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import {
@@ -34,7 +34,7 @@ const Hero = () => {
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
   
-  const searchContainerRef = useRef<HTMLDivElement>(null);
+  const searchContainerRef = useRef<HTMLFormElement>(null);
   
   const { suggestions, isLoading, isError, isEnabled } = useSearchSuggestions(searchQuery, searchType.value as string);
 
@@ -50,10 +50,16 @@ const Hero = () => {
   });
 
   const handleSearch = () => {
+    const normalizedQuery = searchQuery.trim();
     setIsDropdownOpen(false);
     router.push(
-      `${ROUTES.SEARCH}?q=${encodeURIComponent(searchQuery)}&type=${searchType.value}`
+      `${ROUTES.SEARCH}?q=${encodeURIComponent(normalizedQuery)}&type=${searchType.value}`
     );
+  };
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    handleSearch();
   };
 
   const handleSelectSuggestion = (item: SearchSuggestionItem) => {
@@ -64,6 +70,17 @@ const Hero = () => {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (isDropdownOpen && isEnabled && selectedIndex >= 0 && selectedIndex < totalItems) {
+        handleSelectSuggestion(flatSuggestions[selectedIndex]);
+        return;
+      }
+
+      handleSearch();
+      return;
+    }
+
     if (!isDropdownOpen || !isEnabled) return;
 
     if (e.key === "ArrowDown") {
@@ -72,15 +89,6 @@ const Hero = () => {
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
       setSelectedIndex(prev => (prev > 0 ? prev - 1 : totalItems));
-    } else if (e.key === "Enter") {
-      e.preventDefault();
-      if (selectedIndex === -1) {
-        handleSearch();
-      } else if (selectedIndex === totalItems) {
-        handleSearch();
-      } else {
-        handleSelectSuggestion(flatSuggestions[selectedIndex]);
-      }
     } else if (e.key === "Escape") {
       setIsDropdownOpen(false);
     }
@@ -125,8 +133,9 @@ const Hero = () => {
         </div>
 
         {/* Search Box - Glassmorphism */}
-        <div 
+        <form
           ref={searchContainerRef}
+          onSubmit={handleSubmit}
           className={`relative max-w-4xl mx-auto flex flex-col md:flex-row shadow-2xl rounded-xl backdrop-blur-md bg-[#111111]/70 border border-[#262626] p-2 transition-all duration-1000 delay-600 ${isVisible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-10 scale-95"} ${isDropdownOpen ? "z-50" : "z-30"}`}
         >
           <div className="flex-1 flex items-center px-6 py-4 border-b md:border-b-0 md:border-r border-[#262626]">
@@ -170,7 +179,7 @@ const Hero = () => {
             />
           </div>
           <button
-            onClick={handleSearch}
+            type="submit"
             className="px-8 py-4 bg-[#171717] hover:bg-[#1f1f1f] transition-all text-[#8b6a55] text-lg font-bold flex items-center justify-center gap-2 rounded-xl border border-[#262626] mt-2 md:mt-0 shadow-lg active:scale-95"
           >
             {t("home.search_button")}
@@ -187,7 +196,7 @@ const Hero = () => {
             onSelect={handleSelectSuggestion}
             onViewAll={handleSearch}
           />
-        </div>
+        </form>
       </div>
 
       {/* Weather Widget */}
