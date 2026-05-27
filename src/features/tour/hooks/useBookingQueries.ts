@@ -11,7 +11,7 @@ import type {
 } from "@/types";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
-import axios from "axios";
+import { getApiErrorMessage } from "@/utils/api-error";
 
 export function useBookingCalculate() {
   return useMutation({
@@ -27,11 +27,7 @@ export function useCreateBooking() {
     mutationFn: (payload: CreateBookingPayload) => 
       bookingService.create(payload).then((res) => res.data as Booking),
     onError: (error: unknown) => {
-      let message = t("detail.error_desc");
-      if (axios.isAxiosError(error)) {
-        message = error.response?.data?.message || message;
-      }
-      toast.error(message);
+      toast.error(getApiErrorMessage(error, t("detail.error_desc")));
     }
   });
 }

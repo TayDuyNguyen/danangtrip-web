@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import type { CartItem } from "@/types";
+import { safeLocalStorage } from "@/utils/safe-local-storage";
 
 interface CartState {
   guestItems: CartItem[];
@@ -67,7 +68,7 @@ export const useCartStore = create<CartState>()(
     }),
     {
       name: "danangtrip-guest-cart",
-      storage: createJSONStorage(() => localStorage),
+      storage: createJSONStorage(() => safeLocalStorage),
     }
   )
 );

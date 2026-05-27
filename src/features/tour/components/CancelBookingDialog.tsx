@@ -8,7 +8,7 @@ import { Textarea, Button } from "@/components/ui";
 import { InfoCircle, X } from "@/components/icons/solar";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import axios from "axios";
+import { getApiErrorMessage } from "@/utils/api-error";
 
 interface CancelBookingDialogProps {
   isOpen: boolean;
@@ -59,11 +59,7 @@ export function CancelBookingDialog({
           onClose();
         },
         onError: (err: unknown) => {
-          let errorMessage = t("cancel_failed");
-          if (axios.isAxiosError(err)) {
-            errorMessage = err.response?.data?.message || errorMessage;
-          }
-          toast.error(errorMessage);
+          toast.error(getApiErrorMessage(err, t("cancel_failed")));
         },
       }
     );

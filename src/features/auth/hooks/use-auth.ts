@@ -7,6 +7,7 @@ import { favoriteService } from "@/services/favorite.service";
 import type { LoginRequest, RegisterRequest, RegisterResponse, ApiResponse, User } from "@/types";
 import { clearTokens, getAccessToken } from "@/utils/auth.helper";
 import { getApiErrorMessage } from "@/utils";
+import { normalizeAuthUser } from "@/utils/normalize-user";
 import { localFavoriteLocations } from "@/utils/local-favorites";
 
 const mergeLocalFavoritesToAccount = async () => {
@@ -35,13 +36,13 @@ export const useAuth = () => {
   const extractRegisteredUser = (payload: RegisterResponse): { user: User; token?: string } | null => {
     if ("user" in payload && payload.user) {
       return {
-        user: payload.user,
+        user: normalizeAuthUser(payload.user),
         token: payload.token,
       };
     }
 
     if ("id" in payload) {
-      return { user: payload };
+      return { user: normalizeAuthUser(payload) };
     }
 
     return null;
@@ -59,7 +60,7 @@ export const useAuth = () => {
           const { user: userData, token: userToken } = response.data;
 
           if (userToken && userData) {
-            storeLogin(userData, userToken);
+            storeLogin(normalizeAuthUser(userData), userToken);
             await mergeLocalFavoritesToAccount();
             return { success: true };
           }
@@ -92,7 +93,7 @@ export const useAuth = () => {
           if (registered?.user) {
             const { user: userData, token: userToken } = registered;
             if (userToken) {
-              storeLogin(userData, userToken);
+              storeLogin(normalizeAuthUser(userData), userToken);
             }
             return { success: true };
           }
@@ -129,7 +130,7 @@ export const useAuth = () => {
     try {
       const response = await authService.getMe();
       if (response.success && response.data) {
-        storeLogin(response.data, token);
+        storeLogin(normalizeAuthUser(response.data), token);
       } else {
         // Only logout on definitive 401 Unauthorized
         if (response.status === 401) {

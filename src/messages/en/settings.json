@@ -76,5 +76,31 @@
     "success_toast": "Your account has been deleted successfully.",
     "error_wrong_password": "Wrong password.",
     "error_generic": "An error occurred. Please try again later."
+  },
+  "profile_edit": {
+    "page_title": "Edit Profile",
+    "heading": "Edit Profile",
+    "description": "Update your personal information to use our services more easily.",
+    "full_name_label": "Full Name",
+    "full_name_placeholder": "Enter your full name",
+    "phone_label": "Phone Number",
+    "phone_placeholder": "Enter your phone number",
+    "birthdate_label": "Date of Birth",
+    "birthdate_placeholder": "Select your birth date",
+    "gender_label": "Gender",
+    "gender_male": "Male",
+    "gender_female": "Female",
+    "gender_other": "Other",
+    "gender_prefer_not_to_say": "Prefer not to say",
+    "city_label": "City / Province",
+    "city_placeholder": "Enter your city or living region",
+    "submit_button": "Save Changes",
+    "cancel_button": "Cancel",
+    "success_toast": "Profile updated successfully!",
+    "error_generic": "An error occurred. Please try again later.",
+    "avatar_heading": "Profile Avatar",
+    "avatar_description": "PNG, JPG formats. Maximum size 2MB.",
+    "avatar_upload_success": "Avatar updated successfully!",
+    "avatar_upload_error": "Failed to update avatar."
   }
 }

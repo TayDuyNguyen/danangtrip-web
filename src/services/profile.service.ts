@@ -16,7 +16,15 @@ export const profileService = {
   update: (data: UpdateProfileInput): Promise<ApiResponse<User>> =>
     axiosInstance.put(API_ENDPOINTS.USER.UPDATE_PROFILE, data),
 
-  updateAvatar: (avatar: File): Promise<ApiResponse<User>> => {
+  updateAvatar: (
+    avatar: File
+  ): Promise<
+    ApiResponse<{
+      avatar?: string;
+      avatar_url?: string;
+      user?: User;
+    }>
+  > => {
     const formData = new FormData();
     formData.append("avatar", avatar);
     return axiosInstance.post(API_ENDPOINTS.USER.AVATAR, formData);

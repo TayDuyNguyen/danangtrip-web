@@ -7,7 +7,7 @@ import { bookingSchema, type BookingFormValues } from "../validators/booking.sch
 import { useBookingCalculate, useCreateBooking } from "../hooks/useBookingQueries";
 import { useTourSchedules } from "../hooks/useTourDetail";
 import { useAuthStore } from "@/store/auth.store";
-import { Input, Button, Textarea, Select, type SelectOption } from "@/components/ui";
+import { Input, Button, Textarea, Select } from "@/components/ui";
 import { BookingProgressSteps } from "./BookingProgressSteps";
 import { QuantityCounter } from "./QuantityCounter";
 import { PaymentMethodSelector } from "./PaymentMethodSelector";
@@ -26,6 +26,7 @@ interface BookingFormProps {
 export function BookingForm({ tour }: BookingFormProps) {
   const t = useTranslations("tour.booking");
   const td = useTranslations("tour.detail");
+  const tTour = useTranslations("tour");
   const locale = useLocale();
   const router = useRouter();
   const { user } = useAuthStore();
@@ -50,7 +51,7 @@ export function BookingForm({ tour }: BookingFormProps) {
     customer_name: user?.name || "",
     customer_email: user?.email || "",
     customer_phone: user?.phone || "",
-    customer_address: "",
+    customer_address: user?.city || "",
     customer_note: "",
     agree_terms: false,
   });
@@ -150,6 +151,11 @@ export function BookingForm({ tour }: BookingFormProps) {
       return;
     }
 
+    if (isOverCapacity) {
+      toast.error(tTour("departures.over_capacity"));
+      return;
+    }
+
     createBooking(effectiveFormData, {
       onSuccess: (booking) => {
         if (booking?.id) {
@@ -176,6 +182,17 @@ export function BookingForm({ tour }: BookingFormProps) {
   const selectedAvailableSeats = selectedSchedule
     ? selectedSchedule.max_people - selectedSchedule.booked_people
     : 0;
+
+  const isOverCapacity =
+    selectedSchedule !== undefined &&
+    formData.quantity_adult + formData.quantity_child > selectedAvailableSeats;
+
+  const maxAdults = selectedSchedule
+    ? Math.max(1, selectedAvailableSeats - formData.quantity_child)
+    : 20;
+  const maxChildren = selectedSchedule
+    ? Math.max(0, selectedAvailableSeats - formData.quantity_adult)
+    : 20;
 
   return (
     <div className="flex flex-col lg:flex-row gap-8 items-start">
@@ -253,6 +270,14 @@ export function BookingForm({ tour }: BookingFormProps) {
                 {td("guests_label")}
                </h2>
             </div>
+
+            {isOverCapacity && (
+              <div className="p-4 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-3 animate-in fade-in duration-300">
+                <span className="w-2 h-2 rounded-full bg-red-500 animate-ping shrink-0" />
+                {tTour("departures.over_capacity_remaining", { seats: selectedAvailableSeats })}
+              </div>
+            )}
+
             <div className="divide-y divide-border/30">
               <QuantityCounter 
                 label={td("price_adult")} 
@@ -260,18 +285,23 @@ export function BookingForm({ tour }: BookingFormProps) {
                 value={formData.quantity_adult}
                 onChange={(val) => handleChange("quantity_adult", val)}
                 min={1}
+                max={maxAdults}
               />
               <QuantityCounter 
                 label={td("price_child")} 
                 subLabel={`${tour.price_child}đ ${td("per_person")}`}
                 value={formData.quantity_child}
                 onChange={(val) => handleChange("quantity_child", val)}
+                min={0}
+                max={maxChildren}
               />
               <QuantityCounter 
                 label={td("price_infant")} 
                 subLabel={`${tour.price_infant}đ ${td("per_person")}`}
                 value={formData.quantity_infant}
                 onChange={(val) => handleChange("quantity_infant", val)}
+                min={0}
+                max={20}
               />
             </div>
           </section>
@@ -289,6 +319,7 @@ export function BookingForm({ tour }: BookingFormProps) {
                     handleChange("customer_name", user.name || "");
                     handleChange("customer_email", user.email || "");
                     handleChange("customer_phone", user.phone || "");
+                    handleChange("customer_address", user.city || "");
                   }
                 }}
                 className="text-[11px] font-bold text-primary hover:text-white transition-colors uppercase tracking-widest"
@@ -386,7 +417,7 @@ export function BookingForm({ tour }: BookingFormProps) {
                 type="submit" 
                 className="w-full h-16 text-lg font-black uppercase tracking-widest shadow-[0_10px_30px_-5px_rgba(139,106,85,0.4)]"
                 isLoading={isCreating || isCreatingPayment}
-                disabled={isCalculating || isCreatingPayment}
+                disabled={isCalculating || isCreatingPayment || isOverCapacity}
              >
                {t("continue_payment")}
              </Button>

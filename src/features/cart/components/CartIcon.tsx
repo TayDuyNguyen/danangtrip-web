@@ -23,7 +23,7 @@ export function CartIcon() {
   return (
     <Link
       href="/cart"
-      className="relative p-2 text-on-surface hover:text-primary transition-colors flex items-center justify-center rounded-full bg-surface-container-high/40 hover:bg-surface-container-high border border-white/5"
+      className="relative p-2 text-on-surface hover:text-primary transition-colors flex items-center justify-center rounded-full bg-surface-container-high/40 hover:bg-surface-container-high border border-white/5 cursor-pointer"
     >
       <IoShoppingBagOutline className="w-5 h-5" />
       {cartItemsCount > 0 && (

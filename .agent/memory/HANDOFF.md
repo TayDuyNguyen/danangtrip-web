@@ -2,23 +2,22 @@
 
 ## Last Updated
 
-- Date: 2026-05-25
-- Status: Completed & Verified
+- Date: 2026-05-27
+- Status: Completed Step 10 closeout for `web_route_api_next_screen_review`
 
 ## Current Feature
 
-- Feature: `user-cart`
-- Routes: `/cart` (Frontend) & `/api/cart/*` family (Backend)
-- Status: Implementation is fully completed, verified, and has passed all local quality gates (`prepush:check`).
+- Feature: `web_route_api_next_screen_review`
+- Result: The generic web route/API review is now closed. The next concrete screen is locked as `user-profile`.
+- Status: All review steps (01-10) are complete, and `npm run prepush:check` passed in `danangtrip-web`.
 
 ## Artifacts Created
 
-1. **Implementation Plan:** [implementation_plan.md](file:///C:/Users/NGUYEN%20DUY%20TAY/.gemini/antigravity/brain/20b9844d-be4f-4ded-b364-52e562379f4a/implementation_plan.md)
-2. **Task Checklist:** [task.md](file:///C:/Users/NGUYEN%20DUY%20TAY/.gemini/antigravity/brain/20b9844d-be4f-4ded-b364-52e562379f4a/task.md)
-3. **Walkthrough:** [walkthrough.md](file:///C:/Users/NGUYEN%20DUY%20TAY/.gemini/antigravity/brain/20b9844d-be4f-4ded-b364-52e562379f4a/walkthrough.md)
-4. **Code Review:** [2026-05-25__user-cart__review.md](file:///D:/DATN/danangtrip-web/.agent/artifacts/review/2026-05-25__user-cart__review.md)
-5. **Deploy Report:** [2026-05-25__user-cart-api-planning__deploy-report.md](file:///D:/DATN/danangtrip-web/.agent/artifacts/deploy/2026-05-25__user-cart-api-planning__deploy-report.md)
+1. **Deploy Report:** [2026-05-27__web_route_api_next_screen_review__deploy-report.md](file:///d:/DATN/danangtrip-web/.agent/artifacts/deploy/2026-05-27__web_route_api_next_screen_review__deploy-report.md)
+2. **Review Report:** [2026-05-27__web_route_api_next_screen_review__review.md](file:///d:/DATN/danangtrip-web/.agent/artifacts/review/2026-05-27__web_route_api_next_screen_review__review.md)
 
 ## Next Action
 
-Obtain user approval to commit and push changes on branch `feat/DATN-94/user-cart-implementation`.
+- Update prompt/progress tracking so web no longer points at `web_route_api_next_screen_review`.
+- Start or split the next concrete feature branch as `user-profile`.
+- Before merge, run a live browser smoke of `/profile` save and avatar upload because this Step 10 pass relied on static gates rather than a fresh runtime session.

@@ -23,6 +23,8 @@ interface SelectProps extends Omit<ReactSelectProps<SelectOption, false, GroupBa
   helperText?: string;
   containerClassName?: string;
   isFocused?: boolean;
+  /** Always show label (profile/settings forms on dark backgrounds). */
+  persistentLabel?: boolean;
   variant?: "default" | "glass" | "minimal";
   menuPortalTarget?: HTMLElement | null;
   menuPosition?: "absolute" | "fixed";
@@ -51,6 +53,7 @@ export const Select = ({
   error,
   helperText,
   isFocused: externalFocused,
+  persistentLabel = false,
   options,
   value,
   onChange,
@@ -90,7 +93,7 @@ export const Select = ({
       border: "none",
       borderBottom: isGlass || isMinimal
         ? "none"
-        : `1px solid ${error ? "#ef4444" : isFocused ? "#8b6a55" : "#262626"}`,
+        : `1px solid ${error ? "#ef4444" : isFocused ? "#8b6a55" : persistentLabel ? "#525252" : "#262626"}`,
       borderRadius: isMinimal ? "8px" : "0",
       boxShadow: "none",
       padding: "0",
@@ -195,11 +198,19 @@ export const Select = ({
         <label
           htmlFor={selectInputId}
           className={cn(
-            "block text-xs font-bold mb-1 uppercase tracking-widest transition-all duration-300 transform",
-            isFocused || error || value
-              ? "translate-y-0 opacity-100"
-              : "text-transparent -translate-y-1 opacity-0",
-            isFocused ? "text-primary" : (error ? "text-red-500" : "text-on-surface-variant")
+            "block text-[11px] font-bold mb-1 uppercase tracking-[0.2em] transition-all duration-300",
+            persistentLabel
+              ? cn(
+                  "translate-y-0 opacity-100",
+                  isFocused || value ? "text-primary" : error ? "text-red-500" : "text-[#d4d4d4]"
+                )
+              : cn(
+                  "transform",
+                  isFocused || error || value
+                    ? "translate-y-0 opacity-100"
+                    : "text-transparent -translate-y-1 opacity-0",
+                  isFocused ? "text-primary" : error ? "text-red-500" : "text-on-surface-variant"
+                )
           )}
         >
           {label}

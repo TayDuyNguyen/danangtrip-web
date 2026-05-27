@@ -225,6 +225,9 @@ export interface Weather {
   temp: number;
   condition: string;
   icon: string;
+  rainProbability?: number;
+  precipitation?: number;
+  forecastHours?: number;
 }
 
 export interface Config {

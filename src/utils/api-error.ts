@@ -51,6 +51,10 @@ const MESSAGE_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Email is already verified.": "Email is already verified.",
     "Contact not found.": "Contact not found.",
     "Blog post not found.": "Blog post not found.",
+    "The phone number format is invalid.": "Invalid phone number.",
+    "The selected gender is invalid.": "Invalid gender selection.",
+    "The full name must not exceed 100 characters.": "Full name cannot exceed 100 characters.",
+    "The city name must not exceed 50 characters.": "City cannot exceed 50 characters.",
   },
   vi: {
     "Booking not found.": "Không tìm thấy đơn đặt.",
@@ -67,6 +71,10 @@ const MESSAGE_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Email is already verified.": "Email đã được xác minh.",
     "Contact not found.": "Không tìm thấy liên hệ.",
     "Blog post not found.": "Không tìm thấy bài viết.",
+    "The phone number format is invalid.": "Số điện thoại không hợp lệ.",
+    "The selected gender is invalid.": "Giới tính không hợp lệ.",
+    "The full name must not exceed 100 characters.": "Họ và tên không được vượt quá 100 ký tự.",
+    "The city name must not exceed 50 characters.": "Thành phố không được vượt quá 50 ký tự.",
   },
 };
 
@@ -106,11 +114,11 @@ export function getFirstApiValidationError(
 
   for (const value of Object.values(errors)) {
     if (Array.isArray(value) && value.length > 0 && value[0]) {
-      return normalizeBilingualMessage(value[0]);
+      return translateByMessage(value[0]) || normalizeBilingualMessage(value[0]);
     }
 
     if (typeof value === "string" && value.trim()) {
-      return normalizeBilingualMessage(value);
+      return translateByMessage(value) || normalizeBilingualMessage(value);
     }
   }
 
