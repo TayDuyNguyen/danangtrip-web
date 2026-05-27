@@ -1,28 +1,62 @@
 "use client";
 
-import { useState, useEffect, memo } from "react";
+import { useState, useEffect, memo, useRef } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import {
   IoMenuOutline,
   IoCloseOutline,
   IoPersonOutline,
   IoChevronForward,
 } from "@/components/icons/solar";
+import { IoNotificationsOutline } from "react-icons/io5";
 import { useAuthStore } from "@/store/auth.store";
 import { ROUTES, NAV_LINKS } from "@/config";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { CartIcon } from "@/features/cart/components/CartIcon";
+import { useClickOutside } from "@/hooks/use-click-outside";
+import { useNotificationsHeader } from "@/features/home/hooks/use-notifications-header";
+import { formatRelativeTime } from "@/utils/format";
+import type { Notification } from "@/types";
 
 const Header = () => {
   const t = useTranslations("common");
   const tTour = useTranslations("tour");
+  const tNotif = useTranslations("notifications");
+  const locale = useLocale();
   const pathname = usePathname();
   const { isAuthenticated, user, logout } = useAuthStore();
 
+  const { unreadCount, notifications, markAllAsRead, markAsRead } = useNotificationsHeader();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const notificationRef = useRef<HTMLDivElement>(null);
 
+  useClickOutside(notificationRef, () => {
+    setIsNotificationOpen(false);
+  });
+
+  const handleMarkAllRead = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    try {
+      await markAllAsRead();
+    } catch {
+      // handled
+    }
+  };
+
+  const handleNotificationClick = async (notif: Notification) => {
+    if (!notif.read_at) {
+      try {
+        await markAsRead(notif.id);
+      } catch {
+        // handled
+      }
+    }
+    setIsNotificationOpen(false);
+  };
 
   // Handle scroll for glassmorphism effect
   useEffect(() => {
@@ -110,6 +144,97 @@ const Header = () => {
           <div className="hidden sm:block">
             <LanguageSwitcher isScrolled={isScrolled} />
           </div>
+
+          {/* Bell Icon & Dropdown */}
+          {isAuthenticated && (
+            <div className="relative" ref={notificationRef}>
+              <button
+                onClick={() => setIsNotificationOpen(!isNotificationOpen)}
+                className="w-10 h-10 rounded-full bg-[#171717] flex items-center justify-center border border-[#262626] transition-all hover:border-[#8b6a55] hover:text-[#8b6a55] cursor-pointer relative"
+                aria-label="Notifications"
+              >
+                <IoNotificationsOutline className="text-xl text-[#d4d4d4]" />
+                {unreadCount > 0 && (
+                  <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-[#171717] animate-pulse" />
+                )}
+              </button>
+
+              {/* Notification Dropdown */}
+              {isNotificationOpen && (
+                <div className="absolute right-[-60px] sm:right-0 mt-2 w-[340px] sm:w-[360px] bg-[#080808]/95 backdrop-blur-md rounded-xl shadow-2xl border border-[#262626] overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                  {/* Header */}
+                  <div className="flex items-center justify-between px-4 py-3 border-b border-[#262626]">
+                    <span className="text-sm font-bold text-white">
+                      {tNotif("page_title")}
+                    </span>
+                    {unreadCount > 0 && (
+                      <button
+                        onClick={handleMarkAllRead}
+                        className="text-xs text-[#8b6a55] hover:underline font-bold cursor-pointer"
+                      >
+                        {tNotif("mark_all_read")}
+                      </button>
+                    )}
+                  </div>
+
+                  {/* List */}
+                  <div className="max-h-[300px] overflow-y-auto divide-y divide-[#1c1c1c] no-scrollbar">
+                    {notifications.length > 0 ? (
+                      notifications.map((notif) => (
+                        <div
+                          key={notif.id}
+                          onClick={() => handleNotificationClick(notif)}
+                          className={`p-4 flex gap-3 cursor-pointer hover:bg-[#111111] transition-colors ${
+                            !notif.read_at ? "bg-[#111111]/30 font-semibold" : ""
+                          }`}
+                        >
+                          {/* Left Type Indicator Icon */}
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-white ${
+                            notif.type.includes("booking") ? "bg-green-500/10 text-green-400 border border-green-500/20" : "bg-[#8b6a55]/10 text-[#8b6a55] border border-[#8b6a55]/20"
+                          }`}>
+                            {notif.type.includes("booking") ? "🎫" : "🔔"}
+                          </div>
+
+                          {/* Detail */}
+                          <div className="flex-1 min-w-0">
+                            <p className="text-[12px] font-bold text-white truncate">
+                              {notif.title}
+                            </p>
+                            <p className="text-[11px] text-[#a3a3a3] line-clamp-2 mt-1 font-medium">
+                              {notif.message}
+                            </p>
+                            <span className="text-[9px] text-[#737373] mt-2 block">
+                              {formatRelativeTime(notif.created_at, locale === "vi" ? "vi-VN" : "en-US")}
+                            </span>
+                          </div>
+
+                          {/* Unread Indicator */}
+                          {!notif.read_at && (
+                            <div className="w-2 h-2 bg-[#8b6a55] rounded-full mt-2 shrink-0 animate-pulse" />
+                          )}
+                        </div>
+                      ))
+                    ) : (
+                      <div className="py-10 text-center text-xs text-[#737373] font-medium">
+                        {tNotif("empty_state_all")}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Footer */}
+                  <div className="p-3 border-t border-[#262626] text-center bg-[#0d0d0d]">
+                    <Link
+                      href={ROUTES.NOTIFICATIONS}
+                      onClick={() => setIsNotificationOpen(false)}
+                      className="text-xs text-[#8b6a55] hover:underline font-bold"
+                    >
+                      {tNotif("view_detail")} →
+                    </Link>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
 
           <CartIcon />
 
