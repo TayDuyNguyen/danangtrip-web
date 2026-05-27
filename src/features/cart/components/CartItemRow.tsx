@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
@@ -11,6 +12,7 @@ import { toast } from "sonner";
 import { format } from "date-fns";
 import { vi, enUS } from "date-fns/locale";
 import { useLocale } from "next-intl";
+import { useDebounce } from "@/hooks/useDebounce";
 
 interface CartItemRowProps {
   item: CartItem;
@@ -30,44 +32,88 @@ export function CartItemRow({ item, isSelected = false, onToggleSelect }: CartIt
   const tour = item.tour;
   const schedule = item.tour_schedule;
 
+  // Local state for quantities to allow instant UI update (cast to Number to prevent type coercion mismatch)
+  const [localAdults, setLocalAdults] = useState(Number(item.quantity_adult || 0));
+  const [localChildren, setLocalChildren] = useState(Number(item.quantity_child || 0));
+  const [localInfants, setLocalInfants] = useState(Number(item.quantity_infant || 0));
+
+  // Sync local state when item changes (e.g. from server refetch)
+  useEffect(() => {
+    setLocalAdults(Number(item.quantity_adult || 0));
+    setLocalChildren(Number(item.quantity_child || 0));
+    setLocalInfants(Number(item.quantity_infant || 0));
+  }, [item.quantity_adult, item.quantity_child, item.quantity_infant]);
+
+  // Debounce the local quantities individually (using primitive values to prevent reference-based re-triggering)
+  const debouncedAdults = useDebounce(localAdults, 500);
+  const debouncedChildren = useDebounce(localChildren, 500);
+  const debouncedInfants = useDebounce(localInfants, 500);
+
+  // Trigger update when debounced values change and differ from original item values
+  useEffect(() => {
+    const serverAdults = Number(item.quantity_adult || 0);
+    const serverChildren = Number(item.quantity_child || 0);
+    const serverInfants = Number(item.quantity_infant || 0);
+
+    if (
+      debouncedAdults !== serverAdults ||
+      debouncedChildren !== serverChildren ||
+      debouncedInfants !== serverInfants
+    ) {
+      updateQuantity({
+        id: item.id,
+        scheduleId: item.tour_schedule_id,
+        payload: {
+          quantity_adult: debouncedAdults,
+          quantity_child: debouncedChildren,
+          quantity_infant: debouncedInfants,
+        },
+      });
+    }
+  }, [
+    debouncedAdults,
+    debouncedChildren,
+    debouncedInfants,
+    item.id,
+    item.tour_schedule_id,
+    item.quantity_adult,
+    item.quantity_child,
+    item.quantity_infant,
+    updateQuantity,
+  ]);
+
   if (!tour || !schedule) return null;
 
   const priceAdult = Number(schedule.price_adult ?? tour.price_adult ?? 0);
   const priceChild = Number(schedule.price_child ?? tour.price_child ?? 0);
   const priceInfant = Number(schedule.price_infant ?? tour.price_infant ?? 0);
 
+  // Calculate subtotal using local values for instant visual feedback
   const subtotal =
-    item.quantity_adult * priceAdult +
-    item.quantity_child * priceChild +
-    item.quantity_infant * priceInfant;
+    localAdults * priceAdult +
+    localChildren * priceChild +
+    localInfants * priceInfant;
 
   const availableSeats = schedule.max_people - schedule.booked_people;
-  const requestedSeats = item.quantity_adult + item.quantity_child;
+  const requestedSeats = localAdults + localChildren;
   const isSoldOut = schedule.booking_availability === "sold_out" || availableSeats <= 0;
   const isExpired = new Date(schedule.start_date) < new Date();
   const hasCapacityWarning = availableSeats < requestedSeats && !isSoldOut && !isExpired;
 
   const handleQuantityChange = (type: "adult" | "child" | "infant", val: number) => {
-    const nextAdult = type === "adult" ? val : item.quantity_adult;
-    const nextChild = type === "child" ? val : item.quantity_child;
-    const nextInfant = type === "infant" ? val : item.quantity_infant;
+    const nextAdult = type === "adult" ? val : localAdults;
+    const nextChild = type === "child" ? val : localChildren;
 
-    // Check capacity before sending update
+    // Check capacity locally
     const nextRequested = nextAdult + nextChild;
     if (nextRequested > availableSeats) {
       toast.error(t("quantity_limit"));
       return;
     }
 
-    updateQuantity({
-      id: item.id,
-      scheduleId: item.tour_schedule_id,
-      payload: {
-        quantity_adult: nextAdult,
-        quantity_child: nextChild,
-        quantity_infant: nextInfant,
-      },
-    });
+    if (type === "adult") setLocalAdults(val);
+    if (type === "child") setLocalChildren(val);
+    if (type === "infant") setLocalInfants(val);
   };
 
   const handleRemove = () => {
@@ -160,27 +206,27 @@ export function CartItemRow({ item, isSelected = false, onToggleSelect }: CartIt
               <QuantityCounter
                 label={t("adults")}
                 subLabel={`${priceAdult.toLocaleString()}đ`}
-                value={item.quantity_adult}
+                value={localAdults}
                 onChange={(val) => handleQuantityChange("adult", val)}
                 min={1}
-                max={availableSeats}
+                max={Math.max(1, availableSeats - localChildren)}
                 disabled={isUpdating || isExpired || isSoldOut}
                 className="py-1 border-0"
               />
               <QuantityCounter
                 label={t("children")}
                 subLabel={`${priceChild.toLocaleString()}đ`}
-                value={item.quantity_child}
+                value={localChildren}
                 onChange={(val) => handleQuantityChange("child", val)}
                 min={0}
-                max={availableSeats - item.quantity_adult}
+                max={Math.max(0, availableSeats - localAdults)}
                 disabled={isUpdating || isExpired || isSoldOut}
                 className="py-1 border-0"
               />
               <QuantityCounter
                 label={t("infants")}
                 subLabel={`${priceInfant.toLocaleString()}đ`}
-                value={item.quantity_infant}
+                value={localInfants}
                 onChange={(val) => handleQuantityChange("infant", val)}
                 min={0}
                 disabled={isUpdating || isExpired || isSoldOut}

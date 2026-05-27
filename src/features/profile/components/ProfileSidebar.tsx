@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { useTranslations, useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
@@ -16,6 +17,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { cn } from "@/utils/string";
+import { resolveMediaUrl } from "@/utils/media-url";
 
 interface SidebarItem {
   key: string;
@@ -89,7 +91,10 @@ export function ProfileSidebar() {
 
   const isActive = (href: string) => basePath === href;
 
-  const avatarInitial = user?.name?.charAt(0).toUpperCase() ?? "?";
+  const displayName = user?.name || user?.email?.split("@")[0] || "?";
+  const avatarInitial = displayName.charAt(0).toUpperCase();
+  const avatarUrl = resolveMediaUrl(user?.avatar);
+  const [failedAvatarUrl, setFailedAvatarUrl] = useState<string | null>(null);
 
   return (
     <aside
@@ -100,13 +105,23 @@ export function ProfileSidebar() {
       <div className="bg-[#0a0a0a]/60 border border-[#262626] rounded-xl p-6 mb-4 backdrop-blur-md flex flex-col items-center gap-3 text-center">
         <div
           className="w-16 h-16 bg-[#171717] text-white rounded-xl border border-[#262626] flex items-center justify-center text-2xl font-bold
-            hover:border-[#8b6a55] transition-all duration-300"
+            hover:border-[#8b6a55] transition-all duration-300 overflow-hidden"
           aria-hidden="true"
         >
-          {avatarInitial}
+          {avatarUrl && failedAvatarUrl !== avatarUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={avatarUrl}
+              alt={displayName}
+              className="w-full h-full object-cover"
+              onError={() => setFailedAvatarUrl(avatarUrl)}
+            />
+          ) : (
+            avatarInitial
+          )}
         </div>
         <div className="min-w-0">
-          <p className="text-white font-semibold text-sm truncate">{user?.name}</p>
+          <p className="text-white font-semibold text-sm truncate">{displayName}</p>
           <p className="text-[#737373] text-xs truncate mt-0.5">{user?.email}</p>
         </div>
       </div>

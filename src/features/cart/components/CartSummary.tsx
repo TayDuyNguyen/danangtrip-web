@@ -58,26 +58,41 @@ export function CartSummary({ items }: CartSummaryProps) {
     if (cleanCode === "DANANGTRIP" || cleanCode === "DATN2026") {
       setDiscountPercent(10);
       setAppliedCode(cleanCode);
-      toast.success("Áp dụng mã thành công! Giảm 10%.");
+      toast.success(t("promo_apply_success", { discount: 10 }));
     } else {
-      toast.error("Mã giảm giá không hợp lệ.");
+      toast.error(t("promo_invalid"));
     }
   };
 
   const handleCheckout = () => {
     if (activeItems.length === 0) {
-      toast.error("Vui lòng chọn ít nhất một tour hợp lệ để tiếp tục.");
+      toast.error(t("checkout_no_active"));
       return;
     }
 
     // Backend only supports 1 tour per booking → always book the first active item
     const firstItem = activeItems[0];
     const tour = firstItem.tour;
-    if (!tour) return;
+    const schedule = firstItem.tour_schedule;
+    if (!tour || !schedule) return;
+
+    const availableSeats = schedule.max_people - schedule.booked_people;
+    if (firstItem.quantity_adult + firstItem.quantity_child > availableSeats) {
+      toast.error(
+        t("checkout_capacity_error", {
+          tourName: tour.name,
+          availableSeats,
+        })
+      );
+      return;
+    }
 
     if (activeItems.length > 1) {
       toast.info(
-        `Đang đặt tour "${tour.name}". Sau khi hoàn tất, quay lại giỏ hàng để đặt ${activeItems.length - 1} tour còn lại.`,
+        t("checkout_multi_info", {
+          tourName: tour.name,
+          remainingTours: activeItems.length - 1,
+        }),
         { duration: 5000 }
       );
     }
@@ -97,7 +112,7 @@ export function CartSummary({ items }: CartSummaryProps) {
       {activeItems.length > 1 && (
         <div className="space-y-2">
           <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
-            Thứ tự đặt tour ({activeItems.length} tour)
+            {t("order_sequence", { count: activeItems.length })}
           </p>
           <div className="space-y-1.5">
             {activeItems.map((item, index) => {
@@ -126,7 +141,7 @@ export function CartSummary({ items }: CartSummaryProps) {
                   <span className="truncate flex-1">{tour.name}</span>
                   {isNext && (
                     <span className="text-[9px] font-black uppercase tracking-wider text-primary shrink-0">
-                      Tiếp theo →
+                      {t("next_up")}
                     </span>
                   )}
                 </div>
@@ -134,7 +149,7 @@ export function CartSummary({ items }: CartSummaryProps) {
             })}
           </div>
           <p className="text-[10px] text-on-surface-subtle leading-relaxed pt-1">
-            💡 Mỗi tour được đặt riêng lẻ. Sau khi hoàn tất thanh toán tour 1, quay lại giỏ hàng để đặt tour tiếp theo.
+            {t("multi_booking_hint")}
           </p>
         </div>
       )}
@@ -194,7 +209,7 @@ export function CartSummary({ items }: CartSummaryProps) {
         className="w-full h-12 text-xs font-black uppercase tracking-widest"
       >
         {activeItems.length > 1
-          ? `Đặt tour 1/${activeItems.length} ngay`
+          ? t("book_first_now", { count: activeItems.length })
           : t("checkout_btn")}
       </Button>
     </div>

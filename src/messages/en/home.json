@@ -21,6 +21,7 @@
     "sunny": "Sunny",
     "cloudy": "Cloudy",
     "rainy": "Rainy",
+    "rain_chance": "{percent}% rain chance in the next {hours} hours",
     "unknown": "Unknown"
   },
   "categories_title": "What do you want to explore?",

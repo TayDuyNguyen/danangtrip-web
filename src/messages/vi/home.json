@@ -21,6 +21,7 @@
     "sunny": "Nắng đẹp",
     "cloudy": "Nhiều mây",
     "rainy": "Có mưa",
+    "rain_chance": "Khả năng mưa {percent}% trong {hours} giờ tới",
     "unknown": "Không xác định"
   },
   "categories_title": "Bạn muốn khám phá gì?",

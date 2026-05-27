@@ -59,7 +59,7 @@ const Header = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 w-full z-[100] transition-all duration-300 ${
         isScrolled
           ? "bg-[#030303]/95 backdrop-blur-md border-b border-[#262626] py-3"
           : "bg-[#080808]/75 backdrop-blur-md border-b border-[#262626] py-4"
@@ -117,13 +117,22 @@ const Header = () => {
           {isAuthenticated ? (
             <div className="relative group/user">
               <button
-                className={`w-10 h-10 rounded-full bg-[#171717] flex items-center justify-center border border-[#262626] transition-all hover:border-[#8b6a55] hover:text-[#8b6a55]`}
+                className={`w-10 h-10 rounded-full bg-[#171717] overflow-hidden flex items-center justify-center border border-[#262626] transition-all hover:border-[#8b6a55] hover:text-[#8b6a55] cursor-pointer`}
               >
-                <IoPersonOutline className="text-xl" />
+                {user?.avatar ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={user.avatar}
+                    alt={user.name || "User Avatar"}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <IoPersonOutline className="text-xl" />
+                )}
               </button>
 
               {/* Dropdown */}
-              <div className="absolute right-0 mt-2 w-56 bg-[#080808] rounded-lg shadow-xl border border-[#262626] overflow-hidden py-2 translate-y-2 opacity-0 invisible group-hover/user:translate-y-0 group-hover/user:opacity-100 group-hover/user:visible transition-all duration-300">
+              <div className="absolute right-0 mt-2 w-56 bg-[#080808] rounded-lg shadow-xl border border-[#262626] overflow-hidden py-2 translate-y-2 opacity-0 invisible group-hover/user:translate-y-0 group-hover/user:opacity-100 group-hover/user:visible transition-all duration-300 z-50">
                 <div className="px-4 py-2 border-b border-[#262626] mb-1">
                   <p className="text-xs text-[#737373]">{t("auth.profile")}</p>
                   <p className="text-sm font-semibold truncate text-white">

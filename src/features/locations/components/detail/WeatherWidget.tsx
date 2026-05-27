@@ -68,6 +68,14 @@ export default function WeatherWidget() {
         <div>
           <div className="text-4xl font-black text-foreground">{weather.temp}°C</div>
           <div className="text-sm font-medium text-on-surface-variant">{conditionLabel}</div>
+          {typeof weather.rainProbability === 'number' && weather.forecastHours ? (
+            <div className="mt-1 text-xs text-on-surface-subtle">
+              {t('home.weather.rain_chance', {
+                percent: weather.rainProbability,
+                hours: weather.forecastHours,
+              })}
+            </div>
+          ) : null}
         </div>
       </div>
     </div>

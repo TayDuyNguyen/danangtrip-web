@@ -76,5 +76,31 @@
     "success_toast": "Tài khoản đã được xóa thành công.",
     "error_wrong_password": "Mật khẩu không đúng.",
     "error_generic": "Có lỗi xảy ra. Vui lòng thử lại sau."
+  },
+  "profile_edit": {
+    "page_title": "Chỉnh sửa hồ sơ",
+    "heading": "Chỉnh sửa hồ sơ",
+    "description": "Cập nhật thông tin cá nhân của bạn để sử dụng các dịch vụ tiện lợi hơn.",
+    "full_name_label": "Họ và tên",
+    "full_name_placeholder": "Nhập họ và tên của bạn",
+    "phone_label": "Số điện thoại",
+    "phone_placeholder": "Nhập số điện thoại của bạn",
+    "birthdate_label": "Ngày sinh",
+    "birthdate_placeholder": "Chọn ngày sinh",
+    "gender_label": "Giới tính",
+    "gender_male": "Nam",
+    "gender_female": "Nữ",
+    "gender_other": "Khác",
+    "gender_prefer_not_to_say": "Không muốn tiết lộ",
+    "city_label": "Thành phố / Tỉnh thành",
+    "city_placeholder": "Nhập thành phố hoặc khu vực sinh sống",
+    "submit_button": "Lưu thay đổi",
+    "cancel_button": "Hủy",
+    "success_toast": "Cập nhật thông tin hồ sơ thành công!",
+    "error_generic": "Có lỗi xảy ra. Vui lòng thử lại sau.",
+    "avatar_heading": "Ảnh đại diện",
+    "avatar_description": "Định dạng PNG, JPG. Dung lượng tối đa 2MB.",
+    "avatar_upload_success": "Ảnh đại diện đã được cập nhật thành công!",
+    "avatar_upload_error": "Cập nhật ảnh đại diện thất bại."
   }
 }

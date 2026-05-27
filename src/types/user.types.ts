@@ -11,6 +11,9 @@ export interface User {
   createdAt: string;
   updatedAt: string;
   lastLoginAt?: string;
+  birthdate?: string | null;
+  gender?: "male" | "female" | "other" | "prefer_not_to_say" | null;
+  city?: string | null;
 }
 
 export interface UserProfile {
@@ -48,7 +51,7 @@ export interface UpdateProfileInput {
   address?: string;
   country?: string;
   dateOfBirth?: string;
-  gender?: "male" | "female" | "other";
+  gender?: "male" | "female" | "other" | null;
 }
 
 export interface ChangePasswordInput {
