@@ -199,6 +199,24 @@
     -webkit-backdrop-filter: blur(var(--glass-blur));
   }
 
+  .glass-retro {
+    background-color: rgba(8, 8, 8, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(139, 106, 85, 0.35); /* Increased border opacity from 0.15 to 0.35 */
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+  }
+
+  .glass-retro-interactive {
+    transition: all 0.3s ease;
+  }
+
+  .glass-retro-interactive:hover {
+    border-color: rgba(139, 106, 85, 0.65); /* Increased hover border opacity from 0.4 to 0.65 */
+    background-color: rgba(14, 14, 14, 0.7);
+    transform: translateY(-2px);
+  }
+
   .glass-shell {
     position: relative;
     border-radius: 8px;

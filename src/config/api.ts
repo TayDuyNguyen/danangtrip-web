@@ -58,6 +58,7 @@ export const API_ENDPOINTS = {
     FEATURED: "/locations/featured",
     DETAIL: (slug: string) => `/locations/${slug}`,
     CATEGORIES: "/categories",
+    FILTER_STATS: "/locations/filter-stats",
     IMAGES: (id: number) => `/locations/${id}/images`,
     RATINGS: (id: number) => `/locations/${id}/ratings`,
     RATING_STATS: (id: number) => `/locations/${id}/rating-stats`,
@@ -92,4 +93,12 @@ export const API_ENDPOINTS = {
     DETAIL: (slug: string) => `/landing-pages/${slug}`,
   },
   RECOMMENDATIONS: "/recommendations",
+  CART: {
+    GET: "/cart",
+    STORE: "/cart/items",
+    UPDATE: (id: number | string) => `/cart/items/${id}`,
+    DELETE: (id: number | string) => `/cart/items/${id}`,
+    CLEAR: "/cart",
+    MERGE: "/cart/merge",
+  },
 };

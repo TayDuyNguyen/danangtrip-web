@@ -5,37 +5,21 @@ import { useSearchParams, usePathname } from "next/navigation";
 import { Link, useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { 
-  IoGridOutline, 
-  IoLeafOutline, 
-  IoUmbrellaOutline, 
-  IoBusinessOutline, 
-  IoFlashOutline, 
-  IoCompassOutline,
-  IoChevronDownOutline
+  IoChevronDownOutline,
 } from "@/components/icons/solar";
 import { cn } from "@/utils/string";
 import { extractItems } from "@/utils";
 import { Category, SubCategory } from "@/types";
 import { PUBLIC_ROUTES } from "@/config/routes";
-import { useLocationCategories, useCategoryLocations } from "@/features/locations/hooks/use-locations";
+import { useLocationCategories, useCategoryLocations, useLocationFilterStats } from "@/features/locations/hooks/use-locations";
 import LocationGrid from "@/features/locations/components/LocationGrid";
 import LocationFilters from "@/features/locations/components/LocationFilters";
 import StandardPagination from "@/components/ui/pagination/StandardPagination";
+import { CategoryIconRenderer } from "@/utils/category-icon";
 
 interface Props {
   slug: string;
 }
-
-const CategoryIcon = ({ icon, className }: { icon: string | null; className?: string }) => {
-  switch (icon) {
-    case "mountain": return <IoLeafOutline className={className} />;
-    case "beach_access": return <IoUmbrellaOutline className={className} />;
-    case "fort": return <IoBusinessOutline className={className} />;
-    case "trending_up": return <IoFlashOutline className={className} />;
-    case "adventure": return <IoCompassOutline className={className} />;
-    default: return <IoGridOutline className={className} />;
-  }
-};
 
 export default function CategoryLocationListClient({ slug }: Props) {
   const router = useRouter();
@@ -45,6 +29,7 @@ export default function CategoryLocationListClient({ slug }: Props) {
 
   // Get active categories list to locate our current category detail
   const { data: rawCategories, isLoading: isCategoriesLoading } = useLocationCategories();
+  const { data: filterStats } = useLocationFilterStats();
   const categoryList = extractItems<Category>(rawCategories);
   
   const currentCategory = useMemo(() => 
@@ -183,7 +168,7 @@ export default function CategoryLocationListClient({ slug }: Props) {
           {/* Hero Content */}
           <div className="flex flex-col md:flex-row md:items-center gap-6">
             <div className="w-16 h-16 rounded-2xl bg-neutral-900 border border-neutral-800 flex items-center justify-center text-white shrink-0 shadow-lg">
-              <CategoryIcon icon={currentCategory.icon} className="text-3xl text-[#8b6a55]" />
+              <CategoryIconRenderer icon={currentCategory.icon} className="text-3xl text-[#8b6a55]" />
             </div>
             <div className="space-y-2">
               <h1 className="text-3xl md:text-4xl font-black text-white tracking-tight">
@@ -252,6 +237,7 @@ export default function CategoryLocationListClient({ slug }: Props) {
               activePriceLevel={priceLevel}
               activeRating={minRating}
               hideCategories={true}
+              filterStats={filterStats}
               onDistrictsChange={(dists) => updateFilters({ districts: dists })}
               onPriceLevelChange={(level) => updateFilters({ price_level: level ? String(level) : null })}
               onRatingChange={(rating) => updateFilters({ min_rating: rating ? String(rating) : null })}
@@ -272,10 +258,10 @@ export default function CategoryLocationListClient({ slug }: Props) {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#262626] pb-4">
             <div className="text-sm font-bold text-on-surface-variant/60">
               {q ? (
-                t("category.results_count_search", { count: pagination.total, category: currentCategory.name })
+                t("category.results_count_search", { count: pagination.total, category: currentCategory?.name || "" })
               ) : (
                 <>
-                  <span className="text-white font-black">{pagination.total}</span> {t("reviews").replace("đánh giá", "địa điểm")}
+                  <span className="text-white font-black">{pagination.total}</span> {t("locations_count")}
                 </>
               )}
             </div>
@@ -283,7 +269,7 @@ export default function CategoryLocationListClient({ slug }: Props) {
             {/* Sorting Select */}
             <div className="flex items-center gap-3">
               <label htmlFor="sort_by" className="text-xs font-black uppercase tracking-wider text-on-surface-variant/40">
-                Sắp xếp
+                {t("sorting.label")}
               </label>
               <div className="relative">
                 <select
@@ -295,12 +281,12 @@ export default function CategoryLocationListClient({ slug }: Props) {
                   }}
                   className="appearance-none bg-surface-container-lowest border border-[#262626] rounded-xl px-4 py-2.5 pr-10 text-xs font-black text-white hover:border-[#8b6a55] transition-colors cursor-pointer outline-none shadow-md"
                 >
-                  <option value="created_at-desc">Mới nhất</option>
-                  <option value="avg_rating-desc">Đánh giá cao</option>
-                  <option value="review_count-desc">Nhiều đánh giá nhất</option>
-                  <option value="view_count-desc">Lượt xem nhiều nhất</option>
-                  <option value="price_min-asc">Giá thấp đến cao</option>
-                  <option value="price_min-desc">Giá cao đến thấp</option>
+                  <option value="created_at-desc">{t("sorting.latest")}</option>
+                  <option value="avg_rating-desc">{t("sorting.rating_high")}</option>
+                  <option value="review_count-desc">{t("sorting.most_reviews")}</option>
+                  <option value="view_count-desc">{t("sorting.most_views")}</option>
+                  <option value="price_min-asc">{t("sorting.price_low_high")}</option>
+                  <option value="price_min-desc">{t("sorting.price_high_low")}</option>
                 </select>
                 <IoChevronDownOutline className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant/40 text-lg pointer-events-none" />
               </div>

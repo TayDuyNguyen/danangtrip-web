@@ -29,7 +29,9 @@
     "rating": "Rating",
     "rating_4_plus": "4+ stars",
     "rating_3_plus": "3+ stars",
-    "reset": "Reset Filters"
+    "reset": "Reset Filters",
+    "close": "Close filters",
+    "show_results": "Show results ({count})"
   },
   "categories": {
     "sightseeing": "Sightseeing",
@@ -55,9 +57,11 @@
     "from": "From",
     "free": "Free",
     "budget": "Budget ($)",
-    "mid_range": "Mid-range ($$)"
+    "mid_range": "Mid-range ($$)",
+    "high_end": "High-end ($$$)"
   },
   "reviews": "reviews",
+  "locations_count": "locations",
   "buttons": {
     "view_details": "View Details",
     "favorite_aria": "Favorite"
@@ -68,7 +72,7 @@
     "breadcrumb_home": "Home",
     "breadcrumb_locations": "Locations",
     "share": "Share",
-    "save": "Save",
+    "save": "Favorite",
     "book_now": "Book Now",
     "contact_consultancy": "Contact Consultancy",
     "price_per_person": "/ person",
@@ -171,5 +175,14 @@
       "subtitle": "No worries! You can select any Da Nang district below to explore exciting locations instantly.",
       "select_district": "Explore locations in:"
     }
+  },
+  "sorting": {
+    "label": "Sort by",
+    "latest": "Newest",
+    "rating_high": "Top Rated",
+    "most_reviews": "Most Reviewed",
+    "most_views": "Most Viewed",
+    "price_low_high": "Price: Low to High",
+    "price_high_low": "Price: High to Low"
   }
 }

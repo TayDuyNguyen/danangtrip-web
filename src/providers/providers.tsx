@@ -6,6 +6,7 @@ import { AbstractIntlMessages, NextIntlClientProvider } from "next-intl";
 import { Toaster } from "sonner";
 import { shouldRetryQuery } from "@/lib/react-query";
 import { LocaleHtmlLang } from "@/components/providers/LocaleHtmlLang";
+import { CartSync } from "@/features/cart/components/CartSync";
 
 interface ProvidersProps {
   children: ReactNode;
@@ -33,6 +34,7 @@ export function Providers({ children, locale, messages }: ProvidersProps) {
     <QueryClientProvider client={queryClient}>
       <NextIntlClientProvider locale={locale} messages={messages} timeZone="Asia/Ho_Chi_Minh">
         <LocaleHtmlLang />
+        <CartSync />
         {children}
         <Toaster position="top-right" richColors closeButton />
       </NextIntlClientProvider>

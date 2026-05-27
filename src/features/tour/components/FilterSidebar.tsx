@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useState, useEffect, useMemo } from "react";
+import { useTranslations, useLocale } from "next-intl";
 import { ChevronDown, X, Check } from "@/components/icons/solar";
 import { TourCategory } from "@/types";
 import { cn } from "@/lib/utils";
 import { TourFilterParams } from "../types";
+import { formatInputPrice } from "@/utils/format";
 
 interface FilterSidebarProps {
   categories: TourCategory[];
@@ -52,6 +53,7 @@ export default function FilterSidebar({
   showCategoryFilter = true
 }: FilterSidebarProps) {
   const t = useTranslations("tour.filters");
+  const locale = useLocale();
 
   const [expanded, setExpanded] = useState({
     categories: true,
@@ -59,6 +61,52 @@ export default function FilterSidebar({
     duration: true,
     departureDate: true
   });
+
+  const priceOptions = useMemo(() => [
+    { label: locale === "vi" ? "Dưới 500k" : "Under 500k", min: undefined, max: 500000 },
+    { label: locale === "vi" ? "500k - 1Tr" : "500k - 1M", min: 500000, max: 1000000 },
+    { label: locale === "vi" ? "1Tr - 2Tr" : "1M - 2M", min: 1000000, max: 2000000 },
+    { label: locale === "vi" ? "Trên 2Tr" : "Over 2M", min: 2000000, max: undefined },
+  ], [locale]);
+
+  // --- Local Price States for Debouncing ---
+  const [localMin, setLocalMin] = useState(filters.price_min !== undefined ? formatInputPrice(filters.price_min) : "");
+  const [localMax, setLocalMax] = useState(filters.price_max !== undefined ? formatInputPrice(filters.price_max) : "");
+
+  // Sync prop changes (e.g. quick options click or reset button click)
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setLocalMin(filters.price_min !== undefined ? formatInputPrice(filters.price_min) : "");
+  }, [filters.price_min]);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setLocalMax(filters.price_max !== undefined ? formatInputPrice(filters.price_max) : "");
+  }, [filters.price_max]);
+
+  // Debounce price min update (600ms)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const rawMin = localMin.replace(/\D/g, "");
+      const parsedMin = rawMin ? Number(rawMin) : undefined;
+      if (parsedMin !== filters.price_min) {
+        onFilterChange({ price_min: parsedMin });
+      }
+    }, 600);
+    return () => clearTimeout(timer);
+  }, [localMin, onFilterChange, filters.price_min]);
+
+  // Debounce price max update (600ms)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const rawMax = localMax.replace(/\D/g, "");
+      const parsedMax = rawMax ? Number(rawMax) : undefined;
+      if (parsedMax !== filters.price_max) {
+        onFilterChange({ price_max: parsedMax });
+      }
+    }, 600);
+    return () => clearTimeout(timer);
+  }, [localMax, onFilterChange, filters.price_max]);
 
   const toggleSection = (section: keyof typeof expanded) => {
     setExpanded(prev => ({ ...prev, [section]: !prev[section] }));
@@ -75,7 +123,7 @@ export default function FilterSidebar({
   };
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="glass-surface rounded-xl p-6 border border-white/5 flex flex-col gap-6 shadow-xl">
       {/* Categories */}
       {showCategoryFilter && (
         <div className="border-b border-border pb-4">
@@ -88,6 +136,26 @@ export default function FilterSidebar({
             "space-y-2 mt-2 transition-all duration-300 overflow-hidden",
             expanded.categories ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
           )}>
+            <label
+              className="flex items-center gap-3 cursor-pointer group"
+            >
+              <div className="relative flex items-center">
+                <input
+                  type="checkbox"
+                  checked={filters.tour_category_id === undefined}
+                  onChange={() => onFilterChange({ tour_category_id: undefined })}
+                  className="peer appearance-none w-5 h-5 rounded border border-border checked:bg-primary checked:border-primary transition-all"
+                />
+                <Check className="absolute w-3 h-3 text-on-primary opacity-0 peer-checked:opacity-100 left-1 pointer-events-none transition-opacity" />
+              </div>
+              <span className={cn(
+                "text-sm transition-colors",
+                filters.tour_category_id === undefined ? "text-primary font-bold" : "text-on-surface-variant group-hover:text-on-surface"
+              )}>
+                {t("all_categories")}
+              </span>
+            </label>
+
             {categories.map((cat) => (
               <label
                 key={cat.id}
@@ -123,27 +191,67 @@ export default function FilterSidebar({
         />
         <div className={cn(
           "space-y-4 mt-4 transition-all duration-300 overflow-hidden",
-          expanded.price ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
+          expanded.price ? "max-h-80 opacity-100" : "max-h-0 opacity-0"
         )}>
+          {/* Quick options grid */}
+          <div className="grid grid-cols-2 gap-2">
+            {priceOptions.map((opt) => {
+              const isSelected = filters.price_min === opt.min && filters.price_max === opt.max;
+              return (
+                <button
+                  key={opt.label}
+                  type="button"
+                  onClick={() => {
+                    if (isSelected) {
+                      onFilterChange({ price_min: undefined, price_max: undefined });
+                    } else {
+                      onFilterChange({ price_min: opt.min, price_max: opt.max });
+                    }
+                  }}
+                  className={cn(
+                    "py-2 px-3 text-xs font-bold rounded-lg border transition-all text-center cursor-pointer select-none",
+                    isSelected
+                      ? "bg-primary border-primary text-white"
+                      : "bg-surface-container border-border text-on-surface-variant hover:border-primary hover:text-white"
+                  )}
+                >
+                  {opt.label}
+                </button>
+              );
+            })}
+          </div>
+
           <div className="flex items-center gap-2">
-            <div className="flex-1">
+            <div className="flex-1 relative">
               <input
-                type="number"
+                type="text"
                 placeholder={t("price_min_placeholder")}
-                value={filters.price_min || ""}
-                onChange={(e) => onFilterChange({ price_min: e.target.value ? Number(e.target.value) : undefined })}
-                className="w-full bg-surface-container border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary"
+                value={localMin}
+                onChange={(e) => {
+                  const clean = e.target.value.replace(/\D/g, "");
+                  const formatted = clean ? formatInputPrice(Number(clean)) : "";
+                  e.target.value = formatted;
+                  setLocalMin(formatted);
+                }}
+                className="w-full bg-surface-container border border-border rounded-lg pl-3 pr-7 py-2 text-sm focus:outline-none focus:border-primary text-on-surface"
               />
+              <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-on-surface-subtle select-none">đ</span>
             </div>
             <span className="text-on-surface-subtle">-</span>
-            <div className="flex-1">
+            <div className="flex-1 relative">
               <input
-                type="number"
+                type="text"
                 placeholder={t("price_max_placeholder")}
-                value={filters.price_max || ""}
-                onChange={(e) => onFilterChange({ price_max: e.target.value ? Number(e.target.value) : undefined })}
-                className="w-full bg-surface-container border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary"
+                value={localMax}
+                onChange={(e) => {
+                  const clean = e.target.value.replace(/\D/g, "");
+                  const formatted = clean ? formatInputPrice(Number(clean)) : "";
+                  e.target.value = formatted;
+                  setLocalMax(formatted);
+                }}
+                className="w-full bg-surface-container border border-border rounded-lg pl-3 pr-7 py-2 text-sm focus:outline-none focus:border-primary text-on-surface"
               />
+              <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-on-surface-subtle select-none">đ</span>
             </div>
           </div>
         </div>

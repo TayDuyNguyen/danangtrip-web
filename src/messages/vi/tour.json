@@ -30,11 +30,13 @@
     "filters_toggle": "Bộ lọc",
     "results_count": "Tìm thấy <highlight>{count}</highlight> tour phù hợp",
     "load_error": "Không tải được danh sách tour. Vui lòng thử lại.",
-    "retry": "Thử lại"
+    "retry": "Thử lại",
+    "hero_badge": "{count} tour khả dụng"
   },
   "filters": {
     "title": "Bộ lọc",
     "category": "Danh mục",
+    "all_categories": "Tất cả danh mục",
     "price": "Khoảng giá",
     "duration": "Thời lượng",
     "departure_date": "Ngày khởi hành",
@@ -83,6 +85,7 @@
     "continue": "Tiếp tục đặt tour",
     "no_schedules": "Không có lịch khởi hành nào khả dụng.",
     "over_capacity": "Vượt quá số chỗ trống!",
+    "over_capacity_remaining": "Vượt quá số chỗ trống! (Còn {seats} chỗ)",
     "calc_error": "Lỗi khi cập nhật giá hoặc chỗ trống."
   },
   "detail": {
@@ -129,7 +132,8 @@
     "error_title": "Không thể tải chi tiết tour",
     "error_desc": "Đã xảy ra lỗi ngoài ý muốn. Vui lòng thử lại.",
     "retry": "Thử lại",
-    "location_short": "Đà Nẵng, Việt Nam"
+    "location_short": "Đà Nẵng, Việt Nam",
+    "weekdays_short": "T2,T3,T4,T5,T6,T7,CN"
   },
   "booking": {
     "title": "Đặt tour: {name}",
@@ -137,6 +141,12 @@
     "step_payment": "Thanh toán",
     "step_confirm": "Xác nhận",
     "back": "Quay lại",
+    "selected_departure": "Lịch khởi hành đã chọn",
+    "change_departure": "Đổi lịch",
+    "loading_departure": "Đang tải lịch khởi hành đã chọn...",
+    "seats_left": "Còn {seats} chỗ",
+    "add_to_cart": "Thêm vào giỏ",
+    "add_to_cart_success": "Đã thêm vào giỏ hàng thành công!",
     "customer_info": "Thông tin khách hàng",
     "customer_note": "Thông tin này dùng để liên hệ và xác nhận đặt tour",
     "fill_from_profile": "Điền từ hồ sơ của bạn",
@@ -183,9 +193,15 @@
       "vnpay": "Cổng VNPay",
       "zalopay": "ZaloPay",
       "bank_transfer": "Chuyển khoản ngân hàng",
+      "bank_transfer_manual": "Chuyển khoản thủ công",
+      "payos": "Cổng thanh toán payOS",
       "credit_card": "Thẻ tín dụng",
       "cash": "Tiền mặt",
       "paypal": "PayPal"
+    },
+    "badges": {
+      "automatic": "Tự động (VietQR)",
+      "manual": "Thủ công"
     },
     "errors": {
       "missing_context": "Trang thanh toán đang thiếu mã đơn hàng hoặc mã giao dịch để tiếp tục.",

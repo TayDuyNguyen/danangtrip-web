@@ -8,9 +8,10 @@ import {
 } from "@/components/icons/solar";
 import { SearchFilters } from "../types/search.types";
 import { cn } from "@/utils/string";
-import { DANANG_DISTRICTS } from "@/utils/constants";
 import { Select } from "@/components/ui/Select";
 import { useSearchFilterCategories } from "../hooks/use-search-filter-categories";
+import { useLocationDistricts } from "@/features/locations/hooks/use-locations";
+import { formatInputPrice, parseInputPrice } from "@/utils/format";
 
 interface SearchFiltersSheetProps {
   isOpen: boolean;
@@ -29,7 +30,14 @@ export const SearchFiltersSheet = ({
 }: SearchFiltersSheetProps) => {
   const t = useTranslations("search");
   const [localFilters, setLocalFilters] = useState<SearchFilters>(initialFilters);
+  const [minPriceInput, setMinPriceInput] = useState(
+    initialFilters.minPrice !== undefined ? formatInputPrice(initialFilters.minPrice) : ""
+  );
+  const [maxPriceInput, setMaxPriceInput] = useState(
+    initialFilters.maxPrice !== undefined ? formatInputPrice(initialFilters.maxPrice) : ""
+  );
   const { data: categories = [], isLoading: isLoadingCats } = useSearchFilterCategories(searchType, isOpen);
+  const { data: districts = [], isLoading: isLoadingDists } = useLocationDistricts();
 
   const handleApply = () => {
     onApply(localFilters);
@@ -44,18 +52,20 @@ export const SearchFiltersSheet = ({
       category: undefined,
       district: undefined,
     });
+    setMinPriceInput("");
+    setMaxPriceInput("");
   };
 
   // Helper to get rating styles and avoid IDE class conflicts
   const getRatingStyles = (isActive: boolean) => {
     const activeBg = "bg-[#8b6a55] shadow-xl shadow-[#8b6a55]/30";
-    const inactiveBg = "bg-surface-container-low/40 backdrop-blur-sm hover:bg-surface-container-low";
+    const inactiveBg = "bg-[#181818] hover:bg-[#222222]";
     
     const activeBorder = "border-[#8b6a55]";
-    const inactiveBorder = "border-outline-variant/10 hover:border-outline-variant/30";
+    const inactiveBorder = "border-white/10 hover:border-[#8b6a55]/30";
     
     const activeText = "text-white";
-    const inactiveText = "text-on-surface-variant";
+    const inactiveText = "text-white/60";
 
     return cn(
       "group flex items-center gap-3 px-6 py-4 rounded-xl font-black transition-all duration-500 scale-100 active:scale-90 border-2",
@@ -76,13 +86,13 @@ export const SearchFiltersSheet = ({
       />
       
       {/* Drawer */}
-      <div className="absolute inset-y-0 right-0 w-full max-w-md bg-surface-container-lowest shadow-2xl flex flex-col animate-in slide-in-from-right duration-500">
+      <div className="absolute inset-y-0 right-0 w-full max-w-md bg-[#111111] border-l border-white/10 shadow-2xl flex flex-col animate-in slide-in-from-right duration-500">
         {/* Header */}
-        <div className="p-6 flex items-center justify-between border-b border-surface-container-high">
-          <h2 className="text-2xl font-bold text-foreground">{t("filters.title")}</h2>
+        <div className="p-6 flex items-center justify-between border-b border-white/10">
+          <h2 className="text-2xl font-bold text-white">{t("filters.title")}</h2>
           <button 
             onClick={onClose}
-            className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-container-low transition-colors"
+            className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/5 transition-colors text-white"
           >
             <IoCloseOutline className="text-2xl" />
           </button>
@@ -93,10 +103,10 @@ export const SearchFiltersSheet = ({
           
           {/* Categories */}
           <div className="space-y-6">
-            <h3 className="text-[11px] font-black text-on-surface-variant/50 uppercase tracking-[0.3em] pl-1">
-              {t("filters.category")}
+            <h3 className="flex items-center justify-between text-[11px] font-black text-white/80 uppercase tracking-[0.3em] pl-1">
+              <span>{t("filters.category")}</span>
               {localFilters.category && (
-                 <button onClick={() => setLocalFilters(p => ({...p, category: undefined}))} className="text-[#8b6a55] normal-case text-xs ml-auto">
+                 <button onClick={() => setLocalFilters(p => ({...p, category: undefined}))} className="text-[#8b6a55] normal-case text-xs font-black tracking-normal cursor-pointer">
                    {t("filters.reset")}
                  </button>
               )}
@@ -117,13 +127,14 @@ export const SearchFiltersSheet = ({
           {/* District — áp dụng khi tìm địa điểm (hoặc tab Tất cả) */}
           {(searchType === "location" || searchType === "all") && (
             <div className="space-y-6">
-              <h3 className="text-[11px] font-black text-on-surface-variant/50 uppercase tracking-[0.3em] pl-1">{t("filters.district")}</h3>
+              <h3 className="text-[11px] font-black text-white/80 uppercase tracking-[0.3em] pl-1">{t("filters.district")}</h3>
               <Select
                 label={t("filters.district")}
-                options={DANANG_DISTRICTS.map(d => ({ value: d.id, label: d.name }))}
-                value={localFilters.district ? { value: DANANG_DISTRICTS.find(d => d.name === localFilters.district)?.id || "", label: localFilters.district } : null}
+                options={districts.map(d => ({ value: d.id, label: d.name }))}
+                value={localFilters.district ? { value: districts.find(d => d.name === localFilters.district)?.id || "", label: localFilters.district } : null}
                 onChange={(option) => setLocalFilters(prev => ({ ...prev, district: option ? (option as { label: string }).label : undefined }))}
                 isClearable
+                isLoading={isLoadingDists}
                 placeholder={t("filters.district")}
               />
             </div>
@@ -131,7 +142,7 @@ export const SearchFiltersSheet = ({
 
           {/* Rating */}
           <div className="space-y-6">
-            <h3 className="text-[11px] font-black text-on-surface-variant/50 uppercase tracking-[0.3em] pl-1">
+            <h3 className="text-[11px] font-black text-white/80 uppercase tracking-[0.3em] pl-1">
               {t("filters.rating")}
             </h3>
             <div className="flex flex-wrap gap-3">
@@ -153,38 +164,50 @@ export const SearchFiltersSheet = ({
 
           {/* Price Range */}
           <div className="space-y-6">
-            <h3 className="text-[11px] font-black text-on-surface-variant/50 uppercase tracking-[0.3em] pl-1">
+            <h3 className="text-[11px] font-black text-white/80 uppercase tracking-[0.3em] pl-1">
               {t("filters.price_range")}
             </h3>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-3">
-                <label className="text-[11px] font-black uppercase tracking-widest text-on-surface-variant/60 ml-1">
+                <label className="text-[11px] font-black uppercase tracking-widest text-white/70 ml-1">
                   {t("filters.from")}
                 </label>
                 <div className="relative group">
                   <input
-                    type="number"
-                    value={localFilters.minPrice || ""}
-                    onChange={(e) => setLocalFilters(prev => ({ ...prev, minPrice: Number(e.target.value) || undefined }))}
+                    type="text"
+                    value={minPriceInput}
+                    onChange={(e) => {
+                      const clean = e.target.value.replace(/\D/g, "");
+                      const formatted = clean ? formatInputPrice(Number(clean)) : "";
+                      e.target.value = formatted;
+                      setMinPriceInput(formatted);
+                      setLocalFilters((prev) => ({ ...prev, minPrice: clean ? Number(clean) : undefined }));
+                    }}
                     placeholder="0"
-                    className="w-full bg-surface-container-low/40 backdrop-blur-sm border-2 border-outline-variant/10 rounded-xl py-5 px-6 font-bold text-foreground outline-none focus:border-[#8b6a55]/50 focus:ring-4 focus:ring-[#8b6a55]/5 transition-all placeholder:text-on-surface-variant/30"
+                    className="w-full bg-[#181818] border-2 border-white/10 rounded-xl py-5 px-6 font-extrabold text-white outline-none focus:border-[#8b6a55] focus:ring-4 focus:ring-[#8b6a55]/5 transition-all placeholder:text-white/30"
                   />
-                  <span className="absolute right-5 top-1/2 -translate-y-1/2 text-on-surface-subtle font-black text-xs">đ</span>
+                  <span className="absolute right-5 top-1/2 -translate-y-1/2 text-white/50 font-black text-xs">đ</span>
                 </div>
               </div>
               <div className="space-y-3">
-                <label className="text-[11px] font-black uppercase tracking-widest text-on-surface-variant/60 ml-1">
+                <label className="text-[11px] font-black uppercase tracking-widest text-white/70 ml-1">
                   {t("filters.to")}
                 </label>
                 <div className="relative group">
                   <input
-                    type="number"
-                    value={localFilters.maxPrice || ""}
-                    onChange={(e) => setLocalFilters(prev => ({ ...prev, maxPrice: Number(e.target.value) || undefined }))}
-                    placeholder="10M+"
-                    className="w-full bg-surface-container-low/40 backdrop-blur-sm border-2 border-outline-variant/10 rounded-xl py-5 px-6 font-bold text-foreground outline-none focus:border-[#8b6a55]/50 focus:ring-4 focus:ring-[#8b6a55]/5 transition-all placeholder:text-on-surface-variant/30"
+                    type="text"
+                    value={maxPriceInput}
+                    onChange={(e) => {
+                      const clean = e.target.value.replace(/\D/g, "");
+                      const formatted = clean ? formatInputPrice(Number(clean)) : "";
+                      e.target.value = formatted;
+                      setMaxPriceInput(formatted);
+                      setLocalFilters((prev) => ({ ...prev, maxPrice: clean ? Number(clean) : undefined }));
+                    }}
+                    placeholder="10.000.000+"
+                    className="w-full bg-[#181818] border-2 border-white/10 rounded-xl py-5 px-6 font-extrabold text-white outline-none focus:border-[#8b6a55] focus:ring-4 focus:ring-[#8b6a55]/5 transition-all placeholder:text-white/30"
                   />
-                  <span className="absolute right-5 top-1/2 -translate-y-1/2 text-on-surface-subtle font-black text-xs">đ</span>
+                  <span className="absolute right-5 top-1/2 -translate-y-1/2 text-white/50 font-black text-xs">đ</span>
                 </div>
               </div>
             </div>
@@ -192,16 +215,16 @@ export const SearchFiltersSheet = ({
         </div>
 
         {/* Footer */}
-        <div className="p-8 border-t border-surface-container-high bg-surface-container-lowest grid grid-cols-2 gap-4">
+        <div className="p-8 border-t border-white/10 bg-[#111111] grid grid-cols-2 gap-4">
           <button
             onClick={handleReset}
-            className="py-4 rounded-xl border-2 border-surface-container-high text-on-surface font-black hover:bg-surface-container-low transition-all active:scale-95"
+            className="py-4 rounded-xl border-2 border-white/10 text-white/80 font-black hover:bg-white/5 transition-all active:scale-95 cursor-pointer"
           >
             {t("filters.reset")}
           </button>
           <button
             onClick={handleApply}
-            className="py-4 rounded-xl bg-[#8b6a55] text-white font-black shadow-lg shadow-[#8b6a55]/20 hover:bg-[#5c3822] transition-all active:scale-95"
+            className="py-4 rounded-xl bg-[#8b6a55] text-white font-black shadow-lg shadow-[#8b6a55]/20 hover:bg-[#72533e] transition-all active:scale-95 cursor-pointer"
           >
             {t("filters.apply")}
           </button>

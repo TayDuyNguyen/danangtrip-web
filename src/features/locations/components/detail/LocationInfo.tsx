@@ -2,7 +2,7 @@
 
 import React, { useMemo } from 'react';
 import { MapPin, Phone, Globe, Clock, CheckCircle2 } from "@/components/icons/solar";
-import { Badge, RatingStars } from '@/components/ui';
+import { RatingStars } from '@/components/ui';
 import type { Location } from '@/types';
 import { useTranslations } from 'next-intl';
 import { normalizeOpeningHoursDisplay } from '@/features/locations/utils/opening-hours-display';
@@ -22,105 +22,141 @@ const LocationInfo: React.FC<LocationInfoProps> = ({ location }) => {
 
   return (
     <div className="space-y-8">
-      {/* Header Info */}
+      {/* Title & Meta — Tour style */}
       <div className="space-y-4">
-        <div className="flex flex-wrap gap-2">
-          {location.category ? (
-            <Badge variant="success" className="uppercase tracking-wider">
-              {location.category}
-            </Badge>
-          ) : null}
-          <Badge variant="secondary" className="bg-surface-container-low text-on-surface-variant">
-            {location.district}
-          </Badge>
+        {/* District label — monospace, uppercase, brand color */}
+        <div className="text-xs font-mono text-primary uppercase tracking-widest">
+          {location.district}
+          {location.category && (
+            <span className="ml-4 text-neutral-500">
+              / {typeof location.category === 'string' ? location.category : location.category.name}
+            </span>
+          )}
         </div>
-        
-        <h1 className="text-4xl font-bold tracking-tight text-foreground md:text-5xl">
+
+        {/* Location name — large, font-black */}
+        <h1 className="text-4xl md:text-5xl font-black text-white leading-[1.1] tracking-tight">
           {location.name}
         </h1>
 
-        <div className="flex items-center gap-4">
-          <RatingStars 
-            rating={avgRating} 
-            count={location.review_count} 
-            showText 
-            size="lg" 
+        {/* Rating + Address row */}
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-neutral-400">
+          <RatingStars
+            rating={avgRating}
+            count={location.review_count}
+            showText
+            size="sm"
           />
-          <div className="h-4 w-px bg-border" />
-          <div className="flex items-center gap-1.5 text-on-surface-variant">
-            <MapPin className="h-4 w-4 text-primary" />
-            <span className="text-sm font-medium">{location.address}</span>
-          </div>
+          {location.address && (
+            <div className="flex items-center gap-1.5">
+              <MapPin className="h-4 w-4 text-neutral-500 shrink-0" />
+              <span>{location.address}</span>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Description */}
-      <div className="prose prose-blue max-w-none text-on-surface-variant">
-        <p className="text-lg leading-relaxed">
-          {location.description}
-        </p>
+      {/* Description — Tour style: sans-serif base text */}
+      <div className="space-y-4 text-base text-neutral-300 leading-relaxed max-w-none">
+        {location.description && <p className="whitespace-pre-wrap">{location.description}</p>}
         {location.content && (
-          <div className="mt-4" dangerouslySetInnerHTML={{ __html: location.content }} />
+          <div
+            className="prose prose-invert prose-sm max-w-none text-neutral-300"
+            dangerouslySetInnerHTML={{ __html: location.content }}
+          />
         )}
       </div>
 
+      {/* Tags */}
+      {location.tags && location.tags.length > 0 && (
+        <div className="flex flex-wrap gap-2 pt-2">
+          {location.tags.map((tag) => (
+            <span
+              key={String(tag.id)}
+              className="px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-neutral-400 text-xs font-semibold hover:border-primary/40 hover:text-primary transition-all duration-300 cursor-pointer hover:scale-105 active:scale-95"
+            >
+              #{tag.name}
+            </span>
+          ))}
+        </div>
+      )}
+
       {/* Amenities */}
       {location.amenities && location.amenities.length > 0 && (
-        <div className="space-y-4 rounded-2xl bg-surface-container-low p-6 shadow-sm border border-border">
-          <h3 className="text-xl font-bold text-foreground flex items-center gap-2">
-            {t('detail.amenities_title')}
-          </h3>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+        <div className="glass-retro rounded-2xl p-6 space-y-4">
+          <div className="flex items-center gap-3">
+            <div className="w-1.5 h-6 bg-primary rounded-full" />
+            <h3 className="text-xl font-black text-white tracking-tight">
+              {t('detail.amenities_title')}
+            </h3>
+          </div>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
             {location.amenities.map((amenity) => (
-              <div key={String(amenity.id)} className="flex items-center gap-2 text-on-surface-variant">
-                <CheckCircle2 className="h-5 w-5 shrink-0 text-success" />
-                <span className="text-sm font-medium">{amenity.name}</span>
+              <div key={String(amenity.id)} className="flex items-center gap-2 text-neutral-400 text-sm">
+                <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" />
+                <span>{amenity.name}</span>
               </div>
             ))}
           </div>
         </div>
       )}
 
-      {/* Contact Info */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {/* Contact Info — Stitch: bento glass-card layout */}
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {location.phone && (
-          <a href={`tel:${location.phone.replace(/\s/g, '')}`} className="flex items-center gap-3 rounded-xl border border-border bg-surface-container-lowest p-4 transition-all hover:border-success hover:shadow-md">
-            <div className="rounded-lg bg-success/10 p-2 text-success">
+          <a
+            href={`tel:${location.phone.replace(/\s/g, '')}`}
+            className="group glass-retro rounded-xl p-5 flex items-center gap-4 hover:border-white/20 transition-all duration-300 cursor-pointer"
+          >
+            <div className="w-11 h-11 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-neutral-400 group-hover:bg-primary group-hover:border-primary group-hover:text-black transition-all duration-300 shrink-0">
               <Phone className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-xs text-on-surface-subtle">{t('detail.contact_phone_label')}</p>
-              <p className="text-sm font-bold text-foreground">{location.phone}</p>
-            </div>
-          </a>
-        )}
-        
-        {location.website && (
-          <a href={location.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded-xl border border-border bg-surface-container-lowest p-4 transition-all hover:border-primary hover:shadow-md">
-            <div className="rounded-lg bg-primary/10 p-2 text-primary">
-              <Globe className="h-5 w-5" />
-            </div>
-            <div>
-              <p className="text-xs text-on-surface-subtle">{t('detail.contact_website_label')}</p>
-              <p className="text-sm font-bold text-foreground truncate max-w-[150px]">{location.website.replace(/^https?:\/\//, '')}</p>
+              <p className="text-[10px] font-mono text-neutral-500 uppercase tracking-widest mb-1">
+                {t('detail.contact_phone_label')}
+              </p>
+              <p className="text-sm font-semibold text-white">{location.phone}</p>
             </div>
           </a>
         )}
 
-        {openingHoursDisplay ? (
-          <div className="flex items-start gap-3 rounded-xl border border-border bg-surface-container-lowest p-4 transition-all hover:border-primary hover:shadow-md">
-            <div className="rounded-lg bg-primary/10 p-2 text-primary">
+        {location.website && (
+          <a
+            href={location.website}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group glass-retro rounded-xl p-5 flex items-center gap-4 hover:border-white/20 transition-all duration-300 cursor-pointer"
+          >
+            <div className="w-11 h-11 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-neutral-400 group-hover:bg-primary group-hover:border-primary group-hover:text-black transition-all duration-300 shrink-0">
+              <Globe className="h-5 w-5" />
+            </div>
+            <div className="overflow-hidden">
+              <p className="text-[10px] font-mono text-neutral-500 uppercase tracking-widest mb-1">
+                {t('detail.contact_website_label')}
+              </p>
+              <p className="text-sm font-semibold text-white truncate max-w-[160px]">
+                {location.website.replace(/^https?:\/\//, '')}
+              </p>
+            </div>
+          </a>
+        )}
+
+        {openingHoursDisplay && (
+          <div className="group glass-retro rounded-xl p-5 flex items-center gap-4 hover:border-white/20 transition-all duration-300">
+            <div className="w-11 h-11 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-neutral-400 group-hover:bg-primary group-hover:border-primary group-hover:text-black transition-all duration-300 shrink-0">
               <Clock className="h-5 w-5" />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-xs text-on-surface-subtle">{t('detail.opening_hours')}</p>
+              <p className="text-[10px] font-mono text-neutral-500 uppercase tracking-widest mb-1">
+                {t('detail.opening_hours')}
+              </p>
               {openingHoursDisplay.kind === 'plain' ? (
-                <p className="text-sm font-bold text-foreground">{openingHoursDisplay.text}</p>
+                <p className="text-sm font-semibold text-white whitespace-pre-line">{openingHoursDisplay.text}</p>
               ) : (
-                <ul className="mt-1 space-y-1 text-sm font-bold text-foreground">
+                <ul className="mt-1 space-y-1 text-sm font-semibold text-white">
                   {openingHoursDisplay.rows.map((row) => (
                     <li key={row.dayKey} className="flex gap-2">
-                      <span className="shrink-0 text-on-surface-variant">
+                      <span className="shrink-0 text-neutral-500">
                         {t(`detail.opening_weekday.${row.dayKey}`)}
                       </span>
                       <span>{row.hours}</span>
@@ -130,7 +166,7 @@ const LocationInfo: React.FC<LocationInfoProps> = ({ location }) => {
               )}
             </div>
           </div>
-        ) : null}
+        )}
       </div>
     </div>
   );

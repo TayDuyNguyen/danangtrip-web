@@ -64,49 +64,34 @@ export const SearchResultHeader = ({
   const hasActiveFilters = Object.values(activeFilters).some(v => v !== undefined && v !== null);
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-top-4 duration-700">
-      <div className="flex flex-col gap-6">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex-1 max-w-3xl">
+    <div className="space-y-6 animate-in fade-in slide-in-from-top-4 duration-700">
+      {/* Search Input Bar inside Glass Box */}
+      <section className="glass-retro rounded-xl p-6">
+        <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+          <div className="relative w-full max-w-2xl flex-1">
             <SearchInput
               value={query}
               onChange={handleInputChange}
               placeholder={tSearch("suggestions.search_placeholder")}
               isLoading={isLoading}
+              debounceMs={0}
+              className="m-0"
             />
           </div>
-        </div>
-      </div>
-
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-2">
-        <div className="space-y-1">
-          <p className="text-on-surface-subtle font-medium text-lg">
-            {query
-              ? tSearch.rich("found_results", {
-                count,
-                query,
-                strong: (chunks: React.ReactNode) => <strong className="text-foreground font-black">{chunks}</strong>
-              })
-              : tSearch("discovery.subtitle")
-            }
-          </p>
-        </div>
-
-        <div className="flex items-center gap-3">
           <button
             onClick={onOpenFilters}
-            className="flex items-center gap-2 px-6 py-3 bg-surface-container-low hover:bg-surface-container-high text-foreground font-black rounded-xl transition-all scale-100 active:scale-95 shadow-sm"
+            className="w-full md:w-auto glass-retro px-6 py-4 rounded-xl flex items-center justify-center gap-2 hover:border-[#8b6a55] transition-colors text-white font-semibold text-sm active:scale-95 shadow-sm shrink-0"
           >
-            <IoOptionsOutline className="text-xl" />
+            <IoOptionsOutline className="text-lg" />
             {tSearch("filters.title")}
             {hasActiveFilters && (
-              <span className="w-5 h-5 rounded-full bg-[#8b6a55] text-white text-[10px] flex items-center justify-center">
+              <span className="w-5 h-5 rounded-full bg-[#8b6a55] text-white text-[10px] flex items-center justify-center font-bold">
                 !
               </span>
             )}
           </button>
         </div>
-      </div>
+      </section>
 
       {/* Filter Tags & Clear All */}
       {hasActiveFilters && (
@@ -144,25 +129,37 @@ export const SearchResultHeader = ({
 
           <button
             onClick={onClearFilters}
-            className="text-sm font-black text-[#8b6a55] border-b-2 border-transparent hover:border-[#8b6a55] transition-all py-1 px-2"
+            className="text-sm font-semibold text-[#8b6a55] border-b-2 border-transparent hover:border-[#8b6a55] transition-all py-1 px-2"
           >
             {tSearch("filters.reset")}
           </button>
         </div>
       )}
 
+      {/* Result Count Status Row */}
+      {query && (
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-2 border-b border-border-low/40">
+          <p className="text-on-surface-subtle font-medium text-base">
+            {tSearch.rich("found_results", {
+              count,
+              query,
+              strong: (chunks: React.ReactNode) => <strong className="text-[#f1bb9d] font-semibold">{chunks}</strong>
+            })}
+          </p>
+        </div>
+      )}
 
-      {/* Trending Section - No Line rule */}
-      <div className="pt-6">
+      {/* Trending Section */}
+      <div className="pt-2">
         <div className="flex flex-wrap items-center gap-3">
-          <span className="text-sm font-black text-on-surface-subtle uppercase tracking-widest mr-2 flex items-center gap-2">
-            <IoTrendingUp className="text-[#8b6a55] text-xl" />
+          <span className="text-xs font-semibold text-on-surface-variant uppercase tracking-widest mr-2 flex items-center gap-1.5">
+            <IoTrendingUp className="text-[#8b6a55] text-base" />
             {tSearch("trending.title")}:
           </span>
 
           {isLoadingTrending ? (
             Array(4).fill(0).map((_, i) => (
-              <div key={i} className="h-10 w-24 bg-surface-container-low rounded-xl animate-pulse" />
+              <div key={i} className="h-9 w-24 bg-surface-container-low/50 rounded-xl animate-pulse" />
             ))
           ) : trending.map((item: string, idx: number) => {
             const isSelected = query === item;
@@ -171,14 +168,14 @@ export const SearchResultHeader = ({
                 key={idx}
                 href={`${ROUTES.SEARCH}?q=${encodeURIComponent(item)}`}
                 className={cn(
-                  "flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-black transition-all duration-300 scale-100 hover:scale-105",
+                  "flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-300 scale-100 hover:scale-105",
                   isSelected
-                    ? "bg-[#8b6a55] shadow-black/30"
-                    : "bg-surface-container-low text-on-surface-subtle hover:bg-surface-container-high"
+                    ? "bg-[#8b6a55] text-white shadow-black/30"
+                    : "bg-surface-container-low/70 text-on-surface-subtle hover:bg-surface-container-high/90 border border-border-low/40"
                 )}
               >
-                {idx < 2 && <IoFlashOutline className="text-amber-500" />}
-                <span className={isSelected ? "text-white" : ""}>{item}</span>
+                {idx < 2 && <IoFlashOutline className="text-amber-500 text-sm" />}
+                <span>{item}</span>
               </Link>
             );
           })}

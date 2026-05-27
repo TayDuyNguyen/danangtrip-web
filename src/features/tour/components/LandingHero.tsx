@@ -34,7 +34,7 @@ export default function LandingHero({ title, subtitle, image, count }: Props) {
               <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
             </span>
             <span className="text-xs font-black text-primary uppercase tracking-[0.2em]">
-              {count} {t("list.results_count", { count: count }).split(' ').pop()} {t("list.results_count", { count: count }).includes('found') ? 'Found' : 'Khả dụng'}
+              {t("list.hero_badge", { count })}
             </span>
           </div>
 

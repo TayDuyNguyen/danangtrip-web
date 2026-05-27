@@ -29,7 +29,9 @@
     "rating": "Đánh giá",
     "rating_4_plus": "4+ sao",
     "rating_3_plus": "3+ sao",
-    "reset": "Đặt lại bộ lọc"
+    "reset": "Đặt lại bộ lọc",
+    "close": "Đóng bộ lọc",
+    "show_results": "Xem kết quả ({count})"
   },
   "categories": {
     "sightseeing": "Tham quan",
@@ -55,9 +57,11 @@
     "from": "Giá từ",
     "free": "Miễn phí",
     "budget": "Bình dân ($)",
-    "mid_range": "Trung cấp ($$)"
+    "mid_range": "Trung cấp ($$)",
+    "high_end": "Sang trọng ($$$)"
   },
   "reviews": "đánh giá",
+  "locations_count": "địa điểm",
   "buttons": {
     "view_details": "Xem chi tiết",
     "favorite_aria": "Yêu thích"
@@ -68,7 +72,7 @@
     "breadcrumb_home": "Trang chủ",
     "breadcrumb_locations": "Địa điểm",
     "share": "Chia sẻ",
-    "save": "Lưu lại",
+    "save": "Yêu thích",
     "book_now": "Đặt ngay",
     "contact_consultancy": "Liên hệ tư vấn",
     "price_per_person": "/ người",
@@ -171,5 +175,14 @@
       "subtitle": "Đừng lo lắng! Bạn có thể chọn nhanh bất kỳ quận nào của Đà Nẵng ở dưới để khám phá địa điểm ngay.",
       "select_district": "Khám phá địa điểm tại:"
     }
+  },
+  "sorting": {
+    "label": "Sắp xếp",
+    "latest": "Mới nhất",
+    "rating_high": "Đánh giá cao",
+    "most_reviews": "Nhiều đánh giá nhất",
+    "most_views": "Lượt xem nhiều nhất",
+    "price_low_high": "Giá thấp đến cao",
+    "price_high_low": "Giá cao đến thấp"
   }
 }

@@ -2,9 +2,24 @@ import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { locationService } from "@/services/location.service";
 import { LocationQueryParams, mapLocationQueryParams } from "../utils/location-query-mapper";
+import { useAuthStore } from "@/store/auth.store";
+import { localFavoriteLocations } from "@/utils/local-favorites";
 
 export const useLocations = (params: LocationQueryParams) => {
-  const backendParams = useMemo(() => mapLocationQueryParams(params), [params]);
+  const { isAuthenticated } = useAuthStore();
+
+  const localFavorites = useMemo(() => {
+    if (typeof window === "undefined" || isAuthenticated) return [];
+    return localFavoriteLocations.list();
+  }, [isAuthenticated]);
+
+  const backendParams = useMemo(() => {
+    const query = { ...params };
+    if (!isAuthenticated && localFavorites.length > 0) {
+      query.favoriteIds = localFavorites;
+    }
+    return mapLocationQueryParams(query);
+  }, [params, isAuthenticated, localFavorites]);
 
   const { data, isLoading, error, isPlaceholderData } = useQuery({
     queryKey: ["locations", "list", backendParams],
@@ -74,3 +89,27 @@ export const useLocationCategories = () => {
     staleTime: 1000 * 60 * 60, // 1 hour
   });
 };
+
+export const useLocationFilterStats = () => {
+  return useQuery({
+    queryKey: ["locations", "filter-stats"],
+    queryFn: async () => {
+      const response = await locationService.getFilterStats();
+      return response.data;
+    },
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
+};
+
+export const useLocationDistricts = () => {
+  return useQuery({
+    queryKey: ["locations", "districts-list"],
+    queryFn: async () => {
+      const response = await locationService.getDistricts();
+      return response.data;
+    },
+    staleTime: 1000 * 60 * 60, // 1 hour
+  });
+};
+
+

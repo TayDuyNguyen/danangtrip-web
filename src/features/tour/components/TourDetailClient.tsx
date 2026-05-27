@@ -77,120 +77,127 @@ export default function TourDetailClient({ tour }: Props) {
         <TourImageGallery images={uniqueGallery} title={tour.name} />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 mt-12">
-          {/* Main Content */}
-          <article className="lg:col-span-8 space-y-16">
-            <header className="reveal-up space-y-6">
-              <div className="flex flex-wrap gap-2">
-                {tour.is_hot && (
-                  <Badge variant="error" className="uppercase text-[10px] font-black tracking-widest px-3">
-                    {t("card.hot_badge")}
-                  </Badge>
-                )}
-                {tour.is_featured && (
-                  <Badge variant="warning" className="uppercase text-[10px] font-black tracking-widest px-3">
-                    {t("card.featured_badge")}
-                  </Badge>
-                )}
-              </div>
-              <div className="flex justify-between items-start gap-4">
-                <h1 className="text-4xl md:text-5xl font-black text-on-surface leading-[1.1] tracking-tight">
-                  {tour.name}
-                </h1>
-                {/* Favorite Button */}
-                <FavoriteButton tourId={tour.id} />
-              </div>
-              <div className="flex flex-wrap items-center gap-6 text-sm text-on-surface-variant border-y border-border/50 py-6">
-                <span className="inline-flex items-center gap-2">
-                  <MapPin className="w-5 h-5 text-primary shrink-0" />
-                  <span className="font-bold text-on-surface">{t("card.location_short")}</span>
-                </span>
-                <span className="w-px h-4 bg-border hidden md:block" />
-                <span className="inline-flex items-center gap-2">
-                  <span className="text-on-surface-subtle uppercase text-[10px] font-black tracking-widest">{td("stats_duration")}:</span>
-                  <span className="font-mono text-on-surface font-bold">{tour.duration}</span>
-                </span>
-                <span className="w-px h-4 bg-border hidden md:block" />
-                <RatingStars
-                  rating={safeRating}
-                  count={safeReviewCount}
-                  size="md"
-                  showText
-                />
-              </div>
-            </header>
-
-            {/* Overview Section */}
-            {tour.short_desc || tour.description ? (
-              <section className="reveal-up space-y-6" style={{ animationDelay: "300ms" }}>
-                <div className="flex items-center gap-3">
-                  <div className="w-1.5 h-6 bg-primary rounded-full" />
-                  <h2 className="text-2xl font-black text-on-surface tracking-tight">{td("overview")}</h2>
-                </div>
-                
-                {tour.short_desc && (
-                  <p className="text-xl text-on-surface-subtle leading-relaxed italic border-l-4 border-primary/20 pl-6">
-                    {tour.short_desc}
-                  </p>
-                )}
-
-                <div className="prose prose-invert max-w-none">
-                  {tour.description?.includes("<") ? (
-                    <div
-                      className="text-on-surface-subtle text-base leading-loose [&_p]:mb-6"
-                      dangerouslySetInnerHTML={{ __html: tour.description }}
-                    />
-                  ) : (
-                    <div className="text-on-surface-subtle whitespace-pre-line text-base leading-loose">
-                      {tour.description}
+          {/* Main Content — dark glass card */}
+          <div className="lg:col-span-8">
+            <div className="rounded-3xl bg-black/60 border border-white/10 shadow-2xl shadow-black/40 backdrop-blur-md overflow-hidden">
+              {/* Header section — padded */}
+              <div className="p-6 md:p-10">
+                <article className="space-y-12">
+                  <header className="reveal-up space-y-6">
+                    <div className="flex flex-wrap gap-2">
+                      {tour.is_hot && (
+                        <Badge variant="error" className="uppercase text-[10px] font-black tracking-widest px-3">
+                          {t("card.hot_badge")}
+                        </Badge>
+                      )}
+                      {tour.is_featured && (
+                        <Badge variant="warning" className="uppercase text-[10px] font-black tracking-widest px-3">
+                          {t("card.featured_badge")}
+                        </Badge>
+                      )}
                     </div>
+                    <div className="flex justify-between items-start gap-4">
+                      <h1 className="text-4xl md:text-5xl font-black text-on-surface leading-[1.1] tracking-tight">
+                        {tour.name}
+                      </h1>
+                      {/* Favorite Button */}
+                      <FavoriteButton tourId={tour.id} />
+                    </div>
+                    <div className="flex flex-wrap items-center gap-6 text-sm text-on-surface-variant border-y border-white/10 py-6">
+                      <span className="inline-flex items-center gap-2">
+                        <MapPin className="w-5 h-5 text-primary shrink-0" />
+                        <span className="font-bold text-on-surface">{t("card.location_short")}</span>
+                      </span>
+                      <span className="w-px h-4 bg-border hidden md:block" />
+                      <span className="inline-flex items-center gap-2">
+                        <span className="text-on-surface-subtle uppercase text-[10px] font-black tracking-widest">{td("stats_duration")}:</span>
+                        <span className="font-mono text-on-surface font-bold">{tour.duration}</span>
+                      </span>
+                      <span className="w-px h-4 bg-border hidden md:block" />
+                      <RatingStars
+                        rating={safeRating}
+                        count={safeReviewCount}
+                        size="md"
+                        showText
+                      />
+                    </div>
+                  </header>
+
+                  {/* Overview Section */}
+                  {tour.short_desc || tour.description ? (
+                    <section className="reveal-up space-y-6" style={{ animationDelay: "300ms" }}>
+                      <div className="flex items-center gap-3">
+                        <div className="w-1.5 h-6 bg-primary rounded-full" />
+                        <h2 className="text-2xl font-black text-on-surface tracking-tight">{td("overview")}</h2>
+                      </div>
+                      
+                      {tour.short_desc && (
+                        <p className="text-xl text-on-surface-subtle leading-relaxed italic border-l-4 border-primary/20 pl-6">
+                          {tour.short_desc}
+                        </p>
+                      )}
+
+                      <div className="prose prose-invert max-w-none">
+                        {tour.description?.includes("<") ? (
+                          <div
+                            className="text-on-surface-subtle text-base leading-loose [&_p]:mb-6"
+                            dangerouslySetInnerHTML={{ __html: tour.description }}
+                          />
+                        ) : (
+                          <div className="text-on-surface-subtle whitespace-pre-line text-base leading-loose">
+                            {tour.description}
+                          </div>
+                        )}
+                      </div>
+                    </section>
+                  ) : null}
+
+                  {/* Itinerary Section */}
+                  <ItineraryTimeline itinerary={tour.itinerary || []} />
+
+                  {/* Inclusions & Meeting Point */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 reveal-up" style={{ animationDelay: "400ms" }}>
+                    {inclusions && (
+                      <div className="glass-surface p-8 rounded-2xl space-y-4">
+                        <h3 className="text-lg font-black text-on-surface uppercase tracking-tight">{td("inclusions")}</h3>
+                        <div className="text-on-surface-subtle whitespace-pre-line text-sm leading-relaxed">
+                          {inclusions}
+                        </div>
+                      </div>
+                    )}
+                    {exclusions && (
+                      <div className="glass-surface p-8 rounded-2xl space-y-4 border-error/10">
+                        <h3 className="text-lg font-black text-on-surface uppercase tracking-tight">{td("exclusions")}</h3>
+                        <div className="text-on-surface-subtle whitespace-pre-line text-sm leading-relaxed">
+                          {exclusions}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {meetingPoint && (
+                    <section className="reveal-up space-y-4" style={{ animationDelay: "450ms" }}>
+                      <div className="flex items-center gap-3">
+                        <div className="w-1.5 h-6 bg-primary rounded-full" />
+                        <h2 className="text-2xl font-black text-on-surface tracking-tight">{td("meeting_point")}</h2>
+                      </div>
+                      <div className="glass-surface p-6 rounded-xl flex items-start gap-4">
+                        <MapPin className="w-6 h-6 text-primary shrink-0 mt-1" />
+                        <p className="text-on-surface-subtle text-base">{meetingPoint}</p>
+                      </div>
+                    </section>
                   )}
-                </div>
-              </section>
-            ) : null}
 
-            {/* Itinerary Section */}
-            <ItineraryTimeline itinerary={tour.itinerary || []} />
-
-            {/* Inclusions & Meeting Point */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 reveal-up" style={{ animationDelay: "400ms" }}>
-              {inclusions && (
-                <div className="glass-surface p-8 rounded-2xl space-y-4">
-                  <h3 className="text-lg font-black text-on-surface uppercase tracking-tight">{td("inclusions")}</h3>
-                  <div className="text-on-surface-subtle whitespace-pre-line text-sm leading-relaxed">
-                    {inclusions}
-                  </div>
-                </div>
-              )}
-              {exclusions && (
-                <div className="glass-surface p-8 rounded-2xl space-y-4 border-error/10">
-                  <h3 className="text-lg font-black text-on-surface uppercase tracking-tight">{td("exclusions")}</h3>
-                  <div className="text-on-surface-subtle whitespace-pre-line text-sm leading-relaxed">
-                    {exclusions}
-                  </div>
-                </div>
-              )}
+                  {/* Reviews Section */}
+                  <ReviewSection 
+                    tourId={tour.id}
+                    rating={safeRating} 
+                    count={safeReviewCount} 
+                  />
+                </article>
+              </div>
             </div>
-
-            {meetingPoint && (
-              <section className="reveal-up space-y-4" style={{ animationDelay: "450ms" }}>
-                <div className="flex items-center gap-3">
-                  <div className="w-1.5 h-6 bg-primary rounded-full" />
-                  <h2 className="text-2xl font-black text-on-surface tracking-tight">{td("meeting_point")}</h2>
-                </div>
-                <div className="glass-surface p-6 rounded-xl flex items-start gap-4">
-                  <MapPin className="w-6 h-6 text-primary shrink-0 mt-1" />
-                  <p className="text-on-surface-subtle text-base">{meetingPoint}</p>
-                </div>
-              </section>
-            )}
-
-            {/* Reviews Section */}
-            <ReviewSection 
-              tourId={tour.id}
-              rating={safeRating} 
-              count={safeReviewCount} 
-            />
-          </article>
+          </div>
 
           {/* Sidebar Section */}
           <aside className="lg:col-span-4">

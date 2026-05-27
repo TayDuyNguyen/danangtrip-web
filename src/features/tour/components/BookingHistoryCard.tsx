@@ -23,11 +23,12 @@ export function BookingHistoryCard({
 }: BookingHistoryCardProps) {
   const t = useTranslations("tour.history");
   const tp = useTranslations("tour.payment");
+  const tTour = useTranslations("tour");
   const locale = useLocale();
 
   const item = booking.booking_items?.[0] || booking.items?.[0];
   const tour = item?.tour;
-  const tourName = item?.item_name || tour?.name || "Tour Du Lịch";
+  const tourName = item?.item_name || tour?.name || tTour("detail.breadcrumb_tours") || "Tour";
   const tourThumbnail = tour?.thumbnail || "/images/placeholder.png";
   const travelDateStr = item?.travel_date || booking.booked_at;
 
@@ -75,9 +76,9 @@ export function BookingHistoryCard({
       case "failed":
         return { variant: "error" as const, text: tp("status_failed") };
       case "refunded":
-        return { variant: "outline" as const, text: locale === "vi" ? "Đã hoàn tiền" : "Refunded" };
+        return { variant: "outline" as const, text: t("payment_states.refunded") };
       case "partially_paid":
-        return { variant: "warning" as const, text: locale === "vi" ? "Thanh toán một phần" : "Partially Paid" };
+        return { variant: "warning" as const, text: t("payment_states.partially_paid") };
       default:
         return { variant: "outline" as const, text: status };
     }

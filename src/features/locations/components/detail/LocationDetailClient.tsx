@@ -1,20 +1,18 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { toast } from "sonner";
 import type { Location } from "@/types";
 import { locationService } from "@/services/location.service";
-import { favoriteService } from "@/services/favorite.service";
 import { useAuthStore } from "@/store/auth.store";
 import { shouldRetryQuery } from "@/lib/react-query";
 import { useLocationRecordView } from "@/features/locations/hooks/use-location-record-view";
+import { useFavoriteLocation } from "@/features/locations/hooks/use-favorite-location";
 import LocationHero from "@/features/locations/components/detail/LocationHero";
 import LocationGallery from "@/features/locations/components/detail/LocationGallery";
 import LocationInfo from "@/features/locations/components/detail/LocationInfo";
 import LocationSidebar from "@/features/locations/components/detail/LocationSidebar";
 import LocationReviews from "@/features/locations/components/detail/LocationReviews";
-import { getApiErrorMessage } from "@/utils";
 
 type Props = {
   location: Location;
@@ -23,18 +21,17 @@ type Props = {
 
 export default function LocationDetailClient({ location, locale }: Props) {
   const t = useTranslations();
-  const queryClient = useQueryClient();
   const { isAuthenticated } = useAuthStore();
 
   useLocationRecordView(location.id);
+
+  const { isFavorite, isPending: favoritePending, toggleFavorite } = useFavoriteLocation(location.id);
 
   const imagesQuery = useQuery({
     queryKey: ["locations", location.id, "images"],
     queryFn: async () => {
       const res = await locationService.getImages(location.id);
-      if (!res.success) {
-        throw res;
-      }
+      if (!res.success) throw res;
       return res.data;
     },
     staleTime: 5 * 60 * 1000,
@@ -45,67 +42,20 @@ export default function LocationDetailClient({ location, locale }: Props) {
     queryKey: ["locations", location.id, "nearby"],
     queryFn: async () => {
       const res = await locationService.getNearbyByLocationId(location.id, 6);
-      if (!res.success) {
-        throw res;
-      }
+      if (!res.success) throw res;
       return res.data ?? [];
     },
     staleTime: 10 * 60 * 1000,
     retry: shouldRetryQuery,
   });
 
-  const favoriteQuery = useQuery({
-    queryKey: ["locations", location.id, "favorite-check"],
-    queryFn: async () => {
-      const res = await favoriteService.checkFavorite({ location_id: location.id });
-      if (!res.success || res.data === undefined) {
-        throw res;
-      }
-      return res.data.is_favorite;
-    },
-    enabled: isAuthenticated,
-    staleTime: 60 * 1000,
-  });
-
-  const addFavorite = useMutation({
-    mutationFn: () => favoriteService.addFavorite({ location_id: location.id }),
-    onSuccess: (res) => {
-      if (res.success) {
-        toast.success(t("common.favorite.add_success"));
-        void queryClient.invalidateQueries({ queryKey: ["locations", location.id, "favorite-check"] });
-      } else {
-        toast.error(getApiErrorMessage(res, t("common.favorite.error")));
-      }
-    },
-    onError: (error) => toast.error(getApiErrorMessage(error, t("common.favorite.error"))),
-  });
-
-  const removeFavorite = useMutation({
-    mutationFn: () => favoriteService.removeFavorite({ location_id: location.id }),
-    onSuccess: (res) => {
-      if (res.success) {
-        toast.success(t("common.favorite.remove_success"));
-        void queryClient.invalidateQueries({ queryKey: ["locations", location.id, "favorite-check"] });
-      } else {
-        toast.error(getApiErrorMessage(res, t("common.favorite.error")));
-      }
-    },
-    onError: (error) => toast.error(getApiErrorMessage(error, t("common.favorite.error"))),
-  });
-
-  const isFavorite = Boolean(favoriteQuery.data);
-  const favoritePending = addFavorite.isPending || removeFavorite.isPending;
-
-  const toggleFavorite = () => {
+  const handleFavoriteToggle = () => {
     if (!isAuthenticated) {
-      toast.error(t("common.favorite.login_required"));
+      // Guest: handled inside the hook (localStorage + toast)
+      toggleFavorite();
       return;
     }
-    if (isFavorite) {
-      removeFavorite.mutate();
-    } else {
-      addFavorite.mutate();
-    }
+    toggleFavorite();
   };
 
   const apiImages = imagesQuery.data?.images?.filter(Boolean) ?? [];
@@ -115,40 +65,45 @@ export default function LocationDetailClient({ location, locale }: Props) {
   const avgRating = Math.min(5, Math.max(0, parseFloat(location.avg_rating) || 0));
 
   return (
-    <main className="design-page layout-main-shell min-h-screen pb-20">
+    <main className="relative min-h-screen pb-24">
       <LocationHero
         locationName={location.name}
         isFavorite={isFavorite}
         favoriteBusy={favoritePending}
-        onFavoriteToggle={toggleFavorite}
+        onFavoriteToggle={handleFavoriteToggle}
       />
 
       <div className="design-container">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
-          <div className="space-y-12 lg:col-span-8">
-            <section className="reveal-up">
-              <LocationGallery
-                images={galleryImages}
-                locationName={location.name}
-                isLoading={galleryLoading}
-              />
-            </section>
+          {/* Left column: Gallery + Info + Reviews */}
+          <div className="space-y-10 lg:col-span-8">
+            {(galleryImages.length > 0 || galleryLoading) && (
+              <section className="reveal-up">
+                <LocationGallery
+                  images={galleryImages}
+                  locationName={location.name}
+                  isLoading={galleryLoading}
+                />
+              </section>
+            )}
 
-            <section className="reveal-up reveal-delay-100">
-              <LocationInfo location={location} />
-            </section>
+            <div className="glass-retro rounded-3xl p-4 md:p-6 space-y-12">
+              <section className="reveal-up reveal-delay-100">
+                <LocationInfo location={location} />
+              </section>
 
-            <hr className="border-border" />
-
-            <section className="reveal-up reveal-delay-200">
-              <LocationReviews
-                locationId={location.id}
-                initialAverageRating={avgRating}
-                initialReviewCount={location.review_count}
-              />
-            </section>
+              {/* Reviews section */}
+              <section className="reveal-up reveal-delay-200 pt-10 border-t border-white/10">
+                <LocationReviews
+                  locationId={location.id}
+                  initialAverageRating={avgRating}
+                  initialReviewCount={location.review_count}
+                />
+              </section>
+            </div>
           </div>
 
+          {/* Right column: Sticky Sidebar */}
           <div className="lg:col-span-4">
             <LocationSidebar
               location={location}

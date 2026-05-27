@@ -10,29 +10,20 @@ interface PaymentMethodSelectorProps {
 }
 
 export function PaymentMethodSelector({ value, onChange }: PaymentMethodSelectorProps) {
-  useTranslations("tour.booking");
+  const t = useTranslations("tour");
 
   const methods = [
     {
-      id: "momo",
-      name: "Ví MoMo",
-      icon: "https://lh3.googleusercontent.com/aida-public/AB6AXuD2CZ43CsmUXzMcvvB4NA2rOIbUNVc7IVDPsbogI9w34AJPkKQlta94-UAwyIe_QCSOnRCEg7UgDaqFY-TOhDXrp_4Z7biCLPSVVgVRxPamGKgxE1XkggDdhPfCkTxMnhGRnjXF3gxfpDYcpPQu3FKrhis5ra7y_5VkucsICkzPKMp4UrGsfZa4wdYDAyrYHtHanSlNdtsZFnm779zVir1yGNr1-SApChhv79iKw6rqKfRi5qKwwJ2DHBoYqeptnyz0ubf6oVm_tw",
-      badge: "Phổ biến",
+      id: "payos",
+      name: t("payment.methods.payos"),
+      icon: "/images/payment/payOS.png",
+      badge: t("payment.badges.automatic"),
     },
     {
-      id: "vnpay",
-      name: "VNPay",
-      icon: "https://lh3.googleusercontent.com/aida-public/AB6AXuAHM-5xmfkyzkkQzAgsaby8ijgKzvbtnyD_j7GOdLe0YwF-u4KCoAGTfdoDQW5vNgdAfnt21Qo8uvMXD9FMnrynV9SZRN4BpiDyhA93gf0yNVnpEIfxFec_7oPIDoMW7ecIftKZLdqhrq4WnSytuLibEOW7_juKydWKMmk7mCfT5a-kcigqqCvSj7Wz4s95Lkwjv4pwIcXeid4sii7ThXTKFXH0uUw3gqFS2TGZb4bDdmXTshbkoH2YDBvupSHAupR8Bjvdm_sRvQ",
-    },
-    {
-      id: "zalopay",
-      name: "ZaloPay",
-      icon: "https://lh3.googleusercontent.com/aida-public/AB6AXuCoBTj_apc5jF8qVe1Yy9_D8WW6f4IdRqUFItZuyzZEbELcej2Z1D6dGba6zMFFsOrTWXLJ-4hSyqP3lNwci9URDiv9AWRm1DoxP1DrUIS5MeR8hJY_WZpvmJM5JHcswqgMV8clEFD5nk2zKykFuA2OREm7NcjWpDkqTe9XW5TYspNlnmdOEtWQVQ-SUaX-RKPCxQTEJ-B6dVd4aaJCuNRKvnu7Taumo0NMLFSR6MEBXPjD8depEc8DHnTBW7h8c7VvBIMKd9EJVw",
-    },
-    {
-        id: "bank_transfer",
-        name: "Chuyển khoản",
-        icon: null
+      id: "bank_transfer",
+      name: t("payment.methods.bank_transfer_manual"),
+      icon: null,
+      badge: t("payment.badges.manual"),
     }
   ];
 

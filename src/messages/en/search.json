@@ -33,7 +33,8 @@
   },
   "card": {
     "starting_from": "Starting from",
-    "default_location": "Da Nang, Vietnam"
+    "default_location": "Da Nang, Vietnam",
+    "price_level": "Price level"
   },
   "empty": {
     "title": "No results found",

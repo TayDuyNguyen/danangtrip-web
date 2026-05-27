@@ -3,9 +3,21 @@
 import { useCallback, useEffect } from "react";
 import { useAuthStore } from "@/store/auth.store";
 import { authService } from "@/services/auth.service";
+import { favoriteService } from "@/services/favorite.service";
 import type { LoginRequest, RegisterRequest, RegisterResponse, ApiResponse, User } from "@/types";
 import { clearTokens, getAccessToken } from "@/utils/auth.helper";
 import { getApiErrorMessage } from "@/utils";
+import { localFavoriteLocations } from "@/utils/local-favorites";
+
+const mergeLocalFavoritesToAccount = async () => {
+  const locationIds = localFavoriteLocations.list();
+  if (locationIds.length === 0) return;
+
+  await Promise.allSettled(
+    locationIds.map((locationId) => favoriteService.addFavorite({ location_id: locationId }))
+  );
+  localFavoriteLocations.clear();
+};
 
 export const useAuth = () => {
   const {
@@ -48,6 +60,7 @@ export const useAuth = () => {
 
           if (userToken && userData) {
             storeLogin(userData, userToken);
+            await mergeLocalFavoritesToAccount();
             return { success: true };
           }
         }
