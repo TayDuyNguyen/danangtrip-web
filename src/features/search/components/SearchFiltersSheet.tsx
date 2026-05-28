@@ -40,6 +40,8 @@ export const SearchFiltersSheet = ({
   const { data: districts = [], isLoading: isLoadingDists } = useLocationDistricts();
   const locationCategories = categoryData?.locationCategories ?? [];
   const tourCategories = categoryData?.tourCategories ?? [];
+  const selectedLocCat = searchType === "location" ? localFilters.category : localFilters.locationCategory;
+  const selectedTourCat = searchType === "tour" ? localFilters.category : localFilters.tourCategory;
 
   const handleApply = () => {
     onApply(localFilters);
@@ -109,7 +111,7 @@ export const SearchFiltersSheet = ({
             <div className="space-y-6">
               <h3 className="flex items-center justify-between text-[11px] font-black text-white/80 uppercase tracking-[0.3em] pl-1">
                 <span>{searchType === "all" ? t("filters.location_category") : t("filters.category")}</span>
-                {(searchType === "location" ? localFilters.category : localFilters.locationCategory) && (
+                {selectedLocCat !== undefined && (
                   <button
                     onClick={() =>
                       setLocalFilters((p) => ({
@@ -129,13 +131,10 @@ export const SearchFiltersSheet = ({
                   label={searchType === "all" ? t("filters.location_category") : t("filters.category")}
                   options={locationCategories.map(cat => ({ value: cat.id, label: cat.name }))}
                   value={
-                    (searchType === "location" ? localFilters.category : localFilters.locationCategory)
+                    selectedLocCat !== undefined
                       ? {
-                          value: searchType === "location" ? localFilters.category : localFilters.locationCategory,
-                          label:
-                            locationCategories.find(
-                              (c) => c.id === (searchType === "location" ? localFilters.category : localFilters.locationCategory)
-                            )?.name || "",
+                          value: selectedLocCat,
+                          label: locationCategories.find((c) => c.id === selectedLocCat)?.name || "",
                         }
                       : null
                   }
@@ -175,7 +174,7 @@ export const SearchFiltersSheet = ({
             <div className="space-y-6">
               <h3 className="flex items-center justify-between text-[11px] font-black text-white/80 uppercase tracking-[0.3em] pl-1">
                 <span>{searchType === "all" ? t("filters.tour_category") : t("filters.category")}</span>
-                {(searchType === "tour" ? localFilters.category : localFilters.tourCategory) && (
+                {selectedTourCat !== undefined && (
                   <button
                     onClick={() =>
                       setLocalFilters((p) => ({
@@ -195,13 +194,10 @@ export const SearchFiltersSheet = ({
                   label={searchType === "all" ? t("filters.tour_category") : t("filters.category")}
                   options={tourCategories.map(cat => ({ value: cat.id, label: cat.name }))}
                   value={
-                    (searchType === "tour" ? localFilters.category : localFilters.tourCategory)
+                    selectedTourCat !== undefined
                       ? {
-                          value: searchType === "tour" ? localFilters.category : localFilters.tourCategory,
-                          label:
-                            tourCategories.find(
-                              (c) => c.id === (searchType === "tour" ? localFilters.category : localFilters.tourCategory)
-                            )?.name || "",
+                          value: selectedTourCat,
+                          label: tourCategories.find((c) => c.id === selectedTourCat)?.name || "",
                         }
                       : null
                   }
