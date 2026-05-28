@@ -41,6 +41,8 @@ export interface SearchFilters {
   maxPrice?: number;
   rating?: number;
   category?: number;
+  locationCategory?: number;
+  tourCategory?: number;
   district?: string;
 }
 

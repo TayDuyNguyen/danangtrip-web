@@ -23,9 +23,7 @@ export const SearchResultCard = ({ item, isLoading, featured, index }: SearchRes
     ? ROUTES.TOUR_DETAIL(item?.slug || "") 
     : ROUTES.LOCATION_DETAIL(item?.slug || "");
 
-  // Use variables for heights to avoid tailwind-intellisense conflicts in ternary
-  const skeletonHeightClass = featured ? "h-[240px] md:h-auto" : "h-[200px]";
-  const imageHeightClass = featured ? "h-[240px] md:h-auto" : "h-[220px]";
+
 
   if (isLoading || !item) {
     return (

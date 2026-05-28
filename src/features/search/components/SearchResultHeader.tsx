@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import {
@@ -15,6 +15,9 @@ import { formatNumber } from "@/utils/format";
 import { SearchFilters } from "../types/search.types";
 import { debounce } from "@/utils/debounce";
 import { useSearchDiscovery } from "../hooks/use-search-discovery";
+import { useSearchSuggestions } from "../hooks/use-search-suggestions";
+import { useSearchHistory } from "../hooks/use-search-history";
+import { SearchSuggestionsDropdown } from "./SearchSuggestionsDropdown";
 import SearchInput from "@/components/ui/SearchInput";
 
 interface SearchResultHeaderProps {
@@ -40,13 +43,40 @@ export const SearchResultHeader = ({
 }: SearchResultHeaderProps) => {
   const tSearch = useTranslations("search");
   const { trending, isLoading: isLoadingTrending } = useSearchDiscovery();
+  const { history, addHistory, removeHistory, clearHistory } = useSearchHistory();
+  
+  const [inputValue, setInputValue] = useState(query);
+  const [isFocused, setIsFocused] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Sync state with url query parameter changes
+  useEffect(() => {
+    setInputValue(query);
+  }, [query]);
+
+  // Click outside suggestions dropdown handling
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setIsFocused(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Fetch suggestions based on input value
+  const { data: suggestions = [], isLoading: isSuggestionsLoading } = useSearchSuggestions(inputValue);
 
   const debouncedSearch = useMemo(
     () =>
       debounce((value: string) => {
         onSearch(value);
+        if (value.trim()) {
+          addHistory(value);
+        }
       }, 500),
-    [onSearch]
+    [onSearch, addHistory]
   );
 
   // Cleanup effect for debounce
@@ -57,25 +87,47 @@ export const SearchResultHeader = ({
   }, [debouncedSearch]);
 
   const handleInputChange = (val: string) => {
+    setInputValue(val);
     debouncedSearch(val);
+  };
+
+  const handleSelectSuggestion = (val: string) => {
+    setInputValue(val);
+    onSearch(val);
+    addHistory(val);
+    setIsFocused(false);
   };
 
   // Helper to check if any filters are active
   const hasActiveFilters = Object.values(activeFilters).some(v => v !== undefined && v !== null);
+
+  const isDropdownOpen = isFocused && (inputValue.trim().length >= 2 || (inputValue.trim().length === 0 && history.length > 0));
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-top-4 duration-700">
       {/* Search Input Bar inside Glass Box */}
       <section className="glass-retro rounded-xl p-6">
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-          <div className="relative w-full max-w-2xl flex-1">
-            <SearchInput
-              value={query}
-              onChange={handleInputChange}
-              placeholder={tSearch("suggestions.search_placeholder")}
-              isLoading={isLoading}
-              debounceMs={0}
-              className="m-0"
+          <div ref={containerRef} className="relative w-full max-w-2xl flex-1">
+            <div onFocus={() => setIsFocused(true)}>
+              <SearchInput
+                value={inputValue}
+                onChange={handleInputChange}
+                placeholder={tSearch("suggestions.search_placeholder")}
+                isLoading={isLoading}
+                debounceMs={0}
+                className="m-0"
+              />
+            </div>
+            <SearchSuggestionsDropdown
+              suggestions={suggestions}
+              isOpen={isDropdownOpen}
+              isLoading={isSuggestionsLoading}
+              onSelect={handleSelectSuggestion}
+              query={inputValue}
+              history={history}
+              onRemoveHistory={removeHistory}
+              onClearHistory={clearHistory}
             />
           </div>
           <button
@@ -120,6 +172,18 @@ export const SearchResultHeader = ({
               onRemove={() => onRemoveFilter("category")}
             />
           )}
+          {activeFilters.locationCategory !== undefined && (
+            <Tag
+              label={`${tSearch("tabs.location")}: ${activeFilters.locationCategory}`}
+              onRemove={() => onRemoveFilter("locationCategory")}
+            />
+          )}
+          {activeFilters.tourCategory !== undefined && (
+            <Tag
+              label={`${tSearch("tabs.tour")}: ${activeFilters.tourCategory}`}
+              onRemove={() => onRemoveFilter("tourCategory")}
+            />
+          )}
           {activeFilters.district !== undefined && (
             <Tag
               label={`${tSearch("filters.district")}: ${activeFilters.district}`}
@@ -152,7 +216,7 @@ export const SearchResultHeader = ({
       {/* Trending Section */}
       <div className="pt-2">
         <div className="flex flex-wrap items-center gap-3">
-          <span className="text-xs font-semibold text-on-surface-variant uppercase tracking-widest mr-2 flex items-center gap-1.5">
+          <span className="mr-2 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-white/72">
             <IoTrendingUp className="text-[#8b6a55] text-base" />
             {tSearch("trending.title")}:
           </span>
@@ -171,7 +235,7 @@ export const SearchResultHeader = ({
                   "flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-300 scale-100 hover:scale-105",
                   isSelected
                     ? "bg-[#8b6a55] text-white shadow-black/30"
-                    : "bg-surface-container-low/70 text-on-surface-subtle hover:bg-surface-container-high/90 border border-border-low/40"
+                    : "border border-border-low/40 bg-surface-container-low/70 text-white/82 hover:bg-surface-container-high/90"
                 )}
               >
                 {idx < 2 && <IoFlashOutline className="text-amber-500 text-sm" />}

@@ -49,6 +49,8 @@ export const SearchResultsClient = ({ initialQuery }: SearchResultsClientProps) 
     maxPrice: safeParseNumber(searchParams.get("maxPrice")),
     rating: safeParseNumber(searchParams.get("rating")),
     category: safeParseNumber(searchParams.get("category")),
+    locationCategory: safeParseNumber(searchParams.get("locationCategory")),
+    tourCategory: safeParseNumber(searchParams.get("tourCategory")),
     district: searchParams.get("district") || undefined,
   }), [searchParams]);
 
@@ -65,7 +67,24 @@ export const SearchResultsClient = ({ initialQuery }: SearchResultsClientProps) 
   };
 
   const handleTypeChange = (newType: "all" | SearchResultType) => {
-    updateUrl({ type: newType, page: 1, category: undefined, district: undefined });
+    const nextUpdates: Record<string, string | number | undefined | null> = { type: newType, page: 1 };
+
+    if (newType === "all") {
+      nextUpdates.locationCategory = type === "location" ? filters.category : filters.locationCategory;
+      nextUpdates.tourCategory = type === "tour" ? filters.category : filters.tourCategory;
+      nextUpdates.category = undefined;
+    } else if (newType === "location") {
+      nextUpdates.category = type === "all" ? filters.locationCategory : filters.category;
+      nextUpdates.locationCategory = undefined;
+      nextUpdates.tourCategory = undefined;
+    } else {
+      nextUpdates.category = type === "all" ? filters.tourCategory : filters.category;
+      nextUpdates.locationCategory = undefined;
+      nextUpdates.tourCategory = undefined;
+      nextUpdates.district = undefined;
+    }
+
+    updateUrl(nextUpdates);
   };
 
   const handleSearch = (newQuery: string) => {
@@ -84,6 +103,8 @@ export const SearchResultsClient = ({ initialQuery }: SearchResultsClientProps) 
       maxPrice: newFilters.maxPrice,
       rating: newFilters.rating,
       category: newFilters.category,
+      locationCategory: newFilters.locationCategory,
+      tourCategory: newFilters.tourCategory,
       district: newFilters.district,
       page: 1,
     });
@@ -99,6 +120,8 @@ export const SearchResultsClient = ({ initialQuery }: SearchResultsClientProps) 
       maxPrice: undefined,
       rating: undefined,
       category: undefined,
+      locationCategory: undefined,
+      tourCategory: undefined,
       district: undefined,
       page: 1,
     });
@@ -146,6 +169,27 @@ export const SearchResultsClient = ({ initialQuery }: SearchResultsClientProps) 
         isLoading={isFetching}
       />
 
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <SearchTabs 
+          activeType={type} 
+          onChange={handleTypeChange} 
+          counts={counts}
+        />
+
+        {q.trim() ? (
+          <div className="w-full md:w-64">
+            <Select 
+              options={sortOptions}
+              value={currentSortOption}
+              onChange={handleSortChange}
+              containerClassName="bg-surface-container-low rounded-xl border border-[#262626] p-0 px-4"
+              className="bg-transparent"
+              placeholder={tSearch("sort.label")}
+            />
+          </div>
+        ) : null}
+      </div>
+
       {/* Main Results Container */}
       {q.trim() ? (
         <div className={cn("transition-all duration-500", q ? "opacity-100" : "opacity-0 h-0 overflow-hidden")}>
@@ -161,25 +205,6 @@ export const SearchResultsClient = ({ initialQuery }: SearchResultsClientProps) 
                 </div>
               )}
               <div className={cn("transition-opacity duration-200", isRefreshing ? "opacity-60" : "opacity-100")}>
-                <div className="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-                  <SearchTabs 
-                    activeType={type} 
-                    onChange={handleTypeChange} 
-                    counts={counts}
-                  />
-                  
-                  <div className="w-full md:w-64">
-                     <Select 
-                       options={sortOptions}
-                       value={currentSortOption}
-                       onChange={handleSortChange}
-                       containerClassName="bg-surface-container-low rounded-xl border border-[#262626] p-0 px-4"
-                       className="bg-transparent"
-                       placeholder={tSearch("sort.label")}
-                     />
-                  </div>
-                </div>
-
                 <SearchGrid 
                   results={results} 
                   isLoading={false} 

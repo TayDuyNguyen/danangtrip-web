@@ -52,17 +52,32 @@ export function useSearchDiscoveryGrid(enabled: boolean, locale: string) {
         originalData: loc,
       }));
 
-      const merged = [...mappedTours, ...mappedLocs];
-      merged.sort((a, b) => {
+      // Sort tours and locations separately first
+      mappedTours.sort((a, b) => {
         if (a.featured && !b.featured) return -1;
         if (!a.featured && b.featured) return 1;
-        const scoreA =
-          a.type === "tour" ? (a as TourSearchResult).bookingCount : (a as LocationSearchResult).viewCount;
-        const scoreB =
-          b.type === "tour" ? (b as TourSearchResult).bookingCount : (b as LocationSearchResult).viewCount;
-        return scoreB - scoreA;
+        return (b.bookingCount ?? 0) - (a.bookingCount ?? 0);
       });
-      return merged;
+
+      mappedLocs.sort((a, b) => {
+        if (a.featured && !b.featured) return -1;
+        if (!a.featured && b.featured) return 1;
+        return (b.viewCount ?? 0) - (a.viewCount ?? 0);
+      });
+
+      // Interleave: 1 tour, 1 location, 1 tour, 1 location...
+      const interleaved: (TourSearchResult | LocationSearchResult)[] = [];
+      const maxLen = Math.max(mappedTours.length, mappedLocs.length);
+      for (let i = 0; i < maxLen; i++) {
+        if (i < mappedTours.length) {
+          interleaved.push(mappedTours[i]);
+        }
+        if (i < mappedLocs.length) {
+          interleaved.push(mappedLocs[i]);
+        }
+      }
+
+      return interleaved;
     },
     enabled,
     staleTime: 1000 * 60 * 5,

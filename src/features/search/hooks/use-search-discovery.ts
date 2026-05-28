@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import { searchService } from "@/services/search.service";
-import { extractItems } from "@/utils";
 
 /**
  * Hook for discovery data (popular and trending searches)
@@ -11,7 +10,8 @@ export const useSearchDiscovery = () => {
     queryFn: async () => {
       try {
         const res = await searchService.getPopular(10, 30);
-        return extractItems<string>(res.data);
+        const popularData = res.data?.popular || [];
+        return popularData.map((item) => item.query);
       } catch {
         return [];
       }
@@ -24,7 +24,8 @@ export const useSearchDiscovery = () => {
     queryFn: async () => {
       try {
         const res = await searchService.getTrending(10);
-        return extractItems<string>(res.data);
+        const trendingData = res.data?.trending || [];
+        return trendingData.map((item) => item.query);
       } catch {
         return [];
       }
