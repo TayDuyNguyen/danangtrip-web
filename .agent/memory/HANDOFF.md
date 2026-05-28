@@ -3,21 +3,22 @@
 ## Last Updated
 
 - Date: 2026-05-27
-- Status: Completed Step 10 closeout for `web_route_api_next_screen_review`
+- Status: Completed Step 10 closeout for `user-home-hardening`
 
 ## Current Feature
 
-- Feature: `web_route_api_next_screen_review`
-- Result: The generic web route/API review is now closed. The next concrete screen is locked as `user-profile`.
-- Status: All review steps (01-10) are complete, and `npm run prepush:check` passed in `danangtrip-web`.
+- Feature: `user-home-hardening`
+- Result: The home page route (`/`) has been completely hardened with robust interactive states, including personalized recommendations, active favorite checking/toggling, and header notification popups.
+- Status: All implementation and quality checks are complete. ESLint warnings for parameter typing are fully resolved, and `npm run prepush:check` runs successfully synchronous/asynchronous.
 
 ## Artifacts Created
 
-1. **Deploy Report:** [2026-05-27__web_route_api_next_screen_review__deploy-report.md](file:///d:/DATN/danangtrip-web/.agent/artifacts/deploy/2026-05-27__web_route_api_next_screen_review__deploy-report.md)
-2. **Review Report:** [2026-05-27__web_route_api_next_screen_review__review.md](file:///d:/DATN/danangtrip-web/.agent/artifacts/review/2026-05-27__web_route_api_next_screen_review__review.md)
+1. **Checklist & Tasks:** [task.md](file:///C:/Users/NGUYEN%20DUY%20TAY/.gemini/antigravity/brain/8187e87f-0ee8-4744-992c-ee9005238243/task.md)
+2. **Walkthrough:** [walkthrough.md](file:///C:/Users/NGUYEN%20DUY%20TAY/.gemini/antigravity/brain/8187e87f-0ee8-4744-992c-ee9005238243/walkthrough.md)
+3. **Deploy Report:** [2026-05-27__user-home-hardening__deploy-report.md](file:///d:/DATN/danangtrip-web/.agent/artifacts/deploy/2026-05-27__user-home-hardening__deploy-report.md)
+4. **Review Report:** [2026-05-27__user-home-hardening__review.md](file:///d:/DATN/danangtrip-web/.agent/artifacts/review/2026-05-27__user-home-hardening__review.md)
 
 ## Next Action
 
-- Update prompt/progress tracking so web no longer points at `web_route_api_next_screen_review`.
-- Start or split the next concrete feature branch as `user-profile`.
-- Before merge, run a live browser smoke of `/profile` save and avatar upload because this Step 10 pass relied on static gates rather than a fresh runtime session.
+- The codebase is completely verified and in a pristine buildable state.
+- Proceed to push the branch or merge changes to the master branch.

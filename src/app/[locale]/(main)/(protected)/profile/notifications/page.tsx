@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { NotificationsPageClient } from "@/features/notifications/components/NotificationsPageClient";
 
+import { ProfileLayoutWrapper } from "@/features/profile/components/ProfileLayoutWrapper";
+
 interface Props {
   params: Promise<{ locale: string }>;
 }
@@ -21,8 +23,13 @@ export default async function NotificationsPage({ params }: Props) {
   setRequestLocale(locale);
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-12">
+    <ProfileLayoutWrapper
+      breadcrumbs={[
+        { labelKey: "breadcrumb.profile", href: "/profile" },
+        { labelKey: "breadcrumb.notifications" },
+      ]}
+    >
       <NotificationsPageClient />
-    </div>
+    </ProfileLayoutWrapper>
   );
 }

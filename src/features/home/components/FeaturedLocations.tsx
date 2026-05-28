@@ -13,15 +13,94 @@ import {
   IoHeart
 } from "@/components/icons/solar";
 import { useLocations } from "../hooks/use-locations";
-import { useAddFavoriteLocation } from "../hooks/use-add-favorite-location";
+import { useFavoriteCheck, useFavoriteToggle } from "@/hooks/useFavorite";
+import { useAuthStore } from "@/store/auth.store";
+import { toast } from "sonner";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 import { getHomeLocationImage } from "../utils/home-image-fallbacks";
+import type { Location } from "@/types";
+
+/**
+ * Subcomponent to represent a Location Card with real-time Favorite toggling.
+ */
+const LocationCard = ({ loc, index }: { loc: Location; index: number }) => {
+  const t = useTranslations();
+  const { isAuthenticated } = useAuthStore();
+  const { data: isFavorite } = useFavoriteCheck({ location_id: loc.id });
+  const toggleMutation = useFavoriteToggle({ location_id: loc.id });
+
+  const handleFavoriteClick = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!isAuthenticated) {
+      toast.error(t("common.favorite.login_required") || "Vui lòng đăng nhập để lưu yêu thích!");
+      return;
+    }
+
+    try {
+      await toggleMutation.mutateAsync(!!isFavorite);
+      if (isFavorite) {
+        toast.success(t("common.favorite.remove_success") || "Đã xóa khỏi danh sách yêu thích!");
+      } else {
+        toast.success(t("common.favorite.add_success") || "Đã thêm vào danh sách yêu thích!");
+      }
+    } catch {
+      toast.error(t("common.favorite.error") || "Đã xảy ra lỗi!");
+    }
+  };
+
+  return (
+    <div
+      className="min-w-[300px] md:min-w-[380px] group cursor-pointer animate-reveal-up snap-start"
+      style={{ animationDelay: `${index * 100}ms` }}
+    >
+      <Link href={`${ROUTES.LOCATIONS}?q=${encodeURIComponent(loc.name)}`}>
+        <div className="relative aspect-3/4 rounded-xl overflow-hidden mb-6 shadow-[0_20px_40px_rgba(0,0,0,0.3)] active:scale-[0.98] transition-all duration-500 hover:shadow-[0_30px_60px_rgba(139,106,85,0.2)] border border-[#262626]">
+          <Image
+            src={getHomeLocationImage(loc.thumbnail, loc.images, loc.id)}
+            alt={loc.name}
+            fill
+            className="object-cover transition-transform duration-1000 group-hover:scale-110"
+            sizes="(max-width: 768px) 300px, 380px"
+            priority={index < 2}
+          />
+          <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent opacity-80 transition-opacity group-hover:opacity-90" />
+
+          {/* Favorite Button */}
+          <button
+            suppressHydrationWarning
+            onClick={handleFavoriteClick}
+            className="absolute top-6 right-6 w-12 h-12 bg-[#111111]/70 backdrop-blur-md rounded-full flex items-center justify-center text-white border border-[#262626] hover:bg-[#171717] hover:text-[#8b6a55] transition-all z-20 active:scale-90 shadow-lg cursor-pointer"
+          >
+            {isFavorite ? (
+              <IoHeart className="text-2xl text-red-500" />
+            ) : (
+              <IoHeartOutline className="text-2xl text-[#d4d4d4] hover:text-red-500 transition-colors" />
+            )}
+          </button>
+
+          {/* Info */}
+          <div className="absolute inset-0 flex flex-col justify-end p-8 translate-y-4 group-hover:translate-y-0 transition-transform duration-700">
+            <div className="flex items-center gap-2 text-white/90 text-[13px] font-bold mb-3 tracking-wide">
+              <IoLocationOutline className="text-[#8b6a55] text-lg" />
+              {loc.address || t("home.featured_locations.default_address")}
+            </div>
+            <h3 className="text-white text-[28px] font-black leading-tight mb-2 drop-shadow-2xl">
+              {loc.name}
+            </h3>
+            <div className="h-1 w-0 bg-[#8b6a55] transition-all duration-500 group-hover:w-16 rounded-full" />
+          </div>
+        </div>
+      </Link>
+    </div>
+  );
+};
 
 const FeaturedLocations = () => {
   const [activeCategoryId, setActiveCategoryId] = useState<number | undefined>(undefined);
   const { featuredLocations: locations, categories, isLoading, isFetching } = useLocations(activeCategoryId);
   const t = useTranslations();
-  const { mutateAsync: addFavorite } = useAddFavoriteLocation();
   const { elementRef, isVisible } = useScrollReveal();
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showLeftBtn, setShowLeftBtn] = useState(false);
@@ -47,16 +126,6 @@ const FeaturedLocations = () => {
       const { clientWidth } = scrollRef.current;
       const scrollAmount = direction === "left" ? -clientWidth * 0.8 : clientWidth * 0.8;
       scrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
-    }
-  };
-
-  const handleFavoriteClick = async (e: React.MouseEvent, locId: number) => {
-    e.preventDefault();
-    e.stopPropagation();
-    try {
-      await addFavorite(locId);
-    } catch {
-      /* toasts handled in mutation */
     }
   };
 
@@ -149,50 +218,15 @@ const FeaturedLocations = () => {
               ))
             ) : locations.length > 0 ? (
               locations.map((loc, index) => (
-                <div
+                <LocationCard
                   key={loc.id}
-                  className="min-w-[300px] md:min-w-[380px] group cursor-pointer animate-reveal-up snap-start"
-                  style={{ animationDelay: `${index * 100}ms` }}
-                >
-                  <Link href={`${ROUTES.LOCATIONS}?q=${encodeURIComponent(loc.name)}`}>
-                    <div className="relative aspect-3/4 rounded-xl overflow-hidden mb-6 shadow-[0_20px_40px_rgba(0,0,0,0.3)] active:scale-[0.98] transition-all duration-500 hover:shadow-[0_30px_60px_rgba(139,106,85,0.2)] border border-[#262626]">
-                      <Image
-                        src={getHomeLocationImage(loc.thumbnail, loc.images, loc.id)}
-                        alt={loc.name}
-                        fill
-                        className="object-cover transition-transform duration-1000 group-hover:scale-110"
-                        sizes="(max-width: 768px) 300px, 380px"
-                      />
-                      <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent opacity-80 transition-opacity group-hover:opacity-90" />
-
-                      {/* Favorite Button */}
-                      <button
-                        suppressHydrationWarning
-                        onClick={(e) => handleFavoriteClick(e, loc.id)}
-                        className="absolute top-6 right-6 w-12 h-12 bg-[#111111]/70 backdrop-blur-md rounded-full flex items-center justify-center text-white border border-[#262626] hover:bg-[#171717] hover:text-[#8b6a55] transition-all z-20 group/fav active:scale-90 shadow-lg"
-                      >
-                        <IoHeartOutline className="text-2xl group-hover/fav:hidden" />
-                        <IoHeart className="text-2xl hidden group-hover/fav:block" />
-                      </button>
-
-                      {/* Info */}
-                      <div className="absolute inset-0 flex flex-col justify-end p-8 translate-y-4 group-hover:translate-y-0 transition-transform duration-700">
-                        <div className="flex items-center gap-2 text-white/90 text-[13px] font-bold mb-3 tracking-wide">
-                          <IoLocationOutline className="text-[#8b6a55] text-lg" />
-                          {loc.address || t("home.featured_locations.default_address")}
-                        </div>
-                        <h3 className="text-white text-[28px] font-black leading-tight mb-2 drop-shadow-2xl">
-                          {loc.name}
-                        </h3>
-                        <div className="h-1 w-0 bg-[#8b6a55] transition-all duration-500 group-hover:w-16 rounded-full" />
-                      </div>
-                    </div>
-                  </Link>
-                </div>
+                  loc={loc}
+                  index={index}
+                />
               ))
             ) : (
-              <div className="w-full py-20 flex flex-col items-center justify-center text-on-surface-subtle bg-surface-container/30 rounded-xl border border-dashed border-outline-variant animate-reveal-up">
-                <IoLocationOutline size={48} className="mb-4 opacity-20" />
+              <div className="w-full py-20 flex flex-col items-center justify-center text-on-surface-subtle bg-surface-container/30 rounded-xl border border-dashed border-[#262626] animate-reveal-up">
+                <IoLocationOutline size={48} className="mb-4 opacity-20 text-[#8b6a55]" />
                 <p className="text-[16px] font-medium">{t("home.featured_locations.no_data")}</p>
               </div>
             )}

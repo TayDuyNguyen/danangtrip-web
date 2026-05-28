@@ -2,6 +2,7 @@ import {
   Hero,
   StatsBar,
   CategoryGrid,
+  Recommendations,
   FeaturedLocations,
   TourCategories,
   FeaturedTours,
@@ -15,6 +16,7 @@ export default function Home() {
       <Hero />
       <StatsBar />
       <CategoryGrid />
+      <Recommendations />
       <FeaturedLocations />
       <TourCategories />
       <FeaturedTours />

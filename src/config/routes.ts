@@ -57,7 +57,7 @@ export const PROTECTED_ROUTES = {
   BOOKINGS: "/profile/bookings",
   BOOKING_BY_CODE: (bookingCode: string) => `/profile/bookings/code/${bookingCode}`,
   FAVORITES: "/profile/favorites",
-  NOTIFICATIONS: "/notifications",
+  NOTIFICATIONS: "/profile/notifications",
   RECOMMENDATIONS: "/profile/recommendations",
   DELETE_ACCOUNT: "/profile/delete",
 } as const;
