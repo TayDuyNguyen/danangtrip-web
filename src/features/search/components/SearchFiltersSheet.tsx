@@ -11,7 +11,7 @@ import { cn } from "@/utils/string";
 import { Select } from "@/components/ui/Select";
 import { useSearchFilterCategories } from "../hooks/use-search-filter-categories";
 import { useLocationDistricts } from "@/features/locations/hooks/use-locations";
-import { formatInputPrice, parseInputPrice } from "@/utils/format";
+import { formatInputPrice } from "@/utils/format";
 
 interface SearchFiltersSheetProps {
   isOpen: boolean;
@@ -36,8 +36,10 @@ export const SearchFiltersSheet = ({
   const [maxPriceInput, setMaxPriceInput] = useState(
     initialFilters.maxPrice !== undefined ? formatInputPrice(initialFilters.maxPrice) : ""
   );
-  const { data: categories = [], isLoading: isLoadingCats } = useSearchFilterCategories(searchType, isOpen);
+  const { data: categoryData, isLoading: isLoadingCats } = useSearchFilterCategories(searchType, isOpen);
   const { data: districts = [], isLoading: isLoadingDists } = useLocationDistricts();
+  const locationCategories = categoryData?.locationCategories ?? [];
+  const tourCategories = categoryData?.tourCategories ?? [];
 
   const handleApply = () => {
     onApply(localFilters);
@@ -78,15 +80,16 @@ export const SearchFiltersSheet = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-100 overflow-hidden">
-      {/* Backdrop */}
-      <div 
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-in fade-in duration-500"
+    <div className="pointer-events-none fixed inset-0 z-100 overflow-hidden">
+      <button
+        aria-label={t("filters.close")}
+        className="pointer-events-auto absolute inset-0 cursor-default bg-transparent"
         onClick={onClose}
+        type="button"
       />
-      
-      {/* Drawer */}
-      <div className="absolute inset-y-0 right-0 w-full max-w-md bg-[#111111] border-l border-white/10 shadow-2xl flex flex-col animate-in slide-in-from-right duration-500">
+
+      <div className="pointer-events-auto absolute right-6 top-24 w-[min(440px,calc(100vw-2rem))] animate-in slide-in-from-right duration-300">
+        <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#111111] shadow-2xl">
         {/* Header */}
         <div className="p-6 flex items-center justify-between border-b border-white/10">
           <h2 className="text-2xl font-bold text-white">{t("filters.title")}</h2>
@@ -99,33 +102,60 @@ export const SearchFiltersSheet = ({
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto p-8 space-y-10">
+        <div className="max-h-[min(64vh,42rem)] overflow-y-auto p-8 space-y-10">
           
-          {/* Categories */}
-          <div className="space-y-6">
-            <h3 className="flex items-center justify-between text-[11px] font-black text-white/80 uppercase tracking-[0.3em] pl-1">
-              <span>{t("filters.category")}</span>
-              {localFilters.category && (
-                 <button onClick={() => setLocalFilters(p => ({...p, category: undefined}))} className="text-[#8b6a55] normal-case text-xs font-black tracking-normal cursor-pointer">
-                   {t("filters.reset")}
-                 </button>
-              )}
-            </h3>
-            <div className="space-y-4">
-              <Select
-                label={t("filters.category")}
-                options={categories.map(cat => ({ value: cat.id, label: cat.name }))}
-                value={localFilters.category ? { value: localFilters.category, label: categories.find(c => c.id === localFilters.category)?.name || "" } : null}
-                onChange={(option) => setLocalFilters(p => ({ ...p, category: option ? (option as { value: number }).value : undefined }))}
-                isClearable
-                isLoading={isLoadingCats}
-                placeholder={t("filters.category")}
-              />
-            </div>
-          </div>
-
-          {/* District — áp dụng khi tìm địa điểm (hoặc tab Tất cả) */}
+          {/* Location category */}
           {(searchType === "location" || searchType === "all") && (
+            <div className="space-y-6">
+              <h3 className="flex items-center justify-between text-[11px] font-black text-white/80 uppercase tracking-[0.3em] pl-1">
+                <span>{searchType === "all" ? t("filters.location_category") : t("filters.category")}</span>
+                {(searchType === "location" ? localFilters.category : localFilters.locationCategory) && (
+                  <button
+                    onClick={() =>
+                      setLocalFilters((p) => ({
+                        ...p,
+                        category: searchType === "location" ? undefined : p.category,
+                        locationCategory: undefined,
+                      }))
+                    }
+                    className="text-[#8b6a55] normal-case text-xs font-black tracking-normal cursor-pointer"
+                  >
+                    {t("filters.reset")}
+                  </button>
+                )}
+              </h3>
+              <div className="space-y-4">
+                <Select
+                  label={searchType === "all" ? t("filters.location_category") : t("filters.category")}
+                  options={locationCategories.map(cat => ({ value: cat.id, label: cat.name }))}
+                  value={
+                    (searchType === "location" ? localFilters.category : localFilters.locationCategory)
+                      ? {
+                          value: searchType === "location" ? localFilters.category : localFilters.locationCategory,
+                          label:
+                            locationCategories.find(
+                              (c) => c.id === (searchType === "location" ? localFilters.category : localFilters.locationCategory)
+                            )?.name || "",
+                        }
+                      : null
+                  }
+                  onChange={(option) =>
+                    setLocalFilters((p) => ({
+                      ...p,
+                      category: searchType === "location" ? ((option as { value: number } | null)?.value) : p.category,
+                      locationCategory: searchType === "all" ? ((option as { value: number } | null)?.value) : p.locationCategory,
+                    }))
+                  }
+                  isClearable
+                  isLoading={isLoadingCats}
+                  placeholder={searchType === "all" ? t("filters.location_category") : t("filters.category")}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* District */}
+          {searchType === "location" && (
             <div className="space-y-6">
               <h3 className="text-[11px] font-black text-white/80 uppercase tracking-[0.3em] pl-1">{t("filters.district")}</h3>
               <Select
@@ -137,6 +167,56 @@ export const SearchFiltersSheet = ({
                 isLoading={isLoadingDists}
                 placeholder={t("filters.district")}
               />
+            </div>
+          )}
+
+          {/* Tour category */}
+          {(searchType === "tour" || searchType === "all") && (
+            <div className="space-y-6">
+              <h3 className="flex items-center justify-between text-[11px] font-black text-white/80 uppercase tracking-[0.3em] pl-1">
+                <span>{searchType === "all" ? t("filters.tour_category") : t("filters.category")}</span>
+                {(searchType === "tour" ? localFilters.category : localFilters.tourCategory) && (
+                  <button
+                    onClick={() =>
+                      setLocalFilters((p) => ({
+                        ...p,
+                        category: searchType === "tour" ? undefined : p.category,
+                        tourCategory: undefined,
+                      }))
+                    }
+                    className="text-[#8b6a55] normal-case text-xs font-black tracking-normal cursor-pointer"
+                  >
+                    {t("filters.reset")}
+                  </button>
+                )}
+              </h3>
+              <div className="space-y-4">
+                <Select
+                  label={searchType === "all" ? t("filters.tour_category") : t("filters.category")}
+                  options={tourCategories.map(cat => ({ value: cat.id, label: cat.name }))}
+                  value={
+                    (searchType === "tour" ? localFilters.category : localFilters.tourCategory)
+                      ? {
+                          value: searchType === "tour" ? localFilters.category : localFilters.tourCategory,
+                          label:
+                            tourCategories.find(
+                              (c) => c.id === (searchType === "tour" ? localFilters.category : localFilters.tourCategory)
+                            )?.name || "",
+                        }
+                      : null
+                  }
+                  onChange={(option) =>
+                    setLocalFilters((p) => ({
+                      ...p,
+                      category: searchType === "tour" ? ((option as { value: number } | null)?.value) : p.category,
+                      tourCategory: searchType === "all" ? ((option as { value: number } | null)?.value) : p.tourCategory,
+                    }))
+                  }
+                  isClearable
+                  isLoading={isLoadingCats}
+                  placeholder={searchType === "all" ? t("filters.tour_category") : t("filters.category")}
+                />
+              </div>
             </div>
           )}
 
@@ -215,7 +295,7 @@ export const SearchFiltersSheet = ({
         </div>
 
         {/* Footer */}
-        <div className="p-8 border-t border-white/10 bg-[#111111] grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-4 border-t border-white/10 bg-[#111111] p-6">
           <button
             onClick={handleReset}
             className="py-4 rounded-xl border-2 border-white/10 text-white/80 font-black hover:bg-white/5 transition-all active:scale-95 cursor-pointer"
@@ -229,6 +309,7 @@ export const SearchFiltersSheet = ({
             {t("filters.apply")}
           </button>
         </div>
+      </div>
       </div>
     </div>
   );

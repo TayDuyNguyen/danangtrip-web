@@ -9,9 +9,12 @@
   },
   "filters": {
     "title": "Filters",
+    "close": "Close filters",
     "price_range": "Price Range",
     "rating": "Rating",
     "category": "Category",
+    "location_category": "Location Category",
+    "tour_category": "Tour Category",
     "district": "District",
     "apply": "Apply",
     "reset": "Reset",
@@ -42,6 +45,7 @@
   },
   "trending": {
     "title": "Trending Searches",
+    "history_title": "Recent Searches",
     "items": {
       "son_tra": "Son Tra Peninsula",
       "asia_park": "Asia Park",
@@ -63,6 +67,7 @@
     "error": "Failed to load suggestions, please try again",
     "views": "{count} views",
     "bookings": "{count} bookings",
-    "search_placeholder": "Search for tours and places..."
+    "search_placeholder": "Search for tours and places...",
+    "loading_trending": "Type to search..."
   }
 }

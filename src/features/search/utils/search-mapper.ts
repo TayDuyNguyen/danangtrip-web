@@ -26,7 +26,11 @@ const mapSortParams = (sort: SearchSortOption, type: SearchResultType) => {
 /**
  * Maps UI SearchState to SearchRequestParams for the /search API
  */
-export const mapSearchStateToParams = (state: SearchState, targetType?: SearchResultType): SearchRequestParams => {
+export const mapSearchStateToParams = (
+  state: SearchState,
+  targetType?: SearchResultType,
+  perPageOverride?: number
+): SearchRequestParams => {
   const { q, type, sort, filters, page } = state;
   const activeType = targetType || (type === "all" ? "location" : type); // Default to location if all
   
@@ -34,14 +38,17 @@ export const mapSearchStateToParams = (state: SearchState, targetType?: SearchRe
   
   const params: SearchRequestParams = {
     type: activeType,
-    district: filters.district,
+    district: activeType === "location" ? filters.district : undefined,
     price_min: filters.minPrice,
     price_max: filters.maxPrice,
-    category_id: activeType === "location" ? filters.category : undefined,
-    tour_category_id: activeType === "tour" ? filters.category : undefined,
+    min_rating: filters.rating,
+    category_id:
+      activeType === "location" ? (filters.category ?? filters.locationCategory) : undefined,
+    tour_category_id:
+      activeType === "tour" ? (filters.category ?? filters.tourCategory) : undefined,
     ...sortParams,
     page: page || 1,
-    per_page: 12,
+    per_page: perPageOverride || 12,
     session_id: getOrCreateSessionId(),
   };
 

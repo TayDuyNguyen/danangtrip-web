@@ -9,9 +9,12 @@
   },
   "filters": {
     "title": "Bộ lọc nâng cao",
+    "close": "Đóng bộ lọc",
     "price_range": "Khoảng giá",
     "rating": "Đánh giá",
     "category": "Danh mục",
+    "location_category": "Danh mục địa điểm",
+    "tour_category": "Danh mục tour",
     "district": "Quận/Huyện",
     "apply": "Áp dụng",
     "reset": "Đặt lại",
@@ -42,6 +45,7 @@
   },
   "trending": {
     "title": "Xu hướng tìm kiếm",
+    "history_title": "Tìm kiếm gần đây",
     "items": {
       "son_tra": "Bán đảo Sơn Trà",
       "asia_park": "Asia Park",
@@ -63,6 +67,7 @@
     "error": "Không tải được gợi ý, vui lòng thử lại",
     "views": "{count} lượt xem",
     "bookings": "{count} đặt",
-    "search_placeholder": "Nhập từ khóa tìm kiếm..."
+    "search_placeholder": "Nhập từ khóa tìm kiếm...",
+    "loading_trending": "Nhập từ khóa để bắt đầu tìm kiếm..."
   }
 }

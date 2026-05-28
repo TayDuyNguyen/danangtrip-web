@@ -2,7 +2,7 @@ import { API_ENDPOINTS } from "@/config";
 import axiosInstance from "@/lib/axios";
 import { ApiResponse, PaginatedResponse } from "@/types";
 import type { Location, Tour, RecommendedLocation, RecommendedTour } from "@/types";
-import type { SearchRequestParams, SearchSuggestionResponse } from "@/types/search.types";
+import type { SearchRequestParams, SearchSuggestionResponse, SearchPopularResponse, SearchTrendingResponse } from "@/types/search.types";
 
 export const searchService = {
   /**
@@ -20,7 +20,7 @@ export const searchService = {
   /**
    * Popular searches (30 days by default)
    */
-  getPopular: (limit: number = 10, days: number = 30): Promise<ApiResponse<string[]>> =>
+  getPopular: (limit: number = 10, days: number = 30): Promise<ApiResponse<SearchPopularResponse>> =>
     axiosInstance.get(API_ENDPOINTS.SEARCH.POPULAR, {
       params: {
         limit: Math.min(Math.max(limit, 1), 50),
@@ -31,7 +31,7 @@ export const searchService = {
   /**
    * Trending searches (1 day by default)
    */
-  getTrending: (limit: number = 10): Promise<ApiResponse<string[]>> =>
+  getTrending: (limit: number = 10): Promise<ApiResponse<SearchTrendingResponse>> =>
     axiosInstance.get(API_ENDPOINTS.SEARCH.TRENDING, { params: { limit: Math.min(Math.max(limit, 1), 50) } }),
 
   /**

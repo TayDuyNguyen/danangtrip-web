@@ -6,6 +6,7 @@ export interface SearchRequestParams {
   district?: string;
   price_min?: number;
   price_max?: number;
+  min_rating?: number;
   sort_by?: string;
   sort_order?: "asc" | "desc";
   page?: number;
@@ -16,8 +17,8 @@ export interface SearchRequestParams {
 import type { Location, Tour } from "./entities.types";
 
 export interface SearchSuggestionResponse {
-  q: string;
-  items: string[];
+  query: string;
+  suggestions: string[];
 }
 
 export interface RecommendationParams {
@@ -35,4 +36,18 @@ export interface RecommendedTour extends Tour {
 export interface RecommendationResponse {
   locations: RecommendedLocation[];
   tours: RecommendedTour[];
+}
+
+export interface SearchPopularResponse {
+  popular: {
+    query: string;
+    count: number;
+  }[];
+}
+
+export interface SearchTrendingResponse {
+  trending: {
+    query: string;
+    count: number;
+  }[];
 }

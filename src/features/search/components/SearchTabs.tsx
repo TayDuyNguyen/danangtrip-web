@@ -24,7 +24,7 @@ export const SearchTabs = ({ activeType, onChange, counts }: SearchTabsProps) =>
   ];
 
   return (
-    <div className="flex items-center gap-1 p-1 bg-surface-container rounded-2xl w-fit">
+    <div className="flex items-center gap-1 rounded-2xl border border-[#262626] bg-[#141414] p-1 shadow-sm w-fit">
       {tabs.map((tab) => (
         <button
           key={tab.id}
@@ -32,15 +32,15 @@ export const SearchTabs = ({ activeType, onChange, counts }: SearchTabsProps) =>
           className={cn(
             "relative px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300",
             activeType === tab.id
-              ? "bg-surface-container-lowest text-[#8b6a55] shadow-sm scale-100"
-              : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high/40 scale-95"
+              ? "bg-[#050505] text-[#d4a689] shadow-sm scale-100"
+              : "text-white/75 hover:text-white hover:bg-white/5 scale-100"
           )}
         >
           <div className="flex items-center gap-2">
             <span>{tab.label}</span>
             <span className={cn(
               "px-1.5 py-0.5 rounded-md text-[10px] font-bold transition-colors",
-              activeType === tab.id ? "bg-[#8b6a55]/10 text-[#8b6a55]" : "bg-surface-container-high text-on-surface-subtle"
+              activeType === tab.id ? "bg-[#8b6a55]/15 text-[#d4a689]" : "bg-white/5 text-white/65"
             )}>
               {tab.count}
             </span>

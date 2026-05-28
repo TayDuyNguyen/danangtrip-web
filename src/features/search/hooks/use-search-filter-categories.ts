@@ -16,11 +16,29 @@ export function useSearchFilterCategories(
       if (searchType === "location") {
         const res = await locationService.getCategories();
         const list = extractItems<Category>(res.data);
-        return list.map((c) => ({ id: c.id, name: c.name }));
+        return {
+          locationCategories: list.map((c) => ({ id: c.id, name: c.name })),
+          tourCategories: [],
+        };
       }
-      const res = await tourService.getCategories();
-      const list = extractItems<Category>(res.data);
-      return list.map((c) => ({ id: c.id, name: c.name }));
+      if (searchType === "tour") {
+        const res = await tourService.getCategories();
+        const list = extractItems<Category>(res.data);
+        return {
+          locationCategories: [],
+          tourCategories: list.map((c) => ({ id: c.id, name: c.name })),
+        };
+      }
+
+      const [locationRes, tourRes] = await Promise.all([
+        locationService.getCategories(),
+        tourService.getCategories(),
+      ]);
+
+      return {
+        locationCategories: extractItems<Category>(locationRes.data).map((c) => ({ id: c.id, name: c.name })),
+        tourCategories: extractItems<Category>(tourRes.data).map((c) => ({ id: c.id, name: c.name })),
+      };
     },
     enabled: isOpen,
     staleTime: 1000 * 60 * 10,
