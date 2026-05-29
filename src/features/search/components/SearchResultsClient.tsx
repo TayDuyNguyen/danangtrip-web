@@ -9,19 +9,20 @@ import { SearchResultHeader } from "./SearchResultHeader";
 import { SearchGrid } from "./SearchGrid";
 import { SearchResultType, SearchSortOption, SearchFilters } from "../types/search.types";
 import { useSearch } from "../hooks/use-search";
+import { useSearchDiscovery } from "../hooks/use-search-discovery";
 import { useSearchDiscoveryGrid } from "../hooks/use-search-discovery-grid";
 import { SearchFiltersSheet } from "./SearchFiltersSheet";
 import { Loading } from "@/components/ui";
 import { Select, type SelectOption } from "@/components/ui/Select";
 import { cn } from "@/utils/string";
-import { IoStar } from "@/components/icons/solar";
 import StandardPagination from "@/components/ui/pagination/StandardPagination";
+import { searchService } from "@/services/search.service";
+import { getOrCreateSessionId } from "@/utils/session";
 
 interface SearchResultsClientProps {
   initialQuery: string;
 }
 
-// Helper to safely parse numbers from URL
 const safeParseNumber = (val: string | null): number | undefined => {
   if (!val) return undefined;
   const num = Number(val);
@@ -33,26 +34,28 @@ export const SearchResultsClient = ({ initialQuery }: SearchResultsClientProps) 
   const router = useRouter();
   const locale = useLocale();
   const tSearch = useTranslations("search");
-  
-  // Drawer State — nonce để remount sheet, tránh setState trong effect khi mở lại
+
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filterSheetNonce, setFilterSheetNonce] = useState(0);
 
-  // --- URL State Management ---
+  // --- URL State ---
   const q = searchParams.get("q") ?? initialQuery;
   const type = (searchParams.get("type") as "all" | SearchResultType) || "all";
   const sort = (searchParams.get("sort") as SearchSortOption) || "popular";
   const page = safeParseNumber(searchParams.get("page")) || 1;
-  
-  const filters = useMemo((): SearchFilters => ({
-    minPrice: safeParseNumber(searchParams.get("minPrice")),
-    maxPrice: safeParseNumber(searchParams.get("maxPrice")),
-    rating: safeParseNumber(searchParams.get("rating")),
-    category: safeParseNumber(searchParams.get("category")),
-    locationCategory: safeParseNumber(searchParams.get("locationCategory")),
-    tourCategory: safeParseNumber(searchParams.get("tourCategory")),
-    district: searchParams.get("district") || undefined,
-  }), [searchParams]);
+
+  const filters = useMemo(
+    (): SearchFilters => ({
+      minPrice: safeParseNumber(searchParams.get("minPrice")),
+      maxPrice: safeParseNumber(searchParams.get("maxPrice")),
+      rating: safeParseNumber(searchParams.get("rating")),
+      category: safeParseNumber(searchParams.get("category")),
+      locationCategory: safeParseNumber(searchParams.get("locationCategory")),
+      tourCategory: safeParseNumber(searchParams.get("tourCategory")),
+      district: searchParams.get("district") || undefined,
+    }),
+    [searchParams]
+  );
 
   const updateUrl = (updates: Record<string, string | number | undefined | null>) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -67,8 +70,10 @@ export const SearchResultsClient = ({ initialQuery }: SearchResultsClientProps) 
   };
 
   const handleTypeChange = (newType: "all" | SearchResultType) => {
-    const nextUpdates: Record<string, string | number | undefined | null> = { type: newType, page: 1 };
-
+    const nextUpdates: Record<string, string | number | undefined | null> = {
+      type: newType,
+      page: 1,
+    };
     if (newType === "all") {
       nextUpdates.locationCategory = type === "location" ? filters.category : filters.locationCategory;
       nextUpdates.tourCategory = type === "tour" ? filters.category : filters.tourCategory;
@@ -83,18 +88,13 @@ export const SearchResultsClient = ({ initialQuery }: SearchResultsClientProps) 
       nextUpdates.tourCategory = undefined;
       nextUpdates.district = undefined;
     }
-
     updateUrl(nextUpdates);
   };
 
-  const handleSearch = (newQuery: string) => {
-    updateUrl({ q: newQuery, page: 1 });
-  };
+  const handleSearch = (newQuery: string) => updateUrl({ q: newQuery, page: 1 });
 
   const handleSortChange = (option: SelectOption | null) => {
-    if (option) {
-      updateUrl({ sort: option.value, page: 1 });
-    }
+    if (option) updateUrl({ sort: option.value, page: 1 });
   };
 
   const handleFilterChange = (newFilters: SearchFilters) => {
@@ -110,11 +110,9 @@ export const SearchResultsClient = ({ initialQuery }: SearchResultsClientProps) 
     });
   };
 
-  const handleRemoveFilter = (key: string) => {
-    updateUrl({ [key]: undefined, page: 1 });
-  };
+  const handleRemoveFilter = (key: string) => updateUrl({ [key]: undefined, page: 1 });
 
-  const clearFilters = () => {
+  const clearFilters = () =>
     updateUrl({
       minPrice: undefined,
       maxPrice: undefined,
@@ -125,23 +123,31 @@ export const SearchResultsClient = ({ initialQuery }: SearchResultsClientProps) 
       district: undefined,
       page: 1,
     });
-  };
 
-  const handlePageChange = (newPage: number) => {
-    updateUrl({ page: newPage });
-  };
+  const handlePageChange = (newPage: number) => updateUrl({ page: newPage });
 
   // --- Data Fetching ---
   const { results, isLoading, isFetching, counts, meta } = useSearch({ q, type, sort, filters, page });
   const isRefreshing = isFetching && !isLoading;
 
-  const totalPages = meta?.last_page || 1;
+  // Derive totalPages — meta.last_page is reliable for all/tour/location
+  // Fallback: estimate from counts (12 per page when type=all, 10 otherwise)
+  const totalPages = (() => {
+    const fromMeta = meta?.last_page;
+    if (fromMeta && fromMeta > 0) return fromMeta;
+    const perPage = type === "all" ? 12 : 10;
+    const total = type === "all" ? counts.all : type === "tour" ? counts.tour : counts.location;
+    return total > 0 ? Math.ceil(total / perPage) : 1;
+  })();
 
-  /** Khi không có q, /search không chạy — lấy featured để lấp grid Khám phá (tránh grid rỗng). */
-  const { data: discoveryGridResults = [], isLoading: isDiscoveryGridLoading } = useSearchDiscoveryGrid(
-    !q.trim(),
-    locale
-  );
+  // Search mode: khi có query HOẶC type filter không phải 'all'
+  const isSearchMode = !!q.trim() || type !== "all";
+
+  const { data: discoveryGridResults = [], isLoading: isDiscoveryGridLoading } =
+    useSearchDiscoveryGrid(!isSearchMode, locale);
+  const { insights, trending, popular } = useSearchDiscovery();
+  const trendKeywords = insights.length > 0 ? insights : trending.length > 0 ? trending : popular;
+
   const sortOptions: SelectOption[] = [
     { value: "popular", label: tSearch("sort.popularity") },
     { value: "newest", label: tSearch("sort.newest") },
@@ -150,51 +156,65 @@ export const SearchResultsClient = ({ initialQuery }: SearchResultsClientProps) 
     { value: "rating_desc", label: tSearch("sort.rating") },
   ];
 
-  const currentSortOption = sortOptions.find(opt => opt.value === sort) || sortOptions[0];
+  const currentSortOption = sortOptions.find((opt) => opt.value === sort) || sortOptions[0];
+
+  const handleResultClick = (item: import("../types/search.types").SearchResult) => {
+    void searchService.trackInteraction({
+      event: "result_click",
+      query: q.trim(),
+      type,
+      clicked_title: item.title,
+      clicked_slug: item.slug,
+      clicked_type: item.type,
+      source: "search_results_grid",
+      session_id: getOrCreateSessionId(),
+      page,
+    });
+  };
 
   return (
     <div className="reveal-up space-y-8">
-      {/* Search Header with Inline Input */}
-      <SearchResultHeader 
-        query={q} 
-        count={counts.all} 
+      {/* Search Header */}
+      <SearchResultHeader
+        query={q}
+        count={counts.all}
         onSearch={handleSearch}
         onOpenFilters={() => {
           setFilterSheetNonce((n) => n + 1);
           setIsFilterOpen(true);
-        }} 
+        }}
         activeFilters={filters}
         onRemoveFilter={handleRemoveFilter}
         onClearFilters={clearFilters}
         isLoading={isFetching}
       />
 
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <SearchTabs 
-          activeType={type} 
-          onChange={handleTypeChange} 
-          counts={counts}
+      {/* Tabs + Sort */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <SearchTabs
+          activeType={type}
+          onChange={handleTypeChange}
+          counts={counts.all > 0 || counts.tour > 0 || counts.location > 0 ? counts : undefined}
         />
-
-        {q.trim() ? (
-          <div className="w-full md:w-64">
-            <Select 
+        {isSearchMode && (
+          <div className="w-full md:w-60">
+            <Select
               options={sortOptions}
               value={currentSortOption}
               onChange={handleSortChange}
-              containerClassName="bg-surface-container-low rounded-xl border border-[#262626] p-0 px-4"
+              containerClassName="bg-[#0e0e0e] rounded-xl border border-[#262626] p-0 px-4"
               className="bg-transparent"
               placeholder={tSearch("sort.label")}
             />
           </div>
-        ) : null}
+        )}
       </div>
 
-      {/* Main Results Container */}
-      {q.trim() ? (
-        <div className={cn("transition-all duration-500", q ? "opacity-100" : "opacity-0 h-0 overflow-hidden")}>
+      {/* Main content */}
+      {isSearchMode ? (
+        <div className="transition-all duration-500">
           {isLoading ? (
-            <div className="flex min-h-[320px] items-center justify-center rounded-xl border border-[#262626] bg-surface-container-low/60">
+            <div className="flex min-h-[320px] items-center justify-center rounded-xl border border-[#262626] bg-[#0e0e0e]/60">
               <Loading type="spokes" color="#8b6a55" height={56} width={56} />
             </div>
           ) : results.length > 0 ? (
@@ -205,12 +225,8 @@ export const SearchResultsClient = ({ initialQuery }: SearchResultsClientProps) 
                 </div>
               )}
               <div className={cn("transition-opacity duration-200", isRefreshing ? "opacity-60" : "opacity-100")}>
-                <SearchGrid 
-                  results={results} 
-                  isLoading={false} 
-                />
-
-                <StandardPagination 
+                <SearchGrid results={results} isLoading={false} onResultClick={handleResultClick} />
+                <StandardPagination
                   currentPage={page}
                   totalPages={totalPages}
                   onPageChange={handlePageChange}
@@ -218,40 +234,62 @@ export const SearchResultsClient = ({ initialQuery }: SearchResultsClientProps) 
               </div>
             </div>
           ) : (
-            /* Empty State (Only if Query exists but no results) */
-            <div className="flex flex-col items-center justify-center py-20 text-center bg-surface-container-lowest rounded-xl shadow-ambient border border-[#262626]">
-              <div className="w-20 h-20 bg-surface-container-low rounded-full flex items-center justify-center mb-6 text-4xl">
+            /* Empty state */
+            <div className="flex flex-col items-center justify-center py-20 text-center gradient-shell rounded-xl border border-[#262626]/50" style={{ backgroundColor: "rgba(14,14,14,0.7)" }}>
+              <div className="w-16 h-16 bg-[#1c1b1b] rounded-full flex items-center justify-center mb-5 text-3xl">
                 🔍
               </div>
-              <h2 className="text-2xl font-bold text-foreground mb-2">{tSearch("empty.title")}</h2>
-              <p className="text-on-surface-subtle max-w-md mx-auto">{tSearch("empty.subtitle")}</p>
+              <h2 className="text-xl font-light text-[#e5e2e1] mb-2">{tSearch("empty.title")}</h2>
+              <p className="text-[#737373] max-w-md mx-auto text-sm">{tSearch("empty.subtitle")}</p>
+              {trendKeywords.length > 0 && (
+                <div className="mt-6 flex flex-wrap justify-center gap-2 max-w-2xl">
+                  {trendKeywords.slice(0, 5).map((item, index) => (
+                    <button
+                      key={`${item.query}-${index}`}
+                      onClick={() => {
+                        void searchService.trackInteraction({
+                          event: "trending_click",
+                          query: item.query,
+                          type: "all",
+                          clicked_title: item.query,
+                          clicked_type: "keyword",
+                          source: "search_empty_state",
+                          session_id: getOrCreateSessionId(),
+                        });
+                        updateUrl({ q: item.query, page: 1 });
+                      }}
+                      className="rounded-full border border-[#6b5a50]/70 px-3 py-2 text-sm font-medium text-[#e5e2e1] transition-all hover:border-[#8b6a55] hover:bg-[#8b6a55]/10"
+                    >
+                      {item.query}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           )}
         </div>
       ) : (
-        /* Discovery Section (Shown when query is empty) */
-        <div className="space-y-8 py-6">
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <IoStar className="text-[#f1bb9d] text-3xl shrink-0" />
-              <h1 className="text-3xl md:text-4xl font-light text-white tracking-tight">
-                {tSearch("discovery.title")}
-              </h1>
-            </div>
-            <p className="text-on-surface-subtle text-sm max-w-2xl font-normal">
+        /* Discovery Section — no query */
+        <div className="space-y-8 py-4">
+          {/* Large display title */}
+          <div className="space-y-3">
+            <h1 className="text-5xl md:text-7xl font-light text-[#e5e2e1] tracking-tighter leading-none">
+              {tSearch("discovery.title")}
+            </h1>
+            <p className="text-[#737373] text-sm max-w-2xl font-normal leading-relaxed">
               {tSearch("discovery.subtitle")}
             </p>
           </div>
 
-          <SearchGrid 
-            results={discoveryGridResults.slice(0, 6)} 
-            isLoading={isDiscoveryGridLoading} 
+          <SearchGrid
+            results={discoveryGridResults.slice(0, 6)}
+            isLoading={isDiscoveryGridLoading}
           />
         </div>
       )}
 
-      {/* Filter Drawer / Sheet */}
-      <SearchFiltersSheet 
+      {/* Filter Sheet */}
+      <SearchFiltersSheet
         key={filterSheetNonce}
         isOpen={isFilterOpen}
         onClose={() => setIsFilterOpen(false)}

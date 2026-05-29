@@ -26,12 +26,11 @@ export const useSearchSuggestions = (query: string, type: string) => {
         : rawData;
       const items = extractItems<Record<string, unknown> | string>(suggestionsPayload);
 
-      // Backend có thể trả mảng chuỗi (từ khóa) thay vì entity
-      if (items.length > 0 && typeof items[0] === "string") {
-        const strings = items as string[];
-        const mapped = strings.map((title, i) => {
-          // Xác định loại (tour hoặc location) dựa trên từ đầu tiên của tiêu đề
-          const isTour = title.toLowerCase().startsWith("tour");
+      const mappedStrings: SearchSuggestionItem[] = items
+        .filter((item): item is string => typeof item === "string")
+        .map((title, i) => {
+          const normalized = title.toLowerCase();
+          const isTour = normalized.startsWith("tour");
           return {
             id: -(i + 1),
             type: (isTour ? "tour" : "location") as SearchSuggestionType,
@@ -45,18 +44,27 @@ export const useSearchSuggestions = (query: string, type: string) => {
           };
         });
 
-        const locations = type === "tour" ? [] : mapped.filter((m) => m.type === "location");
-        const tours = type === "location" ? [] : mapped.filter((m) => m.type === "tour");
+      const objectItems = items.filter(
+        (item): item is Record<string, unknown> => typeof item === "object" && item !== null
+      );
 
-        return {
-          locations,
-          tours,
-          total: locations.length + tours.length,
-        };
-      }
+      const keywords: SearchSuggestionItem[] = objectItems
+        .filter((item) => (item as { type?: string }).type === "keyword")
+        .map((keyword, i) => ({
+          id: Number(keyword.id ?? -(100 + i)),
+          type: "keyword" as SearchSuggestionType,
+          title: String(keyword.title ?? keyword.name ?? ""),
+          slug: String(keyword.slug ?? ""),
+          subtitle: String(keyword.subtitle ?? ""),
+          thumbnail: (keyword.thumbnail as string | null) ?? null,
+          rating: 0,
+          reviewCount: 0,
+          viewCount: 0,
+          score: Number(keyword.score ?? 0),
+        }));
 
-      const locations: SearchSuggestionItem[] = items
-        .filter((item): item is Record<string, unknown> => typeof item === "object" && item !== null && (item as { type?: string }).type === "location")
+      const locations: SearchSuggestionItem[] = objectItems
+        .filter((item): item is Record<string, unknown> => (item as { type?: string }).type === "location")
         .map((loc) => ({
           id: Number(loc.id),
           type: "location" as SearchSuggestionType,
@@ -69,8 +77,8 @@ export const useSearchSuggestions = (query: string, type: string) => {
           viewCount: Number(loc.view_count ?? 0),
         }));
 
-      const tours: SearchSuggestionItem[] = items
-        .filter((item): item is Record<string, unknown> => typeof item === "object" && item !== null && (item as { type?: string }).type === "tour")
+      const tours: SearchSuggestionItem[] = objectItems
+        .filter((item): item is Record<string, unknown> => (item as { type?: string }).type === "tour")
         .map((tour) => ({
           id: Number(tour.id),
           type: "tour" as SearchSuggestionType,
@@ -89,10 +97,17 @@ export const useSearchSuggestions = (query: string, type: string) => {
         }))
         .sort((a: SearchSuggestionItem, b: SearchSuggestionItem) => (b.bookingCount || 0) - (a.bookingCount || 0));
 
+      const stringLocations = type === "tour" ? [] : mappedStrings.filter((m) => m.type === "location");
+      const stringTours = type === "location" ? [] : mappedStrings.filter((m) => m.type === "tour");
+
+      const finalLocations = [...locations, ...stringLocations];
+      const finalTours = [...tours, ...stringTours];
+
       return {
-        locations,
-        tours,
-        total: locations.length + tours.length,
+        keywords,
+        locations: finalLocations,
+        tours: finalTours,
+        total: keywords.length + finalLocations.length + finalTours.length,
       };
     },
     enabled: isEnabled,

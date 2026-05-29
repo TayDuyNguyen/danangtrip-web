@@ -232,6 +232,35 @@
     border-radius: 7px;
   }
 
+  /* Stitch Design: 1px gradient shell border technique */
+  .gradient-shell {
+    position: relative;
+  }
+
+  .gradient-shell::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      135deg,
+      rgba(139, 106, 85, 0.4),
+      transparent 40%,
+      rgba(198, 204, 128, 0.1)
+    );
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 1;
+  }
+
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
@@ -347,6 +376,45 @@
   .custom-scrollbar {
     scrollbar-width: thin;
     scrollbar-color: rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.03);
+  }
+
+  .filter-sheet-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(139, 106, 85, 0.9) rgba(255, 255, 255, 0.04);
+  }
+
+  .filter-sheet-scrollbar::-webkit-scrollbar,
+  .dt-select__menu-list::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  .filter-sheet-scrollbar::-webkit-scrollbar-track,
+  .dt-select__menu-list::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 9999px;
+    border: 1px solid rgba(80, 69, 62, 0.22);
+  }
+
+  .filter-sheet-scrollbar::-webkit-scrollbar-thumb,
+  .dt-select__menu-list::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(231, 190, 166, 0.92), rgba(139, 106, 85, 0.92));
+    border-radius: 9999px;
+    border: 2px solid rgba(8, 8, 8, 0.75);
+  }
+
+  .filter-sheet-scrollbar::-webkit-scrollbar-thumb:hover,
+  .dt-select__menu-list::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, rgba(244, 212, 191, 0.98), rgba(160, 122, 98, 0.95));
+  }
+
+  .filter-sheet-scrollbar::-webkit-scrollbar-corner,
+  .dt-select__menu-list::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  .dt-select__menu-list {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(139, 106, 85, 0.9) rgba(255, 255, 255, 0.04);
   }
 }
 

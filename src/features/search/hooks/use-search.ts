@@ -173,7 +173,7 @@ export const useSearch = (params: SearchState) => {
         meta,
       };
     },
-    enabled: !!q.trim(),
+    enabled: !!q.trim() || type !== "all",
     staleTime: 1000 * 60 * 5,
   });
 

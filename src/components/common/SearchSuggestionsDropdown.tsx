@@ -57,14 +57,20 @@ export const SearchSuggestionsDropdown = ({
               )}
               style={{ animationDelay: `${idx * 50}ms` }}
             >
-              <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-[#171717] shrink-0 border border-[#262626]">
-                <Image
-                  src={item.thumbnail || "/images/placeholder.png"}
-                  alt={item.title}
-                  fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-110"
-                />
-              </div>
+              {item.type === "keyword" ? (
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-[#262626] bg-[#171717] text-[#8b6a55]">
+                  <IoSearchOutline className="text-2xl" />
+                </div>
+              ) : (
+                <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-[#171717] shrink-0 border border-[#262626]">
+                  <Image
+                    src={item.thumbnail || "/images/placeholder.png"}
+                    alt={item.title}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                </div>
+              )}
               
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between gap-2 mb-0.5">
@@ -79,12 +85,17 @@ export const SearchSuggestionsDropdown = ({
                   )}
                 </div>
                 <p className="text-white/60 text-sm truncate font-medium">
-                  {item.type === "location" 
-                    ? t("suggestions.views", { count: item.viewCount })
-                    : t("suggestions.bookings", { count: item.bookingCount || 0 })
-                  }
-                  <span className="mx-2 opacity-30">•</span>
-                  {item.subtitle}
+                  {item.type === "keyword"
+                    ? item.subtitle
+                    : (
+                      <>
+                        {item.type === "location"
+                          ? t("suggestions.views", { count: item.viewCount })
+                          : t("suggestions.bookings", { count: item.bookingCount || 0 })}
+                        <span className="mx-2 opacity-30">•</span>
+                        {item.subtitle}
+                      </>
+                    )}
                 </p>
               </div>
             </div>
@@ -138,8 +149,13 @@ export const SearchSuggestionsDropdown = ({
 
     return (
       <div className="max-h-[500px] overflow-y-auto custom-scrollbar">
-        {renderSection("suggestions.locations_title", suggestions?.locations || [], 0)}
-        {renderSection("suggestions.tours_title", suggestions?.tours || [], suggestions?.locations?.length || 0)}
+        {renderSection("suggestions.keywords_title", suggestions?.keywords || [], 0)}
+        {renderSection("suggestions.locations_title", suggestions?.locations || [], suggestions?.keywords?.length || 0)}
+        {renderSection(
+          "suggestions.tours_title",
+          suggestions?.tours || [],
+          (suggestions?.keywords?.length || 0) + (suggestions?.locations?.length || 0)
+        )}
       </div>
     );
   };

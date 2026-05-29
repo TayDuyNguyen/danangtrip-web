@@ -87,6 +87,8 @@ export const API_ENDPOINTS = {
     SUGGESTIONS: "/search/suggestions",
     POPULAR: "/search/popular",
     TRENDING: "/search/trending",
+    TRENDING_INSIGHTS: "/search/trending-insights",
+    INTERACTIONS: "/search/interactions",
   },
   CONTACTS: "/contacts",
   LANDING_PAGES: {
