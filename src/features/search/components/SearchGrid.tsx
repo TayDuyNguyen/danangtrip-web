@@ -7,9 +7,10 @@ import { SearchGridSkeleton } from "./SearchGridSkeleton";
 interface SearchGridProps {
   results: SearchResult[];
   isLoading: boolean;
+  onResultClick?: (item: SearchResult) => void;
 }
 
-export const SearchGrid = ({ results, isLoading }: SearchGridProps) => {
+export const SearchGrid = ({ results, isLoading, onResultClick }: SearchGridProps) => {
   if (isLoading) {
     return <SearchGridSkeleton />;
   }
@@ -31,6 +32,7 @@ export const SearchGrid = ({ results, isLoading }: SearchGridProps) => {
             item={result} 
             index={index} 
             featured={isFeatured}
+            onClick={onResultClick}
           />
         );
       })}

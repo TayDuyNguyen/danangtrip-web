@@ -61,10 +61,12 @@ export function SearchSuggestionsDropdown({
   return (
     <div
       className={cn(
-        "absolute top-full left-0 right-0 z-50 mt-2 max-h-80 overflow-y-auto rounded-xl glass-retro border border-[#8b6a55]/30 shadow-2xl custom-scrollbar animate-in fade-in slide-in-from-top-2 duration-300",
+        "absolute top-full left-0 right-0 z-50 mt-2 max-h-80 overflow-y-auto rounded-xl gradient-shell shadow-2xl custom-scrollbar animate-in fade-in slide-in-from-top-2 duration-200",
         className
       )}
+      style={{ backgroundColor: "rgba(14, 14, 14, 0.97)", backdropFilter: "blur(16px)" }}
     >
+
       <div className="p-2 space-y-1">
         {isQueryEmpty ? (
           /* Render Search History when query is empty */

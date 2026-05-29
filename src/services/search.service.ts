@@ -2,7 +2,7 @@ import { API_ENDPOINTS } from "@/config";
 import axiosInstance from "@/lib/axios";
 import { ApiResponse, PaginatedResponse } from "@/types";
 import type { Location, Tour, RecommendedLocation, RecommendedTour } from "@/types";
-import type { SearchRequestParams, SearchSuggestionResponse, SearchPopularResponse, SearchTrendingResponse } from "@/types/search.types";
+import type { SearchInteractionPayload, SearchRequestParams, SearchSuggestionResponse, SearchPopularResponse, SearchTrendingResponse, SearchTrendInsightsResponse } from "@/types/search.types";
 
 export const searchService = {
   /**
@@ -33,6 +33,20 @@ export const searchService = {
    */
   getTrending: (limit: number = 10): Promise<ApiResponse<SearchTrendingResponse>> =>
     axiosInstance.get(API_ENDPOINTS.SEARCH.TRENDING, { params: { limit: Math.min(Math.max(limit, 1), 50) } }),
+
+  /**
+   * Blended trending insights: query logs + top viewed locations
+   */
+  getTrendInsights: (limit: number = 10): Promise<ApiResponse<SearchTrendInsightsResponse>> =>
+    axiosInstance.get(API_ENDPOINTS.SEARCH.TRENDING_INSIGHTS, {
+      params: { limit: Math.min(Math.max(limit, 1), 20) },
+    }),
+
+  /**
+   * Track search interactions such as suggestion/result/trending clicks
+   */
+  trackInteraction: (payload: SearchInteractionPayload): Promise<ApiResponse<{ logged: boolean }>> =>
+    axiosInstance.post(API_ENDPOINTS.SEARCH.INTERACTIONS, payload),
 
   /**
    * Get personalized recommendations

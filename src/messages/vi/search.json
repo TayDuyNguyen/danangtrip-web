@@ -45,6 +45,7 @@
   },
   "trending": {
     "title": "Xu hướng tìm kiếm",
+    "fallback_label": "Phổ biến gần đây",
     "history_title": "Tìm kiếm gần đây",
     "items": {
       "son_tra": "Bán đảo Sơn Trà",
@@ -58,8 +59,11 @@
     "subtitle": "Gợi ý những trải nghiệm tuyệt vời nhất dành cho bạn"
   },
   "suggestions": {
+    "keywords_title": "✨ Chủ đề gợi ý",
     "locations_title": "📍 Địa điểm",
     "tours_title": "🗺 Tour du lịch",
+    "recent_searches": "Tìm kiếm gần đây",
+    "clear_history": "Xóa lịch sử",
     "view_all": "🔍 Xem tất cả kết quả cho \"{query}\"",
     "no_results": "Không tìm thấy kết quả phù hợp",
     "loading": "Đang tìm kiếm...",

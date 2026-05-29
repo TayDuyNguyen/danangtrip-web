@@ -11,6 +11,8 @@ interface SearchInputProps {
   placeholder?: string;
   isLoading?: boolean;
   className?: string;
+  onFocus?: React.FocusEventHandler<HTMLInputElement>;
+  onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
   /** Accessible name when no visible label is provided */
   "aria-label"?: string;
   /** Debounce delay in ms. Defaults to 500. Set to 0 to disable built-in debounce. */
@@ -23,6 +25,8 @@ export default function SearchInput({
   placeholder,
   isLoading,
   className,
+  onFocus,
+  onKeyDown,
   "aria-label": ariaLabel,
   debounceMs = 500,
 }: SearchInputProps) {
@@ -79,6 +83,8 @@ export default function SearchInput({
       lastRef.current = localValue;
       onChange(localValue);
     }
+
+    onKeyDown?.(e);
   };
 
   return (
@@ -95,10 +101,10 @@ export default function SearchInput({
         </div>
       )}
 
-      <div className="relative z-10 bg-surface-container-low/70 backdrop-blur-md border border-border group-focus-within:border-primary w-full h-full flex items-center rounded-xl overflow-hidden m-px">
+      <div className="relative z-10 flex h-full w-full items-center overflow-hidden rounded-xl border border-[#262626] bg-[rgba(14,14,14,0.92)] shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] backdrop-blur-md transition-all duration-300 group-hover:border-[#3a2e28] group-focus-within:border-[#8b6a55]/70 group-focus-within:bg-[rgba(19,19,19,0.98)] m-px">
         <UilSearch
-          size={20}
-          className="absolute left-5 top-1/2 -translate-y-1/2 text-on-surface-variant/50 group-focus-within:text-primary transition-colors duration-300 pointer-events-none"
+          size={18}
+          className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#b58c72] group-focus-within:text-[#f0ccb6] transition-colors duration-300"
           aria-hidden
         />
         <input
@@ -106,12 +112,14 @@ export default function SearchInput({
           type="search"
           value={localValue}
           onChange={handleChange}
+          onFocus={onFocus}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
           aria-label={ariaLabel ?? placeholder ?? "Search"}
-          className="w-full bg-transparent border-none py-4 pl-12 pr-6 text-base font-semibold placeholder:text-on-surface-variant/40 focus:ring-4 focus:ring-primary/10 transition-all duration-300 outline-none"
+          className="w-full border-none bg-transparent py-3.5 pl-11 pr-5 text-sm font-medium text-[#f3efec] placeholder:text-[#9d9088] focus:ring-0 transition-all duration-300 outline-none"
         />
       </div>
+
     </div>
   );
 }

@@ -51,3 +51,36 @@ export interface SearchTrendingResponse {
     count: number;
   }[];
 }
+
+export interface SearchTrendInsightItem {
+  query: string;
+  count: number;
+  source: "keyword" | "location";
+  slug?: string;
+  district?: string;
+}
+
+export interface SearchTrendInsightsResponse {
+  items: SearchTrendInsightItem[];
+  trending_keywords: {
+    query: string;
+    count: number;
+  }[];
+  popular_keywords: {
+    query: string;
+    count: number;
+  }[];
+  top_locations: SearchTrendInsightItem[];
+}
+
+export interface SearchInteractionPayload {
+  event: "suggestion_click" | "trending_click" | "result_click";
+  query: string;
+  type?: "location" | "tour" | "all";
+  clicked_title?: string;
+  clicked_slug?: string;
+  clicked_type?: "location" | "tour" | "keyword";
+  source?: string;
+  session_id?: string;
+  page?: number;
+}

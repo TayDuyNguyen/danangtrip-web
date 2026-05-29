@@ -40,6 +40,7 @@ const Hero = () => {
 
   const flatSuggestions: SearchSuggestionItem[] = [];
   if (suggestions) {
+    flatSuggestions.push(...suggestions.keywords);
     flatSuggestions.push(...suggestions.locations);
     flatSuggestions.push(...suggestions.tours);
   }
@@ -65,7 +66,7 @@ const Hero = () => {
   const handleSelectSuggestion = (item: SearchSuggestionItem) => {
     setIsDropdownOpen(false);
     router.push(
-      `${ROUTES.SEARCH}?q=${encodeURIComponent(item.title)}&type=${item.type}`
+      `${ROUTES.SEARCH}?q=${encodeURIComponent(item.title)}&type=${item.type === "keyword" ? "all" : item.type}`
     );
   };
 

@@ -45,6 +45,7 @@
   },
   "trending": {
     "title": "Trending Searches",
+    "fallback_label": "Popular recently",
     "history_title": "Recent Searches",
     "items": {
       "son_tra": "Son Tra Peninsula",
@@ -58,8 +59,11 @@
     "subtitle": "Suggestions for the best experiences for you"
   },
   "suggestions": {
+    "keywords_title": "✨ Suggested themes",
     "locations_title": "📍 Locations",
     "tours_title": "🗺 Tours",
+    "recent_searches": "Recent searches",
+    "clear_history": "Clear history",
     "view_all": "🔍 View all results for \"{query}\"",
     "no_results": "No results found",
     "loading": "Searching...",

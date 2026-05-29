@@ -5,7 +5,7 @@ Current selected web task: `user-search-hardening`.
 
 ## Current Decision Snapshot
 
-Date locked: `2026-05-28`
+Date locked: `2026-05-29`
 
 - Repo: `D:\DATN\danangtrip-web`
 - Supporting repo: `D:\DATN\danangtrip-api`
@@ -20,12 +20,12 @@ Date locked: `2026-05-28`
   - Search results query via search service / API wiring already used by `SearchResultsClient`
   - Filter state, query-string sync, pagination and result mapping
   - Card/image fallback behavior for mixed result entities
-- Status: selected after progress report `0.0.16` confirmed web now has `0` missing route/page screens, while `/search` still lacks a dedicated hardening closeout artifact.
+- Status: selected after progress report `0.0.17` confirmed web still has `0` missing route/page screens, while `/search` still lacks a dedicated hardening closeout artifact.
 - Cross-project rule: this web prompt is independent from admin; do not use admin progress to decide web steps.
 
 ## Why This Is Next
 
-- Progress report `0.0.16` promotes `user-search-hardening` as the next web item after `user-home-hardening`.
+- Progress report `0.0.17` promotes `user-search-hardening` as the next web item after `user-home-hardening`.
 - Repo reality confirms the route exists:
   - `src/app/[locale]/(main)/(public)/search/page.tsx`
   - `src/features/search/components/SearchResultsClient.tsx`
@@ -36,7 +36,8 @@ Date locked: `2026-05-28`
   - it is public-facing and high-traffic,
   - it already has code that can be audited and polished,
   - web no longer has any documented main screen missing route/page code,
-  - it does not yet have a dedicated Step 10 closeout artifact.
+  - it does not yet have a dedicated Step 10 closeout artifact,
+  - recent hardening already touched search filter clarity for `type=all`, so the remaining work is still naturally centered on `/search`.
 
 ## Codegraph / Repo Findings
 
@@ -51,6 +52,10 @@ Read `D:\DATN\danangtrip-web\.codegraph\codegraph.db` and `D:\DATN\danangtrip-ap
   - `src/features/search/components/SearchResultCard.tsx`
   - `src/features/search/components/SearchGrid.tsx`
   - search hooks/services/utilities discovered by Step 01 in `src/features/search`, `src/services`, and query mapping helpers
+- Recent repo reality already confirms:
+  - all-mode filter wording has been clarified,
+  - `Danh mục địa điểm` / `Danh mục tour` behavior is now explicit,
+  - `/search` still needs dedicated closeout artifacts rather than first-pass implementation.
 - This task should not redesign unrelated pages. Keep edits focused to behavior gaps, query/filter synchronization, loading/error/empty states, result cards, pagination, image fallback handling, and responsive/mobile filtering behavior on `/search`.
 
 ## Goals
@@ -153,7 +158,7 @@ CURRENT SCREEN LOCK
 
 WHY THIS IS NEXT
 - `user-home-hardening` already has a dedicated Step 10 artifact.
-- Progress report `0.0.16` selects `user-search-hardening` as the next web screen.
+- Progress report `0.0.17` selects `user-search-hardening` as the next web screen.
 - Codegraph/repo reality confirms `/search` has real route/page/component code.
 - Web currently has `0` documented main screens missing route/page code.
 - Search is a high-impact public screen and still lacks dedicated closeout artifacts.
@@ -200,7 +205,7 @@ EXECUTION RULES
 Activate `01-screen-analysis` for `user-search-hardening`.
 Read mandatory context, codegraph, `user_search.md`, search route/components/hooks/services and backend route/API inventory.
 Work: document purpose, route, API/data contract, existing code, stale doc facts, missing closeout evidence, risks and hardening plan.
-Output: `.agent/artifacts/analysis/2026-05-28__user-search-hardening__screen-analysis.md`
+Output: `.agent/artifacts/analysis/2026-05-29__user-search-hardening__screen-analysis.md`
 ```
 
 ### Step 02
@@ -209,7 +214,7 @@ Output: `.agent/artifacts/analysis/2026-05-28__user-search-hardening__screen-ana
 Activate `02-project-setup` for `user-search-hardening`.
 Inspect search route conventions, i18n namespaces, service/hook conventions, artifact/memory paths and package scripts.
 Work: verify setup readiness and note blocking config/script issues only.
-Output: `.agent/artifacts/setup/2026-05-28__user-search-hardening__project-setup-report.md`
+Output: `.agent/artifacts/setup/2026-05-29__user-search-hardening__project-setup-report.md`
 ```
 
 ### Step 03
@@ -218,7 +223,7 @@ Output: `.agent/artifacts/setup/2026-05-28__user-search-hardening__project-setup
 Activate `03-types-api-contract` for `user-search-hardening`.
 Inspect search service contracts, frontend types and backend route support.
 Work: confirm or align request params, response types, pagination, filter params and error handling expectations.
-Output: `.agent/artifacts/api-contracts/2026-05-28__user-search-hardening__api-contract.md`
+Output: `.agent/artifacts/api-contracts/2026-05-29__user-search-hardening__api-contract.md`
 ```
 
 ### Step 04
@@ -226,7 +231,7 @@ Output: `.agent/artifacts/api-contracts/2026-05-28__user-search-hardening__api-c
 ```text
 Activate `04-layout-routing` for `user-search-hardening`.
 Work: verify `/search` route, locale behavior, metadata, query parsing and all outbound links.
-Output: `.agent/artifacts/routing/2026-05-28__user-search-hardening__route-plan.md`
+Output: `.agent/artifacts/routing/2026-05-29__user-search-hardening__route-plan.md`
 ```
 
 ### Step 05
@@ -234,7 +239,7 @@ Output: `.agent/artifacts/routing/2026-05-28__user-search-hardening__route-plan.
 ```text
 Activate `05-ui-components` for `user-search-hardening`.
 Work: harden search header, filter sheet, result cards, loading/error/empty states and responsive layout.
-Output: `.agent/artifacts/ui-specs/2026-05-28__user-search-hardening__ui-spec.md`
+Output: `.agent/artifacts/ui-specs/2026-05-29__user-search-hardening__ui-spec.md`
 ```
 
 ### Step 06
@@ -242,7 +247,7 @@ Output: `.agent/artifacts/ui-specs/2026-05-28__user-search-hardening__ui-spec.md
 ```text
 Activate `06-data-integration` for `user-search-hardening`.
 Work: verify/wire search query hooks, API params, cache keys, pagination, fallback behavior and error handling.
-Output: `.agent/artifacts/integration/2026-05-28__user-search-hardening__data-integration.md`
+Output: `.agent/artifacts/integration/2026-05-29__user-search-hardening__data-integration.md`
 ```
 
 ### Step 07
@@ -250,7 +255,7 @@ Output: `.agent/artifacts/integration/2026-05-28__user-search-hardening__data-in
 ```text
 Activate `07-interactions` for `user-search-hardening`.
 Work: verify filter interactions, query sync, pagination, keyboard/accessibility and mobile interactions.
-Output: `.agent/artifacts/interaction-specs/2026-05-28__user-search-hardening__interaction-spec.md`
+Output: `.agent/artifacts/interaction-specs/2026-05-29__user-search-hardening__interaction-spec.md`
 ```
 
 ### Step 08
@@ -258,7 +263,7 @@ Output: `.agent/artifacts/interaction-specs/2026-05-28__user-search-hardening__i
 ```text
 Activate `08-auth-permissions` for `user-search-hardening`.
 Work: verify public route behavior, no auth-only leakage and no protected API misuse.
-Output: `.agent/artifacts/auth/2026-05-28__user-search-hardening__auth-permissions-review.md`
+Output: `.agent/artifacts/auth/2026-05-29__user-search-hardening__auth-permissions-review.md`
 ```
 
 ### Step 09
@@ -266,7 +271,7 @@ Output: `.agent/artifacts/auth/2026-05-28__user-search-hardening__auth-permissio
 ```text
 Activate `09-testing` for `user-search-hardening`.
 Run relevant lint/typecheck/build/prepush checks and fix feature-caused failures.
-Output: `.agent/artifacts/test-cases/2026-05-28__user-search-hardening__test-report.md`
+Output: `.agent/artifacts/test-cases/2026-05-29__user-search-hardening__test-report.md`
 ```
 
 ### Step 10
@@ -274,5 +279,5 @@ Output: `.agent/artifacts/test-cases/2026-05-28__user-search-hardening__test-rep
 ```text
 Activate `10-optimization-deploy` for `user-search-hardening`.
 Perform final review, deploy readiness check, artifact closeout, memory handoff and prompt/progress update recommendation.
-Output: `.agent/artifacts/deploy/2026-05-28__user-search-hardening__deploy-report.md` and `.agent/artifacts/review/2026-05-28__user-search-hardening__review.md`
+Output: `.agent/artifacts/deploy/2026-05-29__user-search-hardening__deploy-report.md` and `.agent/artifacts/review/2026-05-29__user-search-hardening__review.md`
 ```

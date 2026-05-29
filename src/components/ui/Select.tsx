@@ -167,6 +167,13 @@ export const Select = ({
       marginTop: "8px",
       padding: "4px",
     }),
+    menuList: (provided) => ({
+      ...provided,
+      padding: "4px",
+      maxHeight: "240px",
+      scrollbarWidth: "thin",
+      scrollbarColor: "rgba(139, 106, 85, 0.9) rgba(255, 255, 255, 0.04)",
+    }),
     option: (provided, state) => ({
       ...provided,
       backgroundColor: state.isSelected
@@ -222,6 +229,7 @@ export const Select = ({
           instanceId={props.instanceId || reactId}
           inputId={selectInputId}
           aria-label={isMinimal && !label ? String(finalPlaceholder) : undefined}
+          classNamePrefix="dt-select"
           components={{ DropdownIndicator }}
           onFocus={() => setInternalFocused(true)}
           onBlur={() => setInternalFocused(false)}
