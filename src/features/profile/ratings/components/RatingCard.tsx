@@ -45,12 +45,12 @@ export function RatingCard({
   );
 
   return (
-    <article className="bg-[#0a0a0a]/60 border border-[#262626] rounded-xl p-5 backdrop-blur-md transition-all duration-300 hover:border-[#8b6a55]/30 hover:bg-[#0a0a0a]/80 animate-in fade-in slide-in-from-bottom-4 duration-300">
+    <article className="animate-in fade-in slide-in-from-bottom-4 rounded-[28px] border border-border bg-white p-5 shadow-[0_16px_48px_rgba(15,23,42,0.06)] transition-all duration-300 hover:border-primary/30 hover:shadow-[0_20px_56px_rgba(15,23,42,0.1)]">
       {/* Header section */}
-      <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-4 pb-4 border-b border-[#1a1a1a]">
+      <div className="mb-4 flex flex-col items-start justify-between gap-4 border-b border-border pb-4 sm:flex-row">
         {/* Left header */}
         <div className="flex gap-3 min-w-0">
-          <div className="relative w-14 h-14 rounded-lg overflow-hidden border border-[#262626] bg-[#111111] shrink-0">
+          <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg border border-border bg-[#fafafa]">
             {targetThumb ? (
               <Image
                 src={targetThumb}
@@ -60,7 +60,7 @@ export function RatingCard({
                 className="object-cover"
               />
             ) : (
-              <div className="w-full h-full flex items-center justify-center text-[#525252]">
+              <div className="flex h-full w-full items-center justify-center text-on-surface-subtle">
                 {isLocation ? (
                   <MapPin className="h-5 w-5" />
                 ) : (
@@ -98,12 +98,12 @@ export function RatingCard({
               {targetSlug ? (
                 <Link
                   href={targetLink}
-                  className="text-sm font-bold text-white hover:text-[#8b6a55] transition-colors truncate max-w-[200px] sm:max-w-[300px]"
+                  className="max-w-[200px] truncate text-sm font-semibold text-on-surface transition-colors hover:text-primary sm:max-w-[300px]"
                 >
                   {targetName}
                 </Link>
               ) : (
-                <span className="text-sm font-bold text-white truncate">
+                <span className="truncate text-sm font-semibold text-on-surface">
                   {targetName}
                 </span>
               )}
@@ -124,7 +124,7 @@ export function RatingCard({
                   />
                 ))}
               </div>
-              <span className="text-[11px] text-[#737373]">{formattedDate}</span>
+              <span className="text-[11px] text-on-surface-subtle">{formattedDate}</span>
             </div>
           </div>
         </div>
@@ -135,9 +135,9 @@ export function RatingCard({
           <span
             className={cn(
               "text-[10px] font-extrabold px-2.5 py-0.75 rounded-full tracking-wider",
-              rating.status === "approved" && "bg-emerald-950/50 border border-emerald-500/20 text-emerald-400",
-              rating.status === "pending" && "bg-amber-950/50 border border-amber-500/20 text-amber-400",
-              rating.status === "rejected" && "bg-red-950/50 border border-red-500/20 text-red-400"
+              rating.status === "approved" && "border border-emerald-500/20 bg-emerald-500/10 text-emerald-600",
+              rating.status === "pending" && "border border-amber-500/20 bg-amber-500/10 text-amber-600",
+              rating.status === "rejected" && "border border-red-500/20 bg-red-500/10 text-red-500"
             )}
           >
             {t(`card.status_${rating.status}`)}
@@ -148,7 +148,7 @@ export function RatingCard({
             <button
               type="button"
               onClick={() => onEdit(rating)}
-              className="p-1.5 rounded-lg border border-[#262626] bg-[#111111] text-[#737373] hover:text-[#f59e0b] hover:border-[#f59e0b]/40 transition-all"
+              className="rounded-lg border border-border bg-[#fafafa] p-1.5 text-on-surface-subtle transition-all hover:border-[#f59e0b]/40 hover:text-[#f59e0b]"
               title={t("card.edit_tooltip")}
             >
               <Edit className="h-3.5 w-3.5" />
@@ -156,7 +156,7 @@ export function RatingCard({
             <button
               type="button"
               onClick={() => onDelete(rating)}
-              className="p-1.5 rounded-lg border border-[#262626] bg-[#111111] text-[#737373] hover:text-red-400 hover:border-red-500/40 transition-all"
+              className="rounded-lg border border-border bg-[#fafafa] p-1.5 text-on-surface-subtle transition-all hover:border-red-500/40 hover:text-red-400"
               title={t("card.delete_tooltip")}
             >
               <Trash2 className="h-3.5 w-3.5" />
@@ -172,7 +172,7 @@ export function RatingCard({
           <div>
             <p
               className={cn(
-                "text-sm text-[#d4d4d4] leading-relaxed whitespace-pre-line",
+                "whitespace-pre-line text-sm leading-relaxed text-on-surface-subtle",
                 !isExpanded && "line-clamp-3"
               )}
             >
@@ -182,7 +182,7 @@ export function RatingCard({
               <button
                 type="button"
                 onClick={() => setIsExpanded(!isExpanded)}
-                className="text-xs font-bold text-[#8b6a55] hover:text-[#725442] transition-colors mt-1 focus:outline-none"
+                className="text-xs font-bold text-primary hover:text-[#725442] transition-colors mt-1 focus:outline-none"
               >
                 {isExpanded ? t("card.read_less") : t("card.read_more")}
               </button>
@@ -197,7 +197,7 @@ export function RatingCard({
               <div
                 key={img.id}
                 onClick={() => onImageClick(img.image_url)}
-                className="relative w-16 h-16 rounded-lg overflow-hidden border border-[#262626] cursor-pointer hover:border-[#8b6a55]/60 hover:scale-105 transition-all duration-200 shrink-0"
+                className="relative w-16 h-16 rounded-lg overflow-hidden border border-border cursor-pointer hover:border-primary/60 hover:scale-105 transition-all duration-200 shrink-0"
               >
                 <Image
                   src={img.image_url}
@@ -213,7 +213,7 @@ export function RatingCard({
 
         {/* Rejection Warning Banner */}
         {rating.status === "rejected" && rating.rejected_reason && (
-          <div className="flex items-start gap-2 bg-red-950/20 border border-red-500/10 rounded-lg p-3 text-red-400">
+          <div className="flex items-start gap-2 rounded-lg border border-red-500/20 bg-red-50 p-3 text-red-600">
             <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
             <p className="text-xs font-medium leading-normal">
               {t("card.rejected_reason", { reason: rating.rejected_reason })}
@@ -223,9 +223,9 @@ export function RatingCard({
       </div>
 
       {/* Card footer */}
-      <div className="flex items-center gap-3 mt-4 pt-3 border-t border-[#1a1a1a] text-xs text-[#737373]">
+      <div className="mt-4 flex items-center gap-3 border-t border-border pt-3 text-xs text-on-surface-subtle">
         <span className="flex items-center gap-1.5">
-          <ThumbsUp className="h-3.5 w-3.5 text-[#525252]" />
+          <ThumbsUp className="h-3.5 w-3.5 text-on-surface-subtle" />
           {t("card.helpful_count", { count: rating.helpful_count })}
         </span>
       </div>

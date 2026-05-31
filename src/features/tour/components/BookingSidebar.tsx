@@ -3,12 +3,12 @@
 import { useState, useEffect, useMemo } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { toast } from "sonner";
 import { formatNumber } from "@/utils/format";
 import { Calendar, Users, InfoCircle } from "@/components/icons/solar";
 import { Button, Select, type SelectOption } from "@/components/ui";
 import { useTourSchedules, useCheckTourAvailability } from "@/features/tour/hooks/useTourDetail";
 import { useAddToCart } from "@/features/cart/hooks/useCartQueries";
-import { toast } from "sonner";
 import type { Tour } from "@/types";
 
 interface BookingSidebarProps {
@@ -20,7 +20,7 @@ export default function BookingSidebar({ tour }: BookingSidebarProps) {
   const td = useTranslations("tour.detail");
   const tb = useTranslations("tour.booking");
   const locale = useLocale();
-  
+
   const discountPercent = tour.discount_percent;
   const adultPrice = parseFloat(tour.price_adult);
   const adultDiscounted = adultPrice * (1 - discountPercent / 100);
@@ -30,44 +30,51 @@ export default function BookingSidebar({ tour }: BookingSidebarProps) {
   const [children, setChildren] = useState(0);
   const [selectedScheduleId, setSelectedScheduleId] = useState<number | "">("");
   const [showDateTooltip, setShowDateTooltip] = useState(false);
-  const dateFormatter = new Intl.DateTimeFormat(locale === "vi" ? "vi-VN" : "en-US");
+
+  const dateFormatter = useMemo(
+    () => new Intl.DateTimeFormat(locale === "vi" ? "vi-VN" : "en-US"),
+    [locale]
+  );
 
   const { data: schedules = [], isLoading: loadingSchedules } = useTourSchedules(tour.id);
   const { mutate: checkAvailability, data: availability, isPending: checking } = useCheckTourAvailability(tour.id);
   const { mutate: addToCart, isPending: addingToCart } = useAddToCart();
 
-  const scheduleOptions = useMemo(() => {
-    return schedules.map((schedule) => ({
-      value: schedule.id,
-      label: `${dateFormatter.format(new Date(schedule.start_date))}${
-        schedule.booking_availability === "sold_out" ? ` (${td("schedule_full")})` : ""
-      }`,
-      isDisabled: schedule.status !== "available" || schedule.booking_availability === "sold_out"
-    }));
-  }, [schedules, dateFormatter, td]);
+  const scheduleOptions = useMemo(
+    () =>
+      schedules.map((schedule) => ({
+        value: schedule.id,
+        label: `${dateFormatter.format(new Date(schedule.start_date))}${
+          schedule.booking_availability === "sold_out" ? ` (${td("schedule_full")})` : ""
+        }`,
+        isDisabled: schedule.status !== "available" || schedule.booking_availability === "sold_out",
+      })),
+    [schedules, dateFormatter, td]
+  );
 
-  const selectedOption = useMemo(() => {
-    return scheduleOptions.find((opt) => opt.value === selectedScheduleId) || null;
-  }, [scheduleOptions, selectedScheduleId]);
+  const selectedOption = useMemo(
+    () => scheduleOptions.find((option) => option.value === selectedScheduleId) || null,
+    [scheduleOptions, selectedScheduleId]
+  );
 
   const handleScheduleChange = (option: SelectOption | null) => {
     setSelectedScheduleId(option ? Number(option.value) : "");
   };
 
   useEffect(() => {
-    if (selectedScheduleId !== "") {
-      checkAvailability({
-        schedule_id: Number(selectedScheduleId),
-        quantity_adult: adults,
-        quantity_child: children,
-      });
-    }
+    if (selectedScheduleId === "") return;
+
+    checkAvailability({
+      schedule_id: Number(selectedScheduleId),
+      quantity_adult: adults,
+      quantity_child: children,
+    });
   }, [selectedScheduleId, adults, children, checkAvailability]);
 
   const handleAddToCart = () => {
     if (selectedScheduleId === "") return;
 
-    const selectedSchedule = schedules.find((s) => s.id === Number(selectedScheduleId));
+    const selectedSchedule = schedules.find((schedule) => schedule.id === Number(selectedScheduleId));
 
     addToCart(
       {
@@ -76,7 +83,7 @@ export default function BookingSidebar({ tour }: BookingSidebarProps) {
         quantity_adult: adults,
         quantity_child: children,
         quantity_infant: 0,
-        tour: tour,
+        tour,
         tour_schedule: selectedSchedule,
       },
       {
@@ -87,40 +94,29 @@ export default function BookingSidebar({ tour }: BookingSidebarProps) {
     );
   };
 
-  // Calculate total price
-  const totalAmount = (adults * adultDiscounted) + (children * parseFloat(tour.price_child));
+  const totalAmount = adults * adultDiscounted + children * parseFloat(tour.price_child);
 
   return (
-    <div
-      id="booking-cta"
-      className="sticky top-28 space-y-6 reveal-up"
-      style={{ animationDelay: "150ms" }}
-    >
-      <div className="glass-shell shadow-2xl">
-        <div className="glass-inner bg-surface-container-low p-6 md:p-8 space-y-6">
-          {/* Price Header */}
+    <div id="booking-cta" className="sticky top-28 space-y-6 reveal-up" style={{ animationDelay: "150ms" }}>
+      <div className="rounded-[28px] border border-border bg-white shadow-[0_24px_70px_rgba(15,23,42,0.1)]">
+        <div className="space-y-6 p-6 md:p-8">
           <div>
-            <p className="text-[10px] font-bold text-on-surface-subtle uppercase tracking-widest mb-2">
+            <p className="mb-2 text-[10px] font-bold uppercase tracking-widest text-on-surface-subtle">
               {t("card.starting_from")}
             </p>
-            <div className="flex items-baseline gap-2 flex-wrap">
-              <span className="text-4xl font-black text-primary">
-                {formatNumber(adultDiscounted)}đ
-              </span>
+            <div className="flex flex-wrap items-baseline gap-2">
+              <span className="text-4xl font-black text-primary">{formatNumber(adultDiscounted)}đ</span>
               {discountPercent > 0 && (
-                <span className="text-sm text-on-surface-subtle line-through">
-                  {formatNumber(adultPrice)}đ
-                </span>
+                <span className="text-sm line-through text-on-surface-subtle">{formatNumber(adultPrice)}đ</span>
               )}
             </div>
-            <span className="text-xs text-on-surface-variant">{suffix}</span>
+            <span className="text-xs text-on-surface-subtle">{suffix}</span>
           </div>
- 
-          {/* Booking Info Fields */}
+
           <div className="space-y-4">
             <div className="space-y-2">
-              <label className="text-xs font-bold text-on-surface-subtle uppercase tracking-wider flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-primary" />
+              <label className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-on-surface-subtle">
+                <Calendar className="h-4 w-4 text-primary" />
                 {t("filters.departure_date")}
               </label>
               <Select
@@ -131,51 +127,58 @@ export default function BookingSidebar({ tour }: BookingSidebarProps) {
                 isLoading={checking}
                 placeholder={td("select_date")}
                 variant="minimal"
-                containerClassName="bg-surface-container rounded-lg border border-border px-3 py-1"
-                className="bg-transparent text-sm text-on-surface-variant font-medium"
+                containerClassName="rounded-2xl border border-border bg-[#f7f7f7] px-3 py-1"
+                className="bg-transparent text-sm font-medium text-on-surface"
               />
             </div>
- 
+
             <div className="space-y-2">
-              <label className="text-xs font-bold text-on-surface-subtle uppercase tracking-wider flex items-center gap-2">
-                <Users className="w-4 h-4 text-primary" />
+              <label className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-on-surface-subtle">
+                <Users className="h-4 w-4 text-primary" />
                 {td("stats_group")}
               </label>
               <div className="grid grid-cols-2 gap-3">
-                <div className="bg-surface-container border border-border rounded-lg px-4 py-2 text-sm flex items-center justify-between">
-                  <span className="text-on-surface-variant">{td("adults_short")}</span>
-                  <input 
-                    type="number" 
-                    min={1} 
-                    max={10} 
-                    value={adults} 
-                    onChange={(e) => setAdults(Number(e.target.value))}
-                    className="w-12 bg-transparent text-right outline-none"
+                <div className="flex items-center justify-between rounded-2xl border border-border bg-[#f7f7f7] px-4 py-2 text-sm">
+                  <span className="text-on-surface-subtle">{td("adults_short")}</span>
+                  <input
+                    type="number"
+                    min={1}
+                    max={10}
+                    value={adults}
+                    onChange={(event) => setAdults(Number(event.target.value))}
+                    className="w-12 bg-transparent text-right font-semibold text-on-surface outline-none"
                     aria-label={td("adults_short")}
                   />
                 </div>
-                <div className="bg-surface-container border border-border rounded-lg px-4 py-2 text-sm flex items-center justify-between">
-                  <span className="text-on-surface-variant">{td("children_short")}</span>
-                  <input 
-                    type="number" 
-                    min={0} 
-                    max={10} 
-                    value={children} 
-                    onChange={(e) => setChildren(Number(e.target.value))}
-                    className="w-12 bg-transparent text-right outline-none"
+                <div className="flex items-center justify-between rounded-2xl border border-border bg-[#f7f7f7] px-4 py-2 text-sm">
+                  <span className="text-on-surface-subtle">{td("children_short")}</span>
+                  <input
+                    type="number"
+                    min={0}
+                    max={10}
+                    value={children}
+                    onChange={(event) => setChildren(Number(event.target.value))}
+                    className="w-12 bg-transparent text-right font-semibold text-on-surface outline-none"
                     aria-label={td("children_short")}
                   />
                 </div>
               </div>
             </div>
           </div>
- 
-          {/* Availability Status */}
+
           {selectedScheduleId !== "" && (checking || availability) && (
-            <div className={`p-3 rounded-lg text-sm ${checking ? 'bg-surface-container border border-border text-on-surface-subtle' : availability?.is_available ? 'bg-green-500/10 text-green-600' : 'bg-red-500/10 text-red-600'}`}>
+            <div
+              className={`rounded-lg p-3 text-sm ${
+                checking
+                  ? "border border-border bg-[#f7f7f7] text-on-surface-subtle"
+                  : availability?.is_available
+                    ? "bg-green-500/10 text-green-600"
+                    : "bg-red-500/10 text-red-600"
+              }`}
+            >
               {checking ? (
                 <span className="flex items-center gap-2">
-                  <span className="w-3.5 h-3.5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                  <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
                   {td("availability_checking") || "Đang kiểm tra chỗ..."}
                 </span>
               ) : availability?.is_available ? (
@@ -185,36 +188,34 @@ export default function BookingSidebar({ tour }: BookingSidebarProps) {
               )}
             </div>
           )}
- 
-          {/* Detailed Pricing */}
-          <div className="space-y-3 text-sm border-t border-border pt-6">
+
+          <div className="space-y-3 border-t border-border pt-6 text-sm">
             <div className="flex justify-between gap-4 text-on-surface-subtle">
               <span className="flex items-center gap-1.5">
                 {adults} x {td("price_adult")}
               </span>
-              <span className="text-on-surface font-medium tabular-nums">
-                {formatNumber(adults * adultDiscounted)}đ
-              </span>
+              <span className="font-medium tabular-nums text-on-surface">{formatNumber(adults * adultDiscounted)}đ</span>
             </div>
+
             {children > 0 && (
               <div className="flex justify-between gap-4 text-on-surface-subtle">
                 <span className="flex items-center gap-1.5">
                   {children} x {td("price_child")}
                 </span>
-                <span className="text-on-surface font-medium tabular-nums">
+                <span className="font-medium tabular-nums text-on-surface">
                   {formatNumber(children * parseFloat(tour.price_child))}đ
                 </span>
               </div>
             )}
-            <div className="flex justify-between gap-4 font-bold text-lg pt-2 border-t border-border">
+
+            <div className="flex justify-between gap-4 border-t border-border pt-2 text-lg font-bold">
               <span className="text-on-surface">{td("booking_total")}</span>
               <span className="text-primary">{formatNumber(totalAmount)}đ</span>
             </div>
           </div>
- 
-          {/* CTA Buttons */}
-          <div 
-            className="space-y-3 relative"
+
+          <div
+            className="relative space-y-3"
             onMouseEnter={() => {
               if (selectedScheduleId === "") {
                 setShowDateTooltip(true);
@@ -223,25 +224,24 @@ export default function BookingSidebar({ tour }: BookingSidebarProps) {
             onMouseLeave={() => setShowDateTooltip(false)}
           >
             {showDateTooltip && (
-              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-3.5 py-2 bg-[#171717]/95 backdrop-blur-md border border-[#262626] text-xs text-white rounded-lg whitespace-nowrap shadow-xl animate-in fade-in slide-in-from-bottom-1 duration-200 z-10 flex items-center justify-center font-bold">
+              <div className="absolute bottom-full left-1/2 z-10 mb-3 flex -translate-x-1/2 animate-in items-center justify-center whitespace-nowrap rounded-xl border border-border bg-white px-3.5 py-2 text-xs font-bold text-on-surface shadow-xl duration-200 fade-in slide-in-from-bottom-1">
                 {locale === "vi" ? "Vui lòng chọn ngày khởi hành" : "Please select departure date"}
-                {/* Tooltip arrow */}
-                <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-[#171717]" />
+                <div className="absolute left-1/2 top-full -translate-x-1/2 border-4 border-transparent border-t-white" />
               </div>
             )}
 
             <Link
               href={`/tours/${tour.slug}/book${selectedScheduleId ? `?tour_schedule_id=${selectedScheduleId}&adults=${adults}&children=${children}` : ""}`}
               className="block"
-              onClick={(e) => {
+              onClick={(event) => {
                 if (selectedScheduleId === "") {
-                  e.preventDefault();
+                  event.preventDefault();
                 }
               }}
             >
-              <Button 
+              <Button
                 disabled={(!availability?.is_available && selectedScheduleId !== "") || selectedScheduleId === ""}
-                className="w-full h-14 text-base font-bold uppercase tracking-wider shadow-[0_10px_20px_-10px_rgba(139,106,85,0.5)] disabled:opacity-50"
+                className="h-14 w-full text-base font-bold uppercase tracking-wider shadow-[0_10px_20px_-10px_rgba(139,106,85,0.5)] disabled:opacity-50"
               >
                 {t("card.book_now")}
               </Button>
@@ -252,26 +252,23 @@ export default function BookingSidebar({ tour }: BookingSidebarProps) {
               variant="secondary"
               disabled={(!availability?.is_available && selectedScheduleId !== "") || selectedScheduleId === "" || addingToCart}
               onClick={handleAddToCart}
-              className="w-full h-12 text-sm font-bold uppercase tracking-wider border-[#262626] text-primary hover:text-white hover:border-[#8b6a55]"
+              className="h-12 w-full border-border text-sm font-bold uppercase tracking-wider text-primary hover:border-primary hover:bg-primary/10 hover:text-primary"
             >
               {tb("add_to_cart")}
             </Button>
           </div>
- 
-          <p className="text-[11px] text-on-surface-variant leading-relaxed text-center italic">
-            {td("book_cta_hint")}
-          </p>
+
+          <p className="text-center text-[11px] italic leading-relaxed text-on-surface-subtle">{td("book_cta_hint")}</p>
         </div>
       </div>
- 
-      {/* Support Card */}
-      <div className="glass-surface rounded-xl p-6 flex items-center gap-4 border-primary/20">
-        <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-          <InfoCircle className="w-6 h-6 text-primary" />
+
+      <div className="flex items-center gap-4 rounded-[24px] border border-border bg-white p-6 shadow-[0_14px_40px_rgba(15,23,42,0.07)]">
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/10">
+          <InfoCircle className="h-6 w-6 text-primary" />
         </div>
         <div>
           <p className="text-sm font-bold text-on-surface">{td("support_title")}</p>
-          <p className="text-xs text-on-surface-variant">{td("support_desc")}</p>
+          <p className="text-xs text-on-surface-subtle">{td("support_desc")}</p>
         </div>
       </div>
     </div>

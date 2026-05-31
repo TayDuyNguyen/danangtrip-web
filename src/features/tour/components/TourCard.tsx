@@ -34,32 +34,21 @@ const TourCard = ({ tour, className, index = 0 }: TourCardProps) => {
     if (tour.thumbnail && !isPlaceholder(tour.thumbnail)) {
       return tour.thumbnail;
     }
-    const fallbacks = [
-      "/images/tours/bana-hills.png",
-      "/images/tours/hoian.png",
-      "/images/tours/sontra.png"
-    ];
-    const index = typeof tour.id === "number" ? Math.abs(tour.id) % fallbacks.length : 0;
-    return fallbacks[index];
+    const fallbacks = ["/images/tours/bana-hills.png", "/images/tours/hoian.png", "/images/tours/sontra.png"];
+    const imageIndex = typeof tour.id === "number" ? Math.abs(tour.id) % fallbacks.length : 0;
+    return fallbacks[imageIndex];
   };
 
   const image = getValidImage();
 
   return (
-    <div
-      className={cn(
-        "p-px rounded-xl bg-linear-to-br from-[rgba(92,56,34,0.4)] to-[rgba(46,58,47,0.1)] reveal-up",
-        className
-      )}
-      style={{ animationDelay: `${index * 100}ms` }}
-    >
+    <div className={cn("reveal-up", className)} style={{ animationDelay: `${index * 100}ms` }}>
       <div
         className={cn(
-          "group relative flex flex-col overflow-hidden rounded-lg bg-surface border border-border",
-          "transition-all duration-300 hover:border-(--glass-border-accent)"
+          "group relative flex flex-col overflow-hidden rounded-[28px] border border-border bg-white shadow-[0_16px_44px_rgba(15,23,42,0.08)]",
+          "transition-all duration-300 hover:-translate-y-1 hover:border-primary/25 hover:shadow-[0_24px_64px_rgba(15,23,42,0.12)]"
         )}
       >
-        {/* Image Container */}
         <div className="relative aspect-4/3 overflow-hidden">
           <Image
             src={image}
@@ -68,91 +57,74 @@ const TourCard = ({ tour, className, index = 0 }: TourCardProps) => {
             className="object-cover transition-transform duration-500 group-hover:scale-110"
           />
 
-          {/* Badges */}
-          <div className="absolute top-3 left-3 flex flex-wrap gap-2">
+          <div className="absolute left-3 top-3 flex flex-wrap gap-2">
             {tour.is_hot && (
-              <Badge variant="error" className="uppercase text-[10px] font-bold">
+              <Badge variant="error" className="rounded-full uppercase text-[10px] font-bold">
                 {t("hot_badge")}
               </Badge>
             )}
             {tour.is_featured && (
-              <Badge variant="warning" className="uppercase text-[10px] font-bold">
+              <Badge variant="warning" className="rounded-full uppercase text-[10px] font-bold">
                 {t("featured_badge")}
               </Badge>
             )}
           </div>
 
           {discountPercent > 0 && (
-            <div className="absolute top-3 right-3">
-              <Badge variant="warning" className="text-[10px] font-bold px-2 py-0.5">
+            <div className="absolute right-3 top-3">
+              <Badge variant="warning" className="rounded-full px-2 py-0.5 text-[10px] font-bold">
                 {t("discount_percent", { percent: discountPercent })}
               </Badge>
             </div>
           )}
         </div>
 
-        {/* Content */}
-        <div className="flex flex-col flex-1 p-4 md:p-6">
-          {/* Category & Location */}
-          <div className="flex items-center gap-2 font-mono text-[12px] leading-4 text-on-surface-subtle mb-2">
-            <MapPin className="w-3 h-3 shrink-0" />
+        <div className="flex flex-1 flex-col p-5 md:p-6">
+          <div className="mb-2 flex items-center gap-2 text-[12px] leading-4 text-on-surface-subtle">
+            <MapPin className="h-3 w-3 shrink-0" />
             <span>{t("location_short")}</span>
           </div>
 
-          {/* Title */}
           <Link
             href={ROUTES.TOUR_DETAIL(tour.slug)}
-            className="text-base font-bold text-on-surface hover:text-primary transition-colors line-clamp-2 mb-3 h-12"
+            className="mb-3 line-clamp-2 h-12 text-base font-semibold text-on-surface transition-colors hover:text-primary"
           >
             {tour.name}
           </Link>
 
-          {/* Stats */}
-          <div className="flex items-center gap-4 font-mono text-[12px] leading-4 text-on-surface-variant mb-4">
+          <div className="mb-4 flex items-center gap-4 text-[12px] leading-4 text-on-surface-subtle">
             <div className="flex items-center gap-1">
-              <Clock className="w-3 h-3 shrink-0" />
+              <Clock className="h-3 w-3 shrink-0" />
               <span>{tour.duration}</span>
             </div>
             <div className="flex items-center gap-1">
-              <Users className="w-3 h-3 shrink-0" />
+              <Users className="h-3 w-3 shrink-0" />
               <span>{t("participants", { count: tour.max_people })}</span>
             </div>
           </div>
 
-          {/* Rating */}
           <div className="mt-auto flex items-center justify-between">
-            <RatingStars
-              rating={parseFloat(tour.avg_rating)}
-              count={tour.review_count}
-              size="sm"
-              showText
-            />
+            <RatingStars rating={parseFloat(tour.avg_rating)} count={tour.review_count} size="sm" showText />
           </div>
 
-          {/* Divider */}
-          <div className="h-px bg-border my-4" />
+          <div className="my-4 h-px bg-border" />
 
-          {/* Price & CTA */}
           <div className="flex items-center justify-between gap-2">
-            <div className="flex flex-col min-w-0">
+            <div className="flex min-w-0 flex-col">
               <span className="text-[10px] text-on-surface-subtle">{t("starting_from")}</span>
-              <div className="flex items-baseline gap-1 flex-wrap">
-                <span className="text-lg font-bold text-primary">
-                  {formatNumber(discountedPrice)}đ
-                </span>
+              <div className="flex flex-wrap items-baseline gap-1">
+                <span className="text-lg font-semibold text-primary">{formatNumber(discountedPrice)}d</span>
                 {discountPercent > 0 && (
-                  <span className="text-xs text-on-surface-subtle line-through">
-                    {formatNumber(originalPrice)}đ
-                  </span>
+                  <span className="text-xs text-on-surface-subtle line-through">{formatNumber(originalPrice)}d</span>
                 )}
               </div>
             </div>
+
             <Link
               href={`${ROUTES.TOUR_DETAIL(tour.slug)}#booking-cta`}
               className={cn(
-                "inline-flex shrink-0 items-center justify-center rounded-full border border-[#262626] bg-[#171717]",
-                "px-3 py-2 text-xs font-semibold text-white transition-all duration-300",
-                "hover:border-[#8b6a55] hover:text-[#8b6a55] active:scale-95"
+                "inline-flex shrink-0 items-center justify-center rounded-full border border-transparent bg-primary px-4 py-2",
+                "cursor-pointer text-xs font-bold text-white shadow-sm transition-all duration-300 hover:bg-primary-hover active:scale-95"
               )}
             >
               {t("book_now")}

@@ -69,16 +69,16 @@ export function ScheduleCalendar({ schedules, selectedId, onSelect }: ScheduleCa
   };
 
   return (
-    <div className="border border-border rounded-xl p-4 bg-surface-container-low reveal-up text-white">
+    <div className="rounded-2xl border border-border bg-white p-4 text-on-surface shadow-[0_14px_42px_rgba(15,23,42,0.07)] reveal-up">
       <div className="flex justify-between items-center mb-6">
         <span className="text-sm font-black uppercase tracking-widest text-primary">
           {format(currentMonth, "MMMM yyyy", { locale: dateLocale })}
         </span>
         <div className="flex gap-2">
-          <button type="button" onClick={prevMonth} className="p-1.5 rounded-lg border border-border hover:bg-surface-container-high transition-colors text-on-surface-variant">
+          <button type="button" onClick={prevMonth} className="rounded-lg border border-border p-1.5 text-on-surface-subtle transition-colors hover:border-primary/30 hover:bg-[#f7f7f7] hover:text-primary">
             <ChevronLeft className="w-4 h-4" />
           </button>
-          <button type="button" onClick={nextMonth} className="p-1.5 rounded-lg border border-border hover:bg-surface-container-high transition-colors text-on-surface-variant">
+          <button type="button" onClick={nextMonth} className="rounded-lg border border-border p-1.5 text-on-surface-subtle transition-colors hover:border-primary/30 hover:bg-[#f7f7f7] hover:text-primary">
             <ChevronRight className="w-4 h-4" />
           </button>
         </div>
@@ -110,7 +110,7 @@ export function ScheduleCalendar({ schedules, selectedId, onSelect }: ScheduleCa
                           {s.booking_availability === "open" ? t("availability_seats_left", { seats: available }) : t("schedule_full")}
                       </span>
                   </div>
-                  <div className="w-16 h-1 bg-surface-container-high rounded-full overflow-hidden">
+                  <div className="h-1 w-16 overflow-hidden rounded-full bg-[#eceff3]">
                       <div 
                           className="h-full bg-primary" 
                           style={{ width: `${Math.min(100, (available / s.max_people) * 100)}%` }} 

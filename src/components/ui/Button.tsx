@@ -28,11 +28,11 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     const variants = {
       primary:
-        "bg-[#171717] text-white border-[#262626] hover:border-[#8b6a55] hover:text-[#8b6a55] focus-visible:ring-[#8b6a55]",
+        "bg-primary text-white border-primary hover:bg-primary-hover hover:border-primary-hover focus-visible:ring-primary",
       secondary:
-        "bg-transparent text-[#737373] border-[#262626] hover:text-white hover:border-[#404040] focus-visible:ring-[#404040]",
-      danger: "bg-transparent text-red-300 border-red-500/40 hover:bg-red-500/10 focus-visible:ring-red-400",
-      link: "bg-transparent text-[#737373] border-transparent px-0 py-0 rounded-none hover:text-white focus-visible:ring-[#404040]",
+        "bg-white text-on-surface-subtle border-border hover:bg-[#f7f7f7] hover:text-on-surface hover:border-[#cfcfcf] focus-visible:ring-[#404040]",
+      danger: "bg-transparent text-red-500 border-red-200 hover:bg-red-50 hover:text-red-600 focus-visible:ring-red-400",
+      link: "bg-transparent text-on-surface-subtle border-transparent px-0 py-0 rounded-none hover:text-on-surface focus-visible:ring-[#404040]",
     };
 
 

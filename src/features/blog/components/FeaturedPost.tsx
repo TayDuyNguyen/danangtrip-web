@@ -45,7 +45,7 @@ export const FeaturedPost = ({ post }: FeaturedPostProps) => {
   const image = getValidImage();
 
   return (
-    <div className="glass-surface rounded-[32px] overflow-hidden flex flex-col md:flex-row h-auto md:h-[400px] reveal-up">
+    <div className="overflow-hidden rounded-[32px] border border-border bg-white shadow-[0_18px_48px_rgba(0,0,0,0.08)] reveal-up flex h-auto flex-col md:h-[400px] md:flex-row">
       <div className="relative w-full md:w-1/2 h-64 md:h-full">
         <Image
           src={image}
@@ -54,14 +54,14 @@ export const FeaturedPost = ({ post }: FeaturedPostProps) => {
           className="object-cover"
         />
         <div className="absolute top-6 left-6">
-          <Badge className="bg-[#8B6A55] text-white border-none px-4 py-1">
+          <Badge className="bg-primary text-white border-none px-4 py-1">
             {t("featured_badge")}
           </Badge>
         </div>
       </div>
 
-      <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center space-y-6">
-        <div className="flex items-center gap-6 text-sm text-[#a3a3a3]">
+      <div className="flex w-full flex-col justify-center space-y-6 p-8 md:w-1/2 md:p-12">
+        <div className="flex flex-wrap items-center gap-4 text-sm text-on-surface-subtle">
           <span className="flex items-center gap-2">
             <Calendar size={16} />
             {post.published_at ? format(new Date(post.published_at), "dd MMMM, yyyy", { locale: dateLocale }) : "-"}
@@ -76,17 +76,17 @@ export const FeaturedPost = ({ post }: FeaturedPostProps) => {
           </span>
         </div>
 
-        <h2 className="text-2xl md:text-4xl font-bold text-white leading-tight">
+        <h2 className="text-2xl leading-tight text-on-surface md:text-4xl font-semibold">
           {post.title}
         </h2>
 
-        <p className="text-[#737373] line-clamp-3 leading-relaxed">
+        <p className="line-clamp-3 leading-relaxed text-on-surface-subtle">
           {post.excerpt}
         </p>
 
         <div className="pt-4">
           <Link href={`/${locale}/blog/${post.slug}`}>
-            <Button size="lg" className="bg-[#8B6A55] hover:bg-[#8B6A55]/90 text-white rounded-full px-8 gap-2 group">
+            <Button size="lg" className="bg-primary hover:bg-primary/90 text-white rounded-full px-8 gap-2 group">
               {t("read_now")}
               <IoArrowForwardOutline className="transition-transform group-hover:translate-x-1" />
             </Button>

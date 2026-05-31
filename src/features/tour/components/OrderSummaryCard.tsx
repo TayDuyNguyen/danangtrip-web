@@ -32,8 +32,8 @@ export function OrderSummaryCard({
 
   return (
     <aside className="w-full lg:w-[380px]">
-      <div className="glass-shell shadow-2xl sticky top-28">
-        <div className="glass-inner bg-surface-container-low p-6 space-y-6 rounded-2xl">
+      <div className="sticky top-28 rounded-[28px] border border-border bg-white shadow-[0_24px_70px_rgba(15,23,42,0.1)]">
+        <div className="space-y-6 p-6">
           {/* Tour Brief */}
           <div className="flex gap-4 pb-5 border-b border-border/50">
             <div className="w-20 h-20 rounded-xl overflow-hidden shrink-0 border border-border/30">
@@ -114,7 +114,7 @@ export function OrderSummaryCard({
 
           {/* Pricing */}
           <div className={cn(
-              "bg-surface-container p-4 rounded-xl space-y-3 transition-opacity duration-300",
+              "rounded-2xl border border-border bg-[#f7f7f7] p-4 space-y-3 transition-opacity duration-300",
               isLoading ? "opacity-50 pointer-events-none" : "opacity-100"
           )}>
             <div className="flex justify-between items-center">

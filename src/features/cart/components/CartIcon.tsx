@@ -1,29 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { Link } from "@/i18n/navigation";
 import { IoShoppingBagOutline } from "@/components/icons/solar";
-import { useAuthStore } from "@/store/auth.store";
 import { useCartStore } from "@/store/cart.store";
-import { useCartQuery } from "../hooks/useCartQueries";
 
 export function CartIcon() {
-  const [isMounted, setIsMounted] = useState(false);
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setIsMounted(true);
-  }, []);
-
-  const { isAuthenticated } = useAuthStore();
   const guestItems = useCartStore((state) => state.guestItems);
-  const { data: userItems = [] } = useCartQuery();
-
-  const cartItemsCount = isMounted ? (isAuthenticated ? userItems.length : guestItems.length) : 0;
+  const cartItemsCount = guestItems.length;
 
   return (
     <Link
       href="/cart"
-      className="relative p-2 text-on-surface hover:text-primary transition-colors flex items-center justify-center rounded-full bg-surface-container-high/40 hover:bg-surface-container-high border border-white/5 cursor-pointer"
+      className="relative flex cursor-pointer items-center justify-center rounded-full border border-border bg-white p-2 text-on-surface shadow-sm transition-colors hover:border-primary/30 hover:bg-[#f7f7f7] hover:text-primary"
     >
       <IoShoppingBagOutline className="w-5 h-5" />
       {cartItemsCount > 0 && (

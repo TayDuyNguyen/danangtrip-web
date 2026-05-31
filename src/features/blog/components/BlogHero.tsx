@@ -10,15 +10,15 @@ export const BlogHero = ({ onSearch, initialSearch }: BlogHeroProps) => {
   const t = useTranslations("blog");
 
   return (
-    <section className="relative py-16 md:py-24 overflow-hidden">
-      <div className="absolute inset-0 bg-linear-to-b from-[#8B6A55]/10 to-transparent pointer-events-none" />
+    <section className="relative overflow-hidden pt-10 pb-6 md:pt-14 md:pb-8">
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#fff1f3] to-transparent" />
       
-      <div className="relative z-10 text-center space-y-8">
+      <div className="relative z-10 space-y-8 text-center">
         <div className="space-y-4">
-          <h1 className="text-4xl md:text-6xl font-bold text-white tracking-tight reveal-up">
+          <h1 className="reveal-up text-4xl font-semibold tracking-[-0.04em] text-on-surface md:text-[60px]">
             {t("title")}
           </h1>
-          <p className="text-lg md:text-xl text-[#a3a3a3] max-w-2xl mx-auto reveal-up reveal-delay-100">
+          <p className="mx-auto max-w-2xl reveal-up reveal-delay-100 text-lg text-on-surface-subtle md:text-xl">
             {t("subtitle")}
           </p>
         </div>
@@ -28,7 +28,9 @@ export const BlogHero = ({ onSearch, initialSearch }: BlogHeroProps) => {
             placeholder={t("search_placeholder")}
             value={initialSearch || ""}
             onChange={onSearch}
-            className="w-full h-14 bg-neutral-900/50 backdrop-blur-md border-neutral-800 rounded-full"
+            className="w-full"
+            label="Search articles"
+            actionText="Search"
           />
         </div>
       </div>

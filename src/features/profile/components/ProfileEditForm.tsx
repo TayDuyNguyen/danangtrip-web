@@ -189,28 +189,28 @@ export function ProfileEditForm({
   const showAvatarImage = Boolean(displayAvatar) && failedAvatarUrl !== displayAvatar;
 
   return (
-    <div className="bg-[#0a0a0a]/60 border border-[#262626] rounded-xl p-6 sm:p-8 backdrop-blur-md animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="animate-in fade-in slide-in-from-bottom-4 rounded-[28px] border border-border bg-white p-6 shadow-[0_24px_80px_rgba(15,23,42,0.08)] duration-500 sm:p-8">
       {/* Header */}
-      <div className="flex items-start gap-4 mb-8 pb-6 border-b border-[#1a1a1a]">
-        <div className="w-10 h-10 rounded-lg bg-[#8b6a55]/10 border border-[#8b6a55]/20 flex items-center justify-center shrink-0">
-          <Sparkles className="w-5 h-5 text-[#8b6a55]" aria-hidden="true" />
+      <div className="mb-8 flex items-start gap-4 border-b border-border pb-6">
+        <div className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
+          <Sparkles className="w-5 h-5 text-primary" aria-hidden="true" />
         </div>
         <div>
-          <h2 className="text-white font-bold text-lg tracking-tight">
+          <h2 className="text-lg font-semibold tracking-tight text-on-surface">
             {t("profile_edit.heading")}
           </h2>
-          <p className="text-[#737373] text-sm mt-0.5">
+          <p className="mt-0.5 text-sm text-on-surface-subtle">
             {t("profile_edit.description")}
           </p>
         </div>
       </div>
 
       {/* Avatar Section */}
-      <div className="flex flex-col sm:flex-row items-center gap-6 mb-8 pb-8 border-b border-[#1a1a1a]">
+      <div className="mb-8 flex flex-col items-center gap-6 border-b border-border pb-8 sm:flex-row">
         <div className="relative group cursor-pointer" onClick={triggerFileSelect}>
-          <div className="w-24 h-24 rounded-full overflow-hidden bg-[#171717] border border-[#262626] flex items-center justify-center text-4xl font-bold hover:border-[#8b6a55] transition-all duration-300 relative">
+          <div className="relative flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border border-border bg-[#fafafa] text-4xl font-bold transition-all duration-300 hover:border-primary">
             {isUploadingAvatar && !avatarPreview ? (
-              <Loader2 className="w-8 h-8 text-[#8b6a55] animate-spin" />
+              <Loader2 className="w-8 h-8 text-primary animate-spin" />
             ) : showAvatarImage ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
@@ -220,7 +220,7 @@ export function ProfileEditForm({
                 onError={() => setFailedAvatarUrl(displayAvatar ?? null)}
               />
             ) : (
-              <span className="text-white select-none">
+              <span className="select-none text-on-surface">
                 {displayName?.charAt(0).toUpperCase() || "?"}
               </span>
             )}
@@ -242,10 +242,10 @@ export function ProfileEditForm({
         </div>
 
         <div className="text-center sm:text-left">
-          <h3 className="text-sm font-semibold text-white mb-1">
+          <h3 className="mb-1 text-sm font-semibold text-on-surface">
             {t("profile_edit.avatar_heading")}
           </h3>
-          <p className="text-[#737373] text-xs max-w-[240px]">
+          <p className="max-w-[240px] text-xs text-on-surface-subtle">
             {t("profile_edit.avatar_description")}
           </p>
           <Button
@@ -361,7 +361,7 @@ export function ProfileEditForm({
         )}
 
         {/* Form Actions */}
-        <div className="flex flex-col-reverse sm:flex-row gap-3 pt-4 border-t border-[#1a1a1a]">
+        <div className="flex flex-col-reverse gap-3 border-t border-border pt-4 sm:flex-row">
           <Button
             type="button"
             variant="secondary"

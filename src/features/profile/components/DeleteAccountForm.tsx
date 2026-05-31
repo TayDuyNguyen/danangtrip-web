@@ -63,24 +63,24 @@ export function DeleteAccountForm({
   const isFormValid = confirmCheckbox && password.length > 0 && activeBookingsCount === 0;
 
   return (
-    <div className="bg-[#0a0a0a]/60 border border-[#262626] rounded-xl p-6 sm:p-8 backdrop-blur-md animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-xl">
+    <div className="max-w-xl rounded-[28px] border border-border bg-white p-6 shadow-[0_14px_36px_rgba(0,0,0,0.06)] animate-in fade-in slide-in-from-bottom-4 duration-500 sm:p-8">
       {/* Header */}
-      <div className="flex items-start gap-4 mb-8 pb-6 border-b border-[#1a1a1a]">
+      <div className="mb-8 flex items-start gap-4 border-b border-border pb-6">
         <div className="w-10 h-10 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center shrink-0">
           <ShieldAlert className="w-5 h-5 text-red-500" aria-hidden="true" />
         </div>
         <div>
-          <h2 className="text-white font-bold text-lg tracking-tight">
+          <h2 className="text-lg font-semibold tracking-tight text-on-surface">
             {t("delete_account.heading")}
           </h2>
-          <p className="text-[#737373] text-sm mt-0.5">
+          <p className="mt-0.5 text-sm text-on-surface-subtle">
             {t("delete_account.subtitle")}
           </p>
         </div>
       </div>
 
       {/* Consequences Warning Card */}
-      <div className="bg-red-950/20 border border-red-900/30 rounded-xl p-5 mb-6">
+        <div className="mb-6 rounded-xl border border-red-200 bg-red-50 p-5">
         <h3 className="text-red-500 font-semibold text-sm mb-4 flex items-center gap-2">
           <AlertTriangle className="w-4 h-4 shrink-0" />
           {t("delete_account.warning_title")}
@@ -92,7 +92,7 @@ export function DeleteAccountForm({
             t("delete_account.warning_3"),
             t("delete_account.warning_4"),
           ].map((warning, index) => (
-            <li key={index} className="flex items-start gap-3 text-xs text-[#d4d4d4]">
+            <li key={index} className="flex items-start gap-3 text-xs text-on-surface">
               <XCircle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" aria-hidden="true" />
               <span>{warning}</span>
             </li>
@@ -103,14 +103,14 @@ export function DeleteAccountForm({
       {/* Active bookings warning banner */}
       {activeBookingsCount > 0 && (
         <div className="bg-amber-950/20 border border-amber-900/30 rounded-xl p-4 mb-6 flex gap-3 animate-in fade-in duration-300">
-          <AlertTriangle className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" aria-hidden="true" />
+          <AlertTriangle className="w-5 h-5 text-on-surface-subtlember-500 shrink-0 mt-0.5" aria-hidden="true" />
           <div className="flex flex-col gap-1">
-            <p className="text-amber-500 text-xs font-semibold">
+            <p className="text-on-surface-subtlember-500 text-xs font-semibold">
               {t("delete_account.active_bookings_warning")}
             </p>
             <Link
               href="/profile/bookings"
-              className="text-[#8b6a55] hover:text-white text-xs font-bold transition-colors inline-flex items-center gap-1 mt-1"
+              className="mt-1 inline-flex items-center gap-1 text-xs font-bold text-primary transition-colors hover:text-primary-hover"
             >
               {t("delete_account.view_bookings")}
             </Link>
@@ -137,7 +137,7 @@ export function DeleteAccountForm({
           >
             {confirmCheckbox && <Check className="w-3.5 h-3.5" />}
           </button>
-          <span className="text-[#a3a3a3] text-xs leading-5">
+          <span className="text-xs leading-5 text-on-surface-subtle">
             {t("delete_account.confirm_checkbox_label")}
           </span>
         </div>
@@ -157,10 +157,10 @@ export function DeleteAccountForm({
         </div>
 
         {/* Action buttons */}
-        <div className="flex flex-col-reverse sm:flex-row gap-3 pt-4 border-t border-[#1a1a1a]">
+        <div className="flex flex-col-reverse gap-3 border-t border-border pt-4 sm:flex-row">
           <Link
             href="/profile"
-            className="w-full sm:w-auto text-center px-5 py-2.5 rounded-lg border border-[#262626] bg-[#0a0a0a] text-[#737373] hover:text-white hover:bg-white/5 text-sm font-semibold transition-all duration-200"
+            className="w-full rounded-lg border border-border bg-[#f7f7f7] px-5 py-2.5 text-center text-sm font-semibold text-on-surface-subtle transition-all duration-200 hover:bg-[#fafafa] hover:text-on-surface sm:w-auto"
           >
             {t("delete_account.cancel_button")}
           </Link>
@@ -184,15 +184,15 @@ export function DeleteAccountForm({
           role="dialog"
           aria-modal="true"
         >
-          <div className="bg-[#0f0f0f] border border-[#262626] rounded-2xl p-6 max-w-sm w-full mx-4 shadow-2xl animate-in zoom-in-95 duration-200">
+          <div className="mx-4 w-full max-w-sm rounded-2xl border border-border bg-white p-6 shadow-2xl animate-in zoom-in-95 duration-200">
             <div className="flex flex-col items-center text-center">
               <div className="w-14 h-14 bg-red-500/10 border border-red-500/20 rounded-full flex items-center justify-center text-red-500 mb-4 animate-bounce">
                 <AlertTriangle className="w-7 h-7" />
               </div>
-              <h3 className="text-white font-bold text-lg leading-tight">
+              <h3 className="text-lg font-semibold leading-tight text-on-surface">
                 {t("delete_account.modal_title")}
               </h3>
-              <p className="text-[#a3a3a3] text-sm mt-3 leading-relaxed">
+              <p className="mt-3 text-sm leading-relaxed text-on-surface-subtle">
                 {t("delete_account.modal_body_1")}
               </p>
               <p className="text-red-500 font-bold text-sm mt-2">
@@ -200,11 +200,11 @@ export function DeleteAccountForm({
               </p>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 mt-6 pt-4 border-t border-[#1a1a1a]">
+            <div className="mt-6 grid grid-cols-2 gap-3 border-t border-border pt-4">
               <button
                 type="button"
                 onClick={() => setIsModalOpen(false)}
-                className="w-full px-4 py-2.5 rounded-lg border border-[#262626] bg-[#0a0a0a] text-[#a3a3a3] hover:text-white hover:bg-white/5 text-sm font-semibold transition-all duration-200"
+                className="w-full rounded-lg border border-border bg-[#f7f7f7] px-4 py-2.5 text-sm font-semibold text-on-surface-subtle transition-all duration-200 hover:bg-[#fafafa] hover:text-on-surface"
               >
                 {t("delete_account.modal_cancel")}
               </button>

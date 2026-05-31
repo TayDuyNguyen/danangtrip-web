@@ -24,10 +24,10 @@ export default async function SearchPage({ searchParams }: Props) {
     <main className="design-page layout-main-shell min-h-screen pb-20">
       <div className="design-container pt-8">
         <Suspense
-          fallback={<div className="min-h-[50vh] animate-pulse rounded-lg bg-surface-container" aria-hidden />}
+          fallback={<div className="min-h-[50vh] animate-pulse rounded-[32px] border border-border bg-white shadow-[0_24px_64px_rgba(15,23,42,0.08)]" aria-hidden />}
         >
-          <div className="glass-shell reveal-up">
-            <div className="glass-surface glass-inner rounded-lg p-4 sm:p-6">
+          <div className="reveal-up">
+            <div className="rounded-[32px] border border-border bg-white p-4 shadow-[0_24px_64px_rgba(15,23,42,0.08)] sm:p-6 lg:p-8">
               <SearchResultsClient initialQuery={query} />
             </div>
           </div>

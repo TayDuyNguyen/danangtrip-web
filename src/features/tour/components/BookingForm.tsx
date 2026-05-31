@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import { useSearchParams } from "next/navigation";
 import type { Tour } from "@/types";
 import { usePayment } from "@/features/payment/hooks/usePayment";
+import { useAppConfig } from "@/hooks/use-app-config";
 
 interface BookingFormProps {
   tour: Tour;
@@ -31,6 +32,7 @@ export function BookingForm({ tour }: BookingFormProps) {
   const router = useRouter();
   const { user } = useAuthStore();
   const searchParams = useSearchParams();
+  const { data: config } = useAppConfig();
 
   const initialScheduleId = searchParams.get("tour_schedule_id")
     ? Number(searchParams.get("tour_schedule_id"))
@@ -65,7 +67,7 @@ export function BookingForm({ tour }: BookingFormProps) {
   const { mutate: createBooking, isPending: isCreating } = useCreateBooking();
   const { createPayment, isCreating: isCreatingPayment } = usePayment();
 
-  const onlinePaymentMethods = ["payos"] as const;
+  const onlinePaymentMethods = ["payos", "vnpay", "momo", "zalopay"] as const;
 
   const availableSchedules = useMemo(
     () => schedules.filter(
@@ -122,6 +124,22 @@ export function BookingForm({ tour }: BookingFormProps) {
     calculate,
     tour.id
   ]);
+
+  // Dynamically default/switch payment method if selected gateway gets toggled off in settings
+  useEffect(() => {
+    if (config?.payment) {
+      const activeMethods: ("payos" | "vnpay" | "momo" | "zalopay" | "bank_transfer")[] = [];
+      if (config.payment.payos !== false) activeMethods.push("payos");
+      if (config.payment.vnpay) activeMethods.push("vnpay");
+      if (config.payment.momo) activeMethods.push("momo");
+      if (config.payment.zalopay) activeMethods.push("zalopay");
+      if (config.payment.cod !== false) activeMethods.push("bank_transfer");
+
+      if (activeMethods.length > 0 && !activeMethods.includes(formData.payment_method)) {
+        setFormData(prev => ({ ...prev, payment_method: activeMethods[0] }));
+      }
+    }
+  }, [config, formData.payment_method]);
 
   const handleChange = (field: keyof BookingFormValues, value: string | number | boolean | null) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -204,8 +222,8 @@ export function BookingForm({ tour }: BookingFormProps) {
           </div>
 
           {/* Section 1: Schedule */}
-          <section className="glass-surface rounded-2xl p-6 md:p-8 space-y-6 reveal-up shadow-xl border-white/5">
-            <div className="flex items-center justify-between gap-4 border-l-4 border-primary pl-4 text-white">
+          <section className="space-y-6 rounded-[28px] border border-border bg-white p-6 shadow-[0_18px_54px_rgba(15,23,42,0.08)] reveal-up md:p-8">
+            <div className="flex items-center justify-between gap-4 border-l-4 border-primary pl-4 text-on-surface">
                <h2 className="text-lg font-black uppercase tracking-tight">
                 {shouldShowSchedulePicker ? td("select_date") : t("selected_departure")}
                </h2>
@@ -213,7 +231,7 @@ export function BookingForm({ tour }: BookingFormProps) {
                 <button
                   type="button"
                   onClick={() => setForceSchedulePicker(true)}
-                  className="text-[11px] font-bold text-primary hover:text-white transition-colors uppercase tracking-widest"
+                  className="text-[11px] font-bold text-primary transition-colors hover:text-primary-hover uppercase tracking-widest"
                 >
                   {t("change_departure")}
                 </button>
@@ -236,7 +254,7 @@ export function BookingForm({ tour }: BookingFormProps) {
                 />
               </div>
             ) : (
-              <div className="border border-border rounded-xl p-5 bg-surface-container-low text-white">
+              <div className="rounded-2xl border border-border bg-[#f7f7f7] p-5 text-on-surface">
                 {selectedSchedule ? (
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div className="space-y-1">
@@ -264,8 +282,8 @@ export function BookingForm({ tour }: BookingFormProps) {
           </section>
 
           {/* Section 2: Quantities */}
-          <section className="glass-surface rounded-2xl p-6 md:p-8 space-y-6 reveal-up delay-100 shadow-xl border-white/5">
-            <div className="flex items-center gap-3 border-l-4 border-primary pl-4 text-white">
+          <section className="space-y-6 rounded-[28px] border border-border bg-white p-6 shadow-[0_18px_54px_rgba(15,23,42,0.08)] reveal-up delay-100 md:p-8">
+            <div className="flex items-center gap-3 border-l-4 border-primary pl-4 text-on-surface">
                <h2 className="text-lg font-black uppercase tracking-tight">
                 {td("guests_label")}
                </h2>
@@ -307,8 +325,8 @@ export function BookingForm({ tour }: BookingFormProps) {
           </section>
 
           {/* Section 3: Customer Info */}
-          <section className="glass-surface rounded-2xl p-6 md:p-8 space-y-8 reveal-up delay-200 shadow-xl border-white/5">
-            <div className="flex justify-between items-end border-l-4 border-primary pl-4 text-white">
+          <section className="space-y-8 rounded-[28px] border border-border bg-white p-6 shadow-[0_18px_54px_rgba(15,23,42,0.08)] reveal-up delay-200 md:p-8">
+            <div className="flex justify-between items-end border-l-4 border-primary pl-4 text-on-surface">
                <h2 className="text-lg font-black uppercase tracking-tight">
                 {t("customer_info")}
                </h2>
@@ -322,7 +340,7 @@ export function BookingForm({ tour }: BookingFormProps) {
                     handleChange("customer_address", user.city || "");
                   }
                 }}
-                className="text-[11px] font-bold text-primary hover:text-white transition-colors uppercase tracking-widest"
+                className="text-[11px] font-bold text-primary transition-colors hover:text-primary-hover uppercase tracking-widest"
                >
                  {t("fill_from_profile")}
                </button>
@@ -381,8 +399,8 @@ export function BookingForm({ tour }: BookingFormProps) {
           </section>
 
           {/* Section 4: Payment Method */}
-          <section className="glass-surface rounded-2xl p-6 md:p-8 space-y-6 reveal-up delay-300 shadow-xl border-white/5">
-             <div className="flex items-center gap-3 border-l-4 border-primary pl-4 text-white">
+          <section className="space-y-6 rounded-[28px] border border-border bg-white p-6 shadow-[0_18px_54px_rgba(15,23,42,0.08)] reveal-up delay-300 md:p-8">
+             <div className="flex items-center gap-3 border-l-4 border-primary pl-4 text-on-surface">
                <h2 className="text-lg font-black uppercase tracking-tight">
                 {t("payment_method")}
                </h2>
@@ -400,9 +418,9 @@ export function BookingForm({ tour }: BookingFormProps) {
                   type="checkbox"
                   checked={formData.agree_terms}
                   onChange={(e) => handleChange("agree_terms", e.target.checked)}
-                  className="mt-1 w-5 h-5 rounded bg-surface-container-high border-border text-primary focus:ring-primary"
+                  className="mt-1 h-5 w-5 rounded border-border bg-white text-primary accent-primary focus:ring-primary"
                 />
-                <span className="text-sm text-on-surface-variant font-medium leading-relaxed select-none">
+                <span className="text-sm text-on-surface-subtle font-medium leading-relaxed select-none">
                   {t.rich("terms_agree", {
                     terms: (chunks) => <span className="text-primary font-bold hover:underline">{chunks}</span>,
                     policy: (chunks) => <span className="text-primary font-bold hover:underline">{chunks}</span>

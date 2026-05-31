@@ -122,11 +122,11 @@ export function ForgotPasswordForm({ email: initialEmail = "" }: ForgotPasswordF
   };
 
   return (
-    <div className="design-page flex min-h-screen justify-center items-center p-4 sm:p-8 relative overflow-hidden bg-[#080808]">
+    <div className="design-page flex min-h-screen justify-center items-center p-4 sm:p-8 relative overflow-hidden bg-surface-container-low">
       {/* Dynamic Background Effect */}
       <AmbientBackground />
 
-      <div className="relative flex w-full max-w-md lg:max-w-4xl lg:w-3/4 xl:w-2/3 h-auto lg:h-[550px] shadow-[0_0_40px_rgba(139,106,85,0.12)] rounded-xl glow-effect animate-reveal-up">
+      <div className="relative flex h-auto w-full max-w-md rounded-[28px] shadow-[0_18px_48px_rgba(0,0,0,0.08)] animate-reveal-up lg:h-[550px] lg:w-3/4 lg:max-w-4xl xl:w-2/3">
         
         {/* Animated Border Background (Hidden on mobile for performance) */}
         <div className="absolute inset-[-2px] rounded-[10px] overflow-hidden pointer-events-none z-0 hidden sm:block">
@@ -137,7 +137,7 @@ export function ForgotPasswordForm({ email: initialEmail = "" }: ForgotPasswordF
         </div>
 
         {/* Main Content Container */}
-        <div className="relative z-10 flex w-full h-full rounded-xl overflow-hidden bg-[#080808] border border-[#262626]">
+        <div className="relative z-10 flex w-full h-full rounded-[28px] overflow-hidden bg-white border border-border">
           
           {/* Left panel - brand image/gradient layout */}
           <div
@@ -153,12 +153,12 @@ export function ForgotPasswordForm({ email: initialEmail = "" }: ForgotPasswordF
           </div>
 
           {/* Right panel - Form & Success content */}
-          <div className="flex flex-1 items-center justify-center p-5 sm:p-8 bg-[#080808]">
+          <div className="flex flex-1 items-center justify-center p-5 sm:p-8 bg-white">
             <div className="w-full max-w-md flex flex-col items-center">
               
               {/* Brand Name on Mobile */}
               <div className="flex items-center justify-center mb-6 lg:hidden">
-                <span className="font-bold text-[#8b6a55] text-xl text-center uppercase tracking-wider">
+                <span className="font-bold text-primary text-xl text-center uppercase tracking-wider">
                   {t("brand_name")}
                 </span>
               </div>
@@ -166,10 +166,10 @@ export function ForgotPasswordForm({ email: initialEmail = "" }: ForgotPasswordF
               {!isSuccess ? (
                 // 1. STATE: Email Entry Form
                 <div className="w-full">
-                  <h2 className="text-2xl sm:text-3xl font-bold uppercase text-white mb-2 text-center lg:text-left">
+                  <h2 className="text-2xl sm:text-3xl font-semibold uppercase text-on-surface mb-2 text-center lg:text-left">
                     {t("title")}
                   </h2>
-                  <p className="text-xs sm:text-sm text-[#737373] mb-8 text-center lg:text-left">
+                  <p className="text-xs sm:text-sm text-on-surface-subtle mb-8 text-center lg:text-left">
                     {t("subtitle")}
                   </p>
 
@@ -191,7 +191,7 @@ export function ForgotPasswordForm({ email: initialEmail = "" }: ForgotPasswordF
                     <button
                       type="submit"
                       disabled={!email || !!emailError || requestMutation.isPending}
-                      className="w-full flex items-center justify-center gap-2 bg-[#171717] hover:border-[#8b6a55] border border-[#262626] disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3.5 rounded-full transition-all duration-300 uppercase tracking-wider text-xs sm:text-sm"
+                      className="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary-hover border border-primary disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3.5 rounded-full transition-all duration-300 uppercase tracking-wider text-xs sm:text-sm"
                     >
                       {requestMutation.isPending ? (
                         <>
@@ -211,7 +211,7 @@ export function ForgotPasswordForm({ email: initialEmail = "" }: ForgotPasswordF
                   <div className="flex justify-center mt-6">
                     <Link
                       href={ROUTES.LOGIN}
-                      className="flex items-center gap-1.5 text-xs text-[#737373] hover:text-white transition-all cursor-pointer font-medium"
+                      className="flex items-center gap-1.5 text-xs text-on-surface-subtle hover:text-on-surface transition-all cursor-pointer font-medium"
                     >
                       <IoChevronBack className="w-3.5 h-3.5" />
                       <span>{t("back_to_login")}</span>
@@ -221,27 +221,27 @@ export function ForgotPasswordForm({ email: initialEmail = "" }: ForgotPasswordF
               ) : (
                 // 2. STATE: Success Notification Card
                 <div className="w-full text-center space-y-6 animate-fade-in">
-                  <div className="w-16 h-16 mx-auto bg-[#8b6a55]/10 border border-[#8b6a55]/20 rounded-full flex items-center justify-center text-[#8b6a55] animate-pulse">
+                  <div className="w-16 h-16 mx-auto bg-primary/10 border border-primary/20 rounded-full flex items-center justify-center text-primary animate-pulse">
                     <CheckCircle2 className="w-10 h-10" />
                   </div>
                   
                   <div className="space-y-2">
-                    <h2 className="text-xl sm:text-2xl font-bold text-white uppercase tracking-wide">
+                    <h2 className="text-xl sm:text-2xl font-semibold text-on-surface uppercase tracking-wide">
                       {t("success.title")}
                     </h2>
-                    <p className="text-xs sm:text-sm text-[#a3a3a3] max-w-sm mx-auto leading-relaxed">
+                    <p className="text-xs sm:text-sm text-on-surface-subtle max-w-sm mx-auto leading-relaxed">
                       {t("success.subtitle")}
                     </p>
                   </div>
 
                   {/* Divider line */}
-                  <div className="h-px bg-[#262626] my-6" />
+                  <div className="h-px bg-border my-6" />
 
                   {/* Resend Cooldown Handler */}
                   <div className="flex flex-col items-center justify-center gap-2 text-xs">
-                    <span className="text-[#737373]">{t("success.resend_prompt")}</span>
+                    <span className="text-on-surface-subtle">{t("success.resend_prompt")}</span>
                     {resendCooldown > 0 ? (
-                      <span className="text-[#a3a3a3] font-medium bg-[#171717] px-3.5 py-1.5 rounded-full border border-[#262626]">
+                        <span className="text-on-surface-subtle font-medium bg-[#f7f7f7] px-3.5 py-1.5 rounded-full border border-border">
                         {t("success.resend_cooldown", { seconds: resendCooldown })}
                       </span>
                     ) : (
@@ -249,7 +249,7 @@ export function ForgotPasswordForm({ email: initialEmail = "" }: ForgotPasswordF
                         type="button"
                         onClick={handleResend}
                         disabled={requestMutation.isPending}
-                        className="text-[#8b6a55] hover:text-[#c59a5f] hover:underline font-semibold disabled:opacity-50 disabled:no-underline transition-all cursor-pointer"
+                        className="text-primary hover:text-[#c59a5f] hover:underline font-semibold disabled:opacity-50 disabled:no-underline transition-all cursor-pointer"
                       >
                         {t("success.resend_btn")}
                       </button>
@@ -260,7 +260,7 @@ export function ForgotPasswordForm({ email: initialEmail = "" }: ForgotPasswordF
                   <div className="pt-4">
                     <Link
                       href={ROUTES.LOGIN}
-                      className="w-full inline-flex items-center justify-center gap-1.5 bg-[#171717] hover:border-[#8b6a55] hover:text-[#8b6a55] border border-[#262626] text-white font-semibold py-3.5 rounded-full transition-all duration-300 uppercase tracking-wider text-xs"
+                      className="w-full inline-flex items-center justify-center gap-1.5 bg-primary hover:bg-primary-hover border border-primary text-white font-semibold py-3.5 rounded-full transition-all duration-300 uppercase tracking-wider text-xs"
                     >
                       <IoChevronBack className="w-3.5 h-3.5" />
                       <span>{t("back_to_login")}</span>

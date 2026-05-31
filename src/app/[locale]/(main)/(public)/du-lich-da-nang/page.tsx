@@ -59,7 +59,7 @@ async function LandingContent({ locale, searchParams }: { locale: string; search
         count={tours.length}
       />
 
-      <div className="design-container mt-12">
+      <div className="design-container mt-4">
         <DestinationTourLandingClient 
           initialTours={tours}
           categories={categories}

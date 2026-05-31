@@ -11,7 +11,7 @@ export default function MainLayout({
     <div className="design-page layout-main-shell min-h-screen">
       <AmbientBackgroundLazy />
       <Header />
-      <div className="pt-20">{children}</div>
+      <div className="pt-[92px]">{children}</div>
       <Footer />
     </div>
   );

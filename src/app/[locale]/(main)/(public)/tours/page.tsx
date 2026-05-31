@@ -66,15 +66,15 @@ function ToursContent() {
   return (
     <div className="design-page layout-main-shell">
       {/* Header Section */}
-      <div className="relative pt-32 pb-12 overflow-hidden">
-        <div className="absolute inset-0 bg-linear-to-b from-[#8b6a55]/10 to-transparent pointer-events-none" />
+      <div className="relative overflow-hidden pt-10 pb-6 md:pt-14 md:pb-8">
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#fff1f3] to-transparent" />
         <div className="design-container">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div className="reveal-up">
-              <h1 className="text-4xl md:text-5xl font-black text-on-surface mb-4">
+              <h1 className="mb-4 text-4xl font-semibold tracking-[-0.04em] text-on-surface md:text-[52px]">
                 {t("title")}
               </h1>
-              <p className="text-on-surface-subtle text-lg max-w-2xl">
+              <p className="max-w-2xl text-[18px] leading-7 text-on-surface-subtle">
                 {t("subtitle")}
               </p>
             </div>
@@ -84,14 +84,16 @@ function ToursContent() {
                 placeholder={t("list.search_placeholder")}
                 value={filters.search || ""}
                 onChange={(val: string) => setFilters({ search: val })}
+                label="Where"
+                actionText="Search"
               />
             </div>
           </div>
         </div>
       </div>
 
-      <div className="design-container mt-12 pb-24">
-        <div className="flex flex-col lg:flex-row gap-10">
+      <div className="design-container mt-6 pb-16">
+        <div className="flex flex-col lg:flex-row gap-3">
           {/* Mobile Filter Toggle */}
           <button
             type="button"
@@ -170,7 +172,7 @@ function ToursContent() {
 
             {isError ? (
               <div
-                className="rounded-xl border border-border bg-surface-container p-8 text-center"
+                className="rounded-xl border border-border bg-surface-container p-8 text-on-surface-subtleenter"
                 role="alert"
               >
                 <p className="text-on-surface mb-4">{t("list.load_error")}</p>
@@ -188,7 +190,7 @@ function ToursContent() {
 
                 {!isLoading && totalPages > 1 && (
                   <div
-                    className="mt-12 flex justify-center reveal-up"
+                    className="mt-4 flex justify-center reveal-up"
                     style={{ animationDelay: "400ms" }}
                   >
                     <StandardPagination

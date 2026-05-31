@@ -37,7 +37,7 @@ export default function RecommendationGrid() {
   // Render Skeletons
   if (isLoading) {
     return (
-      <div className="space-y-12">
+      <div className="space-y-6">
         <TabSkeleton />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 py-6">
           {Array.from({ length: 8 }).map((_, index) => (
@@ -51,17 +51,17 @@ export default function RecommendationGrid() {
   // Render Error
   if (isError) {
     return (
-      <div className="space-y-12">
+      <div className="space-y-6">
         <TabSkeleton />
-        <div className="rounded-2xl border border-[#262626] bg-[#080808]/40 p-12 text-center backdrop-blur-md max-w-xl mx-auto my-12 animate-in fade-in slide-in-from-top-4 duration-700">
+        <div className="mx-auto my-12 max-w-xl animate-in rounded-[28px] border border-border bg-white p-12 text-center shadow-[0_16px_48px_rgba(15,23,42,0.08)] duration-700">
           <div className="w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-4">
             <IoAlertCircleOutline className="w-6 h-6 text-red-500" />
           </div>
-          <h3 className="text-white font-bold text-lg mb-2">{t("error.title")}</h3>
+          <h3 className="text-on-surface font-bold text-lg mb-2">{t("error.title")}</h3>
           <p className="text-on-surface-subtle text-sm mb-6 max-w-sm mx-auto">{t("error.message")}</p>
           <Button
             onClick={() => refetch()}
-            className="rounded-full bg-[#8b6a55] hover:bg-[#a67c63] px-8 py-3 text-xs font-black uppercase tracking-widest text-white transition-all duration-300 shadow-md"
+            className="cursor-pointer rounded-full bg-primary px-8 py-3 text-xs font-black uppercase tracking-widest text-white shadow-[0_12px_30px_rgba(255,56,92,0.22)] transition-all duration-300 hover:bg-primary-hover"
           >
             {t("error.retry")}
           </Button>
@@ -73,26 +73,26 @@ export default function RecommendationGrid() {
   // Render Empty State
   if (!hasData) {
     return (
-      <div className="space-y-12">
+      <div className="space-y-6">
         <TabSkeleton />
-        <div className="rounded-2xl border border-[#262626] bg-[#080808]/20 p-16 text-center backdrop-blur-md max-w-xl mx-auto my-12 animate-in fade-in slide-in-from-top-4 duration-700">
-          <div className="w-16 h-16 rounded-full bg-[#8b6a55]/10 flex items-center justify-center mx-auto mb-6">
-            <IoCompassOutline className="w-8 h-8 text-[#8b6a55]" />
+        <div className="mx-auto my-12 max-w-xl animate-in rounded-[28px] border border-border bg-white p-16 text-center shadow-[0_16px_48px_rgba(15,23,42,0.08)] duration-700">
+          <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
+            <IoCompassOutline className="w-8 h-8 text-primary" />
           </div>
-          <h3 className="text-white font-bold text-2xl mb-3">{t("empty.title")}</h3>
+          <h3 className="text-on-surface font-bold text-2xl mb-3">{t("empty.title")}</h3>
           <p className="text-on-surface-subtle text-sm mb-8 leading-relaxed max-w-sm mx-auto">
             {t("empty.subtitle")}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href={ROUTES.LOCATIONS}
-              className="px-6 py-3 bg-[#8b6a55] hover:bg-[#a67c63] text-white text-xs font-black uppercase tracking-widest rounded-full transition-all duration-300 text-center shadow-md active:scale-95"
+              className="rounded-full bg-primary px-6 py-3 text-center text-xs font-black uppercase tracking-widest text-white shadow-[0_12px_30px_rgba(255,56,92,0.22)] transition-all duration-300 active:scale-95 hover:bg-primary-hover"
             >
               {t("empty.cta_locations")}
             </Link>
             <Link
               href={ROUTES.TOURS}
-              className="px-6 py-3 bg-[#171717] hover:bg-[#262626] text-white text-xs font-black uppercase tracking-widest rounded-full border border-[#262626] transition-all duration-300 text-center active:scale-95"
+              className="rounded-full border border-border bg-white px-6 py-3 text-center text-xs font-black uppercase tracking-widest text-on-surface transition-all duration-300 active:scale-95 hover:bg-[#f7f7f7]"
             >
               {t("empty.cta_tours")}
             </Link>
@@ -105,20 +105,20 @@ export default function RecommendationGrid() {
   return (
     <div className="space-y-10">
       {/* Control Tab Bar */}
-      <div className="flex border-b border-[#262626] w-full max-w-md">
+      <div className="flex border-b border-border w-full max-w-md">
         {(["all", "location", "tour"] as const).map((tab) => (
           <button
             key={tab}
             onClick={() => handleTabChange(tab)}
-            className={`flex-1 py-4 text-center font-bold text-sm tracking-wide transition-all duration-300 relative focus:outline-none ${
+            className={`flex-1 py-4 text-center font-bold text-sm tracking-wide transition-all duration-300 relative focus:outline-none cursor-pointer ${
               activeTab === tab
-                ? "text-[#8b6a55]"
-                : "text-on-surface-subtle hover:text-[#8b6a55]/80"
+                ? "text-primary"
+                : "text-on-surface-subtle hover:text-primary/80"
             }`}
           >
             {t(`tabs.${tab === "all" ? "all" : tab === "location" ? "locations" : "tours"}`)}
             {activeTab === tab && (
-              <span className="absolute bottom-0 inset-x-0 h-0.5 bg-[#8b6a55] animate-in fade-in zoom-in-95 duration-300" />
+              <span className="absolute bottom-0 inset-x-0 h-0.5 bg-primary animate-in fade-in zoom-in-95 duration-300" />
             )}
           </button>
         ))}
@@ -126,20 +126,20 @@ export default function RecommendationGrid() {
 
       {/* Grid Results */}
       {isFilteredEmpty ? (
-        <div className="rounded-2xl border border-[#262626] bg-[#080808]/20 p-16 text-center max-w-md mx-auto my-12">
+        <div className="mx-auto my-12 max-w-md rounded-[28px] border border-border bg-white p-16 text-center shadow-[0_16px_48px_rgba(15,23,42,0.08)]">
           <IoCompassOutline className="w-12 h-12 text-on-surface-subtle/40 mx-auto mb-4" />
           <p className="text-on-surface-subtle font-medium text-sm">{t("empty.title")}</p>
         </div>
       ) : (
-        <div className="space-y-16">
+        <div className="space-y-8">
           {/* Recommended Locations Grid Section */}
           {showLocations && locations.length > 0 && (
             <div className="space-y-6">
               <div className="flex items-center gap-4">
-                <h2 className="text-2xl font-black text-white uppercase tracking-wider">
+                <h2 className="text-2xl font-black text-on-surface uppercase tracking-wider">
                   {t("sections.locations")}
                 </h2>
-                <div className="h-px bg-[#262626] flex-1" />
+                <div className="h-px bg-border flex-1" />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {locations.map((item, index) => (
@@ -162,10 +162,10 @@ export default function RecommendationGrid() {
           {showTours && tours.length > 0 && (
             <div className="space-y-6">
               <div className="flex items-center gap-4">
-                <h2 className="text-2xl font-black text-white uppercase tracking-wider">
+                <h2 className="text-2xl font-black text-on-surface uppercase tracking-wider">
                   {t("sections.tours")}
                 </h2>
-                <div className="h-px bg-[#262626] flex-1" />
+                <div className="h-px bg-border flex-1" />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {tours.map((item, index) => (
@@ -192,10 +192,10 @@ export default function RecommendationGrid() {
 // Sub components
 function TabSkeleton() {
   return (
-    <div className="flex border-b border-[#262626] w-full max-w-md animate-pulse">
+    <div className="flex border-b border-border w-full max-w-md animate-pulse">
       {Array.from({ length: 3 }).map((_, i) => (
         <div key={i} className="flex-1 py-4 flex justify-center">
-          <div className="h-4 bg-neutral-900 rounded w-16" />
+          <div className="h-4 bg-surface-container rounded w-16" />
         </div>
       ))}
     </div>
@@ -205,17 +205,17 @@ function TabSkeleton() {
 function CardSkeleton({ index }: { index: number }) {
   return (
     <div
-      className="p-px rounded-xl bg-linear-to-br from-[rgba(92,56,34,0.1)] to-[rgba(46,58,47,0.05)] animate-pulse"
+      className="p-px rounded-xl bg-linear-to-br from-primary/5 to-border/10 animate-pulse"
       style={{ animationDelay: `${index * 100}ms` }}
     >
       <div className="bg-surface border border-border rounded-xl overflow-hidden flex flex-col h-[380px]">
-        <div className="aspect-4/3 w-full bg-neutral-900" />
+        <div className="aspect-4/3 w-full bg-surface-container" />
         <div className="p-5 space-y-4 flex-1 flex flex-col justify-between">
           <div className="space-y-2">
-            <div className="h-3 bg-neutral-900 rounded w-1/3" />
-            <div className="h-5 bg-neutral-900 rounded w-3/4" />
+            <div className="h-3 bg-surface-container rounded w-1/3" />
+            <div className="h-5 bg-surface-container rounded w-3/4" />
           </div>
-          <div className="h-8 bg-neutral-900 rounded w-full mt-auto" />
+          <div className="h-8 bg-surface-container rounded w-full mt-auto" />
         </div>
       </div>
     </div>

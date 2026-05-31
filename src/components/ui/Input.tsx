@@ -16,7 +16,7 @@ interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "type">
   leftIcon?: ReactNode;
   isPassword?: boolean;
   isFocused?: boolean;
-  /** Always show label (for profile/settings forms on dark backgrounds). */
+  /** Always show label (for profile/settings forms). */
   persistentLabel?: boolean;
   /** Extra classes on the native input element (e.g. date picker icon styling). */
   inputClassName?: string;
@@ -54,11 +54,11 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           <label
             htmlFor={inputId}
             className={cn(
-              "block text-[11px] font-bold mb-1 uppercase tracking-[0.2em] transition-all duration-300",
+              "mb-1 block text-[11px] font-bold uppercase tracking-[0.2em] transition-all duration-300",
               persistentLabel
                 ? cn(
                     "translate-y-0 opacity-100",
-                    isFocused ? "text-primary" : error ? "text-red-400" : "text-[#d4d4d4]"
+                    isFocused ? "text-primary" : error ? "text-red-500" : "text-on-surface-subtle"
                   )
                 : cn(
                     "transform",
@@ -76,15 +76,15 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {/* Input container */}
         <div
           className={cn(
-            "flex items-center border-b px-0 gap-3 transition-all duration-300 ease-out",
+            "flex items-center gap-3 rounded-2xl border bg-white px-4 transition-all duration-300 ease-out",
             error
-              ? "border-red-500"
+              ? "border-red-500 bg-rose-50/60"
               : isFocused
-                ? "border-primary"
+                ? "border-primary shadow-[0_0_0_3px_rgba(255,56,92,0.12)]"
                 : persistentLabel
-                  ? "border-[#525252]"
+                  ? "border-border"
                   : "border-border",
-            "bg-transparent"
+            "shadow-sm"
           )}
         >
           {/* Left Icon */}
@@ -95,7 +95,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
                 isFocused
                   ? "text-primary"
                   : persistentLabel
-                    ? "text-[#a3a3a3]"
+                    ? "text-on-surface-subtle"
                     : "text-on-surface-variant"
               )}
             >
@@ -110,14 +110,14 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             type={inputType}
             suppressHydrationWarning
             className={cn(
-              "w-full py-3 bg-transparent outline-none",
+              "w-full bg-transparent py-3 outline-none",
               persistentLabel
-                ? "placeholder:text-[#a3a3a3]"
+                ? "placeholder:text-on-surface-subtle"
                 : "placeholder:text-on-surface-variant",
               type === "date" &&
-                "[&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-90 [&::-webkit-calendar-picker-indicator]:invert",
+                "[&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-75",
               "transition-all duration-300 focus:placeholder-transparent",
-              "text-sm sm:text-base text-white font-medium",
+              "text-sm font-medium text-on-surface sm:text-base",
               leftIcon ? "pl-0" : "",
               isPassword ? "pr-8" : "",
               inputClassName

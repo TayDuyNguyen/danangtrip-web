@@ -110,9 +110,9 @@ export const BlogContent = ({ searchQuery = "" }: BlogContentProps) => {
   );
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-6">
       {/* Category Tabs Row */}
-      <div className="border-b border-neutral-800 pb-4 reveal-up" style={{ animationDelay: "100ms" }}>
+      <div className="reveal-up border-b border-border pb-4" style={{ animationDelay: "100ms" }}>
         {isSidebarLoading ? (
           <CategoryTabsSkeleton />
         ) : (
@@ -122,8 +122,8 @@ export const BlogContent = ({ searchQuery = "" }: BlogContentProps) => {
               onClick={() => handleCategorySelect(undefined)}
               className={`px-5 py-3 cursor-pointer border-b-2 transition-all text-sm font-semibold whitespace-nowrap ${
                 !filters.category_id
-                  ? "border-[#8B6A55] text-white"
-                  : "border-transparent text-[#a3a3a3] hover:text-white"
+                  ? "border-primary text-on-surface"
+                  : "border-transparent text-on-surface-subtle hover:text-on-surface"
               }`}
             >
               {t("all_posts")}{" "}
@@ -138,8 +138,8 @@ export const BlogContent = ({ searchQuery = "" }: BlogContentProps) => {
                 onClick={() => handleCategorySelect(cat.id)}
                 className={`px-5 py-3 cursor-pointer border-b-2 transition-all text-sm font-semibold whitespace-nowrap ${
                   Number(filters.category_id) === cat.id
-                    ? "border-[#8B6A55] text-white"
-                    : "border-transparent text-[#a3a3a3] hover:text-white"
+                    ? "border-primary text-on-surface"
+                    : "border-transparent text-on-surface-subtle hover:text-on-surface"
                 }`}
               >
                 {cat.name}{" "}
@@ -152,13 +152,13 @@ export const BlogContent = ({ searchQuery = "" }: BlogContentProps) => {
         )}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-        <div className="lg:col-span-8 space-y-12">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+        <div className="lg:col-span-8 space-y-6">
           {isInvalidCategory ? (
-            <div className="glass-surface rounded-3xl p-16 md:p-20 text-center space-y-4 reveal-up" style={{ animationDelay: "200ms" }}>
-              <IoNewspaperOutline className="mx-auto text-6xl text-[#8B6A55]/80" aria-hidden />
-              <h3 className="text-xl text-white font-semibold">{t("invalid_category_title")}</h3>
-              <p className="text-[#737373] max-w-md mx-auto">{t("invalid_category_desc")}</p>
+            <div className="reveal-up space-y-4 rounded-3xl border border-border bg-white p-16 text-center shadow-[0_14px_36px_rgba(0,0,0,0.06)] md:p-20" style={{ animationDelay: "200ms" }}>
+              <IoNewspaperOutline className="mx-auto text-6xl text-primary/80" aria-hidden />
+              <h3 className="text-xl font-semibold text-on-surface">{t("invalid_category_title")}</h3>
+              <p className="mx-auto max-w-md text-on-surface-subtle">{t("invalid_category_desc")}</p>
               <Button
                 type="button"
                 variant="secondary"
@@ -169,7 +169,7 @@ export const BlogContent = ({ searchQuery = "" }: BlogContentProps) => {
               </Button>
             </div>
           ) : isLoading ? (
-            <div className="space-y-12">
+            <div className="space-y-6">
               <FeaturedPostSkeleton />
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {Array.from({ length: 6 }, (_, index) => index + 1).map((i) => (
@@ -178,8 +178,8 @@ export const BlogContent = ({ searchQuery = "" }: BlogContentProps) => {
               </div>
             </div>
           ) : (
-            <div className="space-y-12">
-              <p className="text-sm text-[#a3a3a3]">{resultText}</p>
+            <div className="space-y-6">
+              <p className="text-sm text-on-surface-subtle">{resultText}</p>
 
               {featuredPost && <FeaturedPost post={featuredPost} />}
 
@@ -190,12 +190,12 @@ export const BlogContent = ({ searchQuery = "" }: BlogContentProps) => {
               </div>
 
               {posts.length === 0 && (
-                <div className="glass-surface rounded-3xl p-16 md:p-20 text-center space-y-4">
+                <div className="space-y-4 rounded-3xl border border-border bg-white p-16 text-center shadow-[0_14px_36px_rgba(0,0,0,0.06)] md:p-20">
                   <IoNewspaperOutline className="mx-auto text-6xl text-neutral-600" aria-hidden />
-                  <h3 className="text-xl text-white font-semibold">
+                  <h3 className="text-xl font-semibold text-on-surface">
                     {filters.category_id ? t("empty_category_title") : t("no_posts")}
                   </h3>
-                  <p className="text-[#737373] max-w-md mx-auto">
+                  <p className="mx-auto max-w-md text-on-surface-subtle">
                     {filters.category_id ? t("empty_category_desc") : t("no_posts_desc")}
                   </p>
                   <Button
@@ -210,7 +210,7 @@ export const BlogContent = ({ searchQuery = "" }: BlogContentProps) => {
               )}
 
               {posts.length > 0 && lastPage > 1 && q.length === 0 && (
-                <div className="mt-12 flex justify-center reveal-up" style={{ animationDelay: "400ms" }}>
+                <div className="mt-4 flex justify-center reveal-up" style={{ animationDelay: "400ms" }}>
                   <StandardPagination
                     currentPage={currentPage}
                     totalPages={lastPage}

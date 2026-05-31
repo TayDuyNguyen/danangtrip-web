@@ -20,17 +20,17 @@ export function FavoritesSortSelect({ value, onChange }: FavoritesSortSelectProp
   ];
 
   return (
-    <div className="relative flex items-center bg-[#111111] rounded-xl border border-[#262626] px-3.5 h-11 transition-all duration-300 hover:border-[#8b6a55]/40 focus-within:border-[#8b6a55] w-full md:w-auto">
-      <SlidersHorizontal className="w-4 h-4 text-white/50 mr-2.5 shrink-0" />
-      <span className="text-xs text-white/40 uppercase tracking-widest font-bold hidden md:inline mr-2">
+    <div className="relative flex h-11 w-full items-center rounded-full border border-border bg-white px-3.5 shadow-sm transition-all duration-300 hover:border-primary/30 focus-within:border-primary md:w-auto">
+      <SlidersHorizontal className="mr-2.5 h-4 w-4 shrink-0 text-on-surface-subtle" />
+      <span className="mr-2 hidden text-xs font-bold uppercase tracking-widest text-on-surface-subtle md:inline">
         {t("sort.label")}:
       </span>
       <select
         value={value}
         onChange={(e) => onChange(e.target.value as "newest" | "oldest" | "name_asc" | "rating_desc")}
-        className="bg-transparent text-white text-xs font-bold uppercase tracking-wider outline-none cursor-pointer pr-6 py-1 w-full md:w-auto select-none appearance-none"
+        className="w-full cursor-pointer appearance-none bg-transparent py-1 pr-6 text-xs font-semibold uppercase tracking-wider text-on-surface outline-none select-none md:w-auto"
         style={{
-          backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23a3a3a3' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
+          backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236A6A6A' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
           backgroundPosition: "right -4px center",
           backgroundSize: "20px 20px",
           backgroundRepeat: "no-repeat",
@@ -40,7 +40,7 @@ export function FavoritesSortSelect({ value, onChange }: FavoritesSortSelectProp
           <option
             key={option.value}
             value={option.value}
-            className="bg-[#111111] text-white py-2"
+            className="bg-white py-2 text-on-surface"
           >
             {option.label}
           </option>

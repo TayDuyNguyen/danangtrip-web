@@ -23,13 +23,13 @@ export const BlogDetailHeader = ({ post, locale }: BlogDetailHeaderProps) => {
   const dateLocale = locale === "vi" ? vi : enUS;
 
   return (
-    <header className="space-y-8 mb-12 reveal-up">
+    <header className="space-y-8 mb-4 reveal-up">
       {/* Category badges — monospace with brand border */}
       <div className="flex flex-wrap gap-3">
         {post.categories.map((cat) => (
           <span
             key={cat.id}
-            className="inline-block px-3 py-1 text-xs font-mono text-primary border border-primary/30 rounded-full glass-retro uppercase tracking-wider"
+            className="inline-block rounded-full border border-primary/20 bg-primary/8 px-3 py-1 text-xs font-mono uppercase tracking-wider text-primary"
           >
             {cat.name}
           </span>
@@ -37,15 +37,15 @@ export const BlogDetailHeader = ({ post, locale }: BlogDetailHeaderProps) => {
       </div>
 
       {/* Title — light weight, uppercase, tight tracking */}
-      <h1 className="text-4xl md:text-5xl lg:text-6xl font-light uppercase tracking-tight leading-tight text-white">
+      <h1 className="text-4xl font-semibold leading-tight tracking-tight text-on-surface md:text-3xl lg:text-6xl">
         {post.title}
       </h1>
 
       {/* Meta Info — border top/bottom, monospace, with author avatar */}
-      <div className="flex flex-wrap items-center gap-x-8 gap-y-3 text-sm font-mono text-neutral-400 border-t border-b border-white/10 py-4">
+      <div className="flex flex-wrap items-center gap-x-8 gap-y-3 border-y border-border py-4 text-sm font-mono text-on-surface-subtle">
         {/* Author */}
         <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-full overflow-hidden border border-white/10 relative shrink-0">
+          <div className="relative h-6 w-6 shrink-0 overflow-hidden rounded-full border border-border">
             <Image
               src={post.author.avatar || "/images/placeholder-avatar.jpg"}
               alt={post.author.full_name}
@@ -53,12 +53,12 @@ export const BlogDetailHeader = ({ post, locale }: BlogDetailHeaderProps) => {
               className="object-cover"
             />
           </div>
-          <span className="text-white">{post.author.full_name}</span>
+          <span className="text-on-surface">{post.author.full_name}</span>
         </div>
 
         {/* Date */}
         <div className="flex items-center gap-2">
-          <Calendar size={16} className="text-neutral-500" />
+          <Calendar size={16} className="text-on-surface-subtle" />
           <span>
             {post.published_at
               ? format(new Date(post.published_at), "dd MMMM, yyyy", { locale: dateLocale })
@@ -68,7 +68,7 @@ export const BlogDetailHeader = ({ post, locale }: BlogDetailHeaderProps) => {
 
         {/* Views */}
         <div className="flex items-center gap-2">
-          <Eye size={16} className="text-neutral-500" />
+          <Eye size={16} className="text-on-surface-subtle" />
           <span>
             {formatCompactNumber(post.view_count, locale === "vi" ? "vi-VN" : "en-US")}{" "}
             {t("views_count", { count: post.view_count }).split(" ")[1]}

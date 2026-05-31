@@ -26,8 +26,8 @@ function FavoriteButton({ tourId }: { tourId: number }) {
       type="button"
       onClick={() => toggleFavorite(!!isFavorite)}
       disabled={isLoading || isPending}
-      className={`w-12 h-12 flex items-center justify-center rounded-full glass-surface transition-all ${
-        isFavorite ? "text-red-500 bg-red-50" : "text-on-surface-subtle hover:text-red-500 hover:bg-red-50"
+      className={`flex h-12 w-12 items-center justify-center rounded-full border border-border bg-white shadow-sm transition-all hover:border-red-200 hover:bg-red-50 ${
+        isFavorite ? "text-red-500" : "text-on-surface-subtle hover:text-red-500"
       }`}
       aria-label={isFavorite ? td("favorite_remove") : td("favorite_add")}
     >
@@ -66,7 +66,7 @@ export default function TourDetailClient({ tour }: Props) {
                 {td("breadcrumb_tours")}
               </Link>
             </li>
-            <li className="text-on-surface-variant">/</li>
+            <li className="text-on-surface-subtle">/</li>
             <li className="text-on-surface font-medium truncate max-w-[min(280px,55vw)]">
               {tour.name}
             </li>
@@ -76,13 +76,13 @@ export default function TourDetailClient({ tour }: Props) {
         {/* Gallery Section */}
         <TourImageGallery images={uniqueGallery} title={tour.name} />
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 mt-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 lg:gap-6 mt-4">
           {/* Main Content — dark glass card */}
           <div className="lg:col-span-8">
-            <div className="rounded-3xl bg-black/60 border border-white/10 shadow-2xl shadow-black/40 backdrop-blur-md overflow-hidden">
+            <div className="overflow-hidden rounded-[32px] border border-border bg-white shadow-[0_24px_70px_rgba(15,23,42,0.1)]">
               {/* Header section — padded */}
               <div className="p-6 md:p-10">
-                <article className="space-y-12">
+                <article className="space-y-6">
                   <header className="reveal-up space-y-6">
                     <div className="flex flex-wrap gap-2">
                       {tour.is_hot && (
@@ -97,13 +97,13 @@ export default function TourDetailClient({ tour }: Props) {
                       )}
                     </div>
                     <div className="flex justify-between items-start gap-4">
-                      <h1 className="text-4xl md:text-5xl font-black text-on-surface leading-[1.1] tracking-tight">
+                      <h1 className="text-4xl md:text-3xl font-black text-on-surface leading-[1.1] tracking-tight">
                         {tour.name}
                       </h1>
                       {/* Favorite Button */}
                       <FavoriteButton tourId={tour.id} />
                     </div>
-                    <div className="flex flex-wrap items-center gap-6 text-sm text-on-surface-variant border-y border-white/10 py-6">
+                    <div className="flex flex-wrap items-center gap-6 border-y border-border py-6 text-sm text-on-surface-subtle">
                       <span className="inline-flex items-center gap-2">
                         <MapPin className="w-5 h-5 text-primary shrink-0" />
                         <span className="font-bold text-on-surface">{t("card.location_short")}</span>
@@ -137,7 +137,7 @@ export default function TourDetailClient({ tour }: Props) {
                         </p>
                       )}
 
-                      <div className="prose prose-invert max-w-none">
+                      <div className="prose max-w-none">
                         {tour.description?.includes("<") ? (
                           <div
                             className="text-on-surface-subtle text-base leading-loose [&_p]:mb-6"
@@ -158,7 +158,7 @@ export default function TourDetailClient({ tour }: Props) {
                   {/* Inclusions & Meeting Point */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 reveal-up" style={{ animationDelay: "400ms" }}>
                     {inclusions && (
-                      <div className="glass-surface p-8 rounded-2xl space-y-4">
+                      <div className="space-y-4 rounded-[24px] border border-border bg-[#f7f7f7] p-8">
                         <h3 className="text-lg font-black text-on-surface uppercase tracking-tight">{td("inclusions")}</h3>
                         <div className="text-on-surface-subtle whitespace-pre-line text-sm leading-relaxed">
                           {inclusions}
@@ -166,7 +166,7 @@ export default function TourDetailClient({ tour }: Props) {
                       </div>
                     )}
                     {exclusions && (
-                      <div className="glass-surface p-8 rounded-2xl space-y-4 border-error/10">
+                      <div className="space-y-4 rounded-[24px] border border-border bg-[#f7f7f7] p-8">
                         <h3 className="text-lg font-black text-on-surface uppercase tracking-tight">{td("exclusions")}</h3>
                         <div className="text-on-surface-subtle whitespace-pre-line text-sm leading-relaxed">
                           {exclusions}
@@ -181,7 +181,7 @@ export default function TourDetailClient({ tour }: Props) {
                         <div className="w-1.5 h-6 bg-primary rounded-full" />
                         <h2 className="text-2xl font-black text-on-surface tracking-tight">{td("meeting_point")}</h2>
                       </div>
-                      <div className="glass-surface p-6 rounded-xl flex items-start gap-4">
+                      <div className="flex items-start gap-4 rounded-[24px] border border-border bg-[#f7f7f7] p-6">
                         <MapPin className="w-6 h-6 text-primary shrink-0 mt-1" />
                         <p className="text-on-surface-subtle text-base">{meetingPoint}</p>
                       </div>

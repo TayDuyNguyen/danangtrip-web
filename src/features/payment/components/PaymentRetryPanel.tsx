@@ -39,15 +39,15 @@ export function PaymentRetryPanel({ bookedAt, onRetry, isRetrying, disabled }: P
   };
 
   return (
-    <div className="bg-[#171717]/60 border border-[#262626] rounded-2xl p-6 mt-6 w-full max-w-md mx-auto text-center shadow-xl backdrop-blur-xl">
-      <div className="flex items-center justify-center gap-2 mb-4 text-[#8b6a55]">
+    <div className="mx-auto mt-6 w-full max-w-md rounded-[28px] border border-border bg-white p-6 text-center shadow-[0_24px_80px_rgba(15,23,42,0.08)]">
+      <div className="flex items-center justify-center gap-2 mb-4 text-primary">
         <IoTimeOutline className="w-5 h-5 animate-pulse" />
         <span className="text-sm font-medium tracking-wide">
           {t("countdown_prefix").toUpperCase()}
         </span>
       </div>
 
-      <div className="text-3xl font-mono font-black text-white tracking-widest bg-[#0a0a0a]/80 py-3 px-6 rounded-lg border border-[#262626] inline-block shadow-inner">
+      <div className="inline-block rounded-2xl border border-border bg-[#f7f7f7] px-6 py-3 font-mono text-3xl font-semibold tracking-widest text-on-surface shadow-inner">
         {formatTime(timeLeft)}
       </div>
 
@@ -55,7 +55,7 @@ export function PaymentRetryPanel({ bookedAt, onRetry, isRetrying, disabled }: P
         <button
           onClick={onRetry}
           disabled={isRetrying || disabled}
-          className="btn-primary w-full py-3 px-6 rounded-full font-semibold transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2"
+          className="flex w-full items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 font-semibold text-white transition-all duration-300 hover:bg-primary-hover active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50"
         >
           {isRetrying ? (
             <>

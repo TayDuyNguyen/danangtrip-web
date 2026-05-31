@@ -14,11 +14,11 @@ import { formatPriceVND } from "@/utils/format";
 
 const Recommendations = () => {
   const { isAuthenticated } = useAuthStore();
-  const { locations, tours, isLoading, isError } = useRecommendations(6);
   const t = useTranslations("recommendations");
   const tHome = useTranslations("home");
   const locale = useLocale();
   const { elementRef, isVisible } = useScrollReveal();
+  const { locations, tours, isLoading, isError } = useRecommendations(6, isAuthenticated);
 
   // 1. Return null early if user is not authenticated (strictly public guest rule)
   if (!isAuthenticated) return null;
@@ -33,32 +33,30 @@ const Recommendations = () => {
   if (!isLoading && !isError && combinedItems.length === 0) return null;
 
   return (
-    <section className="py-[80px] bg-[#080808]/12 backdrop-blur-[1px] font-sans overflow-hidden" ref={elementRef}>
-      <div className="design-container relative">
-        <Link
-          href={ROUTES.RECOMMENDATIONS}
-          className={`absolute right-4 top-0 text-[14px] text-[#8b6a55] font-semibold hover:underline transition-all duration-700 delay-200 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-          }`}
-        >
-          {tHome("hot_tours.explore_more")} <span className="ml-1">→</span>
-        </Link>
-
-        {/* Section Header */}
-        <div className={`text-center mb-[48px] transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-          <div className="flex items-center justify-center gap-4 mb-6">
-            <span className="w-12 h-[2px] bg-[#8b6a55]/30" />
-            <span className="text-[#8b6a55] font-black text-[12px] tracking-[0.4em] uppercase">
-              {t("tabs.all")}
-            </span>
-            <span className="w-12 h-[2px] bg-[#8b6a55]/30" />
+    <section className="py-8 bg-surface-container-low/12 backdrop-blur-[1px] font-sans overflow-hidden" ref={elementRef}>
+      <div className="design-container">
+        {/* Header */}
+        <div className={`flex justify-between items-end mb-6 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
+          <div className={`transition-all duration-700 delay-100 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
+            <div className="flex items-center gap-3 mb-4">
+              <span className="w-8 h-[2px] bg-primary/40" />
+              <span className="text-primary font-black text-[12px] tracking-[0.4em] uppercase">
+                {t("tabs.all")}
+              </span>
+            </div>
+            <h2 className="text-[32px] md:text-[40px] font-black text-on-surface leading-tight">
+              {t("title")}
+            </h2>
+            <p className="mt-2 max-w-xl text-[15px] font-medium text-on-surface-subtle">
+              {t("subtitle")}
+            </p>
           </div>
-          <h2 className="text-[36px] md:text-[48px] font-black leading-[1.1] text-white mb-6">
-            {t("title")}
-          </h2>
-          <p className="text-[#a3a3a3] text-[18px] max-w-2xl mx-auto font-medium leading-relaxed">
-            {t("subtitle")}
-          </p>
+          <Link
+            href={ROUTES.RECOMMENDATIONS}
+            className={`mb-2 flex items-center rounded-full border border-border bg-white px-6 py-3 text-[14px] font-semibold text-on-surface shadow-sm transition-all duration-300 hover:border-primary/30 hover:bg-[#f7f7f7] hover:text-primary ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
+          >
+            {tHome("hot_tours.explore_more")} <span className="ml-2 transition-transform group-hover:translate-x-1">→</span>
+          </Link>
         </div>
 
         {/* Grid Container */}
@@ -68,7 +66,7 @@ const Recommendations = () => {
             Array.from({ length: 6 }).map((_, i) => (
               <div
                 key={i}
-                className="bg-[#111111]/70 border border-[#262626] rounded-2xl h-[280px] w-full animate-pulse flex flex-col p-3"
+                className="flex h-[280px] w-full flex-col rounded-[28px] border border-border bg-[#f7f7f7] p-3 animate-pulse"
               >
                 <div className="w-full h-[120px] rounded-xl bg-[#1c1c1c] mb-3" />
                 <div className="h-4 w-2/3 bg-[#1c1c1c] rounded mb-2" />
@@ -81,8 +79,8 @@ const Recommendations = () => {
             ))
           ) : isError ? (
             // Elegant Failure State Placeholder
-            <div className="col-span-full py-12 flex flex-col items-center justify-center text-on-surface-subtle bg-surface-container/10 rounded-xl border border-dashed border-[#262626]">
-              <p className="text-[15px] font-medium text-[#a3a3a3] mb-4">{t("error.message")}</p>
+            <div className="col-span-full py-12 flex flex-col items-center justify-center text-on-surface-subtle bg-surface-container/10 rounded-xl border border-dashed border-border">
+              <p className="mb-4 text-[15px] font-medium text-on-surface-subtle">{t("error.message")}</p>
             </div>
           ) : (
             // Recommendation Cards
@@ -110,7 +108,7 @@ const Recommendations = () => {
                 <Link
                   key={`${item.itemType}-${item.id}`}
                   href={detailUrl}
-                  className={`group bg-[#111111]/70 hover:bg-[#171717]/90 border border-[#262626] hover:border-[#8b6a55]/40 rounded-2xl overflow-hidden cursor-pointer shadow-[0_10px_30px_rgba(0,0,0,0.3)] hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 flex flex-col`}
+                  className={`group flex cursor-pointer flex-col overflow-hidden rounded-[28px] border border-border bg-white shadow-[0_16px_48px_rgba(15,23,42,0.08)] transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-[0_24px_60px_rgba(15,23,42,0.12)]`}
                   style={{
                     opacity: isVisible ? 1 : 0,
                     transform: isVisible ? "translateY(0)" : "translateY(20px)",
@@ -129,7 +127,7 @@ const Recommendations = () => {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
 
                     {/* Type Badge */}
-                    <span className="absolute top-3 left-3 bg-[#111111]/80 backdrop-blur-md text-white text-[11px] font-bold rounded-full w-7 h-7 flex items-center justify-center border border-[#262626]">
+                    <span className="absolute left-3 top-3 flex h-7 w-7 items-center justify-center rounded-full border border-border bg-white/92 text-[11px] font-bold text-on-surface backdrop-blur-md">
                       {isLocation ? "📍" : "🎫"}
                     </span>
                   </div>
@@ -138,22 +136,22 @@ const Recommendations = () => {
                   <div className="p-3 flex flex-col flex-1 justify-between">
                     <div>
                       {/* Reason badge */}
-                      <span className="inline-block text-[10px] font-black text-[#8b6a55] tracking-wider uppercase mb-1">
+                      <span className="inline-block text-[10px] font-black text-primary tracking-wider uppercase mb-1">
                         {reasonText}
                       </span>
                       {/* Title */}
-                      <h3 className="text-[13px] font-semibold text-white group-hover:text-[#8b6a55] transition-colors leading-snug line-clamp-2 min-h-[36px] mb-2">
+                      <h3 className="text-[13px] font-semibold text-on-surface group-hover:text-primary transition-colors leading-snug line-clamp-2 min-h-[36px] mb-2">
                         {item.name}
                       </h3>
                     </div>
 
                     {/* Rating & Price */}
-                    <div className="flex items-center justify-between mt-auto pt-2 border-t border-[#262626]">
+                    <div className="flex items-center justify-between mt-auto pt-2 border-t border-border">
                       <div className="flex items-center gap-0.5 text-[#929852] text-[11px] font-bold">
                         <IoStar className="text-[12px]" />
                         <span>{parseFloat(item.avg_rating || "0").toFixed(1)}</span>
                       </div>
-                      <div className="text-[12px] font-black text-[#8b6a55]">
+                      <div className="text-[12px] font-black text-primary">
                         {priceText}
                       </div>
                     </div>

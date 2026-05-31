@@ -47,7 +47,7 @@ export const PostCard = ({ post, index = 0 }: PostCardProps) => {
   return (
     <Link 
       href={`/${locale}/blog/${post.slug}`}
-      className="group block glass-surface rounded-3xl overflow-hidden reveal-up"
+      className="group block overflow-hidden rounded-3xl border border-border bg-white shadow-[0_14px_36px_rgba(0,0,0,0.07)] reveal-up"
       style={{ animationDelay: `${index * 100}ms` }}
     >
       <div className="relative aspect-16/10 overflow-hidden">
@@ -59,15 +59,15 @@ export const PostCard = ({ post, index = 0 }: PostCardProps) => {
         />
         {post.categories?.[0] && (
           <div className="absolute top-4 left-4">
-            <Badge variant="secondary" className="bg-[#8B6A55] text-white border-none backdrop-blur-md">
+            <Badge variant="secondary" className="bg-primary text-white border-none backdrop-blur-md">
               {post.categories[0].name}
             </Badge>
           </div>
         )}
       </div>
 
-      <div className="p-6 space-y-4">
-        <div className="flex items-center gap-4 text-xs text-[#a3a3a3]">
+      <div className="space-y-4 p-6">
+        <div className="flex flex-wrap items-center gap-4 text-xs text-on-surface-subtle">
           <span className="flex items-center gap-1">
             <Calendar size={14} />
             {post.published_at ? format(new Date(post.published_at), "dd/MM/yyyy", { locale: dateLocale }) : "-"}
@@ -82,15 +82,15 @@ export const PostCard = ({ post, index = 0 }: PostCardProps) => {
           </span>
         </div>
 
-        <h3 className="text-xl font-semibold text-white line-clamp-2 group-hover:text-[#8B6A55] transition-colors">
+        <h3 className="line-clamp-2 text-xl font-semibold text-on-surface transition-colors group-hover:text-primary">
           {post.title}
         </h3>
 
-        <p className="text-[#737373] text-sm line-clamp-2 leading-relaxed">
+        <p className="line-clamp-2 text-sm leading-relaxed text-on-surface-subtle">
           {post.excerpt}
         </p>
 
-        <div className="pt-2 flex items-center gap-2 text-[#8B6A55] font-medium text-sm">
+        <div className="pt-2 flex items-center gap-2 text-primary font-medium text-sm">
           <span>{t("read_more")}</span>
           <IoArrowForwardOutline className="transition-transform group-hover:translate-x-1" />
         </div>

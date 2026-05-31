@@ -18,15 +18,14 @@ interface Props {
   destinationName: string;
 }
 
-export default function DestinationTourLandingClient({ 
-  initialTours, 
-  categories, 
-  destinationName 
+export default function DestinationTourLandingClient({
+  initialTours,
+  categories,
+  destinationName,
 }: Props) {
   const t = useTranslations("tour");
   const { filters, setFilters } = useTourFilters();
-  
-  // Use destination-specific search by default if no search is present
+
   const activeFilters = {
     ...filters,
     search: filters.search || destinationName,
@@ -37,87 +36,86 @@ export default function DestinationTourLandingClient({
 
   const toursPayload = toursResponse?.data as PaginatedResponse<Tour> | undefined;
   const tours = extractItems<Tour>(toursPayload) || initialTours;
-  
+
   const total = toursPayload?.total || tours.length;
   const totalPages = toursPayload?.last_page || 1;
   const currentPage = toursPayload?.current_page || 1;
 
   return (
-    <div className="flex flex-col lg:flex-row gap-10">
-      {/* Mobile Filter Toggle */}
+    <div className="flex flex-col gap-3 lg:flex-row">
       <button
         type="button"
         onClick={() => setShowMobileFilters(!showMobileFilters)}
-        className="lg:hidden flex items-center justify-center gap-2 bg-surface border border-border py-3 rounded-xl font-bold text-on-surface active:scale-95 transition-all"
+        className="flex items-center justify-center gap-2 rounded-[18px] border border-border bg-white py-3 font-semibold text-on-surface shadow-sm transition-all active:scale-95 lg:hidden"
       >
-        <SlidersHorizontal className="w-4 h-4" />
+        <SlidersHorizontal className="h-4 w-4" />
         {t("list.filters_toggle")}
       </button>
 
-      {/* Sidebar */}
       <aside
         className={cn(
-          "lg:w-72 shrink-0 transition-all duration-300",
-          showMobileFilters 
-            ? "fixed inset-0 z-[100] bg-background/95 backdrop-blur-xl p-6 overflow-y-auto lg:relative lg:bg-transparent lg:p-0 lg:z-0 lg:backdrop-blur-none" 
+          "shrink-0 transition-all duration-300 lg:w-72",
+          showMobileFilters
+            ? "fixed inset-0 z-[100] overflow-y-auto bg-black/45 p-4 backdrop-blur-[3px] lg:relative lg:z-0 lg:bg-transparent lg:p-0 lg:backdrop-blur-none"
             : "hidden lg:block"
         )}
       >
         <div className="sticky top-24">
-          <div className="flex items-center justify-between lg:hidden mb-6">
-            <h2 className="text-xl font-bold">{t("filters.title")}</h2>
-            <button 
-              onClick={() => setShowMobileFilters(false)}
-              className="p-2 hover:bg-surface-container rounded-full"
-            >
-              <SlidersHorizontal className="w-5 h-5 rotate-90" />
-            </button>
+          <div className="rounded-[32px] border border-border bg-white p-4 shadow-[0_24px_64px_rgba(15,23,42,0.14)] lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none">
+            <div className="mb-6 flex items-center justify-between lg:hidden">
+              <div>
+                <h2 className="text-lg font-semibold text-on-surface">{t("filters.title")}</h2>
+                <p className="mt-1 text-sm text-on-surface-subtle">{t("list.results_count", { count: total })}</p>
+              </div>
+              <button
+                onClick={() => setShowMobileFilters(false)}
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-[#fafafa] text-on-surface-subtle transition-colors hover:border-primary/25 hover:bg-white hover:text-on-surface"
+              >
+                x
+              </button>
+            </div>
+
+            <FilterSidebar
+              categories={categories}
+              filters={activeFilters}
+              onFilterChange={(newFilters) => {
+                setFilters(newFilters);
+                if (showMobileFilters) setShowMobileFilters(false);
+              }}
+              onReset={() => {
+                setFilters({
+                  search: destinationName,
+                  tour_category_id: undefined,
+                  price_min: undefined,
+                  price_max: undefined,
+                  duration: undefined,
+                  available_from: undefined,
+                  available_to: undefined,
+                });
+                if (showMobileFilters) setShowMobileFilters(false);
+              }}
+            />
           </div>
-          
-          <FilterSidebar
-            categories={categories}
-            filters={activeFilters}
-            onFilterChange={(newFilters) => {
-              setFilters(newFilters);
-              if (showMobileFilters) setShowMobileFilters(false);
-            }}
-            onReset={() => {
-              setFilters({
-                search: destinationName,
-                tour_category_id: undefined,
-                price_min: undefined,
-                price_max: undefined,
-                duration: undefined,
-                available_from: undefined,
-                available_to: undefined,
-              });
-              if (showMobileFilters) setShowMobileFilters(false);
-            }}
-          />
         </div>
       </aside>
 
-      {/* Main Content */}
       <main className="flex-1">
-        {/* Results Info */}
-        <div className="flex items-center justify-between mb-8 reveal-up">
+        <div className="mb-8 flex items-center justify-between reveal-up">
           <div className="text-sm text-on-surface-subtle">
             {t.rich("list.results_count", {
               count: total,
-              highlight: (chunks) => (
-                <span className="text-on-surface font-bold">{chunks}</span>
-              ),
+              highlight: (chunks) => <span className="font-bold text-on-surface">{chunks}</span>,
             })}
           </div>
         </div>
 
         {isError ? (
-          <div className="rounded-xl border border-border bg-surface-container p-8 text-center">
-            <p className="text-on-surface mb-4">{t("list.load_error")}</p>
+          <div className="rounded-[28px] border border-border bg-white p-8 text-center shadow-[0_16px_44px_rgba(15,23,42,0.06)]">
+            <p className="mb-4 text-on-surface">{t("list.load_error")}</p>
             <button
               type="button"
               onClick={() => refetch()}
-              className="rounded-full bg-primary px-5 py-2 text-sm font-bold text-on-primary active:scale-95 transition-transform"
+              className="rounded-full bg-primary px-5 py-2 text-sm font-bold text-on-primary transition-transform active:scale-95"
             >
               {t("list.retry")}
             </button>
@@ -127,7 +125,7 @@ export default function DestinationTourLandingClient({
             <TourGrid tours={tours} isLoading={isLoading} />
 
             {!isLoading && totalPages > 1 && (
-              <div className="mt-12 flex justify-center reveal-up">
+              <div className="mt-4 flex justify-center reveal-up">
                 <StandardPagination
                   currentPage={currentPage}
                   totalPages={totalPages}

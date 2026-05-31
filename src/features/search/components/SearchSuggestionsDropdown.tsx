@@ -33,23 +33,20 @@ export function SearchSuggestionsDropdown({
 
   const isQueryEmpty = !query.trim();
 
-  // Highlight matching characters in suggestions
   const highlightMatch = (text: string, match: string) => {
     if (!match.trim()) return <span>{text}</span>;
-    
-    // Simple case-insensitive match
     const regex = new RegExp(`(${match.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')})`, 'gi');
     const parts = text.split(regex);
-    
+
     return (
       <span>
-        {parts.map((part, i) => 
+        {parts.map((part, i) =>
           regex.test(part) ? (
-            <span key={i} className="text-[#f1bb9d] font-bold">
+            <span key={i} className="font-bold text-primary">
               {part}
             </span>
           ) : (
-            <span key={i} className="text-white">
+            <span key={i} className="text-on-surface">
               {part}
             </span>
           )
@@ -61,19 +58,16 @@ export function SearchSuggestionsDropdown({
   return (
     <div
       className={cn(
-        "absolute top-full left-0 right-0 z-50 mt-2 max-h-80 overflow-y-auto rounded-xl gradient-shell shadow-2xl custom-scrollbar animate-in fade-in slide-in-from-top-2 duration-200",
+        "absolute left-0 right-0 top-full z-50 mt-2 max-h-80 overflow-y-auto rounded-[24px] border border-border bg-white shadow-[0_20px_50px_rgba(15,23,42,0.14)] custom-scrollbar animate-in fade-in slide-in-from-top-2 duration-200",
         className
       )}
-      style={{ backgroundColor: "rgba(14, 14, 14, 0.97)", backdropFilter: "blur(16px)" }}
     >
-
-      <div className="p-2 space-y-1">
+      <div className="space-y-1 p-2">
         {isQueryEmpty ? (
-          /* Render Search History when query is empty */
           history.length > 0 ? (
             <div className="space-y-1">
-              <div className="flex items-center justify-between px-3 py-1.5 border-b border-border-low/20 mb-1">
-                <span className="text-[10px] font-black text-on-surface-variant uppercase tracking-widest flex items-center gap-1.5">
+              <div className="mb-1 flex items-center justify-between border-b border-border px-3 py-1.5">
+                <span className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-on-surface-subtle">
                   <UilHistory size={12} className="text-primary" />
                   {t("trending.history_title")}
                 </span>
@@ -83,24 +77,23 @@ export function SearchSuggestionsDropdown({
                     e.stopPropagation();
                     onClearHistory();
                   }}
-                  className="text-[10px] font-black text-red-400 hover:text-red-300 transition-colors uppercase tracking-widest flex items-center gap-1 cursor-pointer"
+                  className="flex cursor-pointer items-center gap-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-red-500 transition-colors hover:text-red-400"
                 >
                   <UilTrashAlt size={10} />
                   {t("filters.reset")}
                 </button>
               </div>
               {history.map((item, idx) => (
-                <div
-                  key={idx}
-                  className="w-full flex items-center justify-between rounded-lg hover:bg-surface-container-high/60 transition-colors group"
-                >
+                <div key={idx} className="group flex w-full items-center justify-between rounded-[16px] transition-colors hover:bg-[#fafafa]">
                   <button
                     type="button"
                     onClick={() => onSelect(item)}
-                    className="flex-grow text-left flex items-center gap-3 px-3 py-2 text-sm font-semibold text-white/90 cursor-pointer"
+                    className="flex-grow cursor-pointer px-3 py-2 text-left text-sm font-semibold text-on-surface"
                   >
-                    <UilHistory size={14} className="text-on-surface-variant/40 shrink-0" />
-                    <span className="truncate">{item}</span>
+                    <span className="flex items-center gap-3">
+                      <UilHistory size={14} className="shrink-0 text-on-surface-subtle" />
+                      <span className="truncate">{item}</span>
+                    </span>
                   </button>
                   <button
                     type="button"
@@ -108,7 +101,7 @@ export function SearchSuggestionsDropdown({
                       e.stopPropagation();
                       onRemoveHistory(item);
                     }}
-                    className="p-2 text-on-surface-variant/50 hover:text-red-400 transition-colors mr-1 cursor-pointer"
+                    className="mr-1 cursor-pointer p-2 text-on-surface-subtle transition-colors hover:text-red-500"
                     aria-label="Remove search history item"
                   >
                     <UilTimes size={14} />
@@ -117,43 +110,34 @@ export function SearchSuggestionsDropdown({
               ))}
             </div>
           ) : (
-            <div className="px-4 py-3 text-sm text-on-surface-variant/50 italic">
-              {t("suggestions.loading_trending")}
-            </div>
+            <div className="px-4 py-3 text-sm italic text-on-surface-subtle">{t("suggestions.loading_trending")}</div>
           )
+        ) : isLoading ? (
+          <div className="flex items-center gap-2 px-4 py-3 text-sm italic text-on-surface-subtle">
+            <span className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+            {t("suggestions.loading")}
+          </div>
+        ) : suggestions.length > 0 ? (
+          <>
+            <div className="mb-1 border-b border-border px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-on-surface-subtle">
+              {t("suggestions.locations_title")}
+            </div>
+            {suggestions.map((item, idx) => (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => onSelect(item)}
+                className="group flex w-full cursor-pointer items-center gap-3 rounded-[16px] px-3 py-2.5 text-left text-sm font-semibold transition-colors hover:bg-[#fafafa]"
+              >
+                <UilSearch size={16} className="shrink-0 text-on-surface-subtle transition-colors group-hover:text-primary" />
+                <span className="truncate">{highlightMatch(item, query)}</span>
+              </button>
+            ))}
+          </>
+        ) : query.trim().length >= 2 ? (
+          <div className="px-4 py-3 text-sm text-on-surface-subtle">{t("suggestions.no_results")}</div>
         ) : (
-          /* Autocomplete suggestions */
-          isLoading ? (
-            <div className="px-4 py-3 text-sm text-on-surface-variant/70 italic flex items-center gap-2">
-              <span className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-              {t("suggestions.loading")}
-            </div>
-          ) : suggestions.length > 0 ? (
-            <>
-              <div className="px-3 py-1.5 text-[10px] font-black text-on-surface-variant uppercase tracking-widest border-b border-border-low/20 mb-1">
-                {t("suggestions.locations_title")}
-              </div>
-              {suggestions.map((item, idx) => (
-                <button
-                  key={idx}
-                  type="button"
-                  onClick={() => onSelect(item)}
-                  className="w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-surface-container-high/60 transition-colors text-sm font-semibold group cursor-pointer"
-                >
-                  <UilSearch size={16} className="text-on-surface-variant/50 group-hover:text-primary transition-colors shrink-0" />
-                  <span className="truncate">{highlightMatch(item, query)}</span>
-                </button>
-              ))}
-            </>
-          ) : query.trim().length >= 2 ? (
-            <div className="px-4 py-3 text-sm text-on-surface-variant/60">
-              {t("suggestions.no_results")}
-            </div>
-          ) : (
-            <div className="px-4 py-3 text-sm text-on-surface-variant/60">
-              {t("suggestions.min_chars")}
-            </div>
-          )
+          <div className="px-4 py-3 text-sm text-on-surface-subtle">{t("suggestions.min_chars")}</div>
         )}
       </div>
     </div>

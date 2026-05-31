@@ -17,7 +17,6 @@ export function CartContainer() {
 
   const [isMounted, setIsMounted] = useState(false);
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsMounted(true);
   }, []);
 
@@ -38,7 +37,6 @@ export function CartContainer() {
     if (items.length > prevItemsLength) {
       // Auto-select newly added items
       const newIds = items.map((i) => i.id);
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSelectedIds((prev) => {
         const unique = new Set([...prev, ...newIds]);
         return Array.from(unique);
@@ -105,7 +103,7 @@ export function CartContainer() {
 
   if (!isMounted) {
     return (
-      <div className="design-container design-section py-24 md:py-32">
+      <div className="design-container design-section py-10 md:py-32">
         <div className="flex justify-center items-center py-20">
           <Loading />
         </div>
@@ -114,13 +112,13 @@ export function CartContainer() {
   }
 
   return (
-    <div className="design-container design-section py-24 md:py-32">
+    <div className="design-container design-section py-10 md:py-32">
       {/* Title Header */}
       <div className="mb-10 reveal-up">
-        <h1 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tight">
+        <h1 className="text-3xl font-black uppercase tracking-tight text-on-surface md:text-4xl">
           {t("title")}
         </h1>
-        <p className="text-sm text-on-surface-variant mt-2 max-w-xl font-medium leading-relaxed">
+        <p className="mt-2 max-w-xl text-sm font-medium leading-relaxed text-on-surface-subtle">
           {t("subtitle")}
         </p>
       </div>
@@ -135,13 +133,13 @@ export function CartContainer() {
           <div className="lg:col-span-8 w-full space-y-4">
             {/* Selection Bar */}
             {items.length > 0 && (
-              <div className="glass-surface rounded-xl p-4 border border-white/5 flex items-center justify-between reveal-up">
-                <label className="flex items-center gap-3 cursor-pointer text-sm text-white font-medium select-none">
+              <div className="flex items-center justify-between rounded-[24px] border border-border bg-white p-4 shadow-[0_14px_40px_rgba(15,23,42,0.07)] reveal-up">
+                <label className="flex cursor-pointer select-none items-center gap-3 text-sm font-semibold text-on-surface">
                   <input
                     type="checkbox"
                     checked={isAllSelected}
                     onChange={handleSelectAll}
-                    className="w-4.5 h-4.5 rounded border-white/10 bg-[#171717] text-primary focus:ring-0 focus:ring-offset-0 accent-primary cursor-pointer"
+                    className="h-4.5 w-4.5 cursor-pointer rounded border-border bg-white text-primary accent-primary focus:ring-0 focus:ring-offset-0"
                   />
                   <span>
                     {locale === "vi" ? "Chọn tất cả" : "Select all"} ({items.length})
@@ -152,14 +150,14 @@ export function CartContainer() {
                   {selectedIds.length > 0 && (
                     <button
                       onClick={handleDeleteSelected}
-                      className="text-xs font-bold uppercase tracking-wider text-red-400 hover:text-red-300 transition-colors cursor-pointer"
+                      className="cursor-pointer text-xs font-bold uppercase tracking-wider text-primary transition-colors hover:text-primary-hover"
                     >
                       {locale === "vi" ? `Xóa mục đã chọn (${selectedIds.length})` : `Delete selected (${selectedIds.length})`}
                     </button>
                   )}
                   <button
                     onClick={handleDeleteAll}
-                    className="text-xs font-bold uppercase tracking-wider text-on-surface-subtle hover:text-white transition-colors cursor-pointer"
+                    className="cursor-pointer text-xs font-bold uppercase tracking-wider text-on-surface-subtle transition-colors hover:text-on-surface"
                   >
                     {locale === "vi" ? "Xóa tất cả" : "Xóa tất cả"}
                   </button>

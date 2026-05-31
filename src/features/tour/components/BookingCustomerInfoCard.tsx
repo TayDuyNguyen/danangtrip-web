@@ -12,8 +12,8 @@ export function BookingCustomerInfoCard({ booking }: BookingCustomerInfoCardProp
   const t = useTranslations("tour.history");
 
   return (
-    <div className="w-full rounded-2xl bg-surface border border-border p-5 md:p-6 reveal-up">
-      <h3 className="text-sm font-black text-white uppercase tracking-wider mb-5 flex items-center gap-2">
+    <div className="w-full rounded-[28px] border border-border bg-white p-5 shadow-[0_16px_48px_rgba(15,23,42,0.08)] md:p-6 reveal-up">
+      <h3 className="text-sm font-black text-on-surface uppercase tracking-wider mb-5 flex items-center gap-2">
         <IoPersonOutline className="w-4.5 h-4.5 text-primary shrink-0" />
         {t("section_customer")}
       </h3>
@@ -24,7 +24,7 @@ export function BookingCustomerInfoCard({ booking }: BookingCustomerInfoCardProp
           <IoPersonOutline className="w-4.5 h-4.5 text-primary shrink-0 mt-0.5" />
           <div className="flex flex-col">
             <span className="text-[9px] text-on-surface-subtle uppercase font-semibold">{t("representative_name")}</span>
-            <span className="text-white font-medium text-sm mt-0.5">{booking.customer_name}</span>
+            <span className="text-on-surface font-medium text-sm mt-0.5">{booking.customer_name}</span>
           </div>
         </div>
 
@@ -35,7 +35,7 @@ export function BookingCustomerInfoCard({ booking }: BookingCustomerInfoCardProp
             <Phone className="w-4.5 h-4.5 text-primary shrink-0 mt-0.5" />
             <div className="flex flex-col">
               <span className="text-[9px] text-on-surface-subtle uppercase font-semibold">{t("representative_phone")}</span>
-              <span className="text-white font-medium mt-0.5">{booking.customer_phone}</span>
+              <span className="text-on-surface font-medium mt-0.5">{booking.customer_phone}</span>
             </div>
           </div>
 
@@ -44,7 +44,7 @@ export function BookingCustomerInfoCard({ booking }: BookingCustomerInfoCardProp
             <IoMailOutline className="w-4.5 h-4.5 text-primary shrink-0 mt-0.5" />
             <div className="flex flex-col">
               <span className="text-[9px] text-on-surface-subtle uppercase font-semibold">{t("representative_email")}</span>
-              <span className="text-white font-medium mt-0.5 select-all">{booking.customer_email}</span>
+              <span className="text-on-surface font-medium mt-0.5 select-all">{booking.customer_email}</span>
             </div>
           </div>
         </div>
@@ -54,7 +54,7 @@ export function BookingCustomerInfoCard({ booking }: BookingCustomerInfoCardProp
           <IoHomeOutline className="w-4.5 h-4.5 text-primary shrink-0 mt-0.5" />
           <div className="flex flex-col">
             <span className="text-[9px] text-on-surface-subtle uppercase font-semibold">{t("representative_address")}</span>
-            <span className="text-white font-medium mt-0.5 leading-relaxed">
+            <span className="text-on-surface font-medium mt-0.5 leading-relaxed">
               {booking.customer_address || "—"}
             </span>
           </div>
@@ -65,7 +65,7 @@ export function BookingCustomerInfoCard({ booking }: BookingCustomerInfoCardProp
           <MessageSquare className="w-4.5 h-4.5 text-primary shrink-0 mt-0.5" />
           <div className="flex flex-col">
             <span className="text-[9px] text-on-surface-subtle uppercase font-semibold">{t("representative_note")}</span>
-            <span className="text-white font-medium mt-0.5 leading-relaxed">
+            <span className="text-on-surface font-medium mt-0.5 leading-relaxed">
               {booking.customer_note || t("no_note")}
             </span>
           </div>

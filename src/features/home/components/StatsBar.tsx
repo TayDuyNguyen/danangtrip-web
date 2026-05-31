@@ -2,54 +2,58 @@
 
 import { memo } from "react";
 import { useTranslations } from "next-intl";
-import {
-  IoLocationOutline,
-  IoMapOutline,
-  IoNewspaperOutline
-} from "@/components/icons/solar";
+import { IoLocationOutline, IoMapOutline, IoNewspaperOutline } from "@/components/icons/solar";
 import { useStatistics } from "../hooks/use-statistics";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 
 const StatsBar = () => {
-  const { stats } = useStatistics();
   const t = useTranslations();
   const { elementRef, isVisible } = useScrollReveal();
+  const { stats } = useStatistics();
 
   const statItems = [
     {
       label: t("home.stats.locations"),
       value: stats ? `${stats.total_locations}+` : "—",
-      icon: <IoLocationOutline className="text-2xl text-[#8b6a55]" />
+      icon: <IoLocationOutline className="text-[22px] text-primary transition-transform duration-300 group-hover:scale-110" />,
     },
     {
       label: t("home.stats.tours"),
       value: stats ? `${stats.total_tours}+` : "—",
-      icon: <IoMapOutline className="text-2xl text-[#929852]" />
+      icon: <IoMapOutline className="text-[22px] text-primary transition-transform duration-300 group-hover:scale-110" />,
     },
     {
       label: t("home.stats.blog_posts"),
       value: stats ? `${stats.total_blog_posts}+` : "—",
-      icon: <IoNewspaperOutline className="text-2xl text-[#5c3822]" />
+      icon: <IoNewspaperOutline className="text-[22px] text-primary transition-transform duration-300 group-hover:scale-110" />,
     },
   ];
 
   return (
-    <div className="container mx-auto px-4 relative z-10" ref={elementRef}>
-      <div className={`flex flex-wrap justify-between items-center gap-10 p-10 bg-surface-container-low/80 backdrop-blur-xl border border-[#262626] shadow-[0_20px_50px_rgba(0,0,0,0.35)] rounded-xl -mt-16 mb-12 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
+    <div className="relative z-10 flex w-full justify-center" ref={elementRef}>
+      <div
+        className={`-mt-10 mb-2 flex w-[calc(100%-2rem)] flex-wrap items-center justify-between gap-5 rounded-[28px] border border-border bg-white p-6 shadow-[0_20px_45px_rgba(0,0,0,0.08)] transition-all duration-700 md:w-[calc(100%-3rem)] md:p-7 lg:w-[calc(100%-4rem)] ${
+          isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
+        }`}
+      >
         {statItems.map((item, index) => (
-          <div 
-            key={index} 
-            className={`flex items-center gap-5 group flex-1 min-w-[200px] transition-all duration-700`}
-            style={{ transitionDelay: `${(index + 1) * 150}ms`, opacity: isVisible ? 1 : 0, transform: isVisible ? "translateY(0)" : "translateY(20px)" }}
+          <div
+            key={index}
+            className="group flex min-w-[200px] flex-1 items-center gap-5 transition-all duration-700"
+            style={{
+              transitionDelay: `${(index + 1) * 150}ms`,
+              opacity: isVisible ? 1 : 0,
+              transform: isVisible ? "translateY(0)" : "translateY(20px)",
+            }}
           >
-            <div className="w-16 h-16 rounded-2xl bg-surface-container flex items-center justify-center group-hover:bg-surface-container-high transition-colors duration-500">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-[#ffd8e1] bg-[#fff1f3] transition-all duration-300 group-hover:border-primary/25 group-hover:bg-[#ffe4ea]">
               {item.icon}
             </div>
             <div className="flex flex-col">
-              <span className="text-[32px] font-black text-[#8b6a55] leading-none tracking-tighter mb-1">
+              <span className="mb-1 text-[30px] font-semibold leading-none tracking-[-0.04em] text-on-surface transition-colors group-hover:text-primary">
                 {item.value}
               </span>
-              <span className="text-[12px] text-on-surface-variant font-black tracking-[0.2em] uppercase">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-on-surface-subtle">
                 {item.label}
               </span>
             </div>
@@ -58,7 +62,6 @@ const StatsBar = () => {
       </div>
     </div>
   );
-
 };
 
 export default memo(StatsBar);

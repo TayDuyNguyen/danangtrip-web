@@ -13,14 +13,14 @@ export function FavoritesViewToggle({ view, onChange }: FavoritesViewToggleProps
   const t = useTranslations("favorites");
 
   return (
-    <div className="flex items-center bg-[#111111] p-1 rounded-xl border border-[#262626] h-11">
+    <div className="flex items-center bg-surface-container-high p-1 rounded-xl border border-border h-11">
       <button
         type="button"
         onClick={() => onChange("grid")}
         className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-300 ${
           view === "grid"
-            ? "bg-[#8b6a55] text-white shadow-lg"
-            : "text-white/60 hover:text-white hover:bg-white/5"
+            ? "bg-primary text-white shadow-lg"
+            : "text-on-surface-variant hover:text-on-surface hover:bg-white"
         }`}
         aria-label={t("grid_view")}
         title={t("grid_view")}
@@ -34,8 +34,8 @@ export function FavoritesViewToggle({ view, onChange }: FavoritesViewToggleProps
         onClick={() => onChange("list")}
         className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-300 ${
           view === "list"
-            ? "bg-[#8b6a55] text-white shadow-lg"
-            : "text-white/60 hover:text-white hover:bg-white/5"
+            ? "bg-primary text-white shadow-lg"
+            : "text-on-surface-variant hover:text-on-surface hover:bg-white"
         }`}
         aria-label={t("list_view")}
         title={t("list_view")}

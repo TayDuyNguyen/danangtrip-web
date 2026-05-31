@@ -17,13 +17,13 @@ export function CartList({ items, selectedIds = [], onToggleSelect }: CartListPr
 
   if (items.length === 0) {
     return (
-      <div className="glass-surface rounded-xl p-12 border border-white/5 flex flex-col items-center justify-center text-center space-y-6 reveal-up">
-        <div className="w-16 h-16 bg-[#171717] rounded-full border border-white/5 flex items-center justify-center text-on-surface-subtle">
+      <div className="flex flex-col items-center justify-center space-y-6 rounded-[28px] border border-border bg-white p-12 text-center shadow-[0_18px_54px_rgba(15,23,42,0.08)] reveal-up">
+        <div className="flex h-16 w-16 items-center justify-center rounded-full border border-border bg-[#f7f7f7] text-on-surface-subtle">
           <IoShoppingBagOutline className="w-8 h-8" />
         </div>
         <div className="space-y-2 max-w-md">
-          <h3 className="text-xl font-bold text-white uppercase tracking-tight">{t("empty_title")}</h3>
-          <p className="text-sm text-on-surface-variant leading-relaxed">{t("empty_desc")}</p>
+          <h3 className="text-xl font-bold uppercase tracking-tight text-on-surface">{t("empty_title")}</h3>
+          <p className="text-sm leading-relaxed text-on-surface-subtle">{t("empty_desc")}</p>
         </div>
         <Link
           href="/tours"

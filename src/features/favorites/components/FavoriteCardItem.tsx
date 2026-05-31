@@ -36,13 +36,13 @@ export function FavoriteCardItem({ item, onRemove, isRemoving = false }: Favorit
 
   return (
     <div
-      className={`group relative bg-[#080808]/40 rounded-2xl overflow-hidden border border-[#262626] hover:border-[#8b6a55]/30 transition-all duration-500 hover:shadow-[0_20px_50px_rgba(0,0,0,0.4)] hover:-translate-y-1.5 ${
+      className={`group relative overflow-hidden rounded-[28px] border border-border bg-white shadow-[0_16px_48px_rgba(15,23,42,0.08)] transition-all duration-500 hover:-translate-y-1 hover:border-primary/30 hover:shadow-[0_24px_60px_rgba(15,23,42,0.12)] ${
         isRemoving ? "opacity-0 scale-75 pointer-events-none duration-300" : ""
       }`}
     >
       <Link
         href={detailHref}
-        className="block text-inherit no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8b6a55] focus-visible:ring-offset-2 rounded-2xl"
+        className="block text-inherit no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-2xl"
       >
         {/* Image Section */}
         <div className="relative aspect-4/5 overflow-hidden">
@@ -58,11 +58,11 @@ export function FavoriteCardItem({ item, onRemove, isRemoving = false }: Favorit
           {/* Badges */}
           <div className="absolute top-5 left-5 flex flex-col gap-2 pointer-events-none z-10">
             {location.is_featured && (
-              <span className="px-3.5 py-1.5 bg-[#8b6a55] text-white text-[10px] font-black rounded-full uppercase tracking-widest shadow-lg">
+              <span className="px-3.5 py-1.5 bg-primary text-white text-[10px] font-black rounded-full uppercase tracking-widest shadow-lg">
                 {tLoc("badges.featured")}
               </span>
             )}
-            <span className="px-3 py-1 bg-[#111111]/80 backdrop-blur-md text-white text-[10px] font-bold rounded-full border border-[#262626] uppercase tracking-widest">
+            <span className="rounded-full border border-border bg-white/90 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-on-surface">
               {location.district}
             </span>
           </div>
@@ -72,14 +72,14 @@ export function FavoriteCardItem({ item, onRemove, isRemoving = false }: Favorit
             {/* Header Info */}
             <div className="space-y-1.5 mb-3">
               <div className="flex items-center gap-1.5">
-                <IoLocationOutline className="text-[#8b6a55] text-sm shrink-0" />
-                <span className="text-[10px] font-bold uppercase tracking-wider text-white/60">{location.district}</span>
+                <IoLocationOutline className="text-primary text-sm shrink-0" />
+                <span className="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant">{location.district}</span>
               </div>
-              <h3 className="text-lg font-extrabold leading-snug text-white group-hover:text-[#8b6a55] transition-colors line-clamp-1">
+              <h3 className="line-clamp-1 text-lg font-semibold leading-snug text-white transition-colors group-hover:text-primary">
                 {location.name}
               </h3>
               <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1 bg-white/10 backdrop-blur-md px-1.5 py-0.5 rounded border border-white/10">
+                <div className="flex items-center gap-1 rounded border border-white/10 bg-white/10 px-1.5 py-0.5 backdrop-blur-md">
                   <IoStar className="text-yellow-400 text-[10px]" />
                   <span className="text-[10px] font-bold text-white">{rating.toFixed(1)}</span>
                 </div>
@@ -92,17 +92,17 @@ export function FavoriteCardItem({ item, onRemove, isRemoving = false }: Favorit
             {/* Expandable Section */}
             <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-all duration-500 ease-in-out overflow-hidden">
               <div className="min-h-0 space-y-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-75">
-                <p className="text-white/60 text-xs line-clamp-2 leading-relaxed border-t border-white/10 pt-3">
+                <p className="line-clamp-2 border-t border-white/10 pt-3 text-xs leading-relaxed text-white/78">
                   {location.short_description || location.description}
                 </p>
                 <div className="flex items-center justify-between">
                   <div className="flex flex-col">
-                    <span className="text-[9px] text-white/40 font-bold uppercase tracking-wider">
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-white/45">
                       {tLoc("price.from")}
                     </span>
-                    <span className="text-sm font-black text-[#8b6a55]">{formatPrice(location.price_min)}</span>
+                    <span className="text-sm font-black text-primary">{formatPrice(location.price_min)}</span>
                   </div>
-                  <span className="px-3.5 py-2 bg-white text-black font-extrabold rounded-lg group-hover:bg-[#8b6a55] group-hover:text-white transition-all duration-300 uppercase tracking-widest text-[9px] shadow-md">
+                  <span className="rounded-lg bg-white px-3.5 py-2 text-[9px] font-extrabold uppercase tracking-widest text-black shadow-md transition-all duration-300 group-hover:bg-primary group-hover:text-white">
                     {t("detail")}
                   </span>
                 </div>
@@ -120,7 +120,7 @@ export function FavoriteCardItem({ item, onRemove, isRemoving = false }: Favorit
           e.stopPropagation();
           onRemove(location.id);
         }}
-        className="absolute top-5 right-5 z-20 w-10 h-10 bg-[#111111]/80 backdrop-blur-md rounded-full flex items-center justify-center text-[#ef4444] border border-[#262626] hover:bg-[#171717] hover:scale-105 hover:border-[#8b6a55]/30 active:scale-95 transition-all duration-300 group/heart"
+        className="absolute top-5 right-5 z-20 flex h-10 w-10 items-center justify-center rounded-full border border-border bg-white/90 text-[#ef4444] backdrop-blur-md transition-all duration-300 hover:scale-105 hover:border-primary/30 hover:bg-white active:scale-95 group/heart"
         aria-label={tLoc("buttons.favorite_aria")}
       >
         <IoHeart className="text-lg group-hover/heart:scale-110 transition-transform" />

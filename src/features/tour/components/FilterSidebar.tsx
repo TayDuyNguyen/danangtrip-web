@@ -33,7 +33,7 @@ const SectionHeader = ({ title, isExpanded, onToggle }: { title: string, isExpan
 
 const getDateInputClassName = (hasValue: boolean) => cn(
   "w-full rounded-lg border px-3 py-2 text-sm transition-all duration-200",
-  "bg-surface-container text-on-surface [color-scheme:dark]",
+  "bg-white text-on-surface [color-scheme:light]",
   "focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/25",
   "[&::-webkit-calendar-picker-indicator]:cursor-pointer",
   "[&::-webkit-calendar-picker-indicator]:rounded-md",
@@ -54,6 +54,7 @@ export default function FilterSidebar({
 }: FilterSidebarProps) {
   const t = useTranslations("tour.filters");
   const locale = useLocale();
+  const isVietnamese = locale === "vi";
 
   const [expanded, setExpanded] = useState({
     categories: true,
@@ -61,6 +62,7 @@ export default function FilterSidebar({
     duration: true,
     departureDate: true
   });
+  const [showAllCategories, setShowAllCategories] = useState(false);
 
   const priceOptions = useMemo(() => [
     { label: locale === "vi" ? "Dưới 500k" : "Under 500k", min: undefined, max: 500000 },
@@ -75,12 +77,10 @@ export default function FilterSidebar({
 
   // Sync prop changes (e.g. quick options click or reset button click)
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLocalMin(filters.price_min !== undefined ? formatInputPrice(filters.price_min) : "");
   }, [filters.price_min]);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLocalMax(filters.price_max !== undefined ? formatInputPrice(filters.price_max) : "");
   }, [filters.price_max]);
 
@@ -122,8 +122,10 @@ export default function FilterSidebar({
     onFilterChange({ duration: isSelected ? undefined : val });
   };
 
+  const visibleCategories = showAllCategories ? categories : categories.slice(0, 7);
+
   return (
-    <div className="glass-surface rounded-xl p-6 border border-white/5 flex flex-col gap-6 shadow-xl">
+    <div className="flex flex-col gap-6 rounded-[28px] border border-border bg-white p-6 shadow-[0_18px_54px_rgba(15,23,42,0.08)]">
       {/* Categories */}
       {showCategoryFilter && (
         <div className="border-b border-border pb-4">
@@ -150,13 +152,13 @@ export default function FilterSidebar({
               </div>
               <span className={cn(
                 "text-sm transition-colors",
-                filters.tour_category_id === undefined ? "text-primary font-bold" : "text-on-surface-variant group-hover:text-on-surface"
+                filters.tour_category_id === undefined ? "text-primary font-bold" : "text-on-surface-subtle group-hover:text-on-surface"
               )}>
                 {t("all_categories")}
               </span>
             </label>
 
-            {categories.map((cat) => (
+            {visibleCategories.map((cat) => (
               <label
                 key={cat.id}
                 className="flex items-center gap-3 cursor-pointer group"
@@ -172,12 +174,23 @@ export default function FilterSidebar({
                 </div>
                 <span className={cn(
                   "text-sm transition-colors",
-                  filters.tour_category_id === cat.id ? "text-primary font-bold" : "text-on-surface-variant group-hover:text-on-surface"
+                  filters.tour_category_id === cat.id ? "text-primary font-bold" : "text-on-surface-subtle group-hover:text-on-surface"
                 )}>
                   {cat.name}
                 </span>
               </label>
             ))}
+            {categories.length > 7 && (
+              <button
+                type="button"
+                onClick={() => setShowAllCategories((prev) => !prev)}
+                className="pt-2 text-left text-sm font-semibold text-primary transition-colors hover:text-primary/80"
+              >
+                {showAllCategories
+                  ? (isVietnamese ? "Thu gọn" : "Show less")
+                  : (isVietnamese ? `Xem thêm ${categories.length - 7} danh mục` : `Show ${categories.length - 7} more`)}
+              </button>
+            )}
           </div>
         </div>
       )}
@@ -212,7 +225,7 @@ export default function FilterSidebar({
                     "py-2 px-3 text-xs font-bold rounded-lg border transition-all text-center cursor-pointer select-none",
                     isSelected
                       ? "bg-primary border-primary text-white"
-                      : "bg-surface-container border-border text-on-surface-variant hover:border-primary hover:text-white"
+                      : "bg-white border-border text-on-surface-subtle hover:border-primary hover:bg-primary/10 hover:text-primary"
                   )}
                 >
                   {opt.label}
@@ -233,7 +246,7 @@ export default function FilterSidebar({
                   e.target.value = formatted;
                   setLocalMin(formatted);
                 }}
-                className="w-full bg-surface-container border border-border rounded-lg pl-3 pr-7 py-2 text-sm focus:outline-none focus:border-primary text-on-surface"
+                className="w-full rounded-lg border border-border bg-white py-2 pl-3 pr-7 text-sm text-on-surface focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15"
               />
               <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-on-surface-subtle select-none">đ</span>
             </div>
@@ -249,7 +262,7 @@ export default function FilterSidebar({
                   e.target.value = formatted;
                   setLocalMax(formatted);
                 }}
-                className="w-full bg-surface-container border border-border rounded-lg pl-3 pr-7 py-2 text-sm focus:outline-none focus:border-primary text-on-surface"
+                className="w-full rounded-lg border border-border bg-white py-2 pl-3 pr-7 text-sm text-on-surface focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15"
               />
               <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-on-surface-subtle select-none">đ</span>
             </div>
@@ -288,7 +301,7 @@ export default function FilterSidebar({
               </div>
               <span className={cn(
                 "text-sm transition-colors",
-                filters.duration === option.value ? "text-primary font-bold" : "text-on-surface-variant group-hover:text-on-surface"
+                filters.duration === option.value ? "text-primary font-bold" : "text-on-surface-subtle group-hover:text-on-surface"
               )}>
                 {option.label}
               </span>
@@ -336,7 +349,7 @@ export default function FilterSidebar({
       {/* Clear Button */}
       <button
         onClick={onReset}
-        className="w-full py-3 px-4 bg-surface-container hover:bg-border text-on-surface text-sm font-bold rounded-xl transition-all flex items-center justify-center gap-2"
+        className="flex w-full items-center justify-center gap-2 rounded-full border border-border bg-[#f7f7f7] px-4 py-3 text-sm font-bold text-on-surface transition-all hover:border-primary/30 hover:bg-white hover:text-primary"
       >
         <X className="w-4 h-4" />
         {t("clear_all")}

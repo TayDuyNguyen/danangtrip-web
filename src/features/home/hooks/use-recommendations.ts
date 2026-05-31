@@ -10,9 +10,8 @@ import type { RecommendedLocation, RecommendedTour } from "@/types";
  * Hook to retrieve personalized location and tour recommendations.
  * Enabled only for authenticated users.
  */
-export const useRecommendations = (limit = 6) => {
+export const useRecommendations = (limit = 6, enabled: boolean = true) => {
   const { isAuthenticated } = useAuthStore();
-
   const query = useQuery({
     queryKey: ["home", "recommendations", limit],
     queryFn: async () => {
@@ -22,7 +21,7 @@ export const useRecommendations = (limit = 6) => {
       }
       throw res;
     },
-    enabled: isAuthenticated,
+    enabled: isAuthenticated && enabled,
     staleTime: 5 * 60 * 1000, // 5 minutes cache
     retry: shouldRetryQuery,
   });

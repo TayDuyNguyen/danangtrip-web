@@ -52,18 +52,20 @@ export function PaymentStatusCard({ status, message }: Props) {
   const currentConfig = config[normalizedStatus] || config.pending;
 
   return (
-    <div className="flex flex-col items-center justify-center p-8 text-center animate-in fade-in zoom-in duration-500">
-      <div className={`p-4 rounded-full ${currentConfig.bg} ${currentConfig.border} border mb-6`}>
-        {currentConfig.icon}
+    <div className="w-full animate-in fade-in zoom-in duration-500">
+      <div className="mx-auto flex w-full max-w-2xl flex-col items-center justify-center rounded-[32px] border border-border bg-white px-6 py-10 text-center shadow-[0_24px_80px_rgba(15,23,42,0.08)] md:px-10 md:py-12">
+        <div className={`mb-6 rounded-full border p-4 ${currentConfig.bg} ${currentConfig.border}`}>
+          {currentConfig.icon}
+        </div>
+        <h2 className={`mb-2 text-2xl font-black md:text-4xl ${currentConfig.color}`}>
+          {currentConfig.title}
+        </h2>
+        {message && (
+          <p className="mx-auto max-w-lg text-sm leading-6 text-on-surface-subtle md:text-base">
+            {message}
+          </p>
+        )}
       </div>
-      <h2 className={`text-2xl font-black mb-2 ${currentConfig.color}`}>
-        {currentConfig.title}
-      </h2>
-      {message && (
-        <p className="text-on-surface-subtle text-sm max-w-sm mx-auto">
-          {message}
-        </p>
-      )}
     </div>
   );
 }

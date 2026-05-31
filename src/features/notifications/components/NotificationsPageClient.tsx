@@ -107,7 +107,7 @@ export function NotificationsPageClient() {
   const totalPages = listData?.last_page ?? 1;
 
   return (
-    <div className="space-y-6 min-h-screen pb-20">
+    <div className="min-h-screen space-y-6 pb-20">
       {/* Header section with live unread counter */}
       <NotificationsHeader
         unreadCount={unreadCount}
@@ -126,14 +126,14 @@ export function NotificationsPageClient() {
 
       {/* Main List Area */}
       {isError ? (
-        <div className="rounded-2xl border border-[#262626] bg-[#080808]/40 p-12 text-center backdrop-blur-md max-w-xl mx-auto animate-in fade-in duration-300">
+        <div className="mx-auto max-w-xl animate-in rounded-[28px] border border-border bg-white p-12 text-center shadow-[0_16px_48px_rgba(15,23,42,0.08)] duration-300">
           <div className="w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-4">
             <Info className="w-6 h-6 text-red-500" />
           </div>
-          <p className="text-white font-bold mb-4">{t("toasts.load_error")}</p>
+          <p className="mb-4 font-bold text-on-surface">{t("toasts.load_error")}</p>
           <Button
             onClick={() => refetch()}
-            className="flex items-center gap-2 mx-auto rounded-xl bg-[#8b6a55] hover:bg-[#a67c63] px-6 py-2.5 text-xs font-black uppercase tracking-widest text-white transition-all duration-300"
+            className="mx-auto flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-xs font-black uppercase tracking-widest text-white transition-all duration-300 hover:bg-primary-hover"
           >
             <RefreshCw className={`w-4 h-4 ${isFetching ? "animate-spin" : ""}`} />
             {t("retry")}

@@ -70,7 +70,7 @@ export const ContactForm = () => {
 
   if (isSuccess) {
     return (
-      <div className="glass-surface glass-inner rounded-xl p-8 lg:p-10 text-center reveal-up">
+      <div className="reveal-up rounded-[28px] border border-border bg-white p-8 text-center shadow-[0_24px_80px_rgba(15,23,42,0.08)] lg:p-10">
         <div className="w-20 h-20 bg-green-500/10 border border-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
           <svg
             className="w-10 h-10 text-green-500"
@@ -86,10 +86,10 @@ export const ContactForm = () => {
             />
           </svg>
         </div>
-        <h2 className="text-2xl lg:text-3xl font-bold text-white mb-4 tracking-tight">
+        <h2 className="mb-4 text-2xl font-semibold tracking-tight text-on-surface lg:text-3xl">
           {t("success.title")}
         </h2>
-        <p className="text-[#a3a3a3] font-medium leading-relaxed mb-8 max-w-md mx-auto">
+        <p className="mx-auto mb-8 max-w-md font-medium leading-relaxed text-on-surface-subtle">
           {t("success.message")}
         </p>
         <Button
@@ -104,12 +104,12 @@ export const ContactForm = () => {
   }
 
   return (
-    <div className="glass-surface glass-inner rounded-xl p-8 lg:p-10 reveal-up reveal-delay-300">
+    <div className="reveal-up reveal-delay-300 rounded-[28px] border border-border bg-white p-8 shadow-[0_24px_80px_rgba(15,23,42,0.08)] lg:p-10">
       <div className="mb-10">
-        <h2 className="text-2xl lg:text-3xl font-bold text-white mb-2 tracking-tight">
+        <h2 className="mb-2 text-2xl font-semibold tracking-tight text-on-surface lg:text-3xl">
           {t("form.title")}
         </h2>
-        <p className="text-[#a3a3a3] font-medium leading-relaxed">
+        <p className="font-medium leading-relaxed text-on-surface-subtle">
           {t("form.subtitle")}
         </p>
       </div>
@@ -186,7 +186,7 @@ export const ContactForm = () => {
           <Button
             type="submit"
             size="lg"
-            className="w-full sm:w-auto min-w-[200px] h-14 rounded-full !bg-white !text-black hover:!bg-white/90 transition-all duration-300 gap-2"
+            className="h-14 w-full min-w-[200px] rounded-full bg-primary text-white transition-all duration-300 hover:bg-primary-hover sm:w-auto"
             isLoading={isLoading}
           >
             {isLoading ? t("form.submitting") : t("form.submit")}

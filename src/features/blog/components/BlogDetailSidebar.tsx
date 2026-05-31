@@ -29,16 +29,11 @@ export const BlogDetailSidebar = ({ popularPosts, tocHeadings }: BlogDetailSideb
   const dateLocale = locale === "vi" ? vi : enUS;
 
   return (
-    <aside className="space-y-10 sticky top-24">
-      {/* Table of Contents */}
+    <aside className="sticky top-24 space-y-8">
       <TableOfContents headings={tocHeadings} />
-
-      {/* Share Buttons */}
       <ShareButtons />
-
-      {/* Popular Posts (Re-styled for detail sidebar) */}
-      <div className="p-6 glass-retro rounded-2xl space-y-6">
-        <h3 className="text-lg font-semibold text-white border-l-4 border-primary pl-3">
+      <div className="space-y-6 rounded-[28px] border border-border bg-white p-6 shadow-[0_16px_48px_rgba(15,23,42,0.08)]">
+        <h3 className="border-l-4 border-primary pl-3 text-lg font-semibold text-on-surface">
           {t("popular_posts")}
         </h3>
         
@@ -71,9 +66,9 @@ export const BlogDetailSidebar = ({ popularPosts, tocHeadings }: BlogDetailSideb
               <Link
                 key={post.id}
                 href={`/${locale}/blog/${post.slug}`}
-                className="flex gap-4 group"
+                className="group flex gap-4 rounded-2xl p-2 transition-colors hover:bg-[#fafafa]"
               >
-                <div className="relative w-20 h-20 rounded-lg overflow-hidden shrink-0 border border-white/10">
+                <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg border border-border">
                   <Image
                     src={image}
                     alt={post.title}
@@ -82,10 +77,10 @@ export const BlogDetailSidebar = ({ popularPosts, tocHeadings }: BlogDetailSideb
                   />
                 </div>
                 <div className="flex-1 space-y-2 py-1">
-                  <h4 className="text-sm font-medium text-neutral-200 group-hover:text-primary transition-colors line-clamp-2 leading-snug">
+                  <h4 className="line-clamp-2 text-sm font-medium leading-snug text-on-surface transition-colors group-hover:text-primary">
                     {post.title}
                   </h4>
-                  <div className="flex items-center gap-3 text-xs font-mono text-neutral-500">
+                  <div className="flex items-center gap-3 text-xs text-on-surface-subtle">
                     <span>
                       {post.published_at ? format(new Date(post.published_at), "dd 'thg' M, yyyy", { locale: dateLocale }) : "-"}
                     </span>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useEffect, useRef, useState, useMemo } from "react";
+import { useEffect, useId, useMemo, useState } from "react";
 import { UilSearch } from "@iconscout/react-unicons";
 import { cn } from "@/utils/string";
 import { debounce } from "@/utils/debounce";
@@ -13,10 +13,10 @@ interface SearchInputProps {
   className?: string;
   onFocus?: React.FocusEventHandler<HTMLInputElement>;
   onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
-  /** Accessible name when no visible label is provided */
   "aria-label"?: string;
-  /** Debounce delay in ms. Defaults to 500. Set to 0 to disable built-in debounce. */
   debounceMs?: number;
+  label?: string;
+  actionText?: string;
 }
 
 export default function SearchInput({
@@ -29,34 +29,24 @@ export default function SearchInput({
   onKeyDown,
   "aria-label": ariaLabel,
   debounceMs = 500,
+  label = "Search",
+  actionText = "Go",
 }: SearchInputProps) {
   const autoId = useId();
   const inputId = `search-input-${autoId.replace(/:/g, "")}`;
-
   const [localValue, setLocalValue] = useState(value);
-  const lastRef = useRef(value);
 
-  // Sync external value with local state ONLY if it changed externally (e.g. cleared or updated from elsewhere)
   useEffect(() => {
-    if (value !== lastRef.current) {
-      setLocalValue(value);
-      lastRef.current = value;
-    }
+    setLocalValue(value);
   }, [value]);
 
-  // Create a memoized debounced onChange callback
   const debouncedOnChange = useMemo(() => {
-    if (debounceMs === 0) {
-      return null;
-    }
-    // eslint-disable-next-line react-hooks/refs
+    if (debounceMs === 0) return null;
     return debounce((val: string) => {
-      lastRef.current = val;
       onChange(val);
     }, debounceMs);
   }, [onChange, debounceMs]);
 
-  // Clean up debounce on unmount
   useEffect(() => {
     return () => {
       debouncedOnChange?.cancel();
@@ -70,17 +60,13 @@ export default function SearchInput({
     if (debouncedOnChange) {
       debouncedOnChange(val);
     } else {
-      lastRef.current = val;
       onChange(val);
     }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      if (debouncedOnChange) {
-        debouncedOnChange.cancel();
-      }
-      lastRef.current = localValue;
+      debouncedOnChange?.cancel();
       onChange(localValue);
     }
 
@@ -88,38 +74,38 @@ export default function SearchInput({
   };
 
   return (
-    <div
-      className={cn(
-        "relative group flex-1 w-full rounded-xl transition-all duration-300 overflow-hidden",
-        isLoading ? "ring-2 ring-primary ring-offset-2 ring-offset-background" : "",
-        className
-      )}
-    >
-      {isLoading && (
-        <div className="absolute inset-0 z-0 overflow-hidden rounded-xl">
-          <div className="absolute -inset-full animate-[spin_3s_linear_infinite] bg-[conic-gradient(from_0deg,transparent_0deg,transparent_300deg,#8b6a55_360deg)] motion-reduce:animate-none" />
+    <div className={cn("relative w-full", className)}>
+      <div
+        className={cn(
+          "group relative flex min-h-[76px] w-full items-center overflow-hidden rounded-[24px] border border-border bg-white px-4 shadow-[0_12px_34px_rgba(0,0,0,0.07)] transition-all duration-200 hover:shadow-[0_16px_42px_rgba(0,0,0,0.1)] focus-within:border-[#222222] sm:min-h-[84px] sm:rounded-[28px] sm:px-5",
+          isLoading ? "opacity-100" : ""
+        )}
+      >
+        <div className="mr-3 flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#f7f7f7] text-[#6a6a6a] transition-colors group-focus-within:bg-[#fff1f3] group-focus-within:text-primary sm:mr-4 sm:h-12 sm:w-12">
+          <UilSearch size={20} aria-hidden />
         </div>
-      )}
 
-      <div className="relative z-10 flex h-full w-full items-center overflow-hidden rounded-xl border border-[#262626] bg-[rgba(14,14,14,0.92)] shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] backdrop-blur-md transition-all duration-300 group-hover:border-[#3a2e28] group-focus-within:border-[#8b6a55]/70 group-focus-within:bg-[rgba(19,19,19,0.98)] m-px">
-        <UilSearch
-          size={18}
-          className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#b58c72] group-focus-within:text-[#f0ccb6] transition-colors duration-300"
-          aria-hidden
-        />
-        <input
-          id={inputId}
-          type="search"
-          value={localValue}
-          onChange={handleChange}
-          onFocus={onFocus}
-          onKeyDown={handleKeyDown}
-          placeholder={placeholder}
-          aria-label={ariaLabel ?? placeholder ?? "Search"}
-          className="w-full border-none bg-transparent py-3.5 pl-11 pr-5 text-sm font-medium text-[#f3efec] placeholder:text-[#9d9088] focus:ring-0 transition-all duration-300 outline-none"
-        />
+        <div className="min-w-0 flex-1">
+          <label htmlFor={inputId} className="block text-[12px] font-semibold leading-none text-on-surface">
+            {label}
+          </label>
+          <input
+            id={inputId}
+            type="search"
+            value={localValue}
+            onChange={handleChange}
+            onFocus={onFocus}
+            onKeyDown={handleKeyDown}
+            placeholder={placeholder}
+            aria-label={ariaLabel ?? placeholder ?? label}
+            className="mt-2 w-full border-none bg-transparent pr-2 text-[15px] font-medium text-on-surface outline-none placeholder:text-on-surface-subtle sm:text-[16px]"
+          />
+        </div>
+
+        <div className="hidden shrink-0 rounded-full bg-[#ff385c] px-4 py-2 text-[13px] font-semibold text-white shadow-[0_8px_20px_rgba(255,56,92,0.24)] sm:block">
+          {actionText}
+        </div>
       </div>
-
     </div>
   );
 }

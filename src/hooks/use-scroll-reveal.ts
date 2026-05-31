@@ -7,8 +7,8 @@ type Options = {
   threshold?: number;
   /** IntersectionObserver rootMargin, e.g. "0px 0px -8% 0px" */
   rootMargin?: string;
-  /** Reveal after this ms if observer never fires (hydration / layout) */
-  fallbackMs?: number;
+  /** Reveal after this ms if observer never fires (hydration / layout). Set null to disable fallback reveal. */
+  fallbackMs?: number | null;
 };
 
 /**
@@ -29,15 +29,20 @@ export const useScrollReveal = (options: Options = {}) => {
       }
     };
 
-    const fallbackTimeout = window.setTimeout(() => {
-      reveal();
-    }, fallbackMs);
+    const fallbackTimeout =
+      typeof fallbackMs === "number" && fallbackMs > 0
+        ? window.setTimeout(() => {
+            reveal();
+          }, fallbackMs)
+        : null;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           reveal();
-          window.clearTimeout(fallbackTimeout);
+          if (fallbackTimeout !== null) {
+            window.clearTimeout(fallbackTimeout);
+          }
           if (elementRef.current) {
             observer.unobserve(elementRef.current);
           }
@@ -52,7 +57,9 @@ export const useScrollReveal = (options: Options = {}) => {
     }
 
     return () => {
-      window.clearTimeout(fallbackTimeout);
+      if (fallbackTimeout !== null) {
+        window.clearTimeout(fallbackTimeout);
+      }
       if (el) {
         observer.unobserve(el);
       }

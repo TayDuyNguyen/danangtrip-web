@@ -1,12 +1,17 @@
 "use client";
 
 import { ReactNode, useState } from "react";
+import dynamic from "next/dynamic";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AbstractIntlMessages, NextIntlClientProvider } from "next-intl";
 import { Toaster } from "sonner";
 import { shouldRetryQuery } from "@/lib/react-query";
 import { LocaleHtmlLang } from "@/components/providers/LocaleHtmlLang";
-import { CartSync } from "@/features/cart/components/CartSync";
+
+const CartSync = dynamic(
+  () => import("@/features/cart/components/CartSync").then((mod) => mod.CartSync),
+  { ssr: false }
+);
 
 interface ProvidersProps {
   children: ReactNode;
@@ -15,11 +20,13 @@ interface ProvidersProps {
 }
 
 export function Providers({ children, locale, messages }: ProvidersProps) {
+  const isBrowser = typeof window !== "undefined";
   const [queryClient] = useState(
     () =>
       new QueryClient({
         defaultOptions: {
           queries: {
+            enabled: isBrowser,
             staleTime: 60 * 1000,
             retry: shouldRetryQuery,
             refetchOnWindowFocus: false,

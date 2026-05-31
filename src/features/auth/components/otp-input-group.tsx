@@ -116,10 +116,10 @@ export function OtpInputGroup({
           onKeyDown={(e) => handleKeyDown(index, e)}
           onPaste={handlePaste}
           disabled={disabled}
-          className={`w-10 h-12 sm:w-12 sm:h-14 text-center text-xl font-bold bg-[#030303] text-white border rounded-lg focus:outline-none transition-all duration-200 selection:bg-transparent ${
+          className={`h-12 w-10 rounded-2xl border bg-white text-center text-xl font-bold text-on-surface shadow-sm transition-all duration-200 selection:bg-transparent focus:outline-none sm:h-14 sm:w-12 ${
             error
               ? "border-[#ef4444] focus:border-[#ef4444] focus:ring-1 focus:ring-[#ef4444]/30"
-              : "border-[#262626] focus:border-[#8b6a55] focus:ring-1 focus:ring-[#8b6a55]/30"
+              : "border-border focus:border-primary focus:ring-1 focus:ring-primary/30"
           } disabled:opacity-40 disabled:cursor-not-allowed`}
           aria-label={`OTP Digit ${index + 1}`}
         />

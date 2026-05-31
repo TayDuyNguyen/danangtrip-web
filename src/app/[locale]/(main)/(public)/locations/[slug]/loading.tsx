@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function LocationDetailLoading() {
   return (
-    <main className="min-h-screen bg-[#080808] pb-20 animate-pulse">
+    <main className="min-h-screen bg-surface-container-low pb-20 animate-pulse">
       {/* Top Actions Desktop Skeleton */}
       <div className="design-container pt-8 md:pt-12">
         <div className="mb-6 hidden items-center justify-between md:flex">
@@ -13,9 +13,9 @@ export default function LocationDetailLoading() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
           {/* Left Column Skeleton */}
-          <div className="space-y-12 lg:col-span-8">
+          <div className="space-y-6 lg:col-span-8">
             {/* Gallery Skeleton */}
             <div className="grid h-[400px] grid-cols-4 grid-rows-2 gap-2 overflow-hidden rounded-xl md:h-[500px]">
               <div className="col-span-4 row-span-2 bg-[#262626] md:col-span-2"></div>
@@ -48,7 +48,7 @@ export default function LocationDetailLoading() {
           {/* Right Column (Sidebar) Skeleton */}
           <div className="lg:col-span-4">
             <div className="sticky top-28 space-y-6">
-              <div className="rounded-xl border border-[#262626] bg-[#080808] p-8 shadow-xl">
+              <div className="rounded-xl border border-border bg-surface-container-low p-8 shadow-xl">
                 <div className="mb-6 h-8 w-32 rounded bg-[#262626]"></div>
                 <div className="space-y-4">
                   <div className="h-14 w-full rounded-lg bg-[#262626]"></div>

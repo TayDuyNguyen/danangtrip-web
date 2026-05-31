@@ -82,20 +82,20 @@ export function BookingPriceSummaryCard({ booking }: BookingPriceSummaryCardProp
   };
 
   return (
-    <div className="w-full rounded-2xl bg-surface border border-border p-5 md:p-6 reveal-up">
-      <h3 className="text-sm font-black text-white uppercase tracking-wider mb-5">
+    <div className="w-full rounded-[28px] border border-border bg-white p-5 shadow-[0_16px_48px_rgba(15,23,42,0.08)] md:p-6 reveal-up">
+      <h3 className="text-sm font-black text-on-surface uppercase tracking-wider mb-5">
         {t("section_price")}
       </h3>
 
       <div className="space-y-4">
         {/* Breakdown details */}
-        <div className="space-y-2.5 text-xs text-on-surface-variant font-mono">
+        <div className="space-y-2.5 text-xs text-on-surface-subtle font-mono">
           {/* Adults */}
           <div className="flex justify-between items-center">
             <span className="text-on-surface-subtle">
               {t("price_adult_detail", { count: quantityAdult, price: formatPriceVND(unitPriceAdult) })}
             </span>
-            <span className="text-white font-medium tabular-nums">
+            <span className="text-on-surface font-medium tabular-nums">
               {formatPriceVND(quantityAdult * unitPriceAdult)}
             </span>
           </div>
@@ -106,7 +106,7 @@ export function BookingPriceSummaryCard({ booking }: BookingPriceSummaryCardProp
               <span className="text-on-surface-subtle">
                 {t("price_child_detail", { count: quantityChild, price: formatPriceVND(unitPriceChild) })}
               </span>
-              <span className="text-white font-medium tabular-nums">
+              <span className="text-on-surface font-medium tabular-nums">
                 {formatPriceVND(quantityChild * unitPriceChild)}
               </span>
             </div>
@@ -118,7 +118,7 @@ export function BookingPriceSummaryCard({ booking }: BookingPriceSummaryCardProp
               <span className="text-on-surface-subtle">
                 {t("price_infant_detail", { count: quantityInfant, price: formatPriceVND(unitPriceInfant) })}
               </span>
-              <span className="text-white font-medium tabular-nums">
+              <span className="text-on-surface font-medium tabular-nums">
                 {formatPriceVND(quantityInfant * unitPriceInfant)}
               </span>
             </div>
@@ -136,7 +136,7 @@ export function BookingPriceSummaryCard({ booking }: BookingPriceSummaryCardProp
         {/* Totals & Metadata */}
         <div className="pt-4 border-t border-border/60 space-y-4">
           <div className="flex justify-between items-end">
-            <span className="text-xs font-black text-white uppercase">{t("total_amount")}</span>
+            <span className="text-xs font-black text-on-surface uppercase">{t("total_amount")}</span>
             <span className="text-xl font-bold text-primary tabular-nums">
               {formatPriceVND(finalAmount)}
             </span>
@@ -146,7 +146,7 @@ export function BookingPriceSummaryCard({ booking }: BookingPriceSummaryCardProp
           <div className="grid grid-cols-2 gap-3 pt-2 text-[11px] font-mono border-t border-border/30">
             <div className="flex flex-col gap-1">
               <span className="text-on-surface-subtle uppercase">{t("payment_method_label")}</span>
-              <span className="text-white font-semibold">{getPaymentMethodName(booking.payment_method)}</span>
+              <span className="text-on-surface font-semibold">{getPaymentMethodName(booking.payment_method)}</span>
             </div>
 
             <div className="flex flex-col gap-1 items-end">

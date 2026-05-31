@@ -22,7 +22,13 @@ export function useAddToCart() {
   return useMutation({
     mutationFn: (payload: AddToCartPayload & { tour?: Tour; tour_schedule?: TourSchedule }) => {
       if (isAuthenticated) {
-        const { tour, tour_schedule, ...apiPayload } = payload;
+        const apiPayload = {
+          tour_id: payload.tour_id,
+          tour_schedule_id: payload.tour_schedule_id,
+          quantity_adult: payload.quantity_adult,
+          quantity_child: payload.quantity_child,
+          quantity_infant: payload.quantity_infant,
+        };
         return cartService.store(apiPayload).then((res) => res.data);
       } else {
         addGuestItem({

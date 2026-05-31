@@ -26,11 +26,11 @@ export function EmptyState({
       className={`flex flex-col items-center justify-center py-12 px-4 text-center ${className}`}
     >
       {icon ? (
-        <div className="mb-4 text-[#737373]">{icon}</div>
+        <div className="mb-4 text-on-surface-subtle">{icon}</div>
       ) : (
-        <div className="w-16 h-16 bg-[#171717] border border-[#262626] rounded-full flex items-center justify-center mb-4">
+        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-border bg-[#f7f7f7]">
           <svg
-            className="w-8 h-8 text-[#737373]"
+            className="h-8 w-8 text-on-surface-subtle"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -44,8 +44,8 @@ export function EmptyState({
           </svg>
         </div>
       )}
-      <h3 className="text-lg font-medium text-white mb-2">{displayTitle}</h3>
-      <p className="text-sm text-[#a3a3a3] max-w-sm mb-6">{displayDescription}</p>
+      <h3 className="mb-2 text-lg font-semibold text-on-surface">{displayTitle}</h3>
+      <p className="mb-6 max-w-sm text-sm text-on-surface-subtle">{displayDescription}</p>
       {action && <div>{action}</div>}
     </div>
   );

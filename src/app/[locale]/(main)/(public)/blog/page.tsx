@@ -1,8 +1,16 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import dynamic from "next/dynamic";
+import { useState } from "react";
 import { BlogHero } from "@/features/blog/components/BlogHero";
-import { BlogContent } from "@/features/blog/components/BlogContent";
+
+const BlogContent = dynamic(
+  () => import("@/features/blog/components/BlogContent").then((mod) => mod.BlogContent),
+  {
+    ssr: false,
+    loading: () => <div className="min-h-[320px] animate-pulse rounded-3xl bg-[#f3f3f3]" aria-hidden />,
+  }
+);
 
 export default function BlogPage() {
   const [search, setSearch] = useState("");
@@ -15,9 +23,7 @@ export default function BlogPage() {
       />
       
       <main className="design-container pb-24">
-        <Suspense fallback={<div className="min-h-[320px] animate-pulse rounded-3xl bg-neutral-900/40" aria-hidden />}>
-          <BlogContent searchQuery={search} />
-        </Suspense>
+        <BlogContent searchQuery={search} />
       </main>
     </div>
   );

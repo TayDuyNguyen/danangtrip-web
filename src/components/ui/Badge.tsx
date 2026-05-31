@@ -17,13 +17,13 @@ const Badge = ({
   icon,
 }: BadgeProps) => {
   const variants = {
-    primary: 'bg-[#171717] text-white border-[#262626]',
-    secondary: 'bg-[#080808] text-[#737373] border-[#262626]',
-    outline: 'bg-transparent text-[#737373] border-[#404040] border',
-    success: 'bg-[#1a1f14] text-[#929852] border-[#2f3b25]',
-    warning: 'bg-[#2b1f14] text-[#c59a5f] border-[#5c3822]',
-    error: 'bg-[#2a1616] text-[#d88484] border-[#5f2f2f]',
-    ghost: 'bg-[#080808]/70 backdrop-blur-[12px] text-white border-[#262626]',
+    primary: 'border-primary/10 bg-primary/10 text-on-surface',
+    secondary: 'border-border bg-[#f7f7f7] text-on-surface-subtle',
+    outline: 'border border-border bg-transparent text-on-surface-subtle',
+    success: 'border-emerald-200 bg-emerald-50 text-emerald-600',
+    warning: 'border-amber-200 bg-amber-50 text-amber-700',
+    error: 'border-rose-200 bg-rose-50 text-rose-600',
+    ghost: 'border-border bg-white/90 text-on-surface shadow-sm backdrop-blur-[12px]',
   };
 
   const sizes = {

@@ -25,7 +25,6 @@ export function useFavoriteLocation(locationId: number) {
   // Read localStorage on mount / auth change
   useEffect(() => {
     if (!isAuthenticated) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setLocalIsFavorite(localFavoriteLocations.has(locationId));
     }
   }, [isAuthenticated, locationId]);

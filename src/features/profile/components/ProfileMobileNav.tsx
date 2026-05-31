@@ -53,13 +53,13 @@ export function ProfileMobileNav() {
               active
                 ? isDestructive
                   ? "bg-red-500/15 text-red-500 border border-red-500/40"
-                  : "bg-[#8b6a55]/15 text-white border border-[#8b6a55]/40"
+                  : "border border-primary/30 bg-primary/10 text-on-surface"
                 : isDestructive
-                ? "bg-[#111111] text-red-400 border border-red-500/10 hover:text-red-500 hover:bg-red-500/5"
-                : "bg-[#111111] text-[#737373] border border-[#262626] hover:text-white hover:bg-white/5"
+                ? "border border-red-500/10 bg-white text-red-400 hover:bg-red-500/5 hover:text-red-500"
+                : "border border-border bg-white text-on-surface-subtle hover:bg-[#f7f7f7] hover:text-on-surface"
             )}
           >
-            <Icon className={cn("w-3.5 h-3.5", active ? (isDestructive ? "text-red-500" : "text-[#8b6a55]") : "text-[#525252]")} />
+            <Icon className={cn("h-3.5 w-3.5", active ? (isDestructive ? "text-red-500" : "text-primary") : "text-on-surface-subtle")} />
             {t(labelKey)}
           </Link>
         );

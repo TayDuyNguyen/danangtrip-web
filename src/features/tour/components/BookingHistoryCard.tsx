@@ -103,13 +103,13 @@ export function BookingHistoryCard({
 
   return (
     <div
-      className="p-px rounded-2xl bg-linear-to-br from-[rgba(92,56,34,0.15)] to-[rgba(46,58,47,0.05)] reveal-up shadow-xl transition-all duration-300 hover:shadow-2xl border-white/5"
+      className="w-full max-w-full overflow-hidden rounded-[28px] border border-border bg-white reveal-up shadow-[0_18px_54px_rgba(15,23,42,0.08)] transition-all duration-300 hover:border-primary/25 hover:shadow-[0_24px_64px_rgba(15,23,42,0.11)]"
       style={{ animationDelay: `${index * 50}ms` }}
     >
-      <div className="group relative flex flex-col md:flex-row overflow-hidden rounded-2xl bg-surface border border-border transition-all duration-300 hover:border-primary/30 p-5 md:p-6 gap-6">
+      <div className="group relative flex flex-col overflow-hidden rounded-[28px] bg-white p-5 md:flex-row md:p-6 gap-6">
         
         {/* Thumbnail Image */}
-        <div className="relative w-full md:w-44 h-36 rounded-xl overflow-hidden shrink-0 bg-surface-container">
+        <div className="relative h-36 w-full shrink-0 overflow-hidden rounded-2xl bg-[#f7f7f7] md:w-44">
           <Image
             src={tourThumbnail}
             alt={tourName}
@@ -125,7 +125,7 @@ export function BookingHistoryCard({
           {/* Top Row: Booking Code & Statuses */}
           <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
             <span className="font-mono text-xs text-on-surface-subtle font-bold tracking-wider">
-              {t("booking_code")}: <span className="text-white select-all">{booking.booking_code}</span>
+              {t("booking_code")}: <span className="select-all text-on-surface">{booking.booking_code}</span>
             </span>
             <div className="flex items-center gap-2">
               <Badge 
@@ -144,7 +144,7 @@ export function BookingHistoryCard({
           </div>
 
           {/* Tour Title Link */}
-          <h4 className="text-lg font-bold text-white mb-4 line-clamp-2 hover:text-primary transition-colors pr-2">
+          <h4 className="mb-4 line-clamp-2 pr-2 text-lg font-bold text-on-surface transition-colors hover:text-primary">
             {tour ? (
               <Link href={`/tours/${tour.slug}`}>
                 {tourName}
@@ -155,12 +155,12 @@ export function BookingHistoryCard({
           </h4>
 
           {/* Middle Row: Info Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-y-3 gap-x-4 font-mono text-[12px] text-on-surface-variant mb-5">
+          <div className="mb-5 grid grid-cols-1 gap-x-4 gap-y-3 font-mono text-[12px] text-on-surface-subtle sm:grid-cols-2 md:grid-cols-3">
             <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4 text-primary shrink-0" />
               <div className="flex flex-col">
                 <span className="text-[10px] text-on-surface-subtle uppercase font-semibold">{t("travel_date")}</span>
-                <span className="text-white font-medium">{travelDate}</span>
+                <span className="font-medium text-on-surface">{travelDate}</span>
               </div>
             </div>
 
@@ -168,7 +168,7 @@ export function BookingHistoryCard({
               <Users className="w-4 h-4 text-primary shrink-0" />
               <div className="flex flex-col">
                 <span className="text-[10px] text-on-surface-subtle uppercase font-semibold">{t("quantity")}</span>
-                <span className="text-white font-medium">
+                <span className="font-medium text-on-surface">
                   {totalGuests} {t("quantity").toLowerCase()}
                   <span className="text-[10px] text-on-surface-subtle ml-1">
                     ({item?.quantity_adult || 0}A / {item?.quantity_child || 0}C / {item?.quantity_infant || 0}I)
@@ -177,18 +177,18 @@ export function BookingHistoryCard({
               </div>
             </div>
 
-            <div className="flex items-center gap-2 col-span-2 md:col-span-1">
+            <div className="flex items-center gap-2 sm:col-span-2 md:col-span-1">
               <Clock className="w-4 h-4 text-primary shrink-0" />
               <div className="flex flex-col">
                 <span className="text-[10px] text-on-surface-subtle uppercase font-semibold">{t("booked_date")}</span>
-                <span className="text-white font-medium">{bookedDate}</span>
+                <span className="font-medium text-on-surface">{bookedDate}</span>
               </div>
             </div>
           </div>
 
           {/* Cancellation reason if cancelled */}
           {booking.booking_status === "cancelled" && booking.cancellation_reason && (
-            <div className="mb-5 p-3.5 rounded-xl border border-red-500/10 bg-red-500/5 text-xs text-red-300 leading-relaxed flex gap-2">
+            <div className="mb-5 flex gap-2 rounded-xl border border-red-200 bg-red-50 p-3.5 text-xs leading-relaxed text-red-600">
               <InfoCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
               <div>
                 <span className="font-bold">{t("cancel_reason_label")}: </span>
@@ -214,11 +214,11 @@ export function BookingHistoryCard({
             <div className="flex items-center gap-2 flex-wrap sm:justify-end">
               {/* Detail view */}
               <Link 
-                href={`/payment/result?booking_code=${booking.booking_code}`}
+                href={`/profile/bookings/code/${booking.booking_code}`}
                 className={cn(
-                  "inline-flex shrink-0 items-center justify-center rounded-full border border-border bg-surface-container",
-                  "px-4 py-2.5 text-xs font-semibold text-white transition-all duration-300",
-                  "hover:border-primary/50 hover:bg-surface-container-high active:scale-95"
+                  "inline-flex shrink-0 items-center justify-center rounded-full border border-border bg-[#f7f7f7]",
+                  "px-4 py-2.5 text-xs font-semibold text-on-surface transition-all duration-300",
+                  "hover:border-primary/50 hover:bg-primary/10 hover:text-primary active:scale-95"
                 )}
               >
                 {t("action_detail")}

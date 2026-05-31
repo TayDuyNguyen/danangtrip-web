@@ -26,23 +26,23 @@ export function PaymentSummaryCard({ booking }: Props) {
   };
 
   return (
-    <div className="bg-[#1a1a1a] border border-[#262626] rounded-2xl p-6 mt-8 w-full max-w-md mx-auto text-left shadow-2xl">
-      <h3 className="text-lg font-semibold text-white mb-4 pb-4 border-b border-[#262626]">
+    <div className="mx-auto mt-8 w-full max-w-md rounded-[28px] border border-border bg-white p-6 text-left shadow-[0_24px_80px_rgba(15,23,42,0.08)]">
+      <h3 className="mb-4 border-b border-border pb-4 text-lg font-semibold text-on-surface">
         {t("transaction_info")}
       </h3>
 
       <div className="space-y-4">
         <div className="flex justify-between items-center">
           <span className="text-on-surface-subtle text-sm">{t("booking_code")}</span>
-          <span className="font-semibold text-white uppercase tracking-wider">{booking.booking_code}</span>
+          <span className="font-semibold uppercase tracking-wider text-on-surface">{booking.booking_code}</span>
         </div>
 
         <div className="flex justify-between items-center">
           <span className="text-on-surface-subtle text-sm">{t("method")}</span>
-          <span className="font-medium text-[#d4d4d4]">{getMethodName(booking.payment_method)}</span>
+          <span className="font-medium text-on-surface">{getMethodName(booking.payment_method)}</span>
         </div>
 
-        <div className="flex justify-between items-center pt-2 mt-2 border-t border-[#262626] border-dashed">
+        <div className="flex justify-between items-center pt-2 mt-2 border-t border-border border-dashed">
           <span className="text-on-surface-subtle font-medium">{t("amount")}</span>
           <span className="font-black text-xl text-primary">
             {formatCurrency(booking.total_amount, "VND", locale === "vi" ? "vi-VN" : "en-US")}

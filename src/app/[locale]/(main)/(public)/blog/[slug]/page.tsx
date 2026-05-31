@@ -122,7 +122,7 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
       <ReadingProgressBar />
 
       <div className="container mx-auto px-4 pt-12 md:pt-20">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           
           <div className="lg:col-span-8 space-y-10">
             <BlogDetailHeader post={post} locale={locale} />

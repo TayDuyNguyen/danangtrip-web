@@ -103,4 +103,6 @@ export const API_ENDPOINTS = {
     CLEAR: "/cart",
     MERGE: "/cart/merge",
   },
+  HOME: "/home",
+  CONFIG: "/config",
 };

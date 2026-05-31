@@ -1,24 +1,34 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import { statisticsService } from "@/services/statistics.service";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { homeService } from "@/services/home.service";
+import { mapApiConfig } from "@/services/config.service";
 import type { Statistics } from "@/types";
 import { shouldRetryQuery } from "@/lib/react-query";
 import { getApiErrorMessage } from "@/utils";
 
 /**
  * Enhanced useStatistics hook using TanStack Query.
- * Strict Mode: No mock fallback data allowed.
+ * Consolidates into single /home API and pre-warms global app config cache.
  */
-export const useStatistics = () => {
+export const useStatistics = (enabled: boolean = true) => {
+  const queryClient = useQueryClient();
+
   const query = useQuery({
-    queryKey: ["home", "statistics"],
+    queryKey: ["home", "unified-data"],
     queryFn: async () => {
-      const res = await statisticsService.getStatistics();
-      if (res.success && res.data) return res.data;
+      const res = await homeService.getHomeData();
+      if (res.success && res.data) {
+        if (res.data.config) {
+          queryClient.setQueryData(["app", "config"], mapApiConfig(res.data.config));
+        }
+        return res.data;
+      }
       throw res;
     },
-    staleTime: 30 * 60 * 1000,
+    select: (data) => data.statistics,
+    enabled,
+    staleTime: 5 * 60 * 1000,
     retry: shouldRetryQuery,
   });
 

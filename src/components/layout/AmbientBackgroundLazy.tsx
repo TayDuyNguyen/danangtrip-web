@@ -8,7 +8,7 @@ const AmbientBackground = dynamic(() => import("./AmbientBackground"), {
     <>
       <div
         aria-hidden
-        className="pointer-events-none fixed inset-0 -z-20 bg-[#080808]"
+        className="pointer-events-none fixed inset-0 -z-20 bg-surface-container-low"
       />
       <div
         aria-hidden

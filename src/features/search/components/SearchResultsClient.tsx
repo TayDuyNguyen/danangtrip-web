@@ -38,7 +38,6 @@ export const SearchResultsClient = ({ initialQuery }: SearchResultsClientProps) 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filterSheetNonce, setFilterSheetNonce] = useState(0);
 
-  // --- URL State ---
   const q = searchParams.get("q") ?? initialQuery;
   const type = (searchParams.get("type") as "all" | SearchResultType) || "all";
   const sort = (searchParams.get("sort") as SearchSortOption) || "popular";
@@ -74,6 +73,7 @@ export const SearchResultsClient = ({ initialQuery }: SearchResultsClientProps) 
       type: newType,
       page: 1,
     };
+
     if (newType === "all") {
       nextUpdates.locationCategory = type === "location" ? filters.category : filters.locationCategory;
       nextUpdates.tourCategory = type === "tour" ? filters.category : filters.tourCategory;
@@ -88,6 +88,7 @@ export const SearchResultsClient = ({ initialQuery }: SearchResultsClientProps) 
       nextUpdates.tourCategory = undefined;
       nextUpdates.district = undefined;
     }
+
     updateUrl(nextUpdates);
   };
 
@@ -126,12 +127,9 @@ export const SearchResultsClient = ({ initialQuery }: SearchResultsClientProps) 
 
   const handlePageChange = (newPage: number) => updateUrl({ page: newPage });
 
-  // --- Data Fetching ---
   const { results, isLoading, isFetching, counts, meta } = useSearch({ q, type, sort, filters, page });
   const isRefreshing = isFetching && !isLoading;
 
-  // Derive totalPages — meta.last_page is reliable for all/tour/location
-  // Fallback: estimate from counts (12 per page when type=all, 10 otherwise)
   const totalPages = (() => {
     const fromMeta = meta?.last_page;
     if (fromMeta && fromMeta > 0) return fromMeta;
@@ -140,11 +138,12 @@ export const SearchResultsClient = ({ initialQuery }: SearchResultsClientProps) 
     return total > 0 ? Math.ceil(total / perPage) : 1;
   })();
 
-  // Search mode: khi có query HOẶC type filter không phải 'all'
   const isSearchMode = !!q.trim() || type !== "all";
 
-  const { data: discoveryGridResults = [], isLoading: isDiscoveryGridLoading } =
-    useSearchDiscoveryGrid(!isSearchMode, locale);
+  const { data: discoveryGridResults = [], isLoading: isDiscoveryGridLoading } = useSearchDiscoveryGrid(
+    !isSearchMode,
+    locale
+  );
   const { insights, trending, popular } = useSearchDiscovery();
   const trendKeywords = insights.length > 0 ? insights : trending.length > 0 ? trending : popular;
 
@@ -174,7 +173,6 @@ export const SearchResultsClient = ({ initialQuery }: SearchResultsClientProps) 
 
   return (
     <div className="reveal-up space-y-8">
-      {/* Search Header */}
       <SearchResultHeader
         query={q}
         count={counts.all}
@@ -189,8 +187,7 @@ export const SearchResultsClient = ({ initialQuery }: SearchResultsClientProps) 
         isLoading={isFetching}
       />
 
-      {/* Tabs + Sort */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
         <SearchTabs
           activeType={type}
           onChange={handleTypeChange}
@@ -202,47 +199,40 @@ export const SearchResultsClient = ({ initialQuery }: SearchResultsClientProps) 
               options={sortOptions}
               value={currentSortOption}
               onChange={handleSortChange}
-              containerClassName="bg-[#0e0e0e] rounded-xl border border-[#262626] p-0 px-4"
+              containerClassName="rounded-[22px] border border-border bg-white px-4 py-1 shadow-sm"
               className="bg-transparent"
+              variant="minimal"
               placeholder={tSearch("sort.label")}
             />
           </div>
         )}
       </div>
 
-      {/* Main content */}
       {isSearchMode ? (
         <div className="transition-all duration-500">
           {isLoading ? (
-            <div className="flex min-h-[320px] items-center justify-center rounded-xl border border-[#262626] bg-[#0e0e0e]/60">
-              <Loading type="spokes" color="#8b6a55" height={56} width={56} />
+            <div className="flex min-h-[320px] items-center justify-center rounded-[28px] border border-border bg-[#fafafa] shadow-[0_16px_44px_rgba(15,23,42,0.06)]">
+              <Loading type="spokes" color="#FF385C" height={56} width={56} />
             </div>
           ) : results.length > 0 ? (
             <div className="relative">
               {isRefreshing && (
-                <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center rounded-xl bg-[#080808]/45 backdrop-blur-[1px]">
-                  <Loading type="spokes" color="#8b6a55" height={48} width={48} />
+                <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center rounded-[28px] bg-white/70 backdrop-blur-[2px]">
+                  <Loading type="spokes" color="#FF385C" height={48} width={48} />
                 </div>
               )}
               <div className={cn("transition-opacity duration-200", isRefreshing ? "opacity-60" : "opacity-100")}>
                 <SearchGrid results={results} isLoading={false} onResultClick={handleResultClick} />
-                <StandardPagination
-                  currentPage={page}
-                  totalPages={totalPages}
-                  onPageChange={handlePageChange}
-                />
+                <StandardPagination currentPage={page} totalPages={totalPages} onPageChange={handlePageChange} />
               </div>
             </div>
           ) : (
-            /* Empty state */
-            <div className="flex flex-col items-center justify-center py-20 text-center gradient-shell rounded-xl border border-[#262626]/50" style={{ backgroundColor: "rgba(14,14,14,0.7)" }}>
-              <div className="w-16 h-16 bg-[#1c1b1b] rounded-full flex items-center justify-center mb-5 text-3xl">
-                🔍
-              </div>
-              <h2 className="text-xl font-light text-[#e5e2e1] mb-2">{tSearch("empty.title")}</h2>
-              <p className="text-[#737373] max-w-md mx-auto text-sm">{tSearch("empty.subtitle")}</p>
+            <div className="flex flex-col items-center justify-center rounded-[28px] border border-border bg-white px-6 py-20 text-center shadow-[0_16px_44px_rgba(15,23,42,0.06)]">
+              <div className="mb-5 h-16 w-16 rounded-full bg-[#fff1f3] shadow-sm" />
+              <h2 className="mb-2 text-xl font-semibold text-on-surface">{tSearch("empty.title")}</h2>
+              <p className="mx-auto max-w-md text-sm text-on-surface-subtle">{tSearch("empty.subtitle")}</p>
               {trendKeywords.length > 0 && (
-                <div className="mt-6 flex flex-wrap justify-center gap-2 max-w-2xl">
+                <div className="mt-6 flex max-w-2xl flex-wrap justify-center gap-2">
                   {trendKeywords.slice(0, 5).map((item, index) => (
                     <button
                       key={`${item.query}-${index}`}
@@ -258,7 +248,7 @@ export const SearchResultsClient = ({ initialQuery }: SearchResultsClientProps) 
                         });
                         updateUrl({ q: item.query, page: 1 });
                       }}
-                      className="rounded-full border border-[#6b5a50]/70 px-3 py-2 text-sm font-medium text-[#e5e2e1] transition-all hover:border-[#8b6a55] hover:bg-[#8b6a55]/10"
+                      className="rounded-full border border-border bg-[#fafafa] px-3 py-2 text-sm font-medium text-on-surface transition-all hover:border-primary/40 hover:bg-[#fff4f6] hover:text-primary"
                     >
                       {item.query}
                     </button>
@@ -269,26 +259,20 @@ export const SearchResultsClient = ({ initialQuery }: SearchResultsClientProps) 
           )}
         </div>
       ) : (
-        /* Discovery Section — no query */
         <div className="space-y-8 py-4">
-          {/* Large display title */}
-          <div className="space-y-3">
-            <h1 className="text-5xl md:text-7xl font-light text-[#e5e2e1] tracking-tighter leading-none">
+          <div className="space-y-3 rounded-[28px] border border-border bg-[#fcfcfc] p-6 shadow-[0_16px_44px_rgba(15,23,42,0.05)]">
+            <h1 className="text-3xl font-semibold leading-none tracking-tight text-on-surface md:text-4xl">
               {tSearch("discovery.title")}
             </h1>
-            <p className="text-[#737373] text-sm max-w-2xl font-normal leading-relaxed">
+            <p className="max-w-2xl text-sm font-normal leading-relaxed text-on-surface-subtle">
               {tSearch("discovery.subtitle")}
             </p>
           </div>
 
-          <SearchGrid
-            results={discoveryGridResults.slice(0, 6)}
-            isLoading={isDiscoveryGridLoading}
-          />
+          <SearchGrid results={discoveryGridResults.slice(0, 6)} isLoading={isDiscoveryGridLoading} />
         </div>
       )}
 
-      {/* Filter Sheet */}
       <SearchFiltersSheet
         key={filterSheetNonce}
         isOpen={isFilterOpen}

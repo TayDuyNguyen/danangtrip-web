@@ -1,20 +1,21 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
-import { IoStar, IoLocationOutline, IoHeartOutline } from "@/components/icons/solar";
-import type { Location } from "@/types";
 import { useTranslations } from "next-intl";
-import { Link } from "@/i18n/navigation";
-import { PUBLIC_ROUTES } from "@/config/routes";
-import { useAuthStore } from "@/store/auth.store";
 import { toast } from "sonner";
-import { api } from "@/lib/axios";
-import { useState, useEffect } from "react";
+import { IoHeartOutline, IoLocationOutline, IoStar } from "@/components/icons/solar";
+import { PUBLIC_ROUTES } from "@/config/routes";
+import { useFavoriteToggle } from "@/hooks/useFavorite";
+import { Link } from "@/i18n/navigation";
+import { useAuthStore } from "@/store/auth.store";
+import type { Location } from "@/types";
 
 interface LocationCardCompactProps {
   location: Location & { distance?: number };
   isHighlighted?: boolean;
   isSelected?: boolean;
+  isFavorite?: boolean;
   onHover?: (hovered: boolean) => void;
   onClick?: () => void;
 }
@@ -23,68 +24,43 @@ export default function LocationCardCompact({
   location,
   isHighlighted = false,
   isSelected = false,
+  isFavorite = false,
   onHover,
   onClick,
 }: LocationCardCompactProps) {
   const t = useTranslations("locations");
+  const tCommon = useTranslations("common");
   const detailHref = PUBLIC_ROUTES.LOCATION_DETAIL(location.slug);
   const { isAuthenticated } = useAuthStore();
-  const [isSaved, setIsSaved] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
+  const toggleMutation = useFavoriteToggle({ location_id: location.id });
+  const [optimisticIsSaved, setOptimisticIsSaved] = useState(isFavorite);
 
   useEffect(() => {
-    let active = true;
-    const checkFavorite = async () => {
-      if (!isAuthenticated) return;
-      try {
-        const response = await api.get(`/user/favorites/check`, {
-          location_id: location.id
-        });
-        if (active && response.success) {
-          setIsSaved(!!response.data);
-        }
-      } catch {
-        // Safe fallback
-      }
-    };
-    checkFavorite();
-    return () => {
-      active = false;
-    };
-  }, [location.id, isAuthenticated]);
+    setOptimisticIsSaved(isFavorite);
+  }, [isFavorite]);
 
   const handleFavoriteClick = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
     if (!isAuthenticated) {
-      toast.warning(t("detail.helpful_login") || "Vui lòng đăng nhập để lưu địa điểm");
+      toast.warning(tCommon("favorite.login_required") || "Please sign in to save favorites");
       return;
     }
 
-    setIsSaving(true);
+    const nextValue = !optimisticIsSaved;
+    setOptimisticIsSaved(nextValue);
+
     try {
-      if (isSaved) {
-        const response = await api.delete(`/user/favorites`, {
-          data: { location_id: location.id },
-        });
-        if (response.success) {
-          setIsSaved(false);
-          toast.success(t("detail.review_remove_file") ? "Đã xóa khỏi yêu thích" : "Removed from favorites");
-        }
-      } else {
-        const response = await api.post(`/user/favorites`, {
-          location_id: location.id,
-        });
-        if (response.success) {
-          setIsSaved(true);
-          toast.success(t("detail.save") ? "Đã lưu địa điểm yêu thích" : "Saved to favorites");
-        }
-      }
+      await toggleMutation.mutateAsync(optimisticIsSaved);
+      toast.success(
+        nextValue
+          ? (tCommon("favorite.add_success") || "Saved to favorites")
+          : (tCommon("favorite.remove_success") || "Removed from favorites")
+      );
     } catch {
-      toast.error(t("detail.helpful_error") || "Có lỗi xảy ra, vui lòng thử lại");
-    } finally {
-      setIsSaving(false);
+      setOptimisticIsSaved(!nextValue);
+      toast.error(tCommon("favorite.error") || "Unable to update favorites right now");
     }
   };
 
@@ -100,7 +76,7 @@ export default function LocationCardCompact({
   const formatDistance = (dist?: number | string) => {
     if (dist === undefined || dist === null) return "";
     const parsedDist = typeof dist === "number" ? dist : parseFloat(dist);
-    if (isNaN(parsedDist)) return "";
+    if (Number.isNaN(parsedDist)) return "";
     if (parsedDist < 1) {
       return `${Math.round(parsedDist * 1000)}m`;
     }
@@ -108,7 +84,7 @@ export default function LocationCardCompact({
   };
 
   const rating = parseFloat(location.avg_rating) || 0;
-  
+
   const isPlaceholder = (url?: string | null) => {
     if (!url) return true;
     const lower = url.toLowerCase();
@@ -127,15 +103,13 @@ export default function LocationCardCompact({
       "/images/discovery/dragon-bridge.png",
       "/images/discovery/hoi-an.png",
       "/images/discovery/my-khe.png",
-      "/images/discovery/son-tra.png"
+      "/images/discovery/son-tra.png",
     ];
     const index = typeof location.id === "number" ? Math.abs(location.id) % fallbacks.length : 0;
     return fallbacks[index];
   };
 
   const image = getValidImage();
-
-  // Resolve category name (supporting both eager-loaded Category object and custom string fallback)
   const categoryName = typeof location.category === "object" && location.category !== null
     ? (location.category as { name: string }).name
     : location.category || t("filters.all");
@@ -145,20 +119,19 @@ export default function LocationCardCompact({
       onMouseEnter={() => onHover?.(true)}
       onMouseLeave={() => onHover?.(false)}
       onClick={onClick}
-      className={`group relative flex gap-4 rounded-2xl border p-3 cursor-pointer transition-all duration-300 ${
+      className={`group relative flex cursor-pointer gap-4 rounded-2xl border p-3 transition-all duration-300 ${
         isSelected
-          ? "border-[#8b6a55] bg-[#8b6a55]/20 shadow-lg"
+          ? "border-primary bg-primary/10 shadow-lg"
           : isHighlighted
-            ? "border-[#8b6a55]/60 bg-[#8b6a55]/10 shadow-md"
-            : "border-[#262626] bg-[#111111]/80 hover:border-[#8b6a55]/40 hover:bg-[#171717]/75"
+            ? "border-primary/60 bg-primary/10 shadow-md"
+            : "border-border bg-[#fafafa] hover:border-primary/40 hover:bg-white"
       }`}
     >
-      <div className="flex flex-1 gap-4 text-inherit no-underline min-w-0">
-        {/* Thumbnail Image */}
+      <div className="flex min-w-0 flex-1 gap-4 text-inherit no-underline">
         <Link
           href={detailHref}
           onClick={(e) => e.stopPropagation()}
-          className="relative w-18 h-18 rounded-xl overflow-hidden flex-shrink-0 bg-[#080808] border border-[#262626] block"
+          className="relative block h-18 w-18 flex-shrink-0 overflow-hidden rounded-xl border border-border bg-white"
         >
           <Image
             src={image}
@@ -169,56 +142,52 @@ export default function LocationCardCompact({
           />
         </Link>
 
-        {/* Content Panel */}
-        <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
+        <div className="flex min-w-0 flex-1 flex-col justify-between py-0.5">
           <div>
             <Link
               href={detailHref}
               onClick={(e) => e.stopPropagation()}
-              className="text-sm font-black text-white hover:text-[#8b6a55] group-hover:text-[#8b6a55] transition-colors leading-snug line-clamp-1 no-underline block"
+              className="block line-clamp-1 text-sm font-semibold leading-snug text-on-surface no-underline transition-colors hover:text-primary group-hover:text-primary"
             >
               {location.name}
             </Link>
 
-            {/* Distance & Category Badges */}
-            <div className="flex items-center gap-2 mt-1 flex-wrap">
+            <div className="mt-1 flex flex-wrap items-center gap-2">
               {location.distance !== undefined && (
-                <span className="flex items-center gap-1 text-[11px] font-bold text-[#8b6a55] font-mono bg-[#8b6a55]/10 px-1.5 py-0.5 rounded border border-[#8b6a55]/30">
+                <span className="flex items-center gap-1 rounded border border-primary/30 bg-primary/10 px-1.5 py-0.5 font-mono text-[11px] font-bold text-primary">
                   <IoLocationOutline className="text-xs" />
                   {formatDistance(location.distance)}
                 </span>
               )}
-              <span className="text-[11px] text-[#a3a3a3] font-semibold truncate max-w-[120px]">
+              <span className="max-w-[120px] truncate text-[11px] font-semibold text-on-surface-subtle">
                 {categoryName}
               </span>
             </div>
           </div>
 
-          {/* Ratings & Price */}
-          <div className="flex items-center gap-3 mt-1 text-[11px] text-[#a3a3a3]">
+          <div className="mt-1 flex items-center gap-3 text-[11px] text-on-surface-subtle">
             <div className="flex items-center gap-1">
-              <IoStar className="text-yellow-500 text-xs flex-shrink-0" />
-              <span className="font-bold text-white">{rating.toFixed(1)}</span>
+              <IoStar className="text-xs text-yellow-500 flex-shrink-0" />
+              <span className="font-bold text-on-surface">{rating.toFixed(1)}</span>
               <span>({location.review_count})</span>
             </div>
-            <span>·</span>
-            <span className="truncate max-w-[100px]">{formatPrice(location.price_min)}</span>
+            <span>.</span>
+            <span className="max-w-[100px] truncate">{formatPrice(location.price_min)}</span>
           </div>
         </div>
       </div>
 
-      {/* Favorite Button Overlay */}
       <button
         onClick={handleFavoriteClick}
-        disabled={isSaving}
-        className={`absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-300 ${
-          isSaved
-            ? "bg-[#8b6a55] border-[#8b6a55] text-white"
-            : "bg-[#080808]/80 backdrop-blur-sm border-[#262626] text-[#737373] hover:text-[#8b6a55] hover:border-[#8b6a55]"
+        disabled={toggleMutation.isPending}
+        className={`absolute top-3 right-3 flex h-8 w-8 items-center justify-center rounded-full border transition-all duration-300 ${
+          optimisticIsSaved
+            ? "border-primary bg-primary text-white"
+            : "border-border bg-white text-on-surface-subtle backdrop-blur-sm hover:border-primary hover:text-primary"
         }`}
         aria-label="Add to favorites"
       >
-        <IoHeartOutline className={`text-base ${isSaved ? "fill-white" : ""} ${isSaving ? "animate-pulse" : ""}`} />
+        <IoHeartOutline className={`text-base ${optimisticIsSaved ? "fill-white" : ""} ${toggleMutation.isPending ? "animate-pulse" : ""}`} />
       </button>
     </div>
   );

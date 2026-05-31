@@ -44,7 +44,7 @@ export default function DashboardLayout({
   if (!isAuthenticated) {
     return (
       <div className="design-page flex min-h-screen items-center justify-center px-6">
-        <p className="text-sm text-on-surface-subtle text-center">{t("common.redirecting_login")}</p>
+        <p className="text-sm text-on-surface-subtle text-on-surface-subtleenter">{t("common.redirecting_login")}</p>
       </div>
     );
   }

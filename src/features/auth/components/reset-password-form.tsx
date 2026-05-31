@@ -176,10 +176,10 @@ export function ResetPasswordForm({ token = "", email: initialEmail = "" }: Rese
   // State A: Missing / Invalid URL Token
   if (!token) {
     return (
-      <div className="design-page flex min-h-screen justify-center items-center p-4 sm:p-8 relative overflow-hidden bg-[#080808]">
+      <div className="design-page flex min-h-screen justify-center items-center p-4 sm:p-8 relative overflow-hidden bg-surface-container-low">
         <AmbientBackground />
 
-        <div className="relative flex w-full max-w-md h-auto shadow-[0_0_40px_rgba(139,106,85,0.12)] rounded-xl animate-reveal-up bg-[#080808] border border-[#262626] p-6 sm:p-8 text-center space-y-6">
+        <div className="relative flex w-full max-w-md h-auto rounded-[28px] border border-border bg-white p-6 text-center space-y-6 shadow-[0_18px_48px_rgba(0,0,0,0.08)] animate-reveal-up sm:p-8">
           <div className="w-16 h-16 mx-auto bg-red-500/10 border border-red-500/20 rounded-full flex items-center justify-center text-red-500 animate-pulse">
             <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -187,21 +187,21 @@ export function ResetPasswordForm({ token = "", email: initialEmail = "" }: Rese
           </div>
 
           <div className="space-y-2">
-            <h2 className="text-xl sm:text-2xl font-bold text-white uppercase tracking-wide">
+            <h2 className="text-xl sm:text-2xl font-semibold text-on-surface uppercase tracking-wide">
               {t("invalid_token.title")}
             </h2>
-            <p className="text-xs sm:text-sm text-[#a3a3a3] max-w-sm mx-auto leading-relaxed">
+            <p className="text-xs sm:text-sm text-on-surface-subtle max-w-sm mx-auto leading-relaxed">
               {t("invalid_token.subtitle")}
             </p>
           </div>
 
-          <div className="h-px bg-[#262626] my-6" />
+          <div className="h-px bg-border my-6" />
 
           <div className="flex flex-col gap-3">
             <Link
               id="request-new-link"
               href={ROUTES.FORGOT_PASSWORD}
-              className="w-full inline-flex items-center justify-center bg-[#171717] hover:border-[#8b6a55] hover:text-[#8b6a55] border border-[#262626] text-white font-semibold py-3.5 rounded-full transition-all duration-300 uppercase tracking-wider text-xs"
+              className="w-full inline-flex items-center justify-center bg-primary hover:bg-primary-hover border border-primary text-white font-semibold py-3.5 rounded-full transition-all duration-300 uppercase tracking-wider text-xs"
             >
               <span>{t("invalid_token.action_btn")}</span>
             </Link>
@@ -209,7 +209,7 @@ export function ResetPasswordForm({ token = "", email: initialEmail = "" }: Rese
             <Link
               id="back-to-login-btn"
               href={ROUTES.LOGIN}
-              className="flex items-center justify-center gap-1.5 text-xs text-[#737373] hover:text-white transition-all font-medium py-2"
+              className="flex items-center justify-center gap-1.5 text-xs text-on-surface-subtle hover:text-on-surface transition-all font-medium py-2"
             >
               <IoChevronBack className="w-3.5 h-3.5" />
               <span>{t("back_to_login")}</span>
@@ -221,7 +221,7 @@ export function ResetPasswordForm({ token = "", email: initialEmail = "" }: Rese
   }
 
   return (
-    <div className="design-page flex min-h-screen justify-center items-center p-4 sm:p-8 relative overflow-hidden bg-[#080808]">
+    <div className="design-page flex min-h-screen justify-center items-center p-4 sm:p-8 relative overflow-hidden bg-surface-container-low">
       {/* Premium Ambient Background */}
       <AmbientBackground />
 
@@ -236,7 +236,7 @@ export function ResetPasswordForm({ token = "", email: initialEmail = "" }: Rese
         </div>
 
         {/* Main Content Box */}
-        <div className="relative z-10 flex w-full h-full rounded-xl overflow-hidden bg-[#080808] border border-[#262626]">
+        <div className="relative z-10 flex w-full h-full rounded-[28px] overflow-hidden bg-white border border-border">
           
           {/* Left panel - brand image / copper background gradient */}
           <div
@@ -252,12 +252,12 @@ export function ResetPasswordForm({ token = "", email: initialEmail = "" }: Rese
           </div>
 
           {/* Right panel - Form or Success content */}
-          <div className="flex flex-1 items-center justify-center p-5 sm:p-8 bg-[#080808]">
+          <div className="flex flex-1 items-center justify-center p-5 sm:p-8 bg-white">
             <div className="w-full max-w-md flex flex-col items-center">
               
               {/* Mobile Title Header */}
               <div className="flex items-center justify-center mb-6 lg:hidden">
-                <span className="font-bold text-[#8b6a55] text-xl text-center uppercase tracking-wider">
+                <span className="font-bold text-primary text-xl text-center uppercase tracking-wider">
                   {t("brand_name")}
                 </span>
               </div>
@@ -265,10 +265,10 @@ export function ResetPasswordForm({ token = "", email: initialEmail = "" }: Rese
               {!isSuccess ? (
                 // State B: Form Entry Screen
                 <div className="w-full">
-                  <h2 className="text-2xl sm:text-3xl font-bold uppercase text-white mb-2 text-center lg:text-left">
+                  <h2 className="text-2xl sm:text-3xl font-semibold uppercase text-on-surface mb-2 text-center lg:text-left">
                     {t("title")}
                   </h2>
-                  <p className="text-xs sm:text-sm text-[#737373] mb-8 text-center lg:text-left">
+                  <p className="text-xs sm:text-sm text-on-surface-subtle mb-8 text-center lg:text-left">
                     {t("subtitle")}
                   </p>
 
@@ -322,7 +322,7 @@ export function ResetPasswordForm({ token = "", email: initialEmail = "" }: Rese
                       id="submit-reset-password"
                       type="submit"
                       disabled={!email || !password || !confirmPassword || !!emailError || !!passwordError || !!confirmPasswordError || resetMutation.isPending}
-                      className="w-full flex items-center justify-center gap-2 bg-[#171717] hover:border-[#8b6a55] border border-[#262626] disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3.5 rounded-full transition-all duration-300 uppercase tracking-wider text-xs sm:text-sm cursor-pointer"
+                      className="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary-hover border border-primary disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3.5 rounded-full transition-all duration-300 uppercase tracking-wider text-xs sm:text-sm cursor-pointer"
                     >
                       {resetMutation.isPending ? (
                         <>
@@ -343,7 +343,7 @@ export function ResetPasswordForm({ token = "", email: initialEmail = "" }: Rese
                     <Link
                       id="back-to-login-link"
                       href={ROUTES.LOGIN}
-                      className="flex items-center gap-1.5 text-xs text-[#737373] hover:text-white transition-all cursor-pointer font-medium"
+                      className="flex items-center gap-1.5 text-xs text-on-surface-subtle hover:text-on-surface transition-all cursor-pointer font-medium"
                     >
                       <IoChevronBack className="w-3.5 h-3.5" />
                       <span>{t("back_to_login")}</span>
@@ -353,26 +353,26 @@ export function ResetPasswordForm({ token = "", email: initialEmail = "" }: Rese
               ) : (
                 // State C: Success Card Screen
                 <div className="w-full text-center space-y-6 animate-fade-in">
-                  <div className="w-16 h-16 mx-auto bg-[#8b6a55]/10 border border-[#8b6a55]/20 rounded-full flex items-center justify-center text-[#8b6a55] animate-pulse">
+                  <div className="w-16 h-16 mx-auto bg-primary/10 border border-primary/20 rounded-full flex items-center justify-center text-primary animate-pulse">
                     <CheckCircle2 className="w-10 h-10" />
                   </div>
                   
                   <div className="space-y-2">
-                    <h2 className="text-xl sm:text-2xl font-bold text-white uppercase tracking-wide">
+                    <h2 className="text-xl sm:text-2xl font-semibold text-on-surface uppercase tracking-wide">
                       {t("success.title")}
                     </h2>
-                    <p className="text-xs sm:text-sm text-[#a3a3a3] max-w-sm mx-auto leading-relaxed">
+                    <p className="text-xs sm:text-sm text-on-surface-subtle max-w-sm mx-auto leading-relaxed">
                       {t("success.subtitle")}
                     </p>
                   </div>
 
-                  <div className="h-px bg-[#262626] my-6" />
+                  <div className="h-px bg-border my-6" />
 
                   <div className="pt-2">
                     <Link
                       id="success-login-btn"
                       href={ROUTES.LOGIN}
-                      className="w-full inline-flex items-center justify-center gap-1.5 bg-[#171717] hover:border-[#8b6a55] hover:text-[#8b6a55] border border-[#262626] text-white font-semibold py-3.5 rounded-full transition-all duration-300 uppercase tracking-wider text-xs cursor-pointer"
+                      className="w-full inline-flex items-center justify-center gap-1.5 bg-primary hover:bg-primary-hover border border-primary text-white font-semibold py-3.5 rounded-full transition-all duration-300 uppercase tracking-wider text-xs cursor-pointer"
                     >
                       <span>{t("success.login_btn")}</span>
                     </Link>

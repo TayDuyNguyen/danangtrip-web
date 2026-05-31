@@ -103,15 +103,15 @@ export function CartSummary({ items }: CartSummaryProps) {
   };
 
   return (
-    <div className="glass-surface rounded-xl p-6 border border-white/5 space-y-6 shadow-xl sticky top-24 reveal-up delay-100">
-      <h3 className="text-sm font-black text-white uppercase tracking-widest border-b border-white/5 pb-4">
+    <div className="sticky top-24 space-y-6 rounded-[28px] border border-border bg-white p-6 shadow-[0_18px_54px_rgba(15,23,42,0.08)] reveal-up delay-100">
+      <h3 className="border-b border-border pb-4 text-sm font-black uppercase tracking-widest text-on-surface">
         {t("summary_title")}
       </h3>
 
       {/* Step-by-step booking list — shown only when multiple tours are selected */}
       {activeItems.length > 1 && (
         <div className="space-y-2">
-          <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
+          <p className="text-[10px] font-bold text-on-surface-subtle uppercase tracking-widest">
             {t("order_sequence", { count: activeItems.length })}
           </p>
           <div className="space-y-1.5">
@@ -125,7 +125,7 @@ export function CartSummary({ items }: CartSummaryProps) {
                   className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-medium transition-colors ${
                     isNext
                       ? "bg-primary/15 border border-primary/30 text-primary"
-                      : "bg-white/5 border border-white/5 text-on-surface-variant"
+                      : "bg-[#f7f7f7] border border-border text-on-surface-subtle"
                   }`}
                 >
                   {/* Step number bubble */}
@@ -133,7 +133,7 @@ export function CartSummary({ items }: CartSummaryProps) {
                     className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black shrink-0 ${
                       isNext
                         ? "bg-primary text-white"
-                        : "bg-white/10 text-on-surface-subtle"
+                        : "bg-white text-on-surface-subtle border border-border"
                     }`}
                   >
                     {index + 1}
@@ -157,8 +157,8 @@ export function CartSummary({ items }: CartSummaryProps) {
       <div className="space-y-4">
         {/* Subtotal */}
         <div className="flex justify-between items-center text-sm">
-          <span className="text-on-surface-variant font-medium">{t("subtotal")}</span>
-          <span className="text-white font-bold tabular-nums">{subtotal.toLocaleString()}đ</span>
+          <span className="text-on-surface-subtle font-medium">{t("subtotal")}</span>
+          <span className="text-on-surface font-bold tabular-nums">{subtotal.toLocaleString()}đ</span>
         </div>
 
         {/* Discount */}
@@ -192,8 +192,8 @@ export function CartSummary({ items }: CartSummaryProps) {
         </form>
 
         {/* Final Total */}
-        <div className="border-t border-white/5 pt-4 flex justify-between items-end">
-          <span className="text-sm font-black text-white uppercase tracking-widest">
+        <div className="border-t border-border pt-4 flex justify-between items-end">
+          <span className="text-sm font-black text-on-surface uppercase tracking-widest">
             {t("final_total")}
           </span>
           <span className="text-2xl font-black text-primary tracking-tight tabular-nums">

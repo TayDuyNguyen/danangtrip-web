@@ -5,7 +5,8 @@ import { Clock } from "@/components/icons/solar";
 
 interface ItineraryItem {
   time: string;
-  activity: string;
+  activity?: string;
+  task?: string;
 }
 
 interface ItineraryTimelineProps {
@@ -26,7 +27,7 @@ export default function ItineraryTimeline({ itinerary }: ItineraryTimelineProps)
         </h2>
       </div>
 
-      <div className="relative pl-8 space-y-12 before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-px before:bg-linear-to-b before:from-primary/50 before:via-border before:to-transparent">
+      <div className="relative pl-8 space-y-6 before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-px before:bg-linear-to-b before:from-primary/50 before:via-border before:to-transparent">
         {itinerary.map((item, idx) => (
           <div key={`${item.time}-${idx}`} className="relative group">
             {/* Timeline Dot */}
@@ -39,9 +40,9 @@ export default function ItineraryTimeline({ itinerary }: ItineraryTimelineProps)
                 <Clock className="w-3.5 h-3.5" />
                 {item.time}
               </div>
-              <div className="glass-surface p-5 rounded-xl border-border/50 group-hover:border-primary/30 transition-colors">
-                <p className="text-on-surface-subtle leading-relaxed text-sm md:text-base">
-                  {item.activity}
+              <div className="rounded-[20px] border border-border bg-[#f7f7f7] p-5 transition-colors group-hover:border-primary/30 group-hover:bg-white">
+                <p className="text-sm leading-relaxed text-on-surface md:text-base">
+                  {item.activity || item.task}
                 </p>
               </div>
             </div>

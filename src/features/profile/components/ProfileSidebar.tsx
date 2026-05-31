@@ -102,10 +102,9 @@ export function ProfileSidebar() {
       className="w-full lg:w-64 shrink-0"
     >
       {/* User Avatar & Info */}
-      <div className="bg-[#0a0a0a]/60 border border-[#262626] rounded-xl p-6 mb-4 backdrop-blur-md flex flex-col items-center gap-3 text-center">
+      <div className="mb-4 flex flex-col items-center gap-3 rounded-[24px] border border-border bg-white p-6 text-center shadow-[0_12px_34px_rgba(0,0,0,0.06)]">
         <div
-          className="w-16 h-16 bg-[#171717] text-white rounded-xl border border-[#262626] flex items-center justify-center text-2xl font-bold
-            hover:border-[#8b6a55] transition-all duration-300 overflow-hidden"
+          className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl border border-border bg-[#fff1f3] text-[20px] font-semibold text-primary transition-all duration-300 hover:border-primary"
           aria-hidden="true"
         >
           {avatarUrl && failedAvatarUrl !== avatarUrl ? (
@@ -121,15 +120,15 @@ export function ProfileSidebar() {
           )}
         </div>
         <div className="min-w-0">
-          <p className="text-white font-semibold text-sm truncate">{displayName}</p>
-          <p className="text-[#737373] text-xs truncate mt-0.5">{user?.email}</p>
+          <p className="truncate text-sm font-semibold text-on-surface">{displayName}</p>
+          <p className="mt-0.5 truncate text-xs text-on-surface-subtle">{user?.email}</p>
         </div>
       </div>
 
       {/* Navigation Items */}
       <nav
         aria-label="Profile settings navigation"
-        className="bg-[#0a0a0a]/60 border border-[#262626] rounded-xl overflow-hidden backdrop-blur-md"
+        className="overflow-hidden rounded-[24px] border border-border bg-white shadow-[0_12px_34px_rgba(0,0,0,0.06)]"
       >
         {SIDEBAR_ITEMS.map((item, index) => {
           const Icon = item.icon;
@@ -145,12 +144,12 @@ export function ProfileSidebar() {
                 "border-l-2",
                 active
                   ? isDestructive
-                    ? "border-l-red-500 bg-red-500/10 text-red-500"
-                    : "border-l-[#8b6a55] bg-[#8b6a55]/8 text-white"
+                    ? "border-l-red-500 bg-red-50 text-red-500"
+                    : "border-l-primary bg-[#fff4f6] text-on-surface"
                   : isDestructive
-                  ? "border-l-transparent text-[#737373] hover:text-red-500 hover:bg-red-500/5"
-                  : "border-l-transparent text-[#737373] hover:text-white hover:bg-white/5",
-                index !== 0 && "border-t border-t-[#1a1a1a]"
+                  ? "border-l-transparent text-on-surface-subtle hover:text-red-500 hover:bg-red-50"
+                  : "border-l-transparent text-on-surface-subtle hover:text-on-surface hover:bg-[#fafafa]",
+                index !== 0 && "border-t border-t-border"
               )}
             >
               <Icon
@@ -159,10 +158,10 @@ export function ProfileSidebar() {
                   active
                     ? isDestructive
                       ? "text-red-500"
-                      : "text-[#8b6a55]"
+                      : "text-primary"
                     : isDestructive
                     ? "text-[#525252] group-hover:text-red-500"
-                    : "text-[#525252] group-hover:text-[#8b6a55]"
+                    : "text-[#525252] group-hover:text-primary"
                 )}
               />
               <span>{t(item.labelKey)}</span>

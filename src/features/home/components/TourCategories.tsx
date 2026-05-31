@@ -1,6 +1,6 @@
 "use client";
 
-import { memo } from "react";
+import { memo, useState, useEffect, useRef } from "react";
 import { Link } from "@/i18n/navigation";
 import { ROUTES } from "@/config";
 import Image from "next/image";
@@ -22,8 +22,10 @@ import {
   IoCarSportOutline,
   IoBicycleOutline,
   IoBoatOutline,
+  IoChevronBackOutline,
+  IoChevronForwardOutline,
 } from "@/components/icons/solar";
-import { useTours } from "../hooks/use-tours";
+import { useHomeTourCategories } from "../hooks/use-tours";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 import { cn } from "@/lib/utils";
 
@@ -45,58 +47,58 @@ const IconMapper = ({ icon, className }: { icon?: string | null; className?: str
     case "tree":
     case "trees":
     case "nature":
-      return <IoLeafOutline className={`w-full h-full text-[#8b6a55] ${className}`} />;
+      return <IoLeafOutline className={`w-full h-full text-primary ${className}`} />;
     case "beach_access":
     case "beach":
     case "umbrella":
-      return <IoUmbrellaOutline className={`w-full h-full text-[#8b6a55] ${className}`} />;
+      return <IoUmbrellaOutline className={`w-full h-full text-primary ${className}`} />;
     case "fort":
     case "landmark":
     case "building":
-      return <IoBusinessOutline className={`w-full h-full text-[#8b6a55] ${className}`} />;
+      return <IoBusinessOutline className={`w-full h-full text-primary ${className}`} />;
     case "trending_up":
     case "hot":
     case "flash":
-      return <IoFlashOutline className={`w-full h-full text-[#8b6a55] ${className}`} />;
+      return <IoFlashOutline className={`w-full h-full text-primary ${className}`} />;
     case "adventure":
     case "compass":
-      return <IoCompassOutline className={`w-full h-full text-[#8b6a55] ${className}`} />;
+      return <IoCompassOutline className={`w-full h-full text-primary ${className}`} />;
     case "plane":
     case "flight":
-      return <IoPlaneOutline className={`w-full h-full text-[#8b6a55] ${className}`} />;
+      return <IoPlaneOutline className={`w-full h-full text-primary ${className}`} />;
     case "food":
     case "restaurant":
     case "utensils":
-      return <IoRestaurantOutline className={`w-full h-full text-[#8b6a55] ${className}`} />;
+      return <IoRestaurantOutline className={`w-full h-full text-primary ${className}`} />;
     case "hotel":
     case "resort":
     case "bed":
-      return <IoBedOutline className={`w-full h-full text-[#8b6a55] ${className}`} />;
+      return <IoBedOutline className={`w-full h-full text-primary ${className}`} />;
     case "map":
     case "route":
-      return <IoMapOutline className={`w-full h-full text-[#8b6a55] ${className}`} />;
+      return <IoMapOutline className={`w-full h-full text-primary ${className}`} />;
     case "heart":
     case "honeymoon":
-      return <IoHeartOutline className={`w-full h-full text-[#8b6a55] ${className}`} />;
+      return <IoHeartOutline className={`w-full h-full text-primary ${className}`} />;
     case "family":
     case "team":
     case "users":
-      return <IoPeopleOutline className={`w-full h-full text-[#8b6a55] ${className}`} />;
+      return <IoPeopleOutline className={`w-full h-full text-primary ${className}`} />;
     case "camera":
     case "photo":
-      return <IoCameraOutline className={`w-full h-full text-[#8b6a55] ${className}`} />;
+      return <IoCameraOutline className={`w-full h-full text-primary ${className}`} />;
     case "car":
     case "jeep":
-      return <IoCarSportOutline className={`w-full h-full text-[#8b6a55] ${className}`} />;
+      return <IoCarSportOutline className={`w-full h-full text-primary ${className}`} />;
     case "bike":
     case "bicycle":
-      return <IoBicycleOutline className={`w-full h-full text-[#8b6a55] ${className}`} />;
+      return <IoBicycleOutline className={`w-full h-full text-primary ${className}`} />;
     case "boat":
     case "ship":
     case "cruise":
-      return <IoBoatOutline className={`w-full h-full text-[#8b6a55] ${className}`} />;
+      return <IoBoatOutline className={`w-full h-full text-primary ${className}`} />;
     default:
-      return <IoWalkOutline className={`w-full h-full text-[#737373] ${className}`} />;
+      return <IoWalkOutline className={`w-full h-full text-on-surface-subtle ${className}`} />;
   }
 };
 
@@ -120,101 +122,122 @@ const resolveTourCategoryIcon = (icon: string | null, slug: string, name: string
   return "map";
 };
 
-const resolveTourCategoryBackground = (iconBackground: string | null | undefined, icon: string) => {
-  if (iconBackground) return iconBackground;
-
-  switch (icon) {
-    case "mountain":
-      return "#1a1f14";
-    case "beach":
-    case "boat":
-      return "#11202a";
-    case "restaurant":
-      return "#2b1f14";
-    case "hotel":
-      return "#171717";
-    case "heart":
-      return "#2a161f";
-    case "family":
-      return "#17202a";
-    case "camera":
-      return "#20172a";
-    default:
-      return "#171717";
-  }
-};
-
 const TourCategories = () => {
-  const { tourCategories: categories } = useTours();
   const t = useTranslations();
   const { elementRef, isVisible } = useScrollReveal();
+  const { categories } = useHomeTourCategories();
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
 
-  if (categories.length === 0) return null;
+  const checkScroll = () => {
+    if (scrollRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+      setCanScrollLeft(scrollLeft > 10);
+      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
+    }
+  };
+
+  useEffect(() => {
+    checkScroll();
+    window.addEventListener("resize", checkScroll);
+    return () => window.removeEventListener("resize", checkScroll);
+  }, [categories]);
+
+  const scrollLeft = () => {
+    if (scrollRef.current) scrollRef.current.scrollBy({ left: -300, behavior: "smooth" });
+  };
+
+  const scrollRight = () => {
+    if (scrollRef.current) scrollRef.current.scrollBy({ left: 300, behavior: "smooth" });
+  };
 
   return (
-    <section className="py-[80px] bg-[#080808]/12 backdrop-blur-[1px] font-sans">
-      <div className="design-container relative" ref={elementRef}>
-        <Link
-          href={ROUTES.TOURS}
-          className={cn(
-            "absolute right-4 top-0 text-[14px] text-[#8b6a55] font-semibold hover:underline transition-all",
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4",
-          )}
-        >
-          {t("common.tour.see_all")}
-        </Link>
-
-        <div
-          className={`text-center mb-[48px] transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
-        >
-          <div className="flex items-center justify-center gap-4 mb-6">
-            <span className="w-12 h-[2px] bg-[#8b6a55]/30" />
-            <span className="text-[#8b6a55] font-black text-[12px] tracking-[0.4em] uppercase">
-              {t("home.featured_tours.badge")}
-            </span>
-            <span className="w-12 h-[2px] bg-[#8b6a55]/30" />
+    <section className="py-4 bg-surface-container-low/12 backdrop-blur-[1px] font-sans">
+      <div className="design-container" ref={elementRef}>
+        
+        {/* Header */}
+        <div className={`flex justify-between items-end mb-4 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
+          <div className={`transition-all duration-700 delay-100 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
+            <div className="flex items-center gap-3 mb-2">
+              <span className="w-8 h-[2px] bg-primary/40" />
+              <span className="text-primary font-black text-[12px] tracking-[0.4em] uppercase">
+                {t("home.featured_tours.badge")}
+              </span>
+            </div>
+            <h2 className="text-[28px] md:text-[34px] font-black text-on-surface leading-tight">
+              {t("home.tour_categories.title")}
+            </h2>
           </div>
-          <h2 className="text-[36px] md:text-[48px] font-black leading-[1.1] text-white mb-6">
-            {t("home.tour_categories.title")}
-          </h2>
-          <p className="text-[#a3a3a3] text-[18px] max-w-2xl mx-auto font-medium leading-relaxed">
-            {t("common.tour.list_subtitle")}
-          </p>
+          <Link
+            href={ROUTES.TOURS}
+            className={`mb-1 flex items-center rounded-full border border-border bg-white px-5 py-2.5 text-[13px] font-semibold text-on-surface shadow-sm transition-all duration-300 hover:border-primary/30 hover:bg-[#f7f7f7] hover:text-primary ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
+          >
+            {t("home.hot_tours.explore_more")} <span className="ml-2 transition-transform group-hover:translate-x-1">→</span>
+          </Link>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-[16px]">
-          {categories.slice(0, 6).map((category, index) => {
-            const resolvedIcon = resolveTourCategoryIcon(category.icon, category.slug, category.name);
-            const iconBackground = resolveTourCategoryBackground(category.icon_background, resolvedIcon);
+        {/* Slider Wrapper */}
+        <div className={`relative group/nav transition-all duration-700 delay-500 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
+          {/* Navigation Buttons */}
+          <button
+            onClick={scrollLeft}
+            className={`absolute left-0 top-[40%] -translate-y-1/2 -translate-x-1/2 z-30 w-10 h-10 rounded-full bg-surface border border-border text-on-surface hover:bg-primary hover:border-primary hover:text-white flex items-center justify-center shadow-md transition-all hidden lg:flex active:scale-90 hover:scale-110 opacity-0 ${
+              canScrollLeft
+                ? "group-hover/nav:opacity-100 cursor-pointer"
+                : "group-hover/nav:opacity-10 pointer-events-none cursor-default"
+            }`}
+            aria-label={t("common.accessibility.previous")}
+          >
+            <IoChevronBackOutline size={18} />
+          </button>
 
-            return (
-              <Link
-                key={category.id}
-                href={ROUTES.CATEGORY_TOURS(category.slug)}
-                className={cn(
-                  "group flex flex-col items-center p-[20px] rounded-xl bg-[#080808] hover:bg-[#111111]",
-                  "hover:shadow-[0_12px_24px_rgba(0,0,0,0.35)] transition-all duration-500",
-                  "border border-[#262626] hover:border-[#8b6a55]/30",
-                  isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6",
-                )}
-                style={{ transitionDelay: isVisible ? `${index * 70}ms` : "0ms" }}
-              >
-                <div
-                  className="w-[64px] h-[64px] flex items-center justify-center mb-[12px] p-[16px] rounded-lg border border-[#262626] transition-all relative group-hover:border-[#8b6a55]/40"
-                  style={{ backgroundColor: iconBackground }}
-                  title={`API icon: ${category.icon ?? "fallback"}${category.icon_background ? ` | API color: ${category.icon_background}` : ""}`}
+          <button
+            onClick={scrollRight}
+            className={`absolute right-0 top-[40%] -translate-y-1/2 translate-x-1/2 z-30 w-10 h-10 rounded-full bg-surface border border-border text-on-surface hover:bg-primary hover:border-primary hover:text-white flex items-center justify-center shadow-md transition-all hidden lg:flex active:scale-90 hover:scale-110 opacity-0 ${
+              canScrollRight
+                ? "group-hover/nav:opacity-100 cursor-pointer"
+                : "group-hover/nav:opacity-10 pointer-events-none cursor-default"
+            }`}
+            aria-label={t("common.accessibility.next")}
+          >
+            <IoChevronForwardOutline size={18} />
+          </button>
+
+          {/* Scrollable Container */}
+          <div
+            ref={scrollRef}
+            onScroll={checkScroll}
+            className="flex items-center gap-[24px] overflow-x-auto no-scrollbar scroll-smooth px-2 py-3 snap-x snap-mandatory"
+          >
+            {categories.map((category, index) => {
+              const resolvedIcon = resolveTourCategoryIcon(category.icon, category.slug, category.name);
+
+              return (
+                <Link
+                  key={category.id}
+                  href={ROUTES.CATEGORY_TOURS(category.slug)}
+                  className={cn(
+                    "group flex flex-col items-center justify-center shrink-0 snap-start min-w-[90px] md:min-w-[110px] pb-2 border-b-2 border-transparent hover:border-primary/60 transition-all duration-200 cursor-pointer",
+                    isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6",
+                  )}
+                  style={{ transitionDelay: isVisible ? `${index * 40}ms` : "0ms" }}
                 >
-                  <IconMapper icon={resolvedIcon} />
-                </div>
-                <span className="text-[14px] font-bold text-white group-hover:text-[#8b6a55] transition-colors text-center">
-                  {category.name}
-                </span>
-                <span className="text-[11px] text-[#737373] mt-1">
-                  {t("home.tour_categories.cta")}
-                </span>
-              </Link>
-            );
-          })}
+                  <div
+                    className="w-9 h-9 flex items-center justify-center mb-1 text-on-surface-subtle group-hover:text-primary transition-colors duration-300"
+                    title={`API icon: ${category.icon ?? "fallback"}`}
+                  >
+                    <div className="w-6 h-6 transition-transform duration-500 group-hover:scale-110">
+                      <IconMapper icon={resolvedIcon} />
+                    </div>
+                  </div>
+                  <span className="text-[13px] font-semibold text-on-surface-subtle group-hover:text-primary transition-colors text-center line-clamp-1">
+                    {category.name}
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>

@@ -1,8 +1,10 @@
 "use client";
 
+import { useEffect } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { cn } from "@/utils/string";
+import { useAppConfig } from "@/hooks/use-app-config";
 
 interface PaymentMethodSelectorProps {
   value: string;
@@ -11,21 +13,58 @@ interface PaymentMethodSelectorProps {
 
 export function PaymentMethodSelector({ value, onChange }: PaymentMethodSelectorProps) {
   const t = useTranslations("tour");
+  const { data: config } = useAppConfig();
+
+  const isPayosEnabled = config?.payment?.payos !== false;
+  const isCodEnabled = config?.payment?.cod !== false;
+  const isVnpayEnabled = !!config?.payment?.vnpay;
+  const isMomoEnabled = !!config?.payment?.momo;
+  const isZalopayEnabled = !!config?.payment?.zalopay;
 
   const methods = [
     {
       id: "payos",
-      name: t("payment.methods.payos"),
+      name: t("payment.methods.payos", { defaultValue: "Cổng thanh toán payOS" }),
       icon: "/images/payment/payOS.png",
-      badge: t("payment.badges.automatic"),
+      badge: t("payment.badges.automatic", { defaultValue: "Tự động" }),
+      enabled: isPayosEnabled,
+    },
+    {
+      id: "vnpay",
+      name: t("payment.methods.vnpay", { defaultValue: "Cổng thanh toán VNPAY" }),
+      icon: "/images/payment/vnpay.png",
+      badge: t("payment.badges.automatic", { defaultValue: "Tự động" }),
+      enabled: isVnpayEnabled,
+    },
+    {
+      id: "momo",
+      name: t("payment.methods.momo", { defaultValue: "Ví điện tử MoMo" }),
+      icon: "/images/payment/momo.png",
+      badge: t("payment.badges.automatic", { defaultValue: "Tự động" }),
+      enabled: isMomoEnabled,
+    },
+    {
+      id: "zalopay",
+      name: t("payment.methods.zalopay", { defaultValue: "Ví điện tử ZaloPay" }),
+      icon: "/images/payment/zalopay.png",
+      badge: t("payment.badges.automatic", { defaultValue: "Tự động" }),
+      enabled: isZalopayEnabled,
     },
     {
       id: "bank_transfer",
-      name: t("payment.methods.bank_transfer_manual"),
+      name: t("payment.methods.bank_transfer_manual", { defaultValue: "Chuyển khoản thủ công / COD" }),
       icon: null,
-      badge: t("payment.badges.manual"),
+      badge: t("payment.badges.manual", { defaultValue: "Thủ công" }),
+      enabled: isCodEnabled,
     }
-  ];
+  ].filter((m) => m.enabled);
+
+  // Auto-select first active option if current selection is invalid or filtered out
+  useEffect(() => {
+    if (methods.length > 0 && !methods.some((m) => m.id === value)) {
+      onChange(methods[0].id);
+    }
+  }, [methods, value, onChange]);
 
   return (
     <div className="space-y-3">
@@ -36,7 +75,7 @@ export function PaymentMethodSelector({ value, onChange }: PaymentMethodSelector
             "flex items-center justify-between p-4 rounded-xl cursor-pointer border-2 transition-all duration-300",
             value === method.id
               ? "border-primary bg-primary/5 shadow-[0_0_20px_rgba(139,106,85,0.1)]"
-              : "border-border bg-surface-container-low hover:border-border-strong"
+              : "border-border bg-[#f7f7f7] hover:border-primary/30 hover:bg-white"
           )}
         >
           <div className="flex items-center gap-4">

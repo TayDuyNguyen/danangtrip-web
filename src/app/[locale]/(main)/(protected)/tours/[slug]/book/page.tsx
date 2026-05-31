@@ -57,12 +57,12 @@ export default async function TourBookingPage({ params }: Props) {
   }
 
   return (
-    <main className="min-h-screen pb-20 bg-[#080808]">
+    <main className="min-h-screen bg-[#fafafa] pb-20">
       {/* Minimal Header */}
-      <header className="border-b border-border/50 bg-background/80 backdrop-blur-xl sticky top-0 z-50">
+      <header className="sticky top-0 z-50 border-b border-border/50 bg-white/90 backdrop-blur-xl">
         <div className="design-container h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
-             <div className="bg-primary p-2 rounded-lg">
+             <div className="rounded-2xl bg-primary p-2 shadow-[0_10px_26px_rgba(255,56,92,0.22)]">
                 <Image
                   src="/icons/explore-white.svg"
                   alt="Explore"
@@ -77,7 +77,7 @@ export default async function TourBookingPage({ params }: Props) {
           </div>
           <Link 
             href={`/tours/${slug}`}
-            className="text-[11px] font-black text-primary hover:text-white transition-all flex items-center gap-1.5 uppercase tracking-widest"
+            className="flex items-center gap-1.5 rounded-full border border-border bg-white px-4 py-2 text-[11px] font-black uppercase tracking-widest text-primary transition-all hover:border-primary/30 hover:bg-primary/10 hover:text-primary"
           >
             <ChevronLeft className="w-4 h-4" />
             {t("back")}
@@ -86,7 +86,7 @@ export default async function TourBookingPage({ params }: Props) {
       </header>
 
       {/* Progress Desktop */}
-      <div className="hidden lg:block border-b border-border/30 bg-[#0a0a0a]">
+      <div className="hidden border-b border-border/30 bg-white lg:block">
         <BookingProgressSteps currentStep={1} />
       </div>
 

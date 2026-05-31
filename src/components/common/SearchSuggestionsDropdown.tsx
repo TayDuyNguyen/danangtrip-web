@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { IoStar, IoSearchOutline } from "@/components/icons/solar";
+import { IoSearchOutline, IoStar } from "@/components/icons/solar";
 import { cn } from "@/utils/string";
-import { SearchSuggestionsData, SearchSuggestionItem } from "@/types/search-suggestion.types";
+import type { SearchSuggestionsData, SearchSuggestionItem } from "@/types/search-suggestion.types";
 
 interface SearchSuggestionsDropdownProps {
   isOpen: boolean;
@@ -38,7 +38,7 @@ export const SearchSuggestionsDropdown = ({
 
     return (
       <div className="py-2">
-        <h3 className="px-4 py-2 text-[12px] font-black text-white/50 uppercase tracking-[0.2em]">
+        <h3 className="px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-on-surface-subtle">
           {t(titleKey)}
         </h3>
         {sectionItems.map((item, idx) => {
@@ -50,41 +50,38 @@ export const SearchSuggestionsDropdown = ({
               key={`${item.type}-${item.id}`}
               onClick={() => onSelect(item)}
               className={cn(
-                "group flex items-center gap-4 px-4 py-3 cursor-pointer transition-all duration-300 mx-2 rounded-2xl reveal-up",
-                isSelected 
-                  ? "bg-[#171717] border border-[#8b6a55]/40 backdrop-blur-md shadow-lg scale-[1.02] z-10" 
-                  : "hover:bg-[#171717]/80 hover:translate-x-1"
+                "mx-2 flex cursor-pointer items-center gap-4 rounded-2xl px-4 py-3 transition-all duration-200",
+                isSelected
+                  ? "scale-[1.01] border border-primary/20 bg-[#fff4f6] shadow-sm"
+                  : "hover:bg-[#f7f7f7]"
               )}
-              style={{ animationDelay: `${idx * 50}ms` }}
             >
               {item.type === "keyword" ? (
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-[#262626] bg-[#171717] text-[#8b6a55]">
-                  <IoSearchOutline className="text-2xl" />
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-border bg-[#f7f7f7] text-primary">
+                  <IoSearchOutline className="text-[18px]" />
                 </div>
               ) : (
-                <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-[#171717] shrink-0 border border-[#262626]">
+                <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-2xl border border-border bg-[#f7f7f7]">
                   <Image
                     src={item.thumbnail || "/images/placeholder.png"}
                     alt={item.title}
                     fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                 </div>
               )}
-              
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between gap-2 mb-0.5">
-                  <h4 className="text-white font-bold truncate text-[15px]">
-                    {item.title}
-                  </h4>
+
+              <div className="min-w-0 flex-1">
+                <div className="mb-0.5 flex items-center justify-between gap-2">
+                  <h4 className="truncate text-[15px] font-semibold text-on-surface">{item.title}</h4>
                   {item.rating > 0 && (
-                    <div className="flex items-center gap-1 text-amber-400 text-xs shrink-0 bg-[#171717] px-2 py-0.5 rounded-full">
+                    <div className="flex shrink-0 items-center gap-1 rounded-full bg-[#f7f7f7] px-2 py-0.5 text-xs text-amber-500">
                       <IoStar />
-                      <span className="font-bold text-white">{item.rating}</span>
+                      <span className="font-semibold text-on-surface">{item.rating}</span>
                     </div>
                   )}
                 </div>
-                <p className="text-white/60 text-sm truncate font-medium">
+                <p className="truncate text-sm text-on-surface-subtle">
                   {item.type === "keyword"
                     ? item.subtitle
                     : (
@@ -108,15 +105,15 @@ export const SearchSuggestionsDropdown = ({
   const renderContent = () => {
     if (isLoading) {
       return (
-        <div className="p-4 space-y-4 animate-pulse">
+        <div className="space-y-4 p-4 animate-pulse">
           <div className="space-y-3">
-            <div className="h-4 bg-white/10 rounded-full w-1/4" />
+            <div className="h-4 w-1/4 rounded-full bg-[#f1f1f1]" />
             {[1, 2].map((i) => (
-              <div key={i} className="flex gap-4 p-2 items-center">
-                <div className="w-14 h-14 bg-white/10 rounded-xl" />
+              <div key={i} className="flex items-center gap-4 p-2">
+                <div className="h-14 w-14 rounded-xl bg-[#f1f1f1]" />
                 <div className="flex-1 space-y-2">
-                  <div className="h-5 bg-white/10 rounded-full w-3/4" />
-                  <div className="h-4 bg-white/10 rounded-full w-1/2" />
+                  <div className="h-5 w-3/4 rounded-full bg-[#f1f1f1]" />
+                  <div className="h-4 w-1/2 rounded-full bg-[#f1f1f1]" />
                 </div>
               </div>
             ))}
@@ -127,28 +124,28 @@ export const SearchSuggestionsDropdown = ({
 
     if (isError) {
       return (
-        <div className="p-8 text-center text-white/70 flex flex-col items-center gap-3">
-          <div className="w-16 h-16 rounded-full bg-[#171717] flex items-center justify-center border border-[#5c3822]/30 text-[#8b6a55]">
-            <IoSearchOutline className="text-3xl" />
+        <div className="flex flex-col items-center gap-3 p-8 text-center text-on-surface-subtle">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full border border-border bg-[#f7f7f7] text-primary">
+            <IoSearchOutline className="text-[22px]" />
           </div>
-          <p className="font-bold text-lg text-white">{t("suggestions.error")}</p>
+          <p className="text-lg font-semibold text-on-surface">{t("suggestions.error")}</p>
         </div>
       );
     }
 
     if (totalItems === 0) {
       return (
-        <div className="p-10 text-center text-white/70 flex flex-col items-center gap-3">
-          <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center border border-white/10">
-            <IoSearchOutline className="text-3xl opacity-50" />
+        <div className="flex flex-col items-center gap-3 p-10 text-center text-on-surface-subtle">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full border border-border bg-[#f7f7f7]">
+            <IoSearchOutline className="text-[22px] opacity-50" />
           </div>
-          <p className="font-bold text-lg">{t("suggestions.no_results")}</p>
+          <p className="text-lg font-semibold text-on-surface">{t("suggestions.no_results")}</p>
         </div>
       );
     }
 
     return (
-      <div className="max-h-[500px] overflow-y-auto custom-scrollbar">
+      <div className="max-h-[440px] overflow-y-auto custom-scrollbar">
         {renderSection("suggestions.keywords_title", suggestions?.keywords || [], 0)}
         {renderSection("suggestions.locations_title", suggestions?.locations || [], suggestions?.keywords?.length || 0)}
         {renderSection(
@@ -161,33 +158,30 @@ export const SearchSuggestionsDropdown = ({
   };
 
   const isViewAllSelected = selectedIndex === totalItems;
-  const viewAllSelectedStyles = "bg-azure border-azure text-white shadow-lg shadow-azure/20";
-  const viewAllDefaultStyles = "border-[#262626] text-[#ffffffb3] hover:bg-[#171717] hover:border-[#8b6a55]/40";
+  const viewAllSelectedStyles = "border-primary bg-[#ff385c] text-white shadow-[0_10px_24px_rgba(255,56,92,0.22)]";
+  const viewAllDefaultStyles = "border-border text-on-surface hover:border-primary/30 hover:bg-[#fff4f6]";
 
   return (
-    <div 
-      className={cn(
-        "absolute left-0 right-0 top-[110%] z-50 rounded-xl overflow-hidden backdrop-blur-2xl bg-[#0f0f0f]/95 border border-[#262626] shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all duration-300 origin-top scale-100 opacity-100",
-      )}
-    >
+    <div className="absolute left-0 right-0 top-[calc(100%+14px)] z-50 overflow-hidden rounded-[28px] border border-border bg-white shadow-[0_24px_60px_rgba(0,0,0,0.16)]">
       <div className="py-2">
         {renderContent()}
-        
-        {/* View All Button */}
+
         <div
           onClick={onViewAll}
           className={cn(
-            "mt-2 mx-4 mb-4 p-4 rounded-2xl flex items-center gap-3 cursor-pointer transition-all duration-300 border border-dashed",
+            "mx-4 mb-4 mt-2 flex cursor-pointer items-center gap-3 rounded-2xl border border-dashed p-4 transition-all duration-200",
             isViewAllSelected ? viewAllSelectedStyles : viewAllDefaultStyles
           )}
         >
-          <div className={cn(
-            "w-10 h-10 rounded-full flex items-center justify-center transition-colors",
-            isViewAllSelected ? "bg-white/20" : "bg-white/10"
-          )}>
-            <IoSearchOutline className="text-xl" />
+          <div
+            className={cn(
+              "flex h-10 w-10 items-center justify-center rounded-full transition-colors",
+              isViewAllSelected ? "bg-white/20" : "bg-[#f7f7f7]"
+            )}
+          >
+            <IoSearchOutline className="text-[18px]" />
           </div>
-          <span className="font-bold">{t("suggestions.view_all", { query })}</span>
+          <span className="font-semibold">{t("suggestions.view_all", { query })}</span>
         </div>
       </div>
     </div>

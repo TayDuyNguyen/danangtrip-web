@@ -1,7 +1,6 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
 import type { Location } from "@/types";
 import { locationService } from "@/services/location.service";
 import { useAuthStore } from "@/store/auth.store";
@@ -20,7 +19,6 @@ type Props = {
 };
 
 export default function LocationDetailClient({ location, locale }: Props) {
-  const t = useTranslations();
   const { isAuthenticated } = useAuthStore();
 
   useLocationRecordView(location.id);
@@ -51,7 +49,6 @@ export default function LocationDetailClient({ location, locale }: Props) {
 
   const handleFavoriteToggle = () => {
     if (!isAuthenticated) {
-      // Guest: handled inside the hook (localStorage + toast)
       toggleFavorite();
       return;
     }
@@ -61,7 +58,6 @@ export default function LocationDetailClient({ location, locale }: Props) {
   const apiImages = imagesQuery.data?.images?.filter(Boolean) ?? [];
   const galleryImages = apiImages.length > 0 ? apiImages : (location.images?.filter(Boolean) ?? []);
   const galleryLoading = imagesQuery.isLoading && galleryImages.length === 0;
-
   const avgRating = Math.min(5, Math.max(0, parseFloat(location.avg_rating) || 0));
 
   return (
@@ -74,26 +70,20 @@ export default function LocationDetailClient({ location, locale }: Props) {
       />
 
       <div className="design-container">
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
-          {/* Left column: Gallery + Info + Reviews */}
-          <div className="space-y-10 lg:col-span-8">
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
+          <div className="space-y-8 lg:col-span-8">
             {(galleryImages.length > 0 || galleryLoading) && (
               <section className="reveal-up">
-                <LocationGallery
-                  images={galleryImages}
-                  locationName={location.name}
-                  isLoading={galleryLoading}
-                />
+                <LocationGallery images={galleryImages} locationName={location.name} isLoading={galleryLoading} />
               </section>
             )}
 
-            <div className="glass-retro rounded-3xl p-4 md:p-6 space-y-12">
+            <div className="space-y-8 rounded-[32px] border border-border bg-white p-4 shadow-[0_20px_56px_rgba(15,23,42,0.08)] md:p-6">
               <section className="reveal-up reveal-delay-100">
                 <LocationInfo location={location} />
               </section>
 
-              {/* Reviews section */}
-              <section className="reveal-up reveal-delay-200 pt-10 border-t border-white/10">
+              <section className="reveal-up reveal-delay-200 border-t border-border pt-8">
                 <LocationReviews
                   locationId={location.id}
                   initialAverageRating={avgRating}
@@ -103,7 +93,6 @@ export default function LocationDetailClient({ location, locale }: Props) {
             </div>
           </div>
 
-          {/* Right column: Sticky Sidebar */}
           <div className="lg:col-span-4">
             <LocationSidebar
               location={location}

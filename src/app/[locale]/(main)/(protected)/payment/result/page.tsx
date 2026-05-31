@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import { getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
-import { Loading } from "@/components/ui";
 import { PaymentClient } from "@/features/payment/components/PaymentClient";
 
 interface Props {
@@ -20,8 +19,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default function PaymentResultPage() {
   return (
-    <main className="min-h-screen bg-[#080808]">
-      <Suspense fallback={<Loading />}>
+    <main className="min-h-screen bg-surface-container-low">
+      <Suspense fallback={null}>
         <PaymentClient />
       </Suspense>
     </main>

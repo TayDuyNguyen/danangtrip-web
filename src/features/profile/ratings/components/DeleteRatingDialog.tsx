@@ -31,12 +31,12 @@ export function DeleteRatingDialog({
       {/* Backdrop click closer */}
       <div className="absolute inset-0" onClick={isPending ? undefined : onClose} />
 
-      <div className="relative w-full max-w-md rounded-xl border border-[#262626] bg-[#0a0a0a] p-6 shadow-2xl backdrop-blur-md animate-in fade-in zoom-in-95 duration-300 z-10">
+      <div className="relative z-10 w-full max-w-md rounded-[28px] border border-border bg-white p-6 shadow-[0_24px_80px_rgba(15,23,42,0.18)] animate-in fade-in zoom-in-95 duration-300">
         <button
           type="button"
           disabled={isPending}
           onClick={onClose}
-          className="absolute right-4 top-4 rounded-lg p-1.5 text-[#737373] hover:text-white hover:bg-white/5 transition-all"
+          className="absolute right-4 top-4 rounded-lg p-1.5 text-on-surface-subtle transition-all hover:bg-[#f7f7f7] hover:text-on-surface"
           aria-label="Close dialog"
         >
           <X className="h-4 w-4" />
@@ -49,12 +49,12 @@ export function DeleteRatingDialog({
 
           <h2
             id="delete-dialog-title"
-            className="text-lg font-bold text-white tracking-tight mb-2"
+            className="mb-2 text-lg font-semibold tracking-tight text-on-surface"
           >
             {t("title")}
           </h2>
 
-          <p className="text-sm text-[#737373] leading-relaxed mb-6">
+          <p className="mb-6 text-sm leading-relaxed text-on-surface-subtle">
             {t("message")}
           </p>
 
@@ -71,7 +71,7 @@ export function DeleteRatingDialog({
             <Button
               type="button"
               variant="secondary"
-              className="w-full sm:order-1 bg-[#171717] border border-[#262626] hover:border-white/10 hover:bg-white/5 text-[#d4d4d4] font-semibold py-2.5 rounded-lg"
+              className="w-full rounded-lg border border-border bg-[#f7f7f7] py-2.5 font-semibold text-on-surface hover:bg-[#efefef] sm:order-1"
               disabled={isPending}
               onClick={onClose}
             >

@@ -14,3 +14,8 @@ export interface FavoritesListParams {
   per_page?: number;
   sort?: "newest" | "oldest" | "name_asc" | "rating_desc";
 }
+
+export interface FavoriteIdsResponse {
+  location_ids: number[];
+  tour_ids: number[];
+}

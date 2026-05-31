@@ -10,7 +10,7 @@ import type { Notification } from "@/types";
  * Custom hook to manage Header notification state and actions.
  * Fetches unread counts and recent 5 notifications when authenticated.
  */
-export const useNotificationsHeader = () => {
+export const useNotificationsHeader = (isNotificationOpen: boolean = false) => {
   const { isAuthenticated } = useAuthStore();
   const queryClient = useQueryClient();
 
@@ -33,7 +33,7 @@ export const useNotificationsHeader = () => {
       const res = await notificationService.list({ per_page: 5 });
       return res?.data?.data ?? [];
     },
-    enabled: isAuthenticated,
+    enabled: isAuthenticated && isNotificationOpen,
     staleTime: 60 * 1000,
     retry: shouldRetryQuery,
   });

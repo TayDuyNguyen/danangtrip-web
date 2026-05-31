@@ -12,24 +12,42 @@ interface Props {
 
 export function PaymentActions({ status, booking, isMissingContext = false }: Props) {
   const t = useTranslations("tour.payment");
+  const tHistory = useTranslations("tour.history");
 
   return (
-    <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 w-full max-w-md mx-auto">
+    <div className="mt-8 flex w-full max-w-xl flex-col items-center justify-center gap-4 sm:flex-row">
       {(status === "failed" || isMissingContext) && (
         <Link
           href="/"
-          className="btn-secondary w-full sm:w-auto text-on-surface-subtle border-[#262626] hover:bg-[#1f1f1f] flex items-center justify-center transition-all duration-300 py-3 px-8 rounded-full border text-sm font-semibold"
+          className="flex w-full items-center justify-center rounded-full border border-border bg-white px-8 py-3 text-sm font-semibold text-on-surface transition-all duration-300 hover:bg-[#f7f7f7] sm:w-auto"
         >
           {t("back_home")}
         </Link>
       )}
 
       {status === "success" && (
+        <>
+          <Link
+            href={booking ? `/profile/bookings/code/${booking.booking_code}` : "/profile/bookings"}
+            className="flex w-full items-center justify-center rounded-full border border-primary bg-primary px-8 py-3 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:bg-primary-hover sm:w-auto"
+          >
+            {booking ? tHistory("action_detail") : t("view_profile")}
+          </Link>
+          <Link
+            href="/profile/bookings"
+            className="flex w-full items-center justify-center rounded-full border border-border bg-white px-8 py-3 text-sm font-semibold text-on-surface transition-all duration-300 hover:bg-[#f7f7f7] sm:w-auto"
+          >
+            {tHistory("back_to_list")}
+          </Link>
+        </>
+      )}
+
+      {status === "pending" && booking && (
         <Link
-          href="/profile"
-          className="btn-primary w-full sm:w-auto bg-[#171717] border border-[#262626] text-white hover:border-[#8b6a55] flex items-center justify-center transition-all duration-300 py-3 px-8 rounded-full text-sm font-semibold shadow-lg"
+          href={`/profile/bookings/code/${booking.booking_code}`}
+          className="flex w-full items-center justify-center rounded-full border border-border bg-white px-8 py-3 text-sm font-semibold text-on-surface transition-all duration-300 hover:bg-[#f7f7f7] sm:w-auto"
         >
-          {booking ? t("view_profile") : t("view_profile")}
+          {tHistory("action_detail")}
         </Link>
       )}
     </div>

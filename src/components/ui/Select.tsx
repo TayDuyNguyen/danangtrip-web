@@ -72,7 +72,6 @@ export const Select = ({
 
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
@@ -93,7 +92,7 @@ export const Select = ({
       border: "none",
       borderBottom: isGlass || isMinimal
         ? "none"
-        : `1px solid ${error ? "#ef4444" : isFocused ? "#8b6a55" : persistentLabel ? "#525252" : "#262626"}`,
+        : `1px solid ${error ? "#ef4444" : isFocused ? "#FF385C" : persistentLabel ? "#525252" : "#262626"}`,
       borderRadius: isMinimal ? "8px" : "0",
       boxShadow: "none",
       padding: "0",
@@ -151,21 +150,21 @@ export const Select = ({
     }),
     dropdownIndicator: (provided) => ({
       ...provided,
-      color: isGlass ? "white" : (isFocused ? "#8b6a55" : "#737373"),
+      color: isGlass ? "white" : (isFocused ? "#FF385C" : "#737373"),
       padding: "0",
       paddingRight: isGlass ? "8px" : "0",
       transition: "color 0.3s ease",
     }),
     menu: (provided) => ({
       ...provided,
-      backgroundColor: "#080808",
-      borderRadius: "12px",
-      border: "1px solid #262626",
-      boxShadow: "0 12px 30px rgba(0, 0, 0, 0.4)",
+      backgroundColor: isMinimal ? "#ffffff" : "#080808",
+      borderRadius: "18px",
+      border: isMinimal ? "1px solid #ebebeb" : "1px solid #262626",
+      boxShadow: isMinimal ? "0 20px 50px rgba(0, 0, 0, 0.14)" : "0 12px 30px rgba(0, 0, 0, 0.4)",
       overflow: "hidden",
       zIndex: 50,
       marginTop: "8px",
-      padding: "4px",
+      padding: "6px",
     }),
     menuList: (provided) => ({
       ...provided,
@@ -177,19 +176,19 @@ export const Select = ({
     option: (provided, state) => ({
       ...provided,
       backgroundColor: state.isSelected
-        ? "#8b6a55"
+        ? "#FF385C"
         : state.isFocused
-          ? "#171717"
+          ? (isMinimal ? "#f7f7f7" : "#171717")
           : "transparent",
-      color: state.isSelected ? "#ffffff" : "#d4d4d4",
+      color: state.isSelected ? "#ffffff" : (isMinimal ? "#222222" : "#d4d4d4"),
       fontSize: "14px",
       fontWeight: state.isSelected ? "700" : "500",
       padding: "10px 12px",
-      borderRadius: "8px",
+      borderRadius: "12px",
       marginBottom: "2px",
       cursor: "pointer",
       "&:active": {
-        backgroundColor: state.isSelected ? "#8b6a55" : "#171717",
+        backgroundColor: state.isSelected ? "#FF385C" : (isMinimal ? "#f7f7f7" : "#171717"),
       },
       transition: "all 0.15s ease",
     }),
@@ -247,7 +246,7 @@ export const Select = ({
       ) : (
         <div
           className={cn(
-            "w-full bg-surface-container/30 border-b border-[#262626] flex items-center justify-between text-on-surface-subtle",
+            "w-full bg-surface-container/30 border-b border-border flex items-center justify-between text-on-surface-subtle",
             isMinimal ? "h-[40px] rounded-lg px-3 bg-surface-container" : isGlass ? "h-[40px] px-3" : "h-[56px] px-3",
             className
           )}
@@ -259,13 +258,15 @@ export const Select = ({
         </div>
       )}
 
-      <div className="h-5 overflow-hidden">
-        {error && (
-          <p className="mt-1 text-xs text-red-500 animate-in fade-in slide-in-from-top-1 duration-300">
-            {error}
-          </p>
-        )}
-      </div>
+      {(!isMinimal || error) && (
+        <div className="h-5 overflow-hidden">
+          {error && (
+            <p className="mt-1 text-xs text-red-500 animate-in fade-in slide-in-from-top-1 duration-300">
+              {error}
+            </p>
+          )}
+        </div>
+      )}
 
       {helperText && !error && (
         <p className="text-on-surface-variant text-sm mt-1">{helperText}</p>

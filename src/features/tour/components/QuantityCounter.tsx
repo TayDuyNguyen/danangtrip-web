@@ -70,8 +70,8 @@ export function QuantityCounter({
           className={cn(
             "w-8 h-8 rounded-full border flex items-center justify-center transition-all active:scale-90",
             disabled || value <= min
-              ? "border-white/5 text-white/20 cursor-not-allowed bg-transparent"
-              : "border-white/20 bg-white/5 text-white hover:bg-primary/20 hover:border-primary hover:text-primary"
+              ? "border-border text-on-surface-variant/50 cursor-not-allowed bg-[#f7f7f7]"
+              : "border-border bg-white text-on-surface hover:bg-primary/10 hover:border-primary hover:text-primary"
           )}
         >
           <Minus className="w-4 h-4" />
@@ -86,7 +86,7 @@ export function QuantityCounter({
           min={min}
           max={max}
           className={cn(
-            "w-12 text-center text-lg font-black tabular-nums bg-transparent border-b border-transparent hover:border-white/10 focus:border-primary focus:outline-none transition-all [appearance:textfield] [&::-webkit-outer-spin-button]:margin-0 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:margin-0 [&::-webkit-inner-spin-button]:appearance-none",
+            "w-12 text-center text-lg font-black tabular-nums text-on-surface bg-transparent border-b border-transparent hover:border-border focus:border-primary focus:outline-none transition-all [appearance:textfield] [&::-webkit-outer-spin-button]:margin-0 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:margin-0 [&::-webkit-inner-spin-button]:appearance-none",
             disabled && "opacity-50"
           )}
           aria-label={label}
@@ -99,7 +99,7 @@ export function QuantityCounter({
           className={cn(
             "w-8 h-8 rounded-full border flex items-center justify-center transition-all active:scale-90",
             disabled || value >= max
-              ? "border-white/5 text-white/20 cursor-not-allowed bg-transparent"
+              ? "border-border text-on-surface-variant/50 cursor-not-allowed bg-[#f7f7f7]"
               : "border-primary/30 bg-primary/10 text-primary hover:bg-primary hover:text-white hover:border-primary"
           )}
         >

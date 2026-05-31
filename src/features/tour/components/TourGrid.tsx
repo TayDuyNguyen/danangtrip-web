@@ -15,9 +15,9 @@ export default function TourGrid({ tours, isLoading }: TourGridProps) {
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {[...Array(6)].map((_, i) => (
-          <div key={i} className="bg-surface-container animate-pulse rounded-xl aspect-4/5" />
+          <div key={i} className="aspect-4/5 animate-pulse rounded-[28px] border border-border bg-[#f3f4f6]" />
         ))}
       </div>
     );
@@ -26,7 +26,7 @@ export default function TourGrid({ tours, isLoading }: TourGridProps) {
   if (tours.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-center">
-        <div className="w-20 h-20 bg-surface-container rounded-full flex items-center justify-center mb-6">
+        <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-[#fff1f3]">
           <Search className="w-10 h-10 text-on-surface-subtle" />
         </div>
         <h3 className="text-xl font-bold text-on-surface mb-2">{t("title")}</h3>
@@ -36,7 +36,7 @@ export default function TourGrid({ tours, isLoading }: TourGridProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
       {tours.map((tour, index) => (
         <TourCard key={tour.id} tour={tour} index={index} />
       ))}

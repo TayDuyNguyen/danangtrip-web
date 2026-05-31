@@ -153,18 +153,18 @@ export const SearchResultHeader = ({
   };
 
   const renderDiscoveryPanel = () => (
-    <div className="absolute left-0 right-0 top-[110%] z-50 overflow-hidden rounded-2xl border border-[#262626] bg-[#0f0f0f]/95 shadow-[0_20px_50px_rgba(0,0,0,0.5)] backdrop-blur-2xl">
+    <div className="absolute left-0 right-0 top-[calc(100%+14px)] z-50 overflow-hidden rounded-[28px] border border-border bg-white shadow-[0_24px_60px_rgba(0,0,0,0.16)]">
       <div className="grid gap-4 p-4 md:grid-cols-2">
-        <div className="rounded-2xl border border-[#262626] bg-[#121212]/90 p-4">
+        <div className="rounded-2xl border border-border bg-[#fafafa] p-4">
           <div className="mb-3 flex items-center justify-between">
-            <div className="flex items-center gap-2 text-sm font-bold text-white">
-              <IoTimeOutline className="text-[#8b6a55]" />
+            <div className="flex items-center gap-2 text-sm font-semibold text-on-surface">
+              <IoTimeOutline className="text-primary" />
               <span>{tSearch("suggestions.recent_searches")}</span>
             </div>
             {history.length > 0 && (
               <button
                 onClick={clearHistory}
-                className="text-xs font-semibold text-[#a89080] transition-colors hover:text-[#e7bea6]"
+                className="text-xs font-semibold text-on-surface-subtle transition-colors hover:text-primary"
               >
                 {tSearch("suggestions.clear_history")}
               </button>
@@ -176,14 +176,14 @@ export const SearchResultHeader = ({
               {history.map((item) => (
                 <div
                   key={item}
-                  className="flex items-center gap-1 rounded-full border border-[#3a2e28] bg-[#171717] pl-3 pr-2 py-2 text-sm text-[#e5e2e1]"
+                  className="flex items-center gap-1 rounded-full border border-border bg-white pl-3 pr-2 py-2 text-sm text-on-surface shadow-sm"
                 >
-                  <button onClick={() => commitSearch(item)} className="transition-colors hover:text-white">
+                  <button onClick={() => commitSearch(item)} className="transition-colors hover:text-primary">
                     {item}
                   </button>
                   <button
                     onClick={() => removeHistory(item)}
-                    className="rounded-full p-0.5 text-[#737373] transition-colors hover:text-[#e7bea6]"
+                    className="rounded-full p-0.5 text-on-surface-subtle transition-colors hover:text-primary"
                     aria-label={tSearch("filters.close")}
                   >
                     <IoCloseOutline className="text-sm" />
@@ -196,9 +196,9 @@ export const SearchResultHeader = ({
           )}
         </div>
 
-        <div className="rounded-2xl border border-[#262626] bg-[#121212]/90 p-4">
-          <div className="mb-3 flex items-center gap-2 text-sm font-bold text-white">
-            <IoTrendingUp className="text-[#8b6a55]" />
+        <div className="rounded-2xl border border-border bg-[#fafafa] p-4">
+          <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-on-surface">
+            <IoTrendingUp className="text-primary" />
             <span>{tSearch("trending.title")}</span>
           </div>
 
@@ -225,7 +225,7 @@ export const SearchResultHeader = ({
                     });
                     commitSearch(item.query);
                   }}
-                  className="rounded-full border border-[#6b5a50]/70 px-3 py-2 text-sm font-medium text-[#e5e2e1] transition-all hover:border-[#8b6a55] hover:bg-[#8b6a55]/10"
+                  className="rounded-full border border-border bg-white px-3 py-2 text-sm font-medium text-on-surface transition-all hover:border-primary hover:bg-[#fff4f6]"
                 >
                   {item.query}
                 </button>
@@ -236,9 +236,9 @@ export const SearchResultHeader = ({
       </div>
 
       {topLocations.length > 0 && (
-        <div className="border-t border-[#262626] px-4 pb-4 pt-3">
-          <div className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-[#a89080]">
-            <IoFlashOutline className="text-[#8b6a55]" />
+        <div className="border-t border-border px-4 pb-4 pt-3">
+          <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-on-surface-subtle">
+            <IoFlashOutline className="text-primary" />
             <span>{tSearch("discovery.title")}</span>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -258,10 +258,10 @@ export const SearchResultHeader = ({
                   });
                   commitSearch(item.query);
                 }}
-                className="rounded-xl border border-[#262626] bg-[#171717]/80 px-3 py-2 text-left text-sm text-[#e5e2e1] transition-all hover:border-[#8b6a55]/70 hover:bg-[#1b1b1b]"
+                className="rounded-xl border border-border bg-white px-3 py-2 text-left text-sm text-on-surface transition-all hover:border-primary/70 hover:bg-[#fff4f6]"
               >
                 <div className="font-semibold">{item.query}</div>
-                <div className="text-xs text-[#a89080]">{item.district || tSearch("tabs.location")}</div>
+                <div className="text-xs text-on-surface-subtle">{item.district || tSearch("tabs.location")}</div>
               </button>
             ))}
           </div>
@@ -283,6 +283,8 @@ export const SearchResultHeader = ({
               placeholder={tSearch("suggestions.search_placeholder")}
               isLoading={isLoading}
               className="m-0"
+              label="Where"
+              actionText="Search"
             />
 
             {showSuggestionsPanel ? (
@@ -303,12 +305,12 @@ export const SearchResultHeader = ({
 
           <button
             onClick={onOpenFilters}
-            className="flex items-center justify-center gap-2 px-6 py-3 bg-surface-container-low hover:bg-surface-container-high text-foreground font-black rounded-xl transition-all scale-100 active:scale-95 shadow-sm"
+            className="flex items-center justify-center gap-2 rounded-[20px] border border-border bg-white px-6 py-3 font-semibold text-on-surface shadow-sm transition-all hover:bg-[#f7f7f7] hover:border-primary/25 active:scale-95"
           >
             <IoOptionsOutline className="text-xl" />
             {tSearch("filters.title")}
             {hasActiveFilters && (
-              <span className="w-5 h-5 rounded-full bg-[#8b6a55] text-white text-[10px] flex items-center justify-center">
+              <span className="w-5 h-5 rounded-full bg-primary text-white text-[10px] flex items-center justify-center">
                 !
               </span>
             )}
@@ -350,7 +352,7 @@ export const SearchResultHeader = ({
           )}
           <button
             onClick={onClearFilters}
-            className="text-sm font-black text-[#8b6a55] border-b-2 border-transparent hover:border-[#8b6a55] transition-all py-1 px-2"
+            className="text-sm font-black text-primary border-b-2 border-transparent hover:border-primary transition-all py-1 px-2"
           >
             {tSearch("filters.reset")}
           </button>
@@ -360,7 +362,7 @@ export const SearchResultHeader = ({
       <div className="pt-2">
         <div className="flex flex-wrap items-center gap-3">
           <span className="text-sm font-black text-on-surface-subtle uppercase tracking-widest mr-2 flex items-center gap-2">
-            <IoTrendingUp className="text-[#8b6a55] text-xl" />
+            <IoTrendingUp className="text-primary text-xl" />
             {tSearch("trending.title")}:
           </span>
 
@@ -390,15 +392,22 @@ export const SearchResultHeader = ({
                     });
                   }}
                   className={cn(
-                    "flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-black transition-all duration-300 scale-100 hover:scale-105",
+                    "flex scale-100 items-center gap-2 rounded-xl border px-5 py-2 text-sm font-black transition-all duration-300 hover:scale-105",
                     isSelected
-                      ? "bg-[#8b6a55] shadow-black/30 text-white"
-                      : "bg-surface-container-low text-on-surface-subtle hover:bg-surface-container-high"
+                      ? "border-primary/20 bg-[#fff1f3] text-primary shadow-[0_10px_28px_rgba(255,56,92,0.12)]"
+                      : "border-border bg-[#fafafa] text-on-surface-subtle hover:border-primary/25 hover:bg-white hover:text-on-surface"
                   )}
                 >
                   {index < 2 && <IoFlashOutline className="text-amber-500" />}
                   <span>{item.query}</span>
-                  <span className="rounded-full bg-black/20 px-2 py-0.5 text-[10px]">{item.count}</span>
+                  <span
+                    className={cn(
+                      "rounded-full px-2 py-0.5 text-[10px]",
+                      isSelected ? "bg-primary/10 text-primary" : "bg-white text-on-surface-subtle"
+                    )}
+                  >
+                    {item.count}
+                  </span>
                 </Link>
               );
             })
@@ -414,7 +423,7 @@ export const SearchResultHeader = ({
                   count,
                   query,
                   strong: (chunks: React.ReactNode) => (
-                    <strong className="text-foreground font-black">{chunks}</strong>
+                    <strong className="text-on-surface font-semibold">{chunks}</strong>
                   ),
                 })
               : tSearch("discovery.subtitle")}
@@ -431,7 +440,7 @@ interface FilterTagProps {
 }
 
 const FilterTag = ({ label, onRemove }: FilterTagProps) => (
-  <div className="flex items-center gap-2 px-4 py-2 bg-[#8b6a55]/10 text-[#8b6a55] rounded-xl text-sm font-black border border-[#8b6a55]/20 shadow-sm transition-all hover:bg-[#8b6a55]/20">
+  <div className="flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-xl text-sm font-black border border-primary/20 shadow-sm transition-all hover:bg-primary/20">
     <span>{label}</span>
     <button onClick={onRemove} className="hover:rotate-90 transition-transform">
       <IoCloseOutline className="text-lg" />

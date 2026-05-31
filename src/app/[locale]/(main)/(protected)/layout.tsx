@@ -2,7 +2,7 @@
 
 import { useEffect, useSyncExternalStore, Suspense } from "react";
 import { usePathname, useRouter } from "@/i18n/navigation";
-import { useAuthStore } from "@/store/auth.store";
+import { useAuth } from "@/features/auth";
 import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { getAccessToken } from "@/utils/auth.helper";
@@ -15,7 +15,7 @@ function AuthChecker({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const { isAuthenticated, isLoading } = useAuthStore();
+  const { isAuthenticated, isLoading } = useAuth();
   const t = useTranslations("common");
   const isMounted = useSyncExternalStore(emptySubscribe, clientSnapshot, serverSnapshot);
 
@@ -60,7 +60,7 @@ function AuthChecker({ children }: { children: React.ReactNode }) {
   if (!isAuthenticated) {
     return (
       <div className="design-page layout-main-shell min-h-screen flex items-center justify-center px-6">
-        <p className="text-sm text-on-surface-subtle text-center">{t("common.redirecting_login")}</p>
+        <p className="text-center text-sm text-on-surface-subtle">{t("common.redirecting_login")}</p>
       </div>
     );
   }

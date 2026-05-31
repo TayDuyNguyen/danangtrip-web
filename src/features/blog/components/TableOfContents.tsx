@@ -11,10 +11,10 @@ interface TableOfContentsProps {
 
 /**
  * Molecule: TableOfContents
- * Updated to match Stitch design:
+ * Updated to match the current public design:
  * - Heading with border-l-4 brand accent
  * - Numbered items with brand-colored prefix
- * - Glassmorphic container (glass-retro)
+ * - White card container with clear contrast
  */
 export const TableOfContents = ({ headings }: TableOfContentsProps) => {
   const t = useTranslations("blog");
@@ -43,12 +43,12 @@ export const TableOfContents = ({ headings }: TableOfContentsProps) => {
   if (headings.length === 0) return null;
 
   return (
-    <nav className="p-6 glass-retro rounded-2xl space-y-4">
-      <h3 className="text-lg font-semibold text-white border-l-4 border-primary pl-3">
+    <nav className="space-y-4 rounded-[28px] border border-border bg-white p-6 shadow-[0_16px_48px_rgba(15,23,42,0.08)]">
+      <h3 className="border-l-4 border-primary pl-3 text-lg font-semibold text-on-surface">
         {t("table_of_contents")}
       </h3>
 
-      <ul className="space-y-3 text-sm text-neutral-400">
+      <ul className="space-y-3 text-sm text-on-surface-subtle">
         {headings.map((heading, idx) => (
           <li
             key={heading.id}

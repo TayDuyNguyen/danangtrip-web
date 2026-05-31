@@ -153,7 +153,7 @@ export function FavoritesPageClient() {
 
       {/* Control Panel (Sort & View Toggles) */}
       {validItems.length > 0 && (
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-[#080808]/40 border border-[#262626] rounded-2xl p-4 backdrop-blur-md">
+        <div className="flex flex-col items-center justify-between gap-4 rounded-[28px] border border-border bg-white p-4 shadow-[0_16px_48px_rgba(15,23,42,0.08)] md:flex-row">
           <FavoritesSortSelect value={sort} onChange={handleSortChange} />
           <FavoritesViewToggle view={view} onChange={setView} />
         </div>
@@ -161,14 +161,14 @@ export function FavoritesPageClient() {
 
       {/* Grid or List content */}
       {isError ? (
-        <div className="rounded-2xl border border-[#262626] bg-[#080808]/40 p-12 text-center backdrop-blur-md max-w-xl mx-auto">
-          <div className="w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-4">
+        <div className="mx-auto max-w-xl rounded-[28px] border border-border bg-white p-12 text-center shadow-[0_16px_48px_rgba(15,23,42,0.08)]">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-500/10">
             <InfoCircle className="w-6 h-6 text-red-500" />
           </div>
-          <p className="text-white font-bold mb-4">{t("toast_remove_error")}</p>
+          <p className="mb-4 font-semibold text-on-surface">{t("toast_remove_error")}</p>
           <Button
             onClick={() => refetch()}
-            className="rounded-xl bg-[#8b6a55] hover:bg-[#a67c63] px-6 py-2.5 text-xs font-black uppercase tracking-widest text-white transition-all duration-300"
+            className="rounded-full bg-primary px-6 py-2.5 text-xs font-semibold uppercase tracking-widest text-white transition-all duration-300 hover:bg-primary-hover"
           >
             {t("retry")}
           </Button>

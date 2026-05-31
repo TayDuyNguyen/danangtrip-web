@@ -29,11 +29,11 @@ export default function FAQSection({ title, items }: Props) {
         {items.map((item, index) => (
           <div 
             key={index}
-            className="rounded-2xl border border-border bg-surface-container overflow-hidden transition-all duration-300"
+            className="overflow-hidden rounded-[24px] border border-border bg-white shadow-[0_10px_28px_rgba(15,23,42,0.05)] transition-all duration-300"
           >
             <button
               onClick={() => setOpenIndex(openIndex === index ? null : index)}
-              className="w-full flex items-center justify-between p-6 text-left hover:bg-surface-container-high transition-colors"
+              className="flex w-full items-center justify-between p-6 text-left transition-colors hover:bg-[#fafafa]"
             >
               <span className="font-bold text-on-surface">
                 {item.question}

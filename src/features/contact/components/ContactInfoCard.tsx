@@ -7,8 +7,8 @@ export const ContactInfoCard = () => {
   const t = useTranslations("contact");
 
   return (
-    <div className="glass-surface glass-inner rounded-xl p-8 lg:p-10 space-y-10 group reveal-up reveal-delay-200">
-      <h2 className="text-2xl lg:text-3xl font-bold text-white mb-8 tracking-tight">
+    <div className="group reveal-up reveal-delay-200 space-y-10 rounded-[28px] border border-border bg-white p-8 shadow-[0_24px_80px_rgba(15,23,42,0.08)] lg:p-10">
+      <h2 className="mb-8 text-2xl font-semibold tracking-tight text-on-surface lg:text-3xl">
         {t("info.title")}
       </h2>
 

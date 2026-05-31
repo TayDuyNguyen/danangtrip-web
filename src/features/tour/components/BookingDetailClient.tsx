@@ -46,9 +46,9 @@ export function BookingDetailClient({ id, bookingCode }: BookingDetailClientProp
 
   if (error || !booking || !item) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[400px] text-center p-6 border border-border rounded-2xl bg-surface reveal-up">
+      <div className="flex min-h-[400px] flex-col items-center justify-center rounded-[28px] border border-border bg-white p-6 text-center shadow-[0_18px_54px_rgba(15,23,42,0.08)] reveal-up">
         <InfoCircle className="w-12 h-12 text-red-500 mb-4" />
-        <h3 className="text-xl font-bold text-white mb-2">
+        <h3 className="mb-2 text-xl font-bold text-on-surface">
           {error ? t("error_load") : t("empty_title")}
         </h3>
         <p className="text-sm text-on-surface-subtle max-w-md mb-6">
@@ -156,15 +156,15 @@ export function BookingDetailClient({ id, bookingCode }: BookingDetailClientProp
         <div className="flex items-center gap-4">
           <button
             onClick={() => router.push("/profile/bookings")}
-            className="p-2.5 rounded-full border border-border bg-surface-container hover:bg-surface-container-high transition-colors active:scale-95"
+            className="rounded-full border border-border bg-white p-2.5 text-on-surface shadow-sm transition-colors hover:border-primary/30 hover:bg-[#f7f7f7] hover:text-primary active:scale-95"
             aria-label="Back"
           >
-            <ChevronLeft className="w-5 h-5 text-white" />
+            <ChevronLeft className="w-5 h-5" />
           </button>
           <div>
-            <h1 className="text-2xl font-bold text-white">{t("detail_title")}</h1>
+            <h1 className="text-2xl font-bold text-on-surface">{t("detail_title")}</h1>
             <p className="text-xs text-on-surface-subtle font-mono mt-1">
-              {t("booking_code")}: <span className="text-white select-all font-bold">{booking.booking_code}</span>
+              {t("booking_code")}: <span className="select-all font-bold text-on-surface">{booking.booking_code}</span>
             </p>
           </div>
         </div>
@@ -175,7 +175,7 @@ export function BookingDetailClient({ id, bookingCode }: BookingDetailClientProp
             variant="secondary"
             onClick={handleDownloadInvoice}
             disabled={isDownloading}
-            className={`px-5 py-2.5 rounded-full text-xs font-semibold text-white border border-border bg-surface-container hover:border-primary/50 flex items-center gap-2 transition-all duration-200 ${
+            className={`flex items-center gap-2 rounded-full border border-border bg-white px-5 py-2.5 text-xs font-semibold text-on-surface transition-all duration-200 hover:border-primary/50 hover:bg-primary/10 hover:text-primary ${
               isDownloading ? "bg-[#3385D6] border-[#3385D6] hover:bg-[#3385D6]/90 cursor-not-allowed" : ""
             }`}
           >
@@ -193,7 +193,7 @@ export function BookingDetailClient({ id, bookingCode }: BookingDetailClientProp
           <Button
             variant="secondary"
             onClick={handlePrint}
-            className="px-5 py-2.5 rounded-full text-xs font-semibold text-white border border-border bg-surface-container hover:border-primary/50 flex items-center gap-2 transition-all duration-200"
+            className="flex items-center gap-2 rounded-full border border-border bg-white px-5 py-2.5 text-xs font-semibold text-on-surface transition-all duration-200 hover:border-primary/50 hover:bg-primary/10 hover:text-primary"
           >
             <Printer className="w-4 h-4 text-on-surface-subtle" />
             <span>{t("button_print_invoice")}</span>
@@ -213,12 +213,12 @@ export function BookingDetailClient({ id, bookingCode }: BookingDetailClientProp
 
       {/* Print-only Invoice Header */}
       <div className="hidden print:block border-b border-border pb-6 text-center space-y-2">
-        <h1 className="text-3xl font-bold text-white uppercase tracking-wider">{t("invoice_title")}</h1>
+        <h1 className="text-3xl font-bold text-on-surface uppercase tracking-wider">{t("invoice_title")}</h1>
         <p className="text-sm font-mono text-on-surface-subtle">
-          {t("booking_code")}: <span className="text-white font-bold">{booking.booking_code}</span>
+          {t("booking_code")}: <span className="font-bold text-on-surface">{booking.booking_code}</span>
         </p>
         <p className="text-xs text-on-surface-subtle">
-          {t("booked_date")}: <span className="text-white font-medium">{new Date(booking.booked_at).toLocaleString()}</span>
+          {t("booked_date")}: <span className="font-medium text-on-surface">{new Date(booking.booked_at).toLocaleString()}</span>
         </p>
       </div>
 
@@ -243,12 +243,12 @@ export function BookingDetailClient({ id, bookingCode }: BookingDetailClientProp
 
           {/* Cancellation Info Panel if Cancelled */}
           {booking.booking_status === "cancelled" && booking.cancellation_reason && (
-            <div className="p-5 rounded-2xl border border-red-500/10 bg-red-500/5 text-xs text-red-300 leading-relaxed space-y-2.5 reveal-up">
+            <div className="space-y-2.5 rounded-[24px] border border-red-200 bg-red-50 p-5 text-xs leading-relaxed text-red-600 reveal-up">
               <div className="flex items-center gap-2 font-bold text-red-400">
                 <InfoCircle className="w-5 h-5 shrink-0" />
                 <span>{t("cancellation_reason_label")}</span>
               </div>
-              <p className="font-mono bg-surface p-3 rounded-xl border border-border">
+              <p className="rounded-xl border border-red-100 bg-white p-3 font-mono">
                 {booking.cancellation_reason}
               </p>
             </div>
@@ -284,74 +284,68 @@ export function BookingDetailClient({ id, bookingCode }: BookingDetailClientProp
 function BookingDetailSkeleton() {
   return (
     <div className="space-y-8 animate-pulse">
-      {/* Header Skeleton */}
       <div className="flex items-center justify-between border-b border-border pb-6">
         <div className="flex items-center gap-4">
-          <div className="w-10 h-10 rounded-full bg-surface-container" />
+          <div className="h-10 w-10 rounded-full bg-[#eceff3]" />
           <div className="space-y-2">
-            <div className="h-6 w-48 bg-surface-container rounded" />
-            <div className="h-4 w-32 bg-surface-container-low rounded" />
+            <div className="h-6 w-48 rounded bg-[#eceff3]" />
+            <div className="h-4 w-32 rounded bg-[#f3f4f6]" />
           </div>
         </div>
         <div className="flex gap-3">
-          <div className="h-10 w-24 bg-surface-container rounded-full" />
-          <div className="h-10 w-24 bg-surface-container rounded-full" />
+          <div className="h-10 w-24 rounded-full bg-[#eceff3]" />
+          <div className="h-10 w-24 rounded-full bg-[#eceff3]" />
         </div>
       </div>
 
-      {/* Grid Skeleton */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
-          {/* Timeline Skeleton */}
-          <div className="h-44 bg-surface border border-border rounded-2xl p-6 flex flex-col justify-between">
-            <div className="h-4 w-32 bg-surface-container rounded" />
+          <div className="flex h-44 flex-col justify-between rounded-[24px] border border-border bg-white p-6">
+            <div className="h-4 w-32 rounded bg-[#eceff3]" />
             <div className="flex justify-between items-center px-4">
               {[1, 2, 3, 4].map((i) => (
                 <div key={i} className="flex flex-col items-center gap-2">
-                  <div className="w-10 h-10 rounded-full bg-surface-container" />
-                  <div className="h-3 w-16 bg-surface-container-low rounded" />
+                  <div className="h-10 w-10 rounded-full bg-[#eceff3]" />
+                  <div className="h-3 w-16 rounded bg-[#f3f4f6]" />
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Tour Card Skeleton */}
-          <div className="h-36 bg-surface border border-border rounded-2xl p-6 flex gap-6">
-            <div className="w-36 h-24 bg-surface-container rounded-xl shrink-0" />
+          <div className="flex h-36 gap-6 rounded-[24px] border border-border bg-white p-6">
+            <div className="h-24 w-36 shrink-0 rounded-xl bg-[#eceff3]" />
             <div className="flex-1 space-y-4">
-              <div className="h-5 w-2/3 bg-surface-container rounded" />
-              <div className="h-3 w-1/3 bg-surface-container-low rounded" />
-              <div className="h-3 w-1/2 bg-surface-container-low rounded" />
+              <div className="h-5 w-2/3 rounded bg-[#eceff3]" />
+              <div className="h-3 w-1/3 rounded bg-[#f3f4f6]" />
+              <div className="h-3 w-1/2 rounded bg-[#f3f4f6]" />
             </div>
           </div>
 
-          {/* Customer Info Skeleton */}
-          <div className="h-48 bg-surface border border-border rounded-2xl p-6 space-y-6">
-            <div className="h-4 w-36 bg-surface-container rounded" />
+          <div className="h-48 space-y-6 rounded-[24px] border border-border bg-white p-6">
+            <div className="h-4 w-36 rounded bg-[#eceff3]" />
             <div className="space-y-3">
-              <div className="h-3 w-1/3 bg-surface-container-low rounded" />
-              <div className="h-3 w-1/2 bg-surface-container-low rounded" />
-              <div className="h-3 w-1/4 bg-surface-container-low rounded" />
+              <div className="h-3 w-1/3 rounded bg-[#f3f4f6]" />
+              <div className="h-3 w-1/2 rounded bg-[#f3f4f6]" />
+              <div className="h-3 w-1/4 rounded bg-[#f3f4f6]" />
             </div>
           </div>
         </div>
 
-        {/* Right Column Price Skeleton */}
-        <div className="h-64 bg-surface border border-border rounded-2xl p-6 flex flex-col justify-between">
-          <div className="h-4 w-32 bg-surface-container rounded" />
+        <div className="flex h-64 flex-col justify-between rounded-[24px] border border-border bg-white p-6">
+          <div className="h-4 w-32 rounded bg-[#eceff3]" />
           <div className="space-y-3">
             <div className="flex justify-between">
-              <div className="h-3 w-20 bg-surface-container-low rounded" />
-              <div className="h-3 w-16 bg-surface-container-low rounded" />
+              <div className="h-3 w-20 rounded bg-[#f3f4f6]" />
+              <div className="h-3 w-16 rounded bg-[#f3f4f6]" />
             </div>
             <div className="flex justify-between">
-              <div className="h-3 w-24 bg-surface-container-low rounded" />
-              <div className="h-3 w-16 bg-surface-container-low rounded" />
+              <div className="h-3 w-24 rounded bg-[#f3f4f6]" />
+              <div className="h-3 w-16 rounded bg-[#f3f4f6]" />
             </div>
           </div>
           <div className="pt-4 border-t border-border flex justify-between items-end">
-            <div className="h-4 w-16 bg-surface-container rounded" />
-            <div className="h-6 w-24 bg-surface-container rounded" />
+            <div className="h-4 w-16 rounded bg-[#eceff3]" />
+            <div className="h-6 w-24 rounded bg-[#eceff3]" />
           </div>
         </div>
       </div>

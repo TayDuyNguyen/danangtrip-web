@@ -129,7 +129,7 @@ export function CartItemRow({ item, isSelected = false, onToggleSelect }: CartIt
   });
 
   return (
-    <div className="glass-surface rounded-xl p-5 border border-white/5 flex flex-row gap-5 items-center relative reveal-up">
+    <div className="relative flex flex-row items-center gap-5 rounded-[28px] border border-border bg-white p-5 shadow-[0_14px_42px_rgba(15,23,42,0.07)] transition-all hover:border-primary/25 hover:shadow-[0_20px_54px_rgba(15,23,42,0.1)] reveal-up">
       {/* Selection Checkbox */}
       {onToggleSelect && (
         <div className="shrink-0 flex items-center justify-center pl-1">
@@ -137,7 +137,7 @@ export function CartItemRow({ item, isSelected = false, onToggleSelect }: CartIt
             type="checkbox"
             checked={isSelected}
             onChange={() => onToggleSelect(item.id)}
-            className="w-4.5 h-4.5 rounded border-white/10 bg-[#171717] text-primary focus:ring-0 focus:ring-offset-0 accent-primary cursor-pointer"
+            className="h-4.5 w-4.5 cursor-pointer rounded border-border bg-white text-primary accent-primary focus:ring-0 focus:ring-offset-0"
             aria-label={tour.name}
           />
         </div>
@@ -145,7 +145,7 @@ export function CartItemRow({ item, isSelected = false, onToggleSelect }: CartIt
 
       <div className="flex flex-col md:flex-row gap-5 items-start md:items-center w-full flex-grow">
         {/* Thumbnail */}
-        <div className="w-full md:w-28 h-28 relative rounded-lg overflow-hidden border border-white/5 bg-neutral-900 shrink-0">
+        <div className="relative h-28 w-full shrink-0 overflow-hidden rounded-2xl border border-border bg-[#f7f7f7] md:w-28">
           <Image
             src={tour.thumbnail || "/images/placeholder-tour.jpg"}
             alt={tour.name}
@@ -159,13 +159,13 @@ export function CartItemRow({ item, isSelected = false, onToggleSelect }: CartIt
         <div className="flex-grow space-y-2 w-full">
           <div className="flex justify-between items-start gap-4">
             <Link href={`/tours/${tour.slug}`} className="hover:text-primary transition-colors">
-              <h3 className="font-bold text-white text-base leading-snug uppercase tracking-tight">
+              <h3 className="text-base font-bold uppercase leading-snug tracking-tight text-on-surface">
                 {tour.name}
               </h3>
             </Link>
             <button
               onClick={handleRemove}
-              className="p-1 rounded bg-[#171717] hover:bg-red-500/10 text-on-surface-subtle hover:text-red-400 border border-white/5 transition-colors shrink-0"
+              className="shrink-0 rounded-full border border-border bg-[#f7f7f7] p-1 text-on-surface-subtle transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-500"
               title={t("remove_item")}
               disabled={isRemoving}
             >
@@ -173,13 +173,13 @@ export function CartItemRow({ item, isSelected = false, onToggleSelect }: CartIt
             </button>
           </div>
 
-          <div className="text-xs text-on-surface-variant font-medium flex flex-wrap gap-x-4 gap-y-1">
+          <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs font-medium text-on-surface-subtle">
             <span>
-              {t("schedule_label")}: <strong className="text-white">{formattedDate}</strong>
+              {t("schedule_label")}: <strong className="text-on-surface">{formattedDate}</strong>
             </span>
             {schedule.departure_code && (
               <span>
-                {t("departure_code_label")}: <strong className="text-white">{schedule.departure_code}</strong>
+                {t("departure_code_label")}: <strong className="text-on-surface">{schedule.departure_code}</strong>
               </span>
             )}
           </div>
@@ -200,7 +200,7 @@ export function CartItemRow({ item, isSelected = false, onToggleSelect }: CartIt
           ) : null}
 
           {/* Counters & Prices Grid */}
-          <div className="pt-3 border-t border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex flex-col justify-between gap-4 border-t border-border pt-3 sm:flex-row sm:items-center">
             {/* Passenger count selectors */}
             <div className="flex flex-col gap-1 shrink-0 w-full sm:max-w-xs">
               <QuantityCounter
@@ -236,7 +236,7 @@ export function CartItemRow({ item, isSelected = false, onToggleSelect }: CartIt
 
             {/* Subtotal */}
             <div className="text-right sm:self-end">
-              <p className="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest">{t("price_label")}</p>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-on-surface-subtle">{t("price_label")}</p>
               <p className="text-xl font-black text-primary tracking-tight">{subtotal.toLocaleString()}đ</p>
             </div>
           </div>

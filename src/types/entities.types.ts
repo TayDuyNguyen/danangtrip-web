@@ -241,4 +241,21 @@ export interface Config {
     youtube?: string;
     website?: string;
   };
+  payment?: {
+    payos?: boolean;
+    cod?: boolean;
+    vnpay?: boolean;
+    momo?: boolean;
+    zalopay?: boolean;
+  };
+  brand?: {
+    website_name?: string;
+    logo?: string;
+    favicon?: string;
+  };
+  policy?: {
+    terms?: string;
+    privacy?: string;
+    data_protection?: string;
+  };
 }

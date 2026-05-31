@@ -16,25 +16,25 @@ export function NotificationsEmptyState({ activeTab }: Props) {
   const isUnreadTab = activeTab === "unread";
 
   return (
-    <div className="flex flex-col items-center justify-center text-center py-20 px-4 bg-[#080808]/40 border border-[#262626] rounded-2xl p-8 backdrop-blur-md animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-2xl mx-auto">
-      <div className="w-16 h-16 bg-[#171717] rounded-2xl flex items-center justify-center border border-[#262626] mb-6 text-white/30 transition-all duration-500 group">
+    <div className="mx-auto flex max-w-2xl animate-in slide-in-from-bottom-4 fade-in flex-col items-center justify-center rounded-[28px] border border-border bg-white px-4 py-20 text-center shadow-[0_16px_48px_rgba(15,23,42,0.08)] duration-500">
+      <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-border bg-[#f7f7f7] text-on-surface-subtle transition-all duration-500 group">
         {isUnreadTab ? (
-          <CheckCircle className="w-8 h-8 text-[#8b6a55] transition-transform duration-500 group-hover:scale-110" />
+          <CheckCircle className="w-8 h-8 text-primary transition-transform duration-500 group-hover:scale-110" />
         ) : (
-          <BellOff className="w-8 h-8 text-white/30 transition-transform duration-500 group-hover:scale-110" />
+          <BellOff className="w-8 h-8 text-on-surface-subtle transition-transform duration-500 group-hover:scale-110" />
         )}
       </div>
 
-      <h3 className="text-2xl font-extrabold text-white mb-3 tracking-tight">
+      <h3 className="mb-3 text-2xl font-extrabold tracking-tight text-on-surface">
         {isUnreadTab ? t("empty_state_unread") : t("empty_state_all")}
       </h3>
-      <p className="text-neutral-400 text-sm max-w-md mx-auto mb-8 leading-relaxed">
+      <p className="mx-auto mb-8 max-w-md text-sm leading-relaxed text-on-surface-subtle">
         {isUnreadTab ? t("empty_state_unread_desc") : t("empty_state_all_desc")}
       </p>
 
       <Link
         href={PUBLIC_ROUTES.TOURS}
-        className="px-6 py-3 bg-[#8b6a55] text-white hover:bg-[#a67c63] transition-all duration-300 font-extrabold text-xs uppercase tracking-widest rounded-xl shadow-lg hover:shadow-[#8b6a55]/20 focus:outline-none focus:ring-2 focus:ring-[#8b6a55]"
+        className="rounded-full bg-primary px-6 py-3 text-xs font-extrabold uppercase tracking-widest text-white shadow-[0_12px_30px_rgba(255,56,92,0.22)] transition-all duration-300 hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-primary"
       >
         {t("explore_button")}
       </Link>

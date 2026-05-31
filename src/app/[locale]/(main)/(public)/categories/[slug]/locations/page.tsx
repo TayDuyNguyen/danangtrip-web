@@ -41,7 +41,7 @@ export default async function CategoryLocationsPage({ params }: Props) {
     <div className="design-page layout-main-shell">
       <div className="design-container pt-8">
         <Suspense fallback={
-          <div className="w-full py-16 space-y-8 animate-pulse">
+          <div className="w-full py-8 space-y-8 animate-pulse">
             <div className="h-48 bg-neutral-900 rounded-2xl border border-neutral-800" />
             <div className="h-10 w-2/3 bg-neutral-900 rounded-lg" />
             <div className="grid grid-cols-1 md:grid-cols-[320px_1fr] gap-8">

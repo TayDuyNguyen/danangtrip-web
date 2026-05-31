@@ -1,10 +1,11 @@
 "use client";
 
-import { memo } from "react";
+import { memo, useState, useEffect, useRef } from "react";
 import { Link } from "@/i18n/navigation";
 import { ROUTES } from "@/config";
 import { useTranslations } from "next-intl";
-import { useLocations } from "../hooks/use-locations";
+import { cn } from "@/lib/utils";
+import { useLocationCategories } from "../hooks/use-locations";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 import {
   IoBedOutline,
@@ -48,8 +49,8 @@ const getCategoryTheme = (slug: string, icon?: string | null, iconBackground?: s
     case "ca-phe-tra-sua":
       return {
         icon: <IoCoffeeOutline className="w-8 h-8" />,
-        bgColor: iconBackground ?? "#2b1f14",
-        textColor: "text-[#c59a5f]",
+        bgColor: iconBackground ?? "#FFF4E8",
+        textColor: "text-[#B45F06]",
       };
     case "international-dining":
     case "utensils":
@@ -59,14 +60,14 @@ const getCategoryTheme = (slug: string, icon?: string | null, iconBackground?: s
     case "food":
       return {
         icon: <IoUtensilsOutline className="w-8 h-8" />,
-        bgColor: iconBackground ?? "#2b1f14",
-        textColor: "text-[#c59a5f]",
+        bgColor: iconBackground ?? "#FFF4E8",
+        textColor: "text-[#B45F06]",
       };
     case "nightlife":
       return {
         icon: <IoMoonOutline className="w-8 h-8" />,
-        bgColor: iconBackground ?? "#221622",
-        textColor: "text-[#d884c7]",
+        bgColor: iconBackground ?? "#F7F0FF",
+        textColor: "text-[#7C3AED]",
       };
     case "bar":
     case "pub":
@@ -74,16 +75,16 @@ const getCategoryTheme = (slug: string, icon?: string | null, iconBackground?: s
     case "bar-pub":
       return {
         icon: <IoGlassOutline className="w-8 h-8" />,
-        bgColor: iconBackground ?? "#221622",
-        textColor: "text-[#d884c7]",
+        bgColor: iconBackground ?? "#F7F0FF",
+        textColor: "text-[#7C3AED]",
       };
     case "mappinned":
     case "map-pinned":
     case "map-pin":
       return {
         icon: <IoMapPinOutline className="w-8 h-8" />,
-        bgColor: iconBackground ?? "#1a1f14",
-        textColor: "text-[#929852]",
+        bgColor: iconBackground ?? "#ECFDF5",
+        textColor: "text-[#047857]",
       };
     case "luu-tru":
     case "hotel":
@@ -91,129 +92,142 @@ const getCategoryTheme = (slug: string, icon?: string | null, iconBackground?: s
     case "khach-san-homestay":
       return {
         icon: <IoBedOutline className="w-8 h-8" />,
-        bgColor: iconBackground ?? "#171717",
-        textColor: "text-[#8b6a55]",
+        bgColor: iconBackground ?? "#FFF1F2",
+        textColor: "text-primary",
       };
     case "tham-quan":
     case "tour":
     case "discovery":
       return {
         icon: <IoMapOutline className="w-8 h-8" />,
-        bgColor: iconBackground ?? "#1a1f14",
-        textColor: "text-[#929852]",
+        bgColor: iconBackground ?? "#ECFDF5",
+        textColor: "text-[#047857]",
       };
     case "mua-sam":
     case "shopping":
       return {
         icon: <IoBagHandleOutline className="w-8 h-8" />,
-        bgColor: iconBackground ?? "#2a1616",
-        textColor: "text-[#d88484]",
+        bgColor: iconBackground ?? "#FFF1F2",
+        textColor: "text-[#E11D48]",
       };
     case "van-hoa":
     case "culture":
     case "shrine":
       return {
         icon: <IoLibraryOutline className="w-8 h-8" />,
-        bgColor: iconBackground ?? "#2b1f14",
-        textColor: "text-[#c59a5f]",
+        bgColor: iconBackground ?? "#EFF6FF",
+        textColor: "text-[#2563EB]",
       };
     case "giai-tri":
     case "entertainment":
       return {
         icon: <IoGameControllerOutline className="w-8 h-8" />,
-        bgColor: iconBackground ?? "#171717",
-        textColor: "text-[#8b6a55]",
+        bgColor: iconBackground ?? "#FFF1F2",
+        textColor: "text-primary",
       };
     case "ticket":
-      return { icon: <IoTicketOutline className="w-8 h-8" />, bgColor: iconBackground ?? "#1f1a14", textColor: "text-[#c59a5f]" };
+      return { icon: <IoTicketOutline className="w-8 h-8" />, bgColor: iconBackground ?? "#FFF4E8", textColor: "text-[#B45F06]" };
     case "home":
-      return { icon: <IoHouseOutline className="w-8 h-8" />, bgColor: iconBackground ?? "#171717", textColor: "text-[#8b6a55]" };
+      return { icon: <IoHouseOutline className="w-8 h-8" />, bgColor: iconBackground ?? "#FFF1F2", textColor: "text-primary" };
     case "pill":
     case "shield":
-      return { icon: <IoShieldOutline className="w-8 h-8" />, bgColor: iconBackground ?? "#12201a", textColor: "text-[#7dd3a8]" };
+      return { icon: <IoShieldOutline className="w-8 h-8" />, bgColor: iconBackground ?? "#ECFDF5", textColor: "text-[#047857]" };
     case "test-tube":
-      return { icon: <IoBusinessOutline className="w-8 h-8" />, bgColor: iconBackground ?? "#171717", textColor: "text-[#8b6a55]" };
+      return { icon: <IoBusinessOutline className="w-8 h-8" />, bgColor: iconBackground ?? "#FFF1F2", textColor: "text-primary" };
     case "code":
-      return { icon: <IoBusinessOutline className="w-8 h-8" />, bgColor: iconBackground ?? "#171717", textColor: "text-[#8b6a55]" };
+      return { icon: <IoBusinessOutline className="w-8 h-8" />, bgColor: iconBackground ?? "#FFF1F2", textColor: "text-primary" };
     case "rocket":
-      return { icon: <IoRocketOutline className="w-8 h-8" />, bgColor: iconBackground ?? "#1f1a14", textColor: "text-[#c59a5f]" };
+      return { icon: <IoRocketOutline className="w-8 h-8" />, bgColor: iconBackground ?? "#FFF4E8", textColor: "text-[#B45F06]" };
     case "briefcase":
-      return { icon: <IoBriefcaseOutline className="w-8 h-8" />, bgColor: iconBackground ?? "#171717", textColor: "text-[#8b6a55]" };
+      return { icon: <IoBriefcaseOutline className="w-8 h-8" />, bgColor: iconBackground ?? "#FFF1F2", textColor: "text-primary" };
     case "building":
     case "factory":
-      return { icon: <IoBusinessOutline className="w-8 h-8" />, bgColor: iconBackground ?? "#171717", textColor: "text-[#8b6a55]" };
+      return { icon: <IoBusinessOutline className="w-8 h-8" />, bgColor: iconBackground ?? "#FFF1F2", textColor: "text-primary" };
     case "box":
-      return { icon: <IoBoxOutline className="w-8 h-8" />, bgColor: iconBackground ?? "#171717", textColor: "text-[#8b6a55]" };
+      return { icon: <IoBoxOutline className="w-8 h-8" />, bgColor: iconBackground ?? "#FFF1F2", textColor: "text-primary" };
     case "ship":
-      return { icon: <IoBoatOutline className="w-8 h-8" />, bgColor: iconBackground ?? "#11202a", textColor: "text-[#7fb7d8]" };
+      return { icon: <IoBoatOutline className="w-8 h-8" />, bgColor: iconBackground ?? "#EFF6FF", textColor: "text-[#2563EB]" };
     case "heart":
-      return { icon: <IoHeartOutline className="w-8 h-8" />, bgColor: iconBackground ?? "#2a161f", textColor: "text-[#d884a6]" };
+      return { icon: <IoHeartOutline className="w-8 h-8" />, bgColor: iconBackground ?? "#FFF1F2", textColor: "text-[#E11D48]" };
     case "users":
     case "user":
-      return { icon: <IoPeopleOutline className="w-8 h-8" />, bgColor: iconBackground ?? "#17202a", textColor: "text-[#8ab4d8]" };
+      return { icon: <IoPeopleOutline className="w-8 h-8" />, bgColor: iconBackground ?? "#EFF6FF", textColor: "text-[#2563EB]" };
     case "globe":
-      return { icon: <IoEarthOutline className="w-8 h-8" />, bgColor: iconBackground ?? "#1a1f14", textColor: "text-[#929852]" };
+      return { icon: <IoEarthOutline className="w-8 h-8" />, bgColor: iconBackground ?? "#ECFDF5", textColor: "text-[#047857]" };
     case "tool":
-      return { icon: <IoWrenchOutline className="w-8 h-8" />, bgColor: iconBackground ?? "#171717", textColor: "text-[#8b6a55]" };
+      return { icon: <IoWrenchOutline className="w-8 h-8" />, bgColor: iconBackground ?? "#FFF1F2", textColor: "text-primary" };
     case "hard-hat":
-      return { icon: <IoHardHatOutline className="w-8 h-8" />, bgColor: iconBackground ?? "#1f1a14", textColor: "text-[#c59a5f]" };
+      return { icon: <IoHardHatOutline className="w-8 h-8" />, bgColor: iconBackground ?? "#FFF4E8", textColor: "text-[#B45F06]" };
     case "flame":
-      return { icon: <IoFlame className="w-8 h-8" />, bgColor: iconBackground ?? "#2a1616", textColor: "text-[#d88484]" };
+      return { icon: <IoFlame className="w-8 h-8" />, bgColor: iconBackground ?? "#FFF1F2", textColor: "text-[#E11D48]" };
     default:
       return {
         icon: <IoCompassOutline className="w-8 h-8" />,
-        bgColor: iconBackground ?? "#171717",
-        textColor: "text-[#737373]",
+        bgColor: iconBackground ?? "#F7F7F7",
+        textColor: "text-on-surface-subtle",
       };
   }
 };
 
 const CategoryGrid = () => {
-  const { categories } = useLocations();
   const t = useTranslations();
   const { elementRef, isVisible } = useScrollReveal();
+  const { categories } = useLocationCategories();
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
+  const checkScroll = () => {
+    if (scrollRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+      setCanScrollLeft(scrollLeft > 10);
+      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
+    }
+  };
+
+  useEffect(() => {
+    checkScroll();
+    window.addEventListener("resize", checkScroll);
+    return () => window.removeEventListener("resize", checkScroll);
+  }, [categories]);
 
   const scrollLeft = () => {
-    const el = document.getElementById("categories-scroll");
-    if (el) el.scrollBy({ left: -300, behavior: "smooth" });
+    if (scrollRef.current) scrollRef.current.scrollBy({ left: -300, behavior: "smooth" });
   };
 
   const scrollRight = () => {
-    const el = document.getElementById("categories-scroll");
-    if (el) el.scrollBy({ left: 300, behavior: "smooth" });
+    if (scrollRef.current) scrollRef.current.scrollBy({ left: 300, behavior: "smooth" });
   };
 
   // Remove early return to keep layout stable
   // if (categories.length === 0) return null;
 
   return (
-    <section className="py-[120px] bg-surface/12 backdrop-blur-[1px] font-sans overflow-hidden">
-      <div className="design-container relative" ref={elementRef}>
-        <Link
-          href={ROUTES.LOCATIONS}
-          className={`absolute right-4 top-0 text-[14px] text-[#8b6a55] font-semibold hover:underline transition-all duration-700 delay-200 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
-        >
-          {t("common.tour.see_all")}
-        </Link>
-
+    <section className="overflow-hidden bg-transparent py-4 font-sans">
+      <div className="design-container" ref={elementRef}>
+        
         {/* Header */}
-        <div className={`text-center mb-20 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
-          <div className={`flex items-center justify-center gap-4 mb-6 transition-all duration-700 delay-100 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
-            <span className="w-12 h-[2px] bg-[#8b6a55]/30" />
-            <span className="text-[#8b6a55] font-black text-[12px] tracking-[0.4em] uppercase">
-              {t("home.location_categories.tagline")}
-            </span>
-            <span className="w-12 h-[2px] bg-[#8b6a55]/30" />
+        <div className={`flex justify-between items-end mb-4 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
+          <div className={`transition-all duration-700 delay-100 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
+            <div className="flex items-center gap-3 mb-2">
+              <span className="w-8 h-[2px] bg-primary/40" />
+              <span className="text-primary font-black text-[12px] tracking-[0.4em] uppercase">
+                {t("home.location_categories.tagline")}
+              </span>
+            </div>
+            <h2 className="text-[28px] md:text-[34px] font-black text-on-surface leading-tight">
+              {t("home.location_categories.title_prefix")}{" "}
+              <span className="text-primary underline decoration-[#8b6a55]/30 underline-offset-8">
+                {t("home.location_categories.title_highlight")}
+              </span>
+            </h2>
           </div>
-          <h2 className={`text-[36px] md:text-[48px] font-black leading-[1.1] mb-8 text-white transition-all duration-700 delay-200 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
-            {t("home.location_categories.title_prefix")}{" "}
-            <span className="text-[#8b6a55] underline decoration-[#8b6a55]/30 underline-offset-8">
-              {t("home.location_categories.title_highlight")}
-            </span>
-          </h2>
-          <p className={`text-[#a3a3a3] text-[18px] max-w-2xl mx-auto font-medium leading-relaxed transition-all duration-700 delay-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
-            {t("home.location_categories.subtitle")}
-          </p>
+          <Link
+            href={ROUTES.LOCATIONS}
+            className={`mb-1 flex items-center rounded-full border border-border bg-white px-5 py-2.5 text-[13px] font-semibold text-on-surface shadow-sm transition-all duration-300 hover:border-primary/30 hover:bg-[#f7f7f7] hover:text-primary ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
+          >
+            {t("home.hot_tours.explore_more")} <span className="ml-2 transition-transform group-hover:translate-x-1">→</span>
+          </Link>
         </div>
 
         {/* Slider Wrapper */}
@@ -221,24 +235,33 @@ const CategoryGrid = () => {
           {/* Navigation Buttons */}
           <button
             onClick={scrollLeft}
-            className="absolute left-0 top-[45%] -translate-y-1/2 -translate-x-1/2 z-30 w-12 h-12 rounded-full bg-[#171717] border border-[#262626] items-center justify-center text-[#d4d4d4] hover:border-[#8b6a55] hover:text-[#8b6a55] shadow-xl transition-all opacity-0 group-hover/nav:opacity-100 hidden lg:flex active:scale-90"
+            className={`absolute left-0 top-[40%] -translate-y-1/2 -translate-x-1/2 z-30 w-10 h-10 rounded-full bg-surface border border-border text-on-surface hover:bg-primary hover:border-primary hover:text-white flex items-center justify-center shadow-md transition-all hidden lg:flex active:scale-90 hover:scale-110 opacity-0 ${
+              canScrollLeft
+                ? "group-hover/nav:opacity-100 cursor-pointer"
+                : "group-hover/nav:opacity-10 pointer-events-none cursor-default"
+            }`}
             aria-label={t("common.accessibility.previous")}
           >
-            <IoChevronBackOutline size={20} />
+            <IoChevronBackOutline size={18} />
           </button>
 
           <button
             onClick={scrollRight}
-            className="absolute right-0 top-[45%] -translate-y-1/2 translate-x-1/2 z-30 w-12 h-12 rounded-full bg-[#171717] border border-[#262626] items-center justify-center text-[#d4d4d4] hover:border-[#8b6a55] hover:text-[#8b6a55] shadow-xl transition-all opacity-0 group-hover/nav:opacity-100 hidden lg:flex active:scale-90"
+            className={`absolute right-0 top-[40%] -translate-y-1/2 translate-x-1/2 z-30 w-10 h-10 rounded-full bg-surface border border-border text-on-surface hover:bg-primary hover:border-primary hover:text-white flex items-center justify-center shadow-md transition-all hidden lg:flex active:scale-90 hover:scale-110 opacity-0 ${
+              canScrollRight
+                ? "group-hover/nav:opacity-100 cursor-pointer"
+                : "group-hover/nav:opacity-10 pointer-events-none cursor-default"
+            }`}
             aria-label={t("common.accessibility.next")}
           >
-            <IoChevronForwardOutline size={20} />
+            <IoChevronForwardOutline size={18} />
           </button>
 
           {/* Scrollable Container */}
           <div
-            id="categories-scroll"
-            className="flex items-center gap-10 md:gap-16 overflow-x-auto no-scrollbar scroll-smooth px-8 md:px-12 py-4"
+            ref={scrollRef}
+            onScroll={checkScroll}
+            className="flex items-center gap-[24px] overflow-x-auto no-scrollbar scroll-smooth px-2 py-3 snap-x snap-mandatory"
           >
             {categories.map((category, index) => {
               const theme = getCategoryTheme(category.slug, category.icon, category.icon_background);
@@ -246,27 +269,26 @@ const CategoryGrid = () => {
                 <Link
                   key={category.id}
                   href={`/categories/${category.slug}/locations`}
-                  className="group flex flex-col items-center gap-6 shrink-0"
-                  style={{ animationDelay: `${(index + 1) * 100}ms` }}
+                  className={cn(
+                    "group flex flex-col items-center justify-center shrink-0 snap-start min-w-[90px] md:min-w-[110px] pb-2 border-b-2 border-transparent hover:border-primary/60 transition-all duration-200 cursor-pointer",
+                    isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                  )}
+                  style={{ transitionDelay: isVisible ? `${index * 40}ms` : "0ms" }}
                 >
-                  {/* Circle Icon Container */}
+                  {/* Minimalist Icon */}
                   <div
-                    className={`w-24 h-24 md:w-28 md:h-28 rounded-full flex items-center justify-center ${theme.textColor} transition-all duration-500 group-hover:scale-110 group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)]`}
-                    style={{ backgroundColor: theme.bgColor }}
-                    title={`API icon: ${category.icon ?? "fallback"}${category.icon_background ? ` | API color: ${category.icon_background}` : ""}`}
+                    className="w-9 h-9 flex items-center justify-center mb-1 text-on-surface-subtle group-hover:text-primary transition-colors duration-300"
+                    title={`API icon: ${category.icon ?? "fallback"}`}
                   >
-                    <div className="transition-transform duration-500 group-hover:rotate-12">
+                    <div className="transition-transform duration-500 group-hover:scale-110">
                       {theme.icon}
                     </div>
                   </div>
 
                   {/* Name */}
-                  <div className="text-center">
-                    <h3 className="text-[16px] md:text-[18px] font-black text-white group-hover:text-[#8b6a55] transition-colors uppercase tracking-wider">
-                      {category.name}
-                    </h3>
-                    <div className="h-1 w-0 bg-[#8b6a55] mx-auto mt-2 transition-all duration-300 group-hover:w-full rounded-full" />
-                  </div>
+                  <span className="text-[13px] font-semibold text-on-surface-subtle group-hover:text-primary transition-colors text-center line-clamp-1">
+                    {category.name}
+                  </span>
                 </Link>
               );
             })}
