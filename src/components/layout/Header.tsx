@@ -16,8 +16,23 @@ import {
   IoCloseOutline,
   IoMenuOutline,
   IoPersonOutline,
+  IoHouseOutline,
+  IoLocationOutline,
+  IoCompassOutline,
+  IoPlaneOutline,
+  IoNewspaperOutline,
+  IoMailOutline,
 } from "@/components/icons/solar";
 import { IoNotificationsOutline } from "react-icons/io5";
+
+const NAV_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
+  "nav.home": IoHouseOutline,
+  "nav.locations": IoLocationOutline,
+  "nav.nearby": IoCompassOutline,
+  "nav.travel": IoPlaneOutline,
+  "nav.blog": IoNewspaperOutline,
+  "nav.contact": IoMailOutline,
+};
 
 const CartIcon = dynamic(
   () => import("@/features/cart/components/CartIcon").then((mod) => mod.CartIcon),
@@ -93,7 +108,7 @@ const Header = () => {
   };
 
   return (
-    <header className="fixed inset-x-0 top-0 z-[100] px-3 pt-3 sm:px-4">
+    <header className="fixed inset-x-0 top-0 z-[100] pt-3">
       <div className="container">
         <div
           className={`mx-auto flex h-[76px] items-center justify-between rounded-[30px] border px-4 backdrop-blur-xl transition-all duration-300 sm:px-6 ${
@@ -106,28 +121,44 @@ const Header = () => {
             <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#ff385c] text-base font-bold text-white shadow-[0_10px_24px_rgba(255,56,92,0.28)]">
               D
             </div>
-            <div className="hidden sm:block">
-              <p className="text-[15px] font-semibold tracking-[-0.02em] text-on-surface">
+            <div className="hidden 2xl:block">
+              <p className="text-[15px] font-semibold tracking-[-0.02em] text-on-surface leading-tight">
                 {t("common.brand_name")}
               </p>
-              <p className="text-[12px] text-on-surface-subtle">Explore Da Nang like a local</p>
+              <p className="text-[12px] text-on-surface-subtle">
+                {t("common.brand_subtitle")}
+              </p>
             </div>
           </Link>
 
           <nav className="hidden lg:flex items-center rounded-full border border-border bg-white px-2 py-2 shadow-[0_2px_12px_rgba(0,0,0,0.05)]">
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.path}
-                href={link.path}
-                className={`rounded-full px-4 py-2 text-[14px] font-medium transition-all duration-200 ${
-                  isActive(link.path)
-                    ? "bg-[#f7f7f7] text-on-surface shadow-[0_1px_4px_rgba(0,0,0,0.06)]"
-                    : "text-on-surface-subtle hover:bg-[#f7f7f7] hover:text-on-surface"
-                }`}
-              >
-                {t(link.name)}
-              </Link>
-            ))}
+            {NAV_LINKS.map((link) => {
+              const Icon = NAV_ICONS[link.name];
+              const isLinkActive = isActive(link.path);
+              return (
+                <Link
+                  key={link.path}
+                  href={link.path}
+                  aria-current={isLinkActive ? "page" : undefined}
+                  className={`group/nav-item relative flex items-center rounded-full px-3 py-2.5 text-[14px] transition-all duration-300 hover:scale-105 active:scale-95 group-hover/nav-item:px-5 xl:px-5 ${
+                    isLinkActive
+                      ? "border border-[#ebebeb] bg-white text-[#222222] font-semibold shadow-[0_6px_18px_rgba(15,23,42,0.10)]"
+                      : "border border-transparent text-[#5f5f5f] font-medium hover:bg-[#f7f7f7] hover:text-[#222222]"
+                  }`}
+                >
+                  {Icon && (
+                    <Icon 
+                      className={`w-[18px] h-[18px] shrink-0 transition-colors duration-200 ${
+                        isLinkActive ? "text-primary" : "text-[#5f5f5f] group-hover/nav-item:text-primary"
+                      }`} 
+                    />
+                  )}
+                  <span className="text-[14px] transition-all duration-300 max-w-0 opacity-0 overflow-hidden group-hover/nav-item:max-w-[120px] group-hover/nav-item:opacity-100 group-hover/nav-item:ml-2 xl:max-w-[120px] xl:opacity-100 xl:ml-2 whitespace-nowrap">
+                    {t(link.name)}
+                  </span>
+                </Link>
+              );
+            })}
           </nav>
 
           <div className="flex items-center gap-2 sm:gap-3">
@@ -218,8 +249,8 @@ const Header = () => {
 
             {isAuthenticated ? (
               <div className="relative group/user hidden sm:block">
-                <button className="flex items-center gap-2 rounded-full border border-border bg-white py-1.5 pl-1.5 pr-3 shadow-[0_2px_10px_rgba(0,0,0,0.05)] transition-colors hover:shadow-[0_5px_16px_rgba(0,0,0,0.09)]">
-                  <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-[#f7f7f7] text-on-surface">
+                <button className="flex items-center justify-center gap-0 2xl:gap-2 rounded-full border border-border bg-white w-10 h-10 p-0 2xl:w-auto 2xl:h-auto 2xl:p-1.5 2xl:pr-3 shadow-[0_2px_10px_rgba(0,0,0,0.05)] transition-colors hover:shadow-[0_5px_16px_rgba(0,0,0,0.09)]">
+                  <div className="flex h-8 w-8 2xl:h-9 2xl:w-9 items-center justify-center overflow-hidden rounded-full bg-[#f7f7f7] text-on-surface shrink-0">
                     {user?.avatar ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img src={user.avatar} alt={user.name || "User Avatar"} className="h-full w-full object-cover" />
@@ -227,7 +258,7 @@ const Header = () => {
                       <IoPersonOutline className="text-[18px]" />
                     )}
                   </div>
-                  <span className="max-w-[110px] truncate text-sm font-medium text-on-surface">
+                  <span className="hidden 2xl:inline-block max-w-[110px] truncate text-sm font-medium text-on-surface ml-0 2xl:ml-2">
                     {user?.name || t("auth.profile")}
                   </span>
                 </button>
@@ -295,21 +326,26 @@ const Header = () => {
             </div>
 
             <nav className="flex max-h-[70vh] flex-col overflow-y-auto p-4">
-              {NAV_LINKS.map((link) => (
-                <Link
-                  key={link.path}
-                  href={link.path}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className={`flex items-center gap-3 rounded-2xl px-4 py-3 text-sm transition-colors ${
-                    isActive(link.path)
-                      ? "bg-[#fff4f6] font-semibold text-primary"
-                      : "text-on-surface hover:bg-[#f7f7f7]"
-                  }`}
-                >
-                  <span>{t(link.name)}</span>
-                  {isActive(link.path) && <IoChevronForward className="ml-auto text-[16px]" />}
-                </Link>
-              ))}
+              {NAV_LINKS.map((link) => {
+                const Icon = NAV_ICONS[link.name];
+                const isLinkActive = isActive(link.path);
+                return (
+                  <Link
+                    key={link.path}
+                    href={link.path}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`flex items-center gap-3 rounded-2xl px-4 py-3 text-sm transition-colors ${
+                      isLinkActive
+                        ? "bg-[#fff4f6] font-semibold text-primary"
+                        : "text-on-surface hover:bg-[#f7f7f7]"
+                    }`}
+                  >
+                    {Icon && <Icon className={`w-5 h-5 shrink-0 ${isLinkActive ? "text-primary" : "text-on-surface-subtle"}`} />}
+                    <span>{t(link.name)}</span>
+                    {isLinkActive && <IoChevronForward className="ml-auto text-[16px]" />}
+                  </Link>
+                );
+              })}
 
               {isAuthenticated && (
                 <div className="mt-3 border-t border-border pt-3">

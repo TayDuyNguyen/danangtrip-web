@@ -27,6 +27,8 @@ interface BookingsSearchFieldProps {
   initialValue: string;
   isLoading: boolean;
   placeholder: string;
+  label: string;
+  actionText: string;
   onDebouncedChange: (value: string) => void;
 }
 
@@ -34,6 +36,8 @@ function BookingsSearchField({
   initialValue,
   isLoading,
   placeholder,
+  label,
+  actionText,
   onDebouncedChange,
 }: BookingsSearchFieldProps) {
   const [value, setValue] = useState(initialValue);
@@ -53,8 +57,8 @@ function BookingsSearchField({
       isLoading={isLoading}
       aria-label={placeholder}
       debounceMs={0}
-      label="Booking search"
-      actionText="Find"
+      label={label}
+      actionText={actionText}
     />
   );
 }
@@ -130,7 +134,7 @@ export function BookingsHistoryClient() {
     <div className="w-full max-w-full space-y-8 overflow-hidden pb-16">
       
       {/* Search and Tabs Header Panel */}
-      <div className="overflow-hidden rounded-[28px] border border-border bg-white shadow-[0_18px_54px_rgba(15,23,42,0.08)]">
+      <div className="overflow-hidden rounded-[20px] border border-border bg-white shadow-[0_1px_3px_rgba(0,0,0,0.08)]">
         <div className="space-y-6 p-4 sm:p-6">
           
           {/* Controls: Search */}
@@ -148,6 +152,8 @@ export function BookingsHistoryClient() {
                 )
               }
               placeholder={t("search_placeholder")}
+              label={t("search_label")}
+              actionText={t("search_action")}
               isLoading={isLoading}
             />
           </div>
@@ -187,7 +193,7 @@ export function BookingsHistoryClient() {
 
       {/* Main List Rendering */}
       {isError ? (
-        <div className="rounded-[28px] border border-border bg-white p-8 text-center shadow-[0_18px_54px_rgba(15,23,42,0.08)]">
+        <div className="rounded-[20px] border border-border bg-white p-8 text-center shadow-[0_1px_3px_rgba(0,0,0,0.08)]">
           <div className="w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-4">
             <InfoCircle className="w-6 h-6 text-red-500" />
           </div>
@@ -203,7 +209,7 @@ export function BookingsHistoryClient() {
         // Premium Skeleton Area
         <div className="space-y-6">
           {[...Array(3)].map((_, i) => (
-            <div key={i} className="flex animate-pulse flex-col gap-6 rounded-[28px] border border-border bg-white p-6 md:flex-row">
+            <div key={i} className="flex animate-pulse flex-col gap-6 rounded-[20px] border border-border bg-white p-6 md:flex-row">
               <div className="h-36 w-full shrink-0 rounded-2xl bg-[#f7f7f7] md:w-44" />
               <div className="flex-1 space-y-4 py-1">
                 <div className="h-4 w-1/4 rounded bg-[#f7f7f7]" />
@@ -224,7 +230,7 @@ export function BookingsHistoryClient() {
         </div>
       ) : bookings.length === 0 ? (
         // Empty State
-        <div className="rounded-[28px] border border-border bg-white shadow-[0_18px_54px_rgba(15,23,42,0.08)]">
+        <div className="rounded-[20px] border border-border bg-white shadow-[0_1px_3px_rgba(0,0,0,0.08)]">
           <div>
             <EmptyState
               title={t("empty_title")}

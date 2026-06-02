@@ -2,6 +2,8 @@
   "title": "Search Results",
   "description": "Find amazing locations and tours in Da Nang",
   "found_results": "Found {count} results for <strong>{query}</strong>",
+  "input_label": "Where",
+  "input_action": "Search",
   "tabs": {
     "all": "All",
     "tour": "Tours",

@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import type { Category } from "@/types";
 import { useLocationDistricts } from "../hooks/use-locations";
 import { IoChevronDownOutline, IoCloseOutline, IoStar } from "@/components/icons/solar";
@@ -66,9 +66,7 @@ export default function LocationFilters({
   hideCategories = false,
 }: LocationFiltersProps) {
   const t = useTranslations("locations");
-  const locale = useLocale();
   const { data: districtsList = [] } = useLocationDistricts();
-  const isVietnamese = locale === "vi";
 
   const totalLocationsCount = useMemo(
     () => categories.reduce((sum, category) => sum + (category.locations_count ?? 0), 0),
@@ -203,8 +201,8 @@ export default function LocationFilters({
                 className="px-3 pt-2 text-left text-sm font-semibold text-primary transition-colors hover:text-primary/80"
               >
                 {showAllCategories
-                  ? (isVietnamese ? "Thu gọn" : "Show less")
-                  : (isVietnamese ? `Xem thêm ${categories.length - 8} danh mục` : `Show ${categories.length - 8} more`)}
+                  ? t("filters.show_less")
+                  : t("filters.show_more_categories", { count: categories.length - 8 })}
               </button>
             )}
           </div>
@@ -296,12 +294,8 @@ export default function LocationFilters({
                 className="px-3 pt-2 text-left text-sm font-semibold text-primary transition-colors hover:text-primary/80"
               >
                 {showAllDistricts
-                  ? (isVietnamese ? "Thu gọn" : "Show less")
-                  : (
-                      isVietnamese
-                        ? `Xem thêm ${districtsList.length - 8} quận/huyện`
-                        : `Show ${districtsList.length - 8} more`
-                    )}
+                  ? t("filters.show_less")
+                  : t("filters.show_more_districts", { count: districtsList.length - 8 })}
               </button>
             )}
           </div>

@@ -27,7 +27,7 @@ export function CartList({ items, selectedIds = [], onToggleSelect }: CartListPr
         </div>
         <Link
           href="/tours"
-          className="inline-flex items-center justify-center px-6 h-12 bg-primary hover:bg-[#a37d65] text-white text-xs font-black uppercase tracking-widest rounded-full transition-colors shadow-lg shadow-primary/20"
+          className="inline-flex h-12 items-center justify-center rounded-full bg-primary px-6 text-xs font-semibold uppercase tracking-normal text-white shadow-lg shadow-primary/20 transition-colors hover:bg-primary-hover"
         >
           {t("back_to_tours")}
         </Link>

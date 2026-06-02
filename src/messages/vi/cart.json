@@ -35,5 +35,12 @@
   "children": "Trẻ em",
   "infants": "Em bé",
   "quantity_limit": "Đạt giới hạn chỗ",
-  "departure_code_label": "Mã chuyến"
+  "departure_code_label": "Mã chuyến",
+  "confirm_delete_selected": "Bạn có chắc muốn xóa {count} mục đã chọn?",
+  "confirm_delete_all": "Bạn có chắc chắn muốn xóa toàn bộ giỏ hàng?",
+  "clear_all_success": "Đã xóa toàn bộ giỏ hàng",
+  "remove_selected_success": "Đã xóa các mục đã chọn",
+  "select_all": "Chọn tất cả",
+  "delete_selected": "Xóa mục đã chọn ({count})",
+  "delete_all": "Xóa tất cả"
 }

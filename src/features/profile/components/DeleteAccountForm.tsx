@@ -26,6 +26,7 @@ export function DeleteAccountForm({
   activeBookingsCount,
 }: DeleteAccountFormProps) {
   const t = useTranslations("settings");
+  const tCommon = useTranslations("common");
   const [confirmCheckbox, setConfirmCheckbox] = useState(false);
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -46,7 +47,7 @@ export function DeleteAccountForm({
       if (issue.path[0] === "confirmCheckbox") {
         setError(t("delete_account.confirm_checkbox_label"));
       } else {
-        setError(t("error.required"));
+        setError(tCommon("error.required"));
       }
       return;
     }
@@ -63,7 +64,7 @@ export function DeleteAccountForm({
   const isFormValid = confirmCheckbox && password.length > 0 && activeBookingsCount === 0;
 
   return (
-    <div className="max-w-xl rounded-[28px] border border-border bg-white p-6 shadow-[0_14px_36px_rgba(0,0,0,0.06)] animate-in fade-in slide-in-from-bottom-4 duration-500 sm:p-8">
+    <div className="max-w-xl rounded-[20px] border border-border bg-white p-6 shadow-[0_1px_3px_rgba(0,0,0,0.08)] animate-in fade-in slide-in-from-bottom-4 duration-500 sm:p-8">
       {/* Header */}
       <div className="mb-8 flex items-start gap-4 border-b border-border pb-6">
         <div className="w-10 h-10 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center shrink-0">

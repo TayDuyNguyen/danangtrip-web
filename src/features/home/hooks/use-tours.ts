@@ -1,24 +1,18 @@
 "use client";
 
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { homeService } from "@/services/home.service";
-import { mapApiConfig } from "@/services/config.service";
 import type { Tour, TourCategory } from "@/types";
 import { shouldRetryQuery } from "@/lib/react-query";
 import { extractItems } from "@/utils";
 import { tourMapper } from "@/features/tour/utils/tour-mapper";
 
 export const useFeaturedTours = (enabled: boolean = true) => {
-  const queryClient = useQueryClient();
-
   const query = useQuery({
-    queryKey: ["home", "unified-data"],
+    queryKey: ["home", "tours-data"],
     queryFn: async () => {
-      const res = await homeService.getHomeData();
+      const res = await homeService.getHomeTours();
       if (res.success && res.data) {
-        if (res.data.config) {
-          queryClient.setQueryData(["app", "config"], mapApiConfig(res.data.config));
-        }
         return res.data;
       }
       throw res;
@@ -37,16 +31,11 @@ export const useFeaturedTours = (enabled: boolean = true) => {
 };
 
 export const useHotTours = (enabled: boolean = true) => {
-  const queryClient = useQueryClient();
-
   const query = useQuery({
-    queryKey: ["home", "unified-data"],
+    queryKey: ["home", "tours-data"],
     queryFn: async () => {
-      const res = await homeService.getHomeData();
+      const res = await homeService.getHomeTours();
       if (res.success && res.data) {
-        if (res.data.config) {
-          queryClient.setQueryData(["app", "config"], mapApiConfig(res.data.config));
-        }
         return res.data;
       }
       throw res;
@@ -65,16 +54,11 @@ export const useHotTours = (enabled: boolean = true) => {
 };
 
 export const useHomeTourCategories = (enabled: boolean = true) => {
-  const queryClient = useQueryClient();
-
   const query = useQuery({
-    queryKey: ["home", "unified-data"],
+    queryKey: ["home", "tours-data"],
     queryFn: async () => {
-      const res = await homeService.getHomeData();
+      const res = await homeService.getHomeTours();
       if (res.success && res.data) {
-        if (res.data.config) {
-          queryClient.setQueryData(["app", "config"], mapApiConfig(res.data.config));
-        }
         return res.data;
       }
       throw res;

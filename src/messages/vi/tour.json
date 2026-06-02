@@ -13,6 +13,9 @@
     "meta_description": "Tổng hợp các tour du lịch Đà Nẵng hấp dẫn: tour Ngũ Hành Sơn, Hội An, Bà Nà Hills, Cù Lao Chàm. Đặt tour trực tuyến, hỗ trợ 24/7.",
     "hero_title": "Du lịch Đà Nẵng",
     "hero_subtitle": "Khám phá các tour du lịch hấp dẫn nhất tại thành phố đáng sống nhất Việt Nam.",
+    "destination_name": "Đà Nẵng",
+    "faq_title": "Câu hỏi thường gặp",
+    "loading": "Đang tải tour Đà Nẵng...",
     "content": "<h2>Khám phá Đà Nẵng - Thành phố của những cây cầu</h2><p>Đà Nẵng không chỉ nổi tiếng với những bãi biển tuyệt đẹp như Mỹ Khê, mà còn thu hút du khách bởi những công trình kiến trúc độc đáo và danh lam thắng cảnh hùng vĩ...</p>",
     "faqs": [
       {
@@ -27,6 +30,8 @@
   },
   "list": {
     "search_placeholder": "Tìm kiếm tour...",
+    "search_label": "Tour",
+    "search_action": "Tìm kiếm",
     "filters_toggle": "Bộ lọc",
     "results_count": "Tìm thấy <highlight>{count}</highlight> tour phù hợp",
     "load_error": "Không tải được danh sách tour. Vui lòng thử lại.",
@@ -47,6 +52,14 @@
     "price_max_placeholder": "Đến",
     "available_from_label": "Từ ngày",
     "available_to_label": "Đến ngày",
+    "show_less": "Thu gọn",
+    "show_more_categories": "Xem thêm {count} danh mục",
+    "price_options": {
+      "under_500k": "Dưới 500k",
+      "from_500k_to_1m": "500k - 1Tr",
+      "from_1m_to_2m": "1Tr - 2Tr",
+      "over_2m": "Trên 2Tr"
+    },
     "durations": {
       "half_day": "Nửa ngày",
       "one_day": "1 ngày",
@@ -158,6 +171,14 @@
     "note": "Ghi chú",
     "note_placeholder": "Yêu cầu đặc biệt, dị ứng thức ăn, v.v...",
     "payment_method": "Phương thức thanh toán",
+    "validation": {
+      "schedule_required": "Vui lòng chọn ngày khởi hành hợp lệ.",
+      "adult_required": "Phải có ít nhất 1 người lớn.",
+      "name_min": "Tên tối thiểu 2 ký tự.",
+      "email_invalid": "Email không hợp lệ.",
+      "phone_invalid": "Số điện thoại không hợp lệ.",
+      "terms_required": "Bạn phải đồng ý với điều khoản."
+    },
     "terms_agree": "Tôi đồng ý với <terms>Điều khoản sử dụng</terms> và <policy>Chính sách hủy tour</policy> của Đà Nẵng Trip.",
     "terms_link": "Điều khoản sử dụng",
     "policy_link": "Chính sách hủy tour",
@@ -217,6 +238,8 @@
     "meta_description": "Xem danh sách và quản lý các đơn đặt tour của bạn tại DanangTrip.",
     "page_title": "Đơn đặt tour của tôi",
     "search_placeholder": "Tìm theo mã đơn đặt hoặc tên tour...",
+    "search_label": "Tìm đơn đặt tour",
+    "search_action": "Tìm kiếm",
     "tabs": {
       "all": "Tất cả",
       "pending": "Chờ xác nhận",
@@ -298,5 +321,9 @@
     "status_completed": "Hoàn thành",
     "section_timeline": "Trạng thái đơn hàng",
     "error_desc": "Có lỗi xảy ra khi tải chi tiết đơn hàng. Vui lòng thử lại."
+  },
+  "landing_hero": {
+    "discover": "Khám phá",
+    "curated_label": "Trải nghiệm cao cấp được tuyển chọn cho bạn"
   }
 }

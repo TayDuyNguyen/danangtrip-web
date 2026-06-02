@@ -225,13 +225,13 @@ export function ResetPasswordForm({ token = "", email: initialEmail = "" }: Rese
       {/* Premium Ambient Background */}
       <AmbientBackground />
 
-      <div className="relative flex w-full max-w-md lg:max-w-4xl lg:w-3/4 xl:w-2/3 h-auto lg:h-[550px] shadow-[0_0_40px_rgba(139,106,85,0.12)] rounded-xl glow-effect animate-reveal-up">
+      <div className="relative flex h-auto w-full max-w-md rounded-xl shadow-[0_0_40px_rgba(255,56,92,0.12)] glow-effect animate-reveal-up lg:h-[550px] lg:w-3/4 lg:max-w-4xl xl:w-2/3">
         
         {/* Conic-gradient Spinning Border Effect (Hidden on mobile for performance) */}
         <div className="absolute inset-[-2px] rounded-[10px] overflow-hidden pointer-events-none z-0 hidden sm:block">
           <div 
             className="absolute top-1/2 left-1/2 w-[200%] h-[200%] -translate-x-1/2 -translate-y-1/2 animate-[spin_4s_linear_infinite]" 
-            style={{ backgroundImage: 'conic-gradient(from 0deg, transparent 0 240deg, rgba(139,106,85,0.3) 300deg, #8b6a55 360deg)' }}
+            style={{ backgroundImage: 'conic-gradient(from 0deg, transparent 0 240deg, rgba(255,56,92,0.24) 300deg, #FF385C 360deg)' }}
           />
         </div>
 

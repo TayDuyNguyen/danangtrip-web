@@ -13,6 +13,7 @@ import { format } from "date-fns";
 import { vi, enUS } from "date-fns/locale";
 import { useLocale } from "next-intl";
 import { useDebounce } from "@/hooks/useDebounce";
+import { formatPriceVND } from "@/utils/format";
 
 interface CartItemRowProps {
   item: CartItem;
@@ -25,6 +26,7 @@ export function CartItemRow({ item, isSelected = false, onToggleSelect }: CartIt
   const td = useTranslations("tour.detail");
   const locale = useLocale();
   const dateLocale = locale === "vi" ? vi : enUS;
+  const priceLocale = locale === "vi" ? "vi-VN" : "en-US";
 
   const { mutate: updateQuantity, isPending: isUpdating } = useUpdateCartItem();
   const { mutate: removeItem, isPending: isRemoving } = useRemoveCartItem();
@@ -191,7 +193,7 @@ export function CartItemRow({ item, isSelected = false, onToggleSelect }: CartIt
             </p>
           ) : isSoldOut ? (
             <p className="text-xs font-bold uppercase tracking-wider text-red-400">
-              {td("sold_out_badge")}
+              {td("schedule_full")}
             </p>
           ) : hasCapacityWarning ? (
             <p className="text-xs font-bold uppercase tracking-wider text-orange-400">
@@ -205,7 +207,7 @@ export function CartItemRow({ item, isSelected = false, onToggleSelect }: CartIt
             <div className="flex flex-col gap-1 shrink-0 w-full sm:max-w-xs">
               <QuantityCounter
                 label={t("adults")}
-                subLabel={`${priceAdult.toLocaleString()}đ`}
+                subLabel={formatPriceVND(priceAdult, priceLocale)}
                 value={localAdults}
                 onChange={(val) => handleQuantityChange("adult", val)}
                 min={1}
@@ -215,7 +217,7 @@ export function CartItemRow({ item, isSelected = false, onToggleSelect }: CartIt
               />
               <QuantityCounter
                 label={t("children")}
-                subLabel={`${priceChild.toLocaleString()}đ`}
+                subLabel={formatPriceVND(priceChild, priceLocale)}
                 value={localChildren}
                 onChange={(val) => handleQuantityChange("child", val)}
                 min={0}
@@ -225,7 +227,7 @@ export function CartItemRow({ item, isSelected = false, onToggleSelect }: CartIt
               />
               <QuantityCounter
                 label={t("infants")}
-                subLabel={`${priceInfant.toLocaleString()}đ`}
+                subLabel={formatPriceVND(priceInfant, priceLocale)}
                 value={localInfants}
                 onChange={(val) => handleQuantityChange("infant", val)}
                 min={0}
@@ -237,7 +239,7 @@ export function CartItemRow({ item, isSelected = false, onToggleSelect }: CartIt
             {/* Subtotal */}
             <div className="text-right sm:self-end">
               <p className="text-[10px] font-bold uppercase tracking-widest text-on-surface-subtle">{t("price_label")}</p>
-              <p className="text-xl font-black text-primary tracking-tight">{subtotal.toLocaleString()}đ</p>
+              <p className="text-xl font-black text-primary tracking-tight">{formatPriceVND(subtotal, priceLocale)}</p>
             </div>
           </div>
         </div>

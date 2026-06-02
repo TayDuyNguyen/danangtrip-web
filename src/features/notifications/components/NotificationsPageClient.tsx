@@ -126,7 +126,7 @@ export function NotificationsPageClient() {
 
       {/* Main List Area */}
       {isError ? (
-        <div className="mx-auto max-w-xl animate-in rounded-[28px] border border-border bg-white p-12 text-center shadow-[0_16px_48px_rgba(15,23,42,0.08)] duration-300">
+        <div className="mx-auto max-w-xl animate-in rounded-[20px] border border-border bg-white p-12 text-center shadow-[0_1px_3px_rgba(0,0,0,0.08)] duration-300">
           <div className="w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-4">
             <Info className="w-6 h-6 text-red-500" />
           </div>

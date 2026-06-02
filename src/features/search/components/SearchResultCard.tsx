@@ -75,16 +75,16 @@ export const SearchResultCard = ({ item, isLoading, featured, index, onClick }: 
 
         <div className="absolute left-4 top-4 z-10 flex gap-2">
           {isTour ? (
-            <span className="rounded-full bg-primary px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-white shadow-sm">
+            <span className="rounded-full bg-primary px-3 py-1 text-xs font-semibold uppercase tracking-normal text-white shadow-sm">
               {t("search.badges.tour")}
             </span>
           ) : (
-            <span className="rounded-full bg-white/92 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-on-surface shadow-sm backdrop-blur-sm">
+            <span className="rounded-full bg-white/92 px-3 py-1 text-xs font-semibold uppercase tracking-normal text-on-surface shadow-sm backdrop-blur-sm">
               {t("search.badges.location")}
             </span>
           )}
           {item.featured && (
-            <span className="rounded-full bg-[#fff4d8] px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-[#9a5b00] shadow-sm">
+            <span className="rounded-full bg-[#fff4d8] px-3 py-1 text-xs font-semibold uppercase tracking-normal text-[#9a5b00] shadow-sm">
               {t("search.badges.hot")}
             </span>
           )}
@@ -93,7 +93,7 @@ export const SearchResultCard = ({ item, isLoading, featured, index, onClick }: 
 
       <div className={cn("flex flex-grow flex-col justify-between", featured ? "w-full p-6 md:w-1/2" : "p-5")}>
         <div>
-          <span className="mb-2 block text-[10px] font-bold uppercase tracking-widest text-on-surface-subtle">
+          <span className="mb-2 block text-xs font-semibold uppercase tracking-normal text-on-surface-subtle">
             {isTour ? t("search.badges.tour") : t("search.badges.location")}
           </span>
 
@@ -103,11 +103,11 @@ export const SearchResultCard = ({ item, isLoading, featured, index, onClick }: 
                 <IoStar className="mr-0.5 text-[11px]" />
                 <span className="text-[12px] font-bold text-on-surface">{item.rating}</span>
               </div>
-              <span className="text-[11px] text-on-surface-subtle">({item.reviewCount})</span>
+              <span className="text-xs text-on-surface-subtle">({item.reviewCount})</span>
               {item.categoryName && (
                 <>
                   <span className="mx-1.5 text-on-surface-subtle opacity-40">•</span>
-                  <span className="text-[10px] font-semibold uppercase tracking-wide text-on-surface-subtle">
+                  <span className="text-xs font-semibold uppercase tracking-normal text-on-surface-subtle">
                     {item.categoryName}
                   </span>
                 </>
@@ -144,7 +144,7 @@ export const SearchResultCard = ({ item, isLoading, featured, index, onClick }: 
           <div>
             {isTour ? (
               <div className="flex flex-col">
-                <span className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-on-surface-subtle">
+                <span className="mb-1 block text-xs font-semibold uppercase tracking-normal text-on-surface-subtle">
                   {t("search.card.starting_from")}
                 </span>
                 <span className={cn("font-semibold text-primary", featured ? "text-2xl" : "text-[18px]")}>
@@ -157,10 +157,10 @@ export const SearchResultCard = ({ item, isLoading, featured, index, onClick }: 
               </div>
             ) : (
               <div className="flex flex-col">
-                <span className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-on-surface-subtle">
+                <span className="mb-1 block text-xs font-semibold uppercase tracking-normal text-on-surface-subtle">
                   {t("search.card.price_level")}
                 </span>
-                <div className="flex gap-0.5 text-[18px] font-semibold tracking-widest text-primary">
+                <div className="flex gap-0.5 text-[18px] font-semibold tracking-normal text-primary">
                   {Array.from({ length: 4 }).map((_, level) => (
                     <span
                       key={level}

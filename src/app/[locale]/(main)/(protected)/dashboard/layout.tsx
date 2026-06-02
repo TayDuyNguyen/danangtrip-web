@@ -4,7 +4,8 @@ import { Sidebar } from "@/components/layout/Sidebar";
 import { Navbar } from "@/components/layout/Navbar";
 import { useAuth } from "@/features/auth";
 import { useEffect } from "react";
-import { useRouter } from "@/i18n/navigation";
+import { usePathname, useRouter } from "@/i18n/navigation";
+import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 
 export default function DashboardLayout({
@@ -14,13 +15,17 @@ export default function DashboardLayout({
 }) {
   const { isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const t = useTranslations("common");
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
-      router.push("/login");
+      const queryString = searchParams.toString();
+      const callbackUrl = queryString ? `${pathname}?${queryString}` : pathname;
+      router.push(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
     }
-  }, [isAuthenticated, isLoading, router]);
+  }, [isAuthenticated, isLoading, router, pathname, searchParams]);
 
   if (isLoading) {
     return (

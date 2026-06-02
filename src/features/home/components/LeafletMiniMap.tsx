@@ -18,7 +18,7 @@ const createCustomIcon = (name: string) =>
         <div class="flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-primary shadow-lg animate-bounce duration-1000">
           <span class="text-[10px]">📍</span>
         </div>
-        <span class="text-[8px] text-[#dfcfc5] font-black mt-0.5 bg-surface-container-high/90 px-1 py-0.5 rounded border border-border whitespace-nowrap shadow-md">
+        <span class="mt-0.5 whitespace-nowrap rounded border border-border bg-white/95 px-1 py-0.5 text-xs font-semibold text-on-surface shadow-md">
           ${name}
         </span>
       </div>
@@ -58,12 +58,18 @@ export default function LeafletMiniMap() {
 
     mapRef.current = map;
 
-    // Force Leaflet to re-calculate container size to prevent broken tiles
-    setTimeout(() => {
-      map.invalidateSize();
+    // Force Leaflet to re-calculate container size to prevent broken tiles.
+    const resizeTimer = window.setTimeout(() => {
+      if (mapRef.current !== map) return;
+      try {
+        map.invalidateSize();
+      } catch {
+        // Leaflet can throw if the container was removed before the delayed resize runs.
+      }
     }, 300);
 
     return () => {
+      window.clearTimeout(resizeTimer);
       map.remove();
       mapRef.current = null;
     };
@@ -103,7 +109,7 @@ export default function LeafletMiniMap() {
         }
 
         .home-mini-map-leaflet .leaflet-bar a:hover {
-          background: #8b6a55 !important;
+          background: #ff385c !important;
           color: #ffffff !important;
         }
       `}</style>

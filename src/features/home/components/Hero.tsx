@@ -1,7 +1,6 @@
 "use client";
 
 import { memo, type FormEvent, useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { ROUTES } from "@/config";
@@ -29,7 +28,6 @@ const Hero = () => {
     { value: "tour", label: t("home.search_type_tour") },
   ];
 
-  const [isVisible, setIsVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchType, setSearchType] = useState<SelectOption>(searchOptions[0]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -42,7 +40,7 @@ const Hero = () => {
 
   const { suggestions, isLoading, isError, isEnabled } = useSearchSuggestions(
     searchQuery,
-    searchType.value as string
+    String(searchType.value)
   );
 
   const flatSuggestions: SearchSuggestionItem[] = [];
@@ -53,8 +51,6 @@ const Hero = () => {
 
   useEffect(() => {
     setPortalTarget(document.body);
-    const raf = requestAnimationFrame(() => setIsVisible(true));
-    return () => cancelAnimationFrame(raf);
   }, []);
 
   const handleSearch = () => {
@@ -116,44 +112,34 @@ const Hero = () => {
 
           <div className="absolute inset-0 bg-gradient-to-b from-black/18 via-black/26 to-black/62" />
 
-          <div className="relative z-20 flex min-h-[640px] flex-col justify-between px-5 pb-8 pt-28 sm:px-8 lg:px-12 lg:pb-10 lg:pt-32 md:min-h-[720px]">
-            <motion.div
-              initial={{ opacity: 0, y: 24 }}
-              animate={isVisible ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-              className="max-w-3xl"
-            >
+          <div className="relative z-20 flex min-h-[640px] flex-col px-5 pb-16 pt-24 sm:px-8 lg:px-12 lg:pb-[72px] lg:pt-[120px] md:min-h-[720px]">
+            <div className="max-w-3xl">
               <div className="inline-flex items-center gap-2 rounded-full border border-white/22 bg-white/12 px-4 py-2 text-[12px] font-semibold text-white/92 backdrop-blur-md">
                 <IoFlashOutline className="text-[14px]" />
-                Inspired by Airbnb, tailored for Da Nang
+                {t("home.hero_airbnb_badge")}
               </div>
 
               <h1 className="mt-6 max-w-2xl text-[38px] font-semibold leading-[1.05] tracking-normal text-white sm:text-[52px] lg:text-[66px]">
-                Tìm nơi đi chơi, địa điểm ăn uống và tour Đà Nẵng trong một thanh tìm kiếm gọn rõ hơn.
+                {t("home.hero_search_title")}
               </h1>
               <p className="mt-5 max-w-2xl text-[15px] leading-7 text-white/82 sm:text-[16px]">
-                Giao diện mới ưu tiên cảm giác sáng, thoáng và dễ tìm như Airbnb: header bo tròn,
-                search pill rõ nhịp, khoảng cách gọn hơn và chữ không còn bị chìm vào nền.
+                {t("home.hero_search_subtitle")}
               </p>
-            </motion.div>
+            </div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 28, scale: 0.985 }}
-              animate={isVisible ? { opacity: 1, y: 0, scale: 1 } : {}}
-              transition={{ duration: 0.95, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-            >
+            <div className="mt-8 w-full lg:mt-10">
               <form
                 ref={searchContainerRef}
                 onSubmit={handleSubmit}
-                className="relative mx-auto w-full max-w-5xl rounded-[32px] border border-white/35 bg-white p-2 shadow-[0_20px_55px_rgba(0,0,0,0.18)]"
+                className="relative z-40 mx-auto w-full max-w-5xl rounded-[32px] border border-white/40 bg-white p-2 shadow-[0_18px_42px_rgba(0,0,0,0.18)] lg:rounded-full"
               >
-                <div className="grid gap-2 lg:grid-cols-[minmax(0,1.5fr)_minmax(220px,0.8fr)_auto]">
-                  <div className="flex min-w-0 items-center rounded-[26px] px-4 py-3 transition-colors hover:bg-[#f7f7f7] sm:px-5">
-                    <div className="mr-3 flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#f7f7f7] text-on-surface">
+                <div className="grid gap-1 lg:grid-cols-[minmax(0,1.45fr)_minmax(190px,0.75fr)_auto] lg:items-center">
+                  <div className="flex min-w-0 items-center rounded-[26px] px-4 py-3 transition-colors hover:bg-[#f7f7f7] sm:px-5 lg:min-h-[72px] lg:rounded-full">
+                    <div className="mr-3 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#f7f7f7] text-on-surface">
                       <IoLocationOutline className="text-[18px]" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="text-[12px] font-semibold text-on-surface">Bạn muốn đi đâu?</p>
+                      <p className="text-[12px] font-semibold text-on-surface">{t("home.hero_where_label")}</p>
                       <input
                         type="text"
                         value={searchQuery}
@@ -168,19 +154,19 @@ const Hero = () => {
                         }}
                         onKeyDown={handleKeyDown}
                         placeholder={t("home.search_placeholder")}
-                        className="mt-1 w-full bg-transparent text-[15px] text-on-surface outline-none placeholder:text-on-surface-subtle"
+                        className="mt-1 w-full bg-transparent text-[15px] font-medium text-on-surface outline-none placeholder:text-on-surface-subtle"
                       />
                     </div>
                   </div>
 
-                  <div className="rounded-[26px] border border-[#ececec] px-4 py-3 transition-colors hover:bg-[#f7f7f7]">
-                    <p className="mb-1 text-[12px] font-semibold text-on-surface">Loại khám phá</p>
+                  <div className="rounded-[26px] border border-[#ebebeb] px-5 py-3 transition-colors hover:bg-[#f7f7f7] lg:min-h-[72px] lg:rounded-full lg:border-l lg:border-y-0 lg:border-r-0">
+                    <p className="mb-1 text-[12px] font-semibold text-on-surface">{t("home.hero_type_label")}</p>
                     <Select
                       variant="minimal"
                       options={searchOptions}
                       value={searchType}
-                      onChange={(opt) => {
-                        setSearchType(opt as SelectOption);
+                      onChange={(option) => {
+                        setSearchType(option as SelectOption);
                         setSelectedIndex(-1);
                       }}
                       className="w-full"
@@ -192,9 +178,9 @@ const Hero = () => {
 
                   <button
                     type="submit"
-                    className="flex h-full min-h-[64px] items-center justify-center gap-2 rounded-[26px] bg-[#ff385c] px-6 text-[15px] font-semibold text-white shadow-[0_16px_32px_rgba(255,56,92,0.3)] transition-all hover:bg-[#e31c5f] active:scale-[0.99]"
+                    className="flex min-h-[62px] items-center justify-center gap-2 rounded-[26px] bg-[#ff385c] px-6 text-[15px] font-semibold text-white shadow-[0_14px_30px_rgba(255,56,92,0.28)] transition-all hover:bg-[#e31c5f] active:scale-[0.99] lg:min-h-[72px] lg:rounded-full lg:px-8"
                   >
-                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/16">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/16 lg:h-11 lg:w-11">
                       <IoSearchOutline className="text-[18px]" />
                     </span>
                     {t("home.search_button")}
@@ -210,19 +196,21 @@ const Hero = () => {
                   selectedIndex={selectedIndex}
                   onSelect={handleSelectSuggestion}
                   onViewAll={handleSearch}
+                  floating
+                  anchorRef={searchContainerRef}
                 />
               </form>
 
               <div className="mt-5 flex flex-col items-start justify-between gap-4 text-white/86 sm:flex-row sm:items-center">
                 <div className="flex flex-wrap items-center gap-2 text-[13px]">
                   <span className="rounded-full border border-white/16 bg-white/10 px-3 py-1.5 backdrop-blur-sm">
-                    Beaches
+                    {t("home.hero_chip_beaches")}
                   </span>
                   <span className="rounded-full border border-white/16 bg-white/10 px-3 py-1.5 backdrop-blur-sm">
-                    Food tours
+                    {t("home.hero_chip_food_tours")}
                   </span>
                   <span className="rounded-full border border-white/16 bg-white/10 px-3 py-1.5 backdrop-blur-sm">
-                    Local guides
+                    {t("home.hero_chip_local_guides")}
                   </span>
                 </div>
 
@@ -235,7 +223,9 @@ const Hero = () => {
                   </div>
                 )}
               </div>
-            </motion.div>
+            </div>
+
+            <div className="flex-1" />
           </div>
 
           <div className="absolute bottom-5 left-1/2 z-30 flex -translate-x-1/2 items-center gap-2.5">

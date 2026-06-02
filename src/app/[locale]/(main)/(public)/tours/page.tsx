@@ -8,7 +8,7 @@ import TourGrid from "@/features/tour/components/TourGrid";
 import { SearchInput, Select, type SelectOption } from "@/components/ui";
 import { StandardPagination } from "@/components/ui/pagination";
 import { SlidersHorizontal } from "@/components/icons/solar";
-import { useState, Suspense } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { cn } from "@/lib/utils";
 import { extractItems } from "@/utils";
 import type { Tour, TourCategory } from "@/types";
@@ -41,6 +41,13 @@ function ToursContent() {
   const { data: categoriesResponse } = useTourCategories();
 
   const [showMobileFilters, setShowMobileFilters] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [selectPortalTarget, setSelectPortalTarget] = useState<HTMLElement | null>(null);
+
+  useEffect(() => {
+    setMounted(true);
+    setSelectPortalTarget(document.body);
+  }, []);
 
   const toursPayload = toursResponse?.data;
   const tours = extractItems<Tour>(toursPayload);
@@ -50,6 +57,7 @@ function ToursContent() {
   );
 
   const categories = extractItems<TourCategory>(categoriesResponse?.data);
+  const showLoading = mounted && isLoading;
 
   const sortSelectValue = `${filters.sort_by || "created_at"}-${filters.sort_order || "desc"}`;
   const sortSelectLabel =
@@ -84,8 +92,8 @@ function ToursContent() {
                 placeholder={t("list.search_placeholder")}
                 value={filters.search || ""}
                 onChange={(val: string) => setFilters({ search: val })}
-                label="Where"
-                actionText="Search"
+                label={t("list.search_label")}
+                actionText={t("list.search_action")}
               />
             </div>
           </div>
@@ -144,7 +152,7 @@ function ToursContent() {
                 <div className="w-48">
                   <Select
                     variant="minimal"
-                    menuPortalTarget={typeof document !== "undefined" ? document.body : null}
+                    menuPortalTarget={selectPortalTarget}
                     options={[
                       { value: "created_at-desc", label: t("sort.newest") },
                       { value: "booking_count-desc", label: t("sort.popular") },
@@ -186,9 +194,9 @@ function ToursContent() {
               </div>
             ) : (
               <>
-                <TourGrid tours={tours} isLoading={isLoading} />
+                <TourGrid tours={tours} isLoading={showLoading} />
 
-                {!isLoading && totalPages > 1 && (
+                {!showLoading && totalPages > 1 && (
                   <div
                     className="mt-4 flex justify-center reveal-up"
                     style={{ animationDelay: "400ms" }}

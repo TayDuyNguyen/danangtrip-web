@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import {
   IoCloseOutline,
@@ -12,7 +12,7 @@ import {
 } from "@/components/icons/solar";
 import { ROUTES } from "@/config";
 import { cn } from "@/utils/string";
-import { formatNumber } from "@/utils/format";
+import { formatPriceVND } from "@/utils/format";
 import { SearchFilters } from "../types/search.types";
 import { useSearchDiscovery } from "../hooks/use-search-discovery";
 import { SearchSuggestionsDropdown } from "@/components/common/SearchSuggestionsDropdown";
@@ -45,6 +45,8 @@ export const SearchResultHeader = ({
   isLoading,
 }: SearchResultHeaderProps) => {
   const tSearch = useTranslations("search");
+  const locale = useLocale();
+  const priceLocale = locale === "vi" ? "vi-VN" : "en-US";
   const containerRef = useRef<HTMLDivElement>(null);
   const [inputValue, setInputValue] = useState(query);
   const [isFocused, setIsFocused] = useState(false);
@@ -283,8 +285,8 @@ export const SearchResultHeader = ({
               placeholder={tSearch("suggestions.search_placeholder")}
               isLoading={isLoading}
               className="m-0"
-              label="Where"
-              actionText="Search"
+              label={tSearch("input_label")}
+              actionText={tSearch("input_action")}
             />
 
             {showSuggestionsPanel ? (
@@ -322,13 +324,13 @@ export const SearchResultHeader = ({
         <div className="flex flex-wrap items-center gap-3 animate-in fade-in slide-in-from-top-2 duration-300">
           {activeFilters.minPrice !== undefined && (
             <FilterTag
-              label={`${tSearch("filters.price_range")}: >${formatNumber(activeFilters.minPrice)}đ`}
+              label={`${tSearch("filters.price_range")}: >${formatPriceVND(activeFilters.minPrice, priceLocale)}`}
               onRemove={() => onRemoveFilter("minPrice")}
             />
           )}
           {activeFilters.maxPrice !== undefined && (
             <FilterTag
-              label={`${tSearch("filters.price_range")}: <${formatNumber(activeFilters.maxPrice)}đ`}
+              label={`${tSearch("filters.price_range")}: <${formatPriceVND(activeFilters.maxPrice, priceLocale)}`}
               onRemove={() => onRemoveFilter("maxPrice")}
             />
           )}

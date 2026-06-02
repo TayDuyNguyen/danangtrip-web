@@ -104,5 +104,8 @@ export const API_ENDPOINTS = {
     MERGE: "/cart/merge",
   },
   HOME: "/home",
+  HOME_LOCATIONS: "/home/locations",
+  HOME_TOURS: "/home/tours",
+  HOME_BLOGS: "/home/blogs",
   CONFIG: "/config",
 };

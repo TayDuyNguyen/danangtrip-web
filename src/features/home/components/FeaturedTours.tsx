@@ -54,7 +54,7 @@ const FeaturedTours = () => {
           <div className={`transition-all duration-700 delay-100 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
             <div className="flex items-center gap-3 mb-4">
               <span className="w-8 h-[2px] bg-primary/40" />
-              <span className="text-primary font-black text-[12px] tracking-[0.3em] uppercase">{t("home.featured_tours.badge")}</span>
+              <span className="text-xs font-semibold uppercase tracking-normal text-primary">{t("home.featured_tours.badge")}</span>
             </div>
             <h2 className="text-[32px] md:text-[40px] font-black text-on-surface leading-tight">
               {t("home.featured_tours.title")}
@@ -73,26 +73,26 @@ const FeaturedTours = () => {
           {/* Navigation Buttons */}
           <button
             onClick={scrollLeft}
-            className={`absolute left-0 top-[40%] -translate-y-1/2 -translate-x-1/2 z-30 w-12 h-12 rounded-full bg-surface border border-border text-on-surface hover:bg-surface-container items-center justify-center text-white shadow-xl transition-all hidden lg:flex active:scale-90 hover:scale-110 opacity-0 ${
+            className={`absolute left-0 top-[40%] -translate-y-1/2 -translate-x-1/2 z-30 w-10 h-10 rounded-full bg-surface border border-border text-on-surface hover:bg-primary hover:border-primary hover:text-white flex items-center justify-center shadow-md transition-all hidden lg:flex active:scale-90 hover:scale-110 opacity-0 ${
               canScrollLeft
-                ? "group-hover/nav:opacity-100 hover:bg-surface-container hover:text-primary cursor-pointer"
-                : "group-hover/nav:opacity-20 pointer-events-none cursor-default"
+                ? "group-hover/nav:opacity-100 cursor-pointer"
+                : "group-hover/nav:opacity-10 pointer-events-none cursor-default"
             }`}
             aria-label={t("common.accessibility.previous")}
           >
-            <IoChevronBackOutline size={20} />
+            <IoChevronBackOutline size={18} />
           </button>
 
           <button
             onClick={scrollRight}
-            className={`absolute right-0 top-[40%] -translate-y-1/2 translate-x-1/2 z-30 w-12 h-12 rounded-full bg-surface border border-border text-on-surface hover:bg-surface-container items-center justify-center text-white shadow-xl transition-all hidden lg:flex active:scale-90 hover:scale-110 opacity-0 ${
+            className={`absolute right-0 top-[40%] -translate-y-1/2 translate-x-1/2 z-30 w-10 h-10 rounded-full bg-surface border border-border text-on-surface hover:bg-primary hover:border-primary hover:text-white flex items-center justify-center shadow-md transition-all hidden lg:flex active:scale-90 hover:scale-110 opacity-0 ${
               canScrollRight
-                ? "group-hover/nav:opacity-100 hover:bg-surface-container hover:text-primary cursor-pointer"
-                : "group-hover/nav:opacity-20 pointer-events-none cursor-default"
+                ? "group-hover/nav:opacity-100 cursor-pointer"
+                : "group-hover/nav:opacity-10 pointer-events-none cursor-default"
             }`}
             aria-label={t("common.accessibility.next")}
           >
-            <IoChevronForwardOutline size={20} />
+            <IoChevronForwardOutline size={18} />
           </button>
 
           {/* Scrollable Container */}
@@ -116,14 +116,14 @@ const FeaturedTours = () => {
                     sizes="(max-width: 768px) 280px, 340px"
                     className="object-cover transition-transform duration-700 group-hover:scale-110"
                   />
-                  <div className="absolute left-[16px] top-[16px] z-10 rounded-full border border-border bg-white/92 px-[12px] py-[6px] text-[10px] font-semibold uppercase tracking-wider text-primary shadow-sm backdrop-blur-md">
+                  <div className="absolute left-[16px] top-[16px] z-10 rounded-full border border-border bg-white/92 px-[12px] py-[6px] text-xs font-semibold uppercase tracking-normal text-primary shadow-sm backdrop-blur-md">
                     ⭐ {t("home.trending")}
                   </div>
                 </Link>
 
                 {/* Body */}
                 <div className="p-6 flex flex-col grow">
-                  <div className="mb-4 self-start rounded-full border border-border bg-[#f7f7f7] px-[10px] py-[4px] text-[10px] font-semibold uppercase tracking-wider text-primary">
+                  <div className="mb-4 self-start rounded-full border border-border bg-[#f7f7f7] px-[10px] py-[4px] text-xs font-semibold uppercase tracking-normal text-primary">
                     {t("home.featured_tours.special_tour")}
                   </div>
 

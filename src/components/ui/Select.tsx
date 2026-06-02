@@ -132,7 +132,7 @@ export const Select = ({
     placeholder: (provided) => ({
       ...provided,
       margin: "0",
-      color: isGlass ? "rgba(255, 255, 255, 0.7)" : "#737373",
+      color: isGlass ? "rgba(255, 255, 255, 0.82)" : "#6A6A6A",
       fontSize: "16px",
       fontWeight: "500",
       width: "100%",
@@ -171,7 +171,7 @@ export const Select = ({
       padding: "4px",
       maxHeight: "240px",
       scrollbarWidth: "thin",
-      scrollbarColor: "rgba(139, 106, 85, 0.9) rgba(255, 255, 255, 0.04)",
+      scrollbarColor: "rgba(255, 56, 92, 0.8) rgba(0, 0, 0, 0.03)",
     }),
     option: (provided, state) => ({
       ...provided,
@@ -204,7 +204,7 @@ export const Select = ({
         <label
           htmlFor={selectInputId}
           className={cn(
-            "block text-[11px] font-bold mb-1 uppercase tracking-[0.2em] transition-all duration-300",
+            "mb-1 block text-[12px] font-semibold uppercase tracking-normal transition-all duration-300",
             persistentLabel
               ? cn(
                   "translate-y-0 opacity-100",
@@ -252,7 +252,7 @@ export const Select = ({
           )}
         >
           <span className="text-base text-neutral-500 font-medium truncate">
-            {finalPlaceholder}
+            {value && !Array.isArray(value) && "label" in value ? value.label : finalPlaceholder}
           </span>
           <UilAngleDown size={16} className="text-on-surface-subtle shrink-0" />
         </div>

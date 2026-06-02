@@ -16,6 +16,7 @@ const Recommendations = () => {
   const { isAuthenticated } = useAuthStore();
   const t = useTranslations("recommendations");
   const tHome = useTranslations("home");
+  const tLocations = useTranslations("locations");
   const locale = useLocale();
   const { elementRef, isVisible } = useScrollReveal();
   const { locations, tours, isLoading, isError } = useRecommendations(6, isAuthenticated);
@@ -40,11 +41,11 @@ const Recommendations = () => {
           <div className={`transition-all duration-700 delay-100 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
             <div className="flex items-center gap-3 mb-4">
               <span className="w-8 h-[2px] bg-primary/40" />
-              <span className="text-primary font-black text-[12px] tracking-[0.4em] uppercase">
+              <span className="text-xs font-semibold uppercase tracking-normal text-primary">
                 {t("tabs.all")}
               </span>
             </div>
-            <h2 className="text-[32px] md:text-[40px] font-black text-on-surface leading-tight">
+            <h2 className="text-[32px] font-semibold leading-[1.1] text-on-surface md:text-[44px]">
               {t("title")}
             </h2>
             <p className="mt-2 max-w-xl text-[15px] font-medium text-on-surface-subtle">
@@ -68,12 +69,12 @@ const Recommendations = () => {
                 key={i}
                 className="flex h-[280px] w-full flex-col rounded-[28px] border border-border bg-[#f7f7f7] p-3 animate-pulse"
               >
-                <div className="w-full h-[120px] rounded-xl bg-[#1c1c1c] mb-3" />
-                <div className="h-4 w-2/3 bg-[#1c1c1c] rounded mb-2" />
-                <div className="h-3 w-1/2 bg-[#1c1c1c] rounded mb-auto" />
+                <div className="mb-3 h-[120px] w-full rounded-xl bg-[#ebebeb]" />
+                <div className="mb-2 h-4 w-2/3 rounded bg-[#e5e5e5]" />
+                <div className="mb-auto h-3 w-1/2 rounded bg-[#ebebeb]" />
                 <div className="flex justify-between mt-auto">
-                  <div className="h-3 w-8 bg-[#1c1c1c] rounded" />
-                  <div className="h-3 w-12 bg-[#1c1c1c] rounded" />
+                  <div className="h-3 w-8 rounded bg-[#e5e5e5]" />
+                  <div className="h-3 w-12 rounded bg-[#e5e5e5]" />
                 </div>
               </div>
             ))
@@ -97,7 +98,7 @@ const Recommendations = () => {
               const priceText = isLocation
                 ? item.price_min && item.price_min > 0
                   ? formatPriceVND(item.price_min, locale === "vi" ? "vi-VN" : "en-US")
-                  : tHome("featured_locations.default_address") === "Đà Nẵng" ? "Miễn phí" : "Free"
+                  : tLocations("price.free")
                 : formatPriceVND(item.price_adult, locale === "vi" ? "vi-VN" : "en-US");
 
               // Reason translation helper fallback
@@ -136,7 +137,7 @@ const Recommendations = () => {
                   <div className="p-3 flex flex-col flex-1 justify-between">
                     <div>
                       {/* Reason badge */}
-                      <span className="inline-block text-[10px] font-black text-primary tracking-wider uppercase mb-1">
+                      <span className="mb-1 inline-block text-xs font-semibold uppercase tracking-normal text-primary">
                         {reasonText}
                       </span>
                       {/* Title */}

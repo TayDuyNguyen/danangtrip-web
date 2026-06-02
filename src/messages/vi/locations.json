@@ -17,7 +17,10 @@
   "discovery": {
     "title": "Khám phá Địa điểm Đà Nẵng",
     "subtitle": "{count} địa điểm du lịch hấp dẫn đang chờ bạn khám phá và trải nghiệm",
-    "search_placeholder": "Tìm kiếm tên địa điểm, khu vực..."
+    "search_placeholder": "Tìm kiếm tên địa điểm, khu vực...",
+    "badge": "Khám phá Đà Nẵng",
+    "search_label": "Địa điểm",
+    "search_action": "Khám phá"
   },
   "filters": {
     "title": "Bộ lọc",
@@ -31,7 +34,10 @@
     "rating_3_plus": "3+ sao",
     "reset": "Đặt lại bộ lọc",
     "close": "Đóng bộ lọc",
-    "show_results": "Xem kết quả ({count})"
+    "show_results": "Xem kết quả ({count})",
+    "show_less": "Thu gọn",
+    "show_more_categories": "Xem thêm {count} danh mục",
+    "show_more_districts": "Xem thêm {count} quận/huyện"
   },
   "categories": {
     "sightseeing": "Tham quan",
@@ -75,6 +81,7 @@
     "save": "Yêu thích",
     "book_now": "Đặt ngay",
     "contact_consultancy": "Liên hệ tư vấn",
+    "price_label": "Giá tham khảo",
     "price_per_person": "/ người",
     "free": "Miễn phí",
     "price_note": "* Giá mang tính chất tham khảo, có thể thay đổi tùy thời điểm",
@@ -126,6 +133,8 @@
     "weather_unavailable": "Không tải được dữ liệu thời tiết. Vui lòng thử lại sau."
   },
   "nearby": {
+    "meta_title": "Tìm địa điểm du lịch gần bạn ở Đà Nẵng | DanangTrip",
+    "meta_description": "Quét vị trí GPS hiện tại của bạn để tìm nhanh các điểm tham quan, ẩm thực, khu vui chơi gần đây ở Đà Nẵng với chỉ dẫn khoảng cách và bản đồ mượt mà.",
     "title": "Địa điểm gần bạn",
     "subtitle": "Tìm kiếm địa điểm du lịch, ẩm thực, giải trí dựa trên khoảng cách GPS thực tế.",
     "breadcrumb_nearby": "Lân cận",
@@ -151,6 +160,9 @@
     "map": {
       "user_marker": "Vị trí của bạn",
       "user_address": "Đà Nẵng, Việt Nam",
+      "city_center": "Trung tâm Đà Nẵng",
+      "zoom_out": "Thu nhỏ bản đồ",
+      "zoom_in": "Phóng to bản đồ",
       "view_details": "Xem chi tiết →",
       "distance": "Cách bạn {distance} km",
       "directions": "Đường đi"

@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useState, type RefObject } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { IoSearchOutline, IoStar } from "@/components/icons/solar";
@@ -15,6 +17,8 @@ interface SearchSuggestionsDropdownProps {
   selectedIndex: number;
   onSelect: (item: SearchSuggestionItem) => void;
   onViewAll: () => void;
+  floating?: boolean;
+  anchorRef?: RefObject<HTMLElement | null>;
 }
 
 export const SearchSuggestionsDropdown = ({
@@ -26,8 +30,42 @@ export const SearchSuggestionsDropdown = ({
   selectedIndex,
   onSelect,
   onViewAll,
+  floating = false,
+  anchorRef,
 }: SearchSuggestionsDropdownProps) => {
   const t = useTranslations("search");
+  const [floatingRect, setFloatingRect] = useState<{ left: number; top: number; width: number } | null>(null);
+
+  useEffect(() => {
+    if (!isOpen || !floating || !anchorRef?.current) {
+      setFloatingRect(null);
+      return;
+    }
+
+    const updateRect = () => {
+      const rect = anchorRef.current?.getBoundingClientRect();
+      if (!rect) return;
+
+      const viewportPadding = 16;
+      const width = Math.min(rect.width, window.innerWidth - viewportPadding * 2);
+      const left = Math.min(Math.max(rect.left, viewportPadding), window.innerWidth - width - viewportPadding);
+
+      setFloatingRect({
+        left,
+        top: rect.bottom + 14,
+        width,
+      });
+    };
+
+    updateRect();
+    window.addEventListener("resize", updateRect);
+    window.addEventListener("scroll", updateRect, true);
+
+    return () => {
+      window.removeEventListener("resize", updateRect);
+      window.removeEventListener("scroll", updateRect, true);
+    };
+  }, [anchorRef, floating, isOpen]);
 
   if (!isOpen) return null;
 
@@ -145,7 +183,7 @@ export const SearchSuggestionsDropdown = ({
     }
 
     return (
-      <div className="max-h-[440px] overflow-y-auto custom-scrollbar">
+      <div className="max-h-[320px] overflow-y-auto custom-scrollbar">
         {renderSection("suggestions.keywords_title", suggestions?.keywords || [], 0)}
         {renderSection("suggestions.locations_title", suggestions?.locations || [], suggestions?.keywords?.length || 0)}
         {renderSection(
@@ -161,8 +199,24 @@ export const SearchSuggestionsDropdown = ({
   const viewAllSelectedStyles = "border-primary bg-[#ff385c] text-white shadow-[0_10px_24px_rgba(255,56,92,0.22)]";
   const viewAllDefaultStyles = "border-border text-on-surface hover:border-primary/30 hover:bg-[#fff4f6]";
 
-  return (
-    <div className="absolute left-0 right-0 top-[calc(100%+14px)] z-50 overflow-hidden rounded-[28px] border border-border bg-white shadow-[0_24px_60px_rgba(0,0,0,0.16)]">
+  const dropdown = (
+    <div
+      className={cn(
+        "overflow-hidden rounded-[28px] border border-border bg-white shadow-[0_24px_60px_rgba(0,0,0,0.16)]",
+        floating ? "fixed z-[9999]" : "absolute left-0 right-0 top-[calc(100%+14px)] z-50"
+      )}
+      style={
+        floating && floatingRect
+          ? {
+              left: floatingRect.left,
+              top: floatingRect.top,
+              width: floatingRect.width,
+            }
+          : undefined
+      }
+      onMouseDown={(event) => event.stopPropagation()}
+      onTouchStart={(event) => event.stopPropagation()}
+    >
       <div className="py-2">
         {renderContent()}
 
@@ -186,4 +240,10 @@ export const SearchSuggestionsDropdown = ({
       </div>
     </div>
   );
+
+  if (floating && floatingRect && typeof document !== "undefined") {
+    return createPortal(dropdown, document.body);
+  }
+
+  return dropdown;
 };

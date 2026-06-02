@@ -26,10 +26,10 @@ export default function LocationHeader({
   return (
     <div className="animate-in slide-in-from-top-4 space-y-8 py-6 duration-700">
       <div className="mx-auto flex max-w-4xl flex-col items-center gap-4 text-center">
-        <span className="rounded-full border border-[#ffd8e1] bg-[#fff4f6] px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
-          Discover Da Nang
+        <span className="rounded-full border border-[#ffd8e1] bg-[#fff4f6] px-4 py-2 text-xs font-semibold uppercase tracking-normal text-primary">
+          {t("discovery.badge")}
         </span>
-        <h1 className="text-[34px] font-semibold leading-[1.08] tracking-[-0.04em] text-on-surface md:text-[48px]">
+        <h1 className="text-[34px] font-semibold leading-[1.08] tracking-normal text-on-surface md:text-[48px]">
           {t("discovery.title")}
         </h1>
         <p className="max-w-3xl text-[16px] leading-7 text-on-surface-subtle md:text-[18px]">
@@ -44,8 +44,8 @@ export default function LocationHeader({
           placeholder={t("discovery.search_placeholder")}
           isLoading={isLoading}
           debounceMs={0}
-          label="Where"
-          actionText="Explore"
+          label={t("discovery.search_label")}
+          actionText={t("discovery.search_action")}
         />
 
         <button

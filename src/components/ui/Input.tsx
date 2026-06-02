@@ -54,7 +54,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           <label
             htmlFor={inputId}
             className={cn(
-              "mb-1 block text-[11px] font-bold uppercase tracking-[0.2em] transition-all duration-300",
+              "mb-1 block text-[12px] font-semibold uppercase tracking-normal transition-all duration-300",
               persistentLabel
                 ? cn(
                     "translate-y-0 opacity-100",
@@ -113,7 +113,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               "w-full bg-transparent py-3 outline-none",
               persistentLabel
                 ? "placeholder:text-on-surface-subtle"
-                : "placeholder:text-on-surface-variant",
+                : "placeholder:text-on-surface-subtle",
               type === "date" &&
                 "[&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-75",
               "transition-all duration-300 focus:placeholder-transparent",

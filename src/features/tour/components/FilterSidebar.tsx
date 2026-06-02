@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { useTranslations, useLocale } from "next-intl";
+import { useTranslations } from "next-intl";
 import { ChevronDown, X, Check } from "@/components/icons/solar";
 import { TourCategory } from "@/types";
 import { cn } from "@/lib/utils";
@@ -53,8 +53,6 @@ export default function FilterSidebar({
   showCategoryFilter = true
 }: FilterSidebarProps) {
   const t = useTranslations("tour.filters");
-  const locale = useLocale();
-  const isVietnamese = locale === "vi";
 
   const [expanded, setExpanded] = useState({
     categories: true,
@@ -65,11 +63,11 @@ export default function FilterSidebar({
   const [showAllCategories, setShowAllCategories] = useState(false);
 
   const priceOptions = useMemo(() => [
-    { label: locale === "vi" ? "Dưới 500k" : "Under 500k", min: undefined, max: 500000 },
-    { label: locale === "vi" ? "500k - 1Tr" : "500k - 1M", min: 500000, max: 1000000 },
-    { label: locale === "vi" ? "1Tr - 2Tr" : "1M - 2M", min: 1000000, max: 2000000 },
-    { label: locale === "vi" ? "Trên 2Tr" : "Over 2M", min: 2000000, max: undefined },
-  ], [locale]);
+    { label: t("price_options.under_500k"), min: undefined, max: 500000 },
+    { label: t("price_options.from_500k_to_1m"), min: 500000, max: 1000000 },
+    { label: t("price_options.from_1m_to_2m"), min: 1000000, max: 2000000 },
+    { label: t("price_options.over_2m"), min: 2000000, max: undefined },
+  ], [t]);
 
   // --- Local Price States for Debouncing ---
   const [localMin, setLocalMin] = useState(filters.price_min !== undefined ? formatInputPrice(filters.price_min) : "");
@@ -187,8 +185,8 @@ export default function FilterSidebar({
                 className="pt-2 text-left text-sm font-semibold text-primary transition-colors hover:text-primary/80"
               >
                 {showAllCategories
-                  ? (isVietnamese ? "Thu gọn" : "Show less")
-                  : (isVietnamese ? `Xem thêm ${categories.length - 7} danh mục` : `Show ${categories.length - 7} more`)}
+                  ? t("show_less")
+                  : t("show_more_categories", { count: categories.length - 7 })}
               </button>
             )}
           </div>

@@ -2,14 +2,14 @@
 
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Clock, Users, MapPin } from "@/components/icons/solar";
 import { Tour } from "@/types";
 import { Badge } from "@/components/ui";
 import { ROUTES } from "@/config";
 import RatingStars from "@/components/ui/RatingStars";
 import { cn } from "@/lib/utils";
-import { formatNumber } from "@/utils/format";
+import { formatPriceVND } from "@/utils/format";
 
 interface TourCardProps {
   tour: Tour;
@@ -19,6 +19,8 @@ interface TourCardProps {
 
 const TourCard = ({ tour, className, index = 0 }: TourCardProps) => {
   const t = useTranslations("tour.card");
+  const locale = useLocale();
+  const priceLocale = locale === "vi" ? "vi-VN" : "en-US";
 
   const discountPercent = tour.discount_percent;
   const originalPrice = parseFloat(tour.price_adult);
@@ -59,12 +61,12 @@ const TourCard = ({ tour, className, index = 0 }: TourCardProps) => {
 
           <div className="absolute left-3 top-3 flex flex-wrap gap-2">
             {tour.is_hot && (
-              <Badge variant="error" className="rounded-full uppercase text-[10px] font-bold">
+              <Badge variant="error" className="rounded-full text-xs font-semibold uppercase tracking-normal">
                 {t("hot_badge")}
               </Badge>
             )}
             {tour.is_featured && (
-              <Badge variant="warning" className="rounded-full uppercase text-[10px] font-bold">
+              <Badge variant="warning" className="rounded-full text-xs font-semibold uppercase tracking-normal">
                 {t("featured_badge")}
               </Badge>
             )}
@@ -72,7 +74,7 @@ const TourCard = ({ tour, className, index = 0 }: TourCardProps) => {
 
           {discountPercent > 0 && (
             <div className="absolute right-3 top-3">
-              <Badge variant="warning" className="rounded-full px-2 py-0.5 text-[10px] font-bold">
+              <Badge variant="warning" className="rounded-full px-2 py-0.5 text-xs font-semibold">
                 {t("discount_percent", { percent: discountPercent })}
               </Badge>
             </div>
@@ -111,11 +113,11 @@ const TourCard = ({ tour, className, index = 0 }: TourCardProps) => {
 
           <div className="flex items-center justify-between gap-2">
             <div className="flex min-w-0 flex-col">
-              <span className="text-[10px] text-on-surface-subtle">{t("starting_from")}</span>
+              <span className="text-xs text-on-surface-subtle">{t("starting_from")}</span>
               <div className="flex flex-wrap items-baseline gap-1">
-                <span className="text-lg font-semibold text-primary">{formatNumber(discountedPrice)}d</span>
+                <span className="text-lg font-semibold text-primary">{formatPriceVND(discountedPrice, priceLocale)}</span>
                 {discountPercent > 0 && (
-                  <span className="text-xs text-on-surface-subtle line-through">{formatNumber(originalPrice)}d</span>
+                  <span className="text-xs text-on-surface-subtle line-through">{formatPriceVND(originalPrice, priceLocale)}</span>
                 )}
               </div>
             </div>

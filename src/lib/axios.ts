@@ -111,22 +111,33 @@ interface RefreshTokenData {
 // Response interceptor
 axiosInstance.interceptors.response.use(
   (response) => {
-    if (response.data && response.data.code === 200 && response.data.data !== undefined) {
+    const responseData = response.data as
+      | { code?: unknown; data?: unknown; message?: string; success?: boolean }
+      | undefined;
+    const responseCode = Number(responseData?.code);
+
+    if (
+      responseData &&
+      responseData.data !== undefined &&
+      Number.isFinite(responseCode) &&
+      responseCode >= 200 &&
+      responseCode < 300
+    ) {
       return {
         success: true,
-        data: response.data.data,
-        message: response.data.message || "Success",
+        data: responseData.data,
+        message: responseData.message || "Success",
       };
     }
 
-    if (response.data && typeof response.data.success === "boolean") {
+    if (responseData && typeof responseData.success === "boolean") {
       return response.data;
     }
 
     return {
       success: true,
       data: response.data,
-      message: (response.data as { message?: string })?.message || "Success",
+      message: responseData?.message || "Success",
     };
   },
   async (

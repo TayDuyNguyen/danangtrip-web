@@ -80,13 +80,13 @@ export function EditRatingModal({
     >
       <div className="absolute inset-0" onClick={isPending ? undefined : onClose} />
 
-      <div className="relative z-10 max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-[28px] border border-border bg-white p-6 shadow-[0_24px_80px_rgba(15,23,42,0.18)] animate-in fade-in zoom-in-95 duration-300">
+      <div className="relative z-10 max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-[20px] border border-border bg-white p-6 shadow-[0_16px_48px_rgba(0,0,0,0.20)] animate-in fade-in zoom-in-95 duration-300">
         <button
           type="button"
           disabled={isPending}
           onClick={onClose}
           className="absolute right-4 top-4 rounded-lg p-1.5 text-on-surface-subtle transition-all hover:bg-[#f7f7f7] hover:text-on-surface"
-          aria-label="Close modal"
+          aria-label={t("close_aria")}
         >
           <X className="h-4 w-4" />
         </button>
@@ -150,7 +150,7 @@ export function EditRatingModal({
             />
             {comment.trim().length > 0 && comment.trim().length < 10 && (
               <p className="text-xs text-red-400 font-medium">
-                Vui lòng nhập tối thiểu 10 ký tự.
+                {t("comment_min_error")}
               </p>
             )}
           </div>
@@ -159,7 +159,7 @@ export function EditRatingModal({
           {initialImages.length > 0 && (
             <div className="space-y-2">
               <span className="text-xs font-semibold text-[#525252] uppercase tracking-wider block">
-                Ảnh hiện tại trên hệ thống
+                {t("existing_images_label")}
               </span>
               <div className="flex gap-2 flex-wrap">
                 {initialImages.map((img) => (
@@ -169,7 +169,7 @@ export function EditRatingModal({
                   >
                     <Image
                       src={img.image_url}
-                      alt="Current preview"
+                      alt={t("current_preview_alt")}
                       fill
                       sizes="56px"
                       className="object-cover"
@@ -222,7 +222,7 @@ export function EditRatingModal({
                     >
                       <Image
                         src={url}
-                        alt="Local file preview"
+                        alt={t("local_preview_alt")}
                         fill
                         sizes="56px"
                         className="object-cover"
@@ -248,7 +248,7 @@ export function EditRatingModal({
               variant="primary"
               disabled={!isValid || isPending}
               isLoading={isPending}
-              className="w-full bg-primary hover:bg-[#725442] text-white font-semibold py-2.5 rounded-lg border-transparent shrink-0"
+              className="w-full bg-primary hover:bg-[#e31c5f] text-white font-semibold py-2.5 rounded-full border-transparent shrink-0"
             >
               {isPending ? t("updating") : t("submit")}
             </Button>

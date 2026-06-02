@@ -162,7 +162,7 @@ export function NotificationItemCard({
           {item.message}
         </p>
 
-        <span className="mt-2 block text-[10px] font-mono text-on-surface-subtle transition-colors duration-300 group-hover:text-on-surface">
+        <span className="mt-2 block text-[11px] text-on-surface-subtle transition-colors duration-300 group-hover:text-on-surface">
           {formatTimeAgo(item.created_at)}
         </span>
       </div>

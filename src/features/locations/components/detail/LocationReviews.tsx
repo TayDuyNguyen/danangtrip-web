@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 import { RatingStars, Button } from '@/components/ui';
 import { MessageSquare, ThumbsUp } from "@/components/icons/solar";
@@ -34,6 +34,11 @@ const LocationReviews: React.FC<LocationReviewsProps> = ({
   const queryClient = useQueryClient();
   const { isAuthenticated } = useAuthStore();
   const [modalOpen, setModalOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const statsQuery = useQuery({
     queryKey: ['locations', locationId, 'rating-stats'],
@@ -44,6 +49,7 @@ const LocationReviews: React.FC<LocationReviewsProps> = ({
       }
       return res.data;
     },
+    enabled: mounted,
     staleTime: 5 * 60 * 1000,
     retry: shouldRetryQuery,
   });
@@ -57,7 +63,7 @@ const LocationReviews: React.FC<LocationReviewsProps> = ({
       }
       return res.data;
     },
-    enabled: isAuthenticated,
+    enabled: mounted && isAuthenticated,
     staleTime: 60 * 1000,
     retry: shouldRetryQuery,
   });
@@ -75,6 +81,7 @@ const LocationReviews: React.FC<LocationReviewsProps> = ({
       }
       return res.data;
     },
+    enabled: mounted,
     initialPageParam: 1,
     getNextPageParam: (last) => (last.current_page < last.last_page ? last.current_page + 1 : undefined),
     staleTime: 60 * 1000,

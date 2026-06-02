@@ -53,7 +53,7 @@ export default function RecommendationGrid() {
     return (
       <div className="space-y-6">
         <TabSkeleton />
-        <div className="mx-auto my-12 max-w-xl animate-in rounded-[28px] border border-border bg-white p-12 text-center shadow-[0_16px_48px_rgba(15,23,42,0.08)] duration-700">
+        <div className="mx-auto my-12 max-w-xl animate-in rounded-[20px] border border-border bg-white p-12 text-center shadow-[0_1px_3px_rgba(0,0,0,0.08)] duration-700">
           <div className="w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-4">
             <IoAlertCircleOutline className="w-6 h-6 text-red-500" />
           </div>
@@ -75,7 +75,7 @@ export default function RecommendationGrid() {
     return (
       <div className="space-y-6">
         <TabSkeleton />
-        <div className="mx-auto my-12 max-w-xl animate-in rounded-[28px] border border-border bg-white p-16 text-center shadow-[0_16px_48px_rgba(15,23,42,0.08)] duration-700">
+        <div className="mx-auto my-12 max-w-xl animate-in rounded-[20px] border border-border bg-white p-16 text-center shadow-[0_1px_3px_rgba(0,0,0,0.08)] duration-700">
           <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
             <IoCompassOutline className="w-8 h-8 text-primary" />
           </div>
@@ -126,7 +126,7 @@ export default function RecommendationGrid() {
 
       {/* Grid Results */}
       {isFilteredEmpty ? (
-        <div className="mx-auto my-12 max-w-md rounded-[28px] border border-border bg-white p-16 text-center shadow-[0_16px_48px_rgba(15,23,42,0.08)]">
+        <div className="mx-auto my-12 max-w-md rounded-[20px] border border-border bg-white p-16 text-center shadow-[0_1px_3px_rgba(0,0,0,0.08)]">
           <IoCompassOutline className="w-12 h-12 text-on-surface-subtle/40 mx-auto mb-4" />
           <p className="text-on-surface-subtle font-medium text-sm">{t("empty.title")}</p>
         </div>

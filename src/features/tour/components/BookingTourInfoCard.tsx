@@ -18,10 +18,10 @@ export function BookingTourInfoCard({ item }: BookingTourInfoCardProps) {
   const locale = useLocale();
 
   const tour = item.tour;
-  const tourName = item.item_name || tour?.name || tTour("detail.breadcrumb_tours") || "Tour";
+  const tourName = item.item_name || tour?.name || tTour("detail.breadcrumb_tours");
   const [imageSrc, setImageSrc] = useState(tour?.thumbnail || "/images/placeholder.png");
-  const duration = tour?.duration || tTour("filters.durations.one_day") || "1 day";
-  const meetingPoint = tour?.meeting_point || td("location_short") || (locale === "vi" ? "Đà Nẵng, Việt Nam" : "Da Nang, Vietnam");
+  const duration = tour?.duration || tTour("filters.durations.one_day");
+  const meetingPoint = tour?.meeting_point || td("location_short");
 
   const travelDateFormatter = new Intl.DateTimeFormat(locale === "vi" ? "vi-VN" : "en-US", {
     year: "numeric",
@@ -31,8 +31,8 @@ export function BookingTourInfoCard({ item }: BookingTourInfoCardProps) {
   const travelDate = travelDateFormatter.format(new Date(item.travel_date));
 
   return (
-    <div className="w-full rounded-[28px] border border-border bg-white p-5 shadow-[0_16px_48px_rgba(15,23,42,0.08)] md:p-6 reveal-up">
-      <h3 className="text-sm font-black text-on-surface uppercase tracking-wider mb-5 flex items-center gap-2">
+    <div className="w-full rounded-[20px] border border-border bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.08)] md:p-6 reveal-up">
+      <h3 className="mb-5 flex items-center gap-2 text-sm font-semibold uppercase tracking-normal text-on-surface">
         <Users className="w-4.5 h-4.5 text-primary shrink-0" />
         {t("section_tour")}
       </h3>
@@ -64,11 +64,11 @@ export function BookingTourInfoCard({ item }: BookingTourInfoCardProps) {
             </h4>
 
             {/* Grid details */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono text-on-surface-subtle">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-on-surface-subtle">
               <div className="flex items-center gap-2">
                 <Calendar className="w-4 h-4 text-primary shrink-0" />
                 <div className="flex flex-col">
-                  <span className="text-[9px] text-on-surface-subtle uppercase font-semibold">{t("travel_date")}</span>
+                  <span className="text-xs font-semibold uppercase tracking-normal text-on-surface-subtle">{t("travel_date")}</span>
                   <span className="text-on-surface font-medium">{travelDate}</span>
                 </div>
               </div>
@@ -76,7 +76,7 @@ export function BookingTourInfoCard({ item }: BookingTourInfoCardProps) {
               <div className="flex items-center gap-2">
                 <Clock className="w-4 h-4 text-primary shrink-0" />
                 <div className="flex flex-col">
-                  <span className="text-[9px] text-on-surface-subtle uppercase font-semibold">{t("tour_duration")}</span>
+                  <span className="text-xs font-semibold uppercase tracking-normal text-on-surface-subtle">{t("tour_duration")}</span>
                   <span className="text-on-surface font-medium">{duration}</span>
                 </div>
               </div>
@@ -87,7 +87,7 @@ export function BookingTourInfoCard({ item }: BookingTourInfoCardProps) {
           <div className="mt-4 pt-4 border-t border-border/50 flex gap-2 text-xs">
             <MapPin className="w-4 h-4 text-primary shrink-0 mt-0.5" />
             <div className="flex flex-col">
-              <span className="text-[9px] text-on-surface-subtle uppercase font-semibold">{t("departure_point")}</span>
+              <span className="text-xs font-semibold uppercase tracking-normal text-on-surface-subtle">{t("departure_point")}</span>
               <span className="text-on-surface font-medium leading-relaxed">{meetingPoint}</span>
             </div>
           </div>

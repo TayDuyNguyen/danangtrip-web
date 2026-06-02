@@ -82,14 +82,14 @@ export function BookingPriceSummaryCard({ booking }: BookingPriceSummaryCardProp
   };
 
   return (
-    <div className="w-full rounded-[28px] border border-border bg-white p-5 shadow-[0_16px_48px_rgba(15,23,42,0.08)] md:p-6 reveal-up">
+    <div className="w-full rounded-[20px] border border-border bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.08)] md:p-6 reveal-up">
       <h3 className="text-sm font-black text-on-surface uppercase tracking-wider mb-5">
         {t("section_price")}
       </h3>
 
       <div className="space-y-4">
         {/* Breakdown details */}
-        <div className="space-y-2.5 text-xs text-on-surface-subtle font-mono">
+        <div className="space-y-2.5 text-xs text-on-surface-subtle">
           {/* Adults */}
           <div className="flex justify-between items-center">
             <span className="text-on-surface-subtle">
@@ -143,7 +143,7 @@ export function BookingPriceSummaryCard({ booking }: BookingPriceSummaryCardProp
           </div>
 
           {/* Table meta */}
-          <div className="grid grid-cols-2 gap-3 pt-2 text-[11px] font-mono border-t border-border/30">
+          <div className="grid grid-cols-2 gap-3 pt-2 text-[11px] border-t border-border/30">
             <div className="flex flex-col gap-1">
               <span className="text-on-surface-subtle uppercase">{t("payment_method_label")}</span>
               <span className="text-on-surface font-semibold">{getPaymentMethodName(booking.payment_method)}</span>

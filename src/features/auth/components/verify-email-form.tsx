@@ -190,7 +190,7 @@ export function VerifyEmailForm({ otp: initialOtp, email }: VerifyEmailFormProps
           <div className="absolute inset-[-2px] rounded-[10px] overflow-hidden pointer-events-none z-0 hidden sm:block">
             <div 
               className="absolute top-1/2 left-1/2 w-[200%] h-[200%] -translate-x-1/2 -translate-y-1/2 animate-[spin_4s_linear_infinite]" 
-              style={{ backgroundImage: 'conic-gradient(from 0deg, transparent 0 240deg, rgba(139,106,85,0.3) 300deg, #8b6a55 360deg)' }}
+              style={{ backgroundImage: 'conic-gradient(from 0deg, transparent 0 240deg, rgba(255,56,92,0.24) 300deg, #FF385C 360deg)' }}
             />
           </div>
         )}
@@ -209,7 +209,7 @@ export function VerifyEmailForm({ otp: initialOtp, email }: VerifyEmailFormProps
           {status === "verifying" && (
             <div className="py-8 space-y-6 flex flex-col items-center">
               <div className="relative flex items-center justify-center">
-                <div className="w-16 h-16 border-4 border-border border-t-[#8b6a55] rounded-full animate-spin" />
+                <div className="h-16 w-16 animate-spin rounded-full border-4 border-border border-t-primary" />
               </div>
               <div className="space-y-2">
                 <h2 className="text-xl font-semibold text-on-surface uppercase tracking-wide">

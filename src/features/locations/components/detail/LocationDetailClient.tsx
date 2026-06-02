@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import type { Location } from "@/types";
 import { locationService } from "@/services/location.service";
@@ -20,6 +21,11 @@ type Props = {
 
 export default function LocationDetailClient({ location, locale }: Props) {
   const { isAuthenticated } = useAuthStore();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useLocationRecordView(location.id);
 
@@ -34,6 +40,7 @@ export default function LocationDetailClient({ location, locale }: Props) {
     },
     staleTime: 5 * 60 * 1000,
     retry: shouldRetryQuery,
+    enabled: mounted,
   });
 
   const nearbyQuery = useQuery({
@@ -45,6 +52,7 @@ export default function LocationDetailClient({ location, locale }: Props) {
     },
     staleTime: 10 * 60 * 1000,
     retry: shouldRetryQuery,
+    enabled: mounted,
   });
 
   const handleFavoriteToggle = () => {
@@ -57,7 +65,7 @@ export default function LocationDetailClient({ location, locale }: Props) {
 
   const apiImages = imagesQuery.data?.images?.filter(Boolean) ?? [];
   const galleryImages = apiImages.length > 0 ? apiImages : (location.images?.filter(Boolean) ?? []);
-  const galleryLoading = imagesQuery.isLoading && galleryImages.length === 0;
+  const galleryLoading = mounted && imagesQuery.isLoading && galleryImages.length === 0;
   const avgRating = Math.min(5, Math.max(0, parseFloat(location.avg_rating) || 0));
 
   return (

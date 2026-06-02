@@ -19,7 +19,7 @@ export function NotificationsHeader({
   const t = useTranslations("notifications");
 
   return (
-    <div className="flex flex-col gap-4 rounded-[28px] border border-border bg-white p-5 shadow-[0_16px_48px_rgba(15,23,42,0.08)] sm:flex-row sm:items-center sm:justify-between sm:p-6">
+    <div className="flex flex-col gap-4 rounded-[20px] border border-border bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.08)] sm:flex-row sm:items-center sm:justify-between sm:p-6">
       <div>
         <h1 className="text-3xl font-extrabold tracking-tight text-on-surface md:text-4xl">
           {t("page_title")}

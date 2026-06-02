@@ -22,7 +22,7 @@ export const ContactInfoItem = ({
         <Icon className="w-6 h-6 text-primary" />
       </div>
       <div>
-        <h4 className="text-[11px] font-bold text-primary uppercase tracking-[0.2em] mb-1">
+        <h4 className="mb-1 text-xs font-semibold uppercase tracking-normal text-primary">
           {label}
         </h4>
         <p className="text-lg font-medium leading-snug text-on-surface lg:text-xl">

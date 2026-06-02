@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { toast } from "sonner";
-import { formatNumber } from "@/utils/format";
+import { formatPriceVND } from "@/utils/format";
 import { Calendar, Users, InfoCircle } from "@/components/icons/solar";
 import { Button, Select, type SelectOption } from "@/components/ui";
 import { useTourSchedules, useCheckTourAvailability } from "@/features/tour/hooks/useTourDetail";
@@ -20,6 +20,7 @@ export default function BookingSidebar({ tour }: BookingSidebarProps) {
   const td = useTranslations("tour.detail");
   const tb = useTranslations("tour.booking");
   const locale = useLocale();
+  const priceLocale = locale === "vi" ? "vi-VN" : "en-US";
 
   const discountPercent = tour.discount_percent;
   const adultPrice = parseFloat(tour.price_adult);
@@ -105,9 +106,9 @@ export default function BookingSidebar({ tour }: BookingSidebarProps) {
               {t("card.starting_from")}
             </p>
             <div className="flex flex-wrap items-baseline gap-2">
-              <span className="text-4xl font-black text-primary">{formatNumber(adultDiscounted)}đ</span>
+              <span className="text-4xl font-black text-primary">{formatPriceVND(adultDiscounted, priceLocale)}</span>
               {discountPercent > 0 && (
-                <span className="text-sm line-through text-on-surface-subtle">{formatNumber(adultPrice)}đ</span>
+                <span className="text-sm line-through text-on-surface-subtle">{formatPriceVND(adultPrice, priceLocale)}</span>
               )}
             </div>
             <span className="text-xs text-on-surface-subtle">{suffix}</span>
@@ -179,7 +180,7 @@ export default function BookingSidebar({ tour }: BookingSidebarProps) {
               {checking ? (
                 <span className="flex items-center gap-2">
                   <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-                  {td("availability_checking") || "Đang kiểm tra chỗ..."}
+                  {td("availability_checking")}
                 </span>
               ) : availability?.is_available ? (
                 <span>{td("availability_seats_left", { seats: availability.available_seats })}</span>
@@ -194,7 +195,7 @@ export default function BookingSidebar({ tour }: BookingSidebarProps) {
               <span className="flex items-center gap-1.5">
                 {adults} x {td("price_adult")}
               </span>
-              <span className="font-medium tabular-nums text-on-surface">{formatNumber(adults * adultDiscounted)}đ</span>
+              <span className="font-medium tabular-nums text-on-surface">{formatPriceVND(adults * adultDiscounted, priceLocale)}</span>
             </div>
 
             {children > 0 && (
@@ -203,14 +204,14 @@ export default function BookingSidebar({ tour }: BookingSidebarProps) {
                   {children} x {td("price_child")}
                 </span>
                 <span className="font-medium tabular-nums text-on-surface">
-                  {formatNumber(children * parseFloat(tour.price_child))}đ
+                  {formatPriceVND(children * parseFloat(tour.price_child), priceLocale)}
                 </span>
               </div>
             )}
 
             <div className="flex justify-between gap-4 border-t border-border pt-2 text-lg font-bold">
               <span className="text-on-surface">{td("booking_total")}</span>
-              <span className="text-primary">{formatNumber(totalAmount)}đ</span>
+              <span className="text-primary">{formatPriceVND(totalAmount, priceLocale)}</span>
             </div>
           </div>
 
@@ -225,7 +226,7 @@ export default function BookingSidebar({ tour }: BookingSidebarProps) {
           >
             {showDateTooltip && (
               <div className="absolute bottom-full left-1/2 z-10 mb-3 flex -translate-x-1/2 animate-in items-center justify-center whitespace-nowrap rounded-xl border border-border bg-white px-3.5 py-2 text-xs font-bold text-on-surface shadow-xl duration-200 fade-in slide-in-from-bottom-1">
-                {locale === "vi" ? "Vui lòng chọn ngày khởi hành" : "Please select departure date"}
+                {td("select_date")}
                 <div className="absolute left-1/2 top-full -translate-x-1/2 border-4 border-transparent border-t-white" />
               </div>
             )}
@@ -241,7 +242,7 @@ export default function BookingSidebar({ tour }: BookingSidebarProps) {
             >
               <Button
                 disabled={(!availability?.is_available && selectedScheduleId !== "") || selectedScheduleId === ""}
-                className="h-14 w-full text-base font-bold uppercase tracking-wider shadow-[0_10px_20px_-10px_rgba(139,106,85,0.5)] disabled:opacity-50"
+                className="h-14 w-full text-base font-semibold uppercase tracking-normal shadow-[0_10px_20px_-10px_rgba(255,56,92,0.28)] disabled:opacity-50"
               >
                 {t("card.book_now")}
               </Button>
