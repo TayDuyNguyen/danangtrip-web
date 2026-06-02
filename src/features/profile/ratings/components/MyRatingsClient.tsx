@@ -177,7 +177,7 @@ export function MyRatingsClient() {
           </p>
           <Link
             href="/tours"
-            className="px-6 py-3 rounded-lg bg-primary hover:bg-[#725442] text-white font-bold text-sm tracking-tight transition-all"
+            className="px-6 py-3 rounded-full bg-primary hover:bg-[#e31c5f] text-white font-semibold text-sm tracking-tight transition-all"
           >
             {t("empty.cta")}
           </Link>

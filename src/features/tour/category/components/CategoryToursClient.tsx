@@ -119,8 +119,8 @@ export default function CategoryToursClient({ slug }: CategoryToursClientProps) 
               placeholder={t("list.search_placeholder")}
               value={filters.search || ""}
               onChange={(value: string) => setFilters({ search: value })}
-              label="Where"
-              actionText="Search"
+              label={t("list.search_label")}
+              actionText={t("list.search_action")}
             />
           </div>
         </div>

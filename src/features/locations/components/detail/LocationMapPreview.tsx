@@ -67,11 +67,17 @@ export default function LocationMapPreview({ location, showMapLink = true }: Loc
 
     mapRef.current = map;
 
-    setTimeout(() => {
-      map.invalidateSize();
+    const resizeTimer = window.setTimeout(() => {
+      if (mapRef.current !== map) return;
+      try {
+        map.invalidateSize();
+      } catch {
+        // Leaflet can throw if the container was removed before the delayed resize runs.
+      }
     }, 200);
 
     return () => {
+      window.clearTimeout(resizeTimer);
       map.remove();
       mapRef.current = null;
       markerRef.current = null;

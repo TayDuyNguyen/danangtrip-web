@@ -35,5 +35,12 @@
   "children": "Children",
   "infants": "Infants",
   "quantity_limit": "Max seats reached",
-  "departure_code_label": "Code"
+  "departure_code_label": "Code",
+  "confirm_delete_selected": "Are you sure you want to delete {count} selected items?",
+  "confirm_delete_all": "Are you sure you want to delete all items from your cart?",
+  "clear_all_success": "Cleared cart successfully",
+  "remove_selected_success": "Removed selected items",
+  "select_all": "Select all",
+  "delete_selected": "Delete selected ({count})",
+  "delete_all": "Delete all"
 }

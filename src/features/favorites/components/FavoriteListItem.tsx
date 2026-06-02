@@ -36,7 +36,7 @@ export function FavoriteListItem({ item, onRemove, isRemoving = false }: Favorit
 
   return (
     <div
-      className={`group relative flex flex-col gap-6 overflow-hidden rounded-[28px] border border-border bg-white p-5 shadow-[0_16px_48px_rgba(15,23,42,0.08)] transition-all duration-500 hover:-translate-y-1 hover:border-primary/30 hover:shadow-[0_24px_60px_rgba(15,23,42,0.12)] md:flex-row ${
+      className={`group relative flex flex-col gap-6 overflow-hidden rounded-[20px] border border-border bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-[0_8px_16px_rgba(0,0,0,0.12)] md:flex-row ${
         isRemoving ? "opacity-0 scale-75 pointer-events-none duration-300" : ""
       }`}
     >
@@ -57,7 +57,7 @@ export function FavoriteListItem({ item, onRemove, isRemoving = false }: Favorit
         {/* Feature Badge */}
         {location.is_featured && (
           <div className="absolute top-3 left-3 pointer-events-none z-10">
-            <span className="px-2.5 py-1 bg-primary text-white text-[9px] font-black rounded-full uppercase tracking-widest shadow-lg">
+            <span className="rounded-full bg-primary px-2.5 py-1 text-xs font-semibold uppercase tracking-normal text-white shadow-lg">
               {tLoc("badges.featured")}
             </span>
           </div>
@@ -69,7 +69,7 @@ export function FavoriteListItem({ item, onRemove, isRemoving = false }: Favorit
         <div className="space-y-2">
           {/* Header row */}
           <div className="flex items-center gap-2">
-            <span className="rounded-full border border-border bg-[#f7f7f7] px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-widest text-on-surface">
+            <span className="rounded-full border border-border bg-[#f7f7f7] px-2.5 py-0.5 text-xs font-semibold uppercase tracking-normal text-on-surface">
               {location.district}
             </span>
           </div>
@@ -85,9 +85,9 @@ export function FavoriteListItem({ item, onRemove, isRemoving = false }: Favorit
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-1 rounded border border-border bg-[#f7f7f7] px-1.5 py-0.5">
               <IoStar className="text-yellow-400 text-[10px]" />
-              <span className="text-[10px] font-bold text-on-surface">{rating.toFixed(1)}</span>
+              <span className="text-xs font-semibold text-on-surface">{rating.toFixed(1)}</span>
             </div>
-            <span className="text-[10px] font-medium text-on-surface-subtle">
+            <span className="text-xs font-medium text-on-surface-subtle">
               ({location.review_count} {tLoc("reviews")})
             </span>
           </div>
@@ -101,14 +101,14 @@ export function FavoriteListItem({ item, onRemove, isRemoving = false }: Favorit
         {/* Footer info (price and action button) */}
         <div className="mt-4 flex items-center justify-between border-t border-border pt-4 md:mt-0">
           <div className="flex flex-col">
-            <span className="text-[9px] font-bold uppercase tracking-wider text-on-surface-subtle">
+            <span className="text-xs font-semibold uppercase tracking-normal text-on-surface-subtle">
               {tLoc("price.from")}
             </span>
             <span className="text-base font-black text-primary">{formatPrice(location.price_min)}</span>
           </div>
           <Link
             href={detailHref}
-            className="rounded-lg bg-[#f7f7f7] px-4 py-2 text-[9px] font-extrabold uppercase tracking-widest text-on-surface shadow-sm transition-all duration-300 hover:bg-primary hover:text-white"
+            className="rounded-lg bg-[#f7f7f7] px-4 py-2 text-xs font-semibold uppercase tracking-normal text-on-surface shadow-sm transition-all duration-300 hover:bg-primary hover:text-white"
           >
             {t("detail")}
           </Link>

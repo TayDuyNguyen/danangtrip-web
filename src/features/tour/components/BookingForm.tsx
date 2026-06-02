@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { bookingSchema, type BookingFormValues } from "../validators/booking.schema";
 import { useBookingCalculate, useCreateBooking } from "../hooks/useBookingQueries";
-import { useTourSchedules } from "../hooks/useTourDetail";
+import { useCheckTourAvailability, useTourSchedules } from "../hooks/useTourDetail";
 import { useAuthStore } from "@/store/auth.store";
 import { Input, Button, Textarea, Select } from "@/components/ui";
 import { BookingProgressSteps } from "./BookingProgressSteps";
@@ -19,6 +19,8 @@ import { useSearchParams } from "next/navigation";
 import type { Tour } from "@/types";
 import { usePayment } from "@/features/payment/hooks/usePayment";
 import { useAppConfig } from "@/hooks/use-app-config";
+import { formatPriceVND } from "@/utils/format";
+import { ROUTES } from "@/config";
 
 interface BookingFormProps {
   tour: Tour;
@@ -29,6 +31,7 @@ export function BookingForm({ tour }: BookingFormProps) {
   const td = useTranslations("tour.detail");
   const tTour = useTranslations("tour");
   const locale = useLocale();
+  const priceLocale = locale === "vi" ? "vi-VN" : "en-US";
   const router = useRouter();
   const { user } = useAuthStore();
   const searchParams = useSearchParams();
@@ -60,11 +63,19 @@ export function BookingForm({ tour }: BookingFormProps) {
 
   const [errors, setErrors] = useState<Partial<Record<keyof BookingFormValues, string>>>({});
   const [forceSchedulePicker, setForceSchedulePicker] = useState(false);
+  const [selectPortalTarget, setSelectPortalTarget] = useState<HTMLElement | null>(null);
+  const autoAdjustedKeyRef = useRef("");
   const { isFocused, getFocusProps } = useFieldFocus<keyof BookingFormValues>();
 
   const { data: schedules = [] } = useTourSchedules(tour.id);
   const { mutate: calculate, data: priceData, isPending: isCalculating } = useBookingCalculate();
   const { mutate: createBooking, isPending: isCreating } = useCreateBooking();
+  const {
+    mutate: checkAvailability,
+    mutateAsync: checkAvailabilityAsync,
+    data: availability,
+    isPending: isCheckingAvailability,
+  } = useCheckTourAvailability(tour.id);
   const { createPayment, isCreating: isCreatingPayment } = usePayment();
 
   const onlinePaymentMethods = ["payos", "vnpay", "momo", "zalopay"] as const;
@@ -107,7 +118,19 @@ export function BookingForm({ tour }: BookingFormProps) {
   const debouncedFormData = useDebounce(effectiveFormData, 400);
 
   useEffect(() => {
+    setSelectPortalTarget(document.body);
+  }, []);
+
+  useEffect(() => {
     if (debouncedFormData.tour_schedule_id) {
+      const availabilityPayload = {
+        schedule_id: debouncedFormData.tour_schedule_id,
+        quantity_adult: debouncedFormData.quantity_adult,
+        quantity_child: debouncedFormData.quantity_child,
+        quantity_infant: debouncedFormData.quantity_infant,
+      };
+
+      checkAvailability(availabilityPayload);
       calculate({
         tour_id: tour.id,
         tour_schedule_id: debouncedFormData.tour_schedule_id,
@@ -121,6 +144,7 @@ export function BookingForm({ tour }: BookingFormProps) {
     debouncedFormData.quantity_adult,
     debouncedFormData.quantity_child,
     debouncedFormData.quantity_infant,
+    checkAvailability,
     calculate,
     tour.id
   ]);
@@ -152,7 +176,7 @@ export function BookingForm({ tour }: BookingFormProps) {
     }
   };
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const result = bookingSchema.safeParse(effectiveFormData);
@@ -161,7 +185,9 @@ export function BookingForm({ tour }: BookingFormProps) {
       result.error.issues.forEach((issue) => {
         const path = issue.path[0] as keyof BookingFormValues;
         if (!fieldErrors[path]) {
-          fieldErrors[path] = issue.message;
+          fieldErrors[path] = issue.message.startsWith("validation.")
+            ? t(issue.message)
+            : issue.message;
         }
       });
       setErrors(fieldErrors);
@@ -169,16 +195,39 @@ export function BookingForm({ tour }: BookingFormProps) {
       return;
     }
 
-    if (isOverCapacity) {
-      toast.error(tTour("departures.over_capacity"));
+    if (isOverCapacity || isRealtimeUnavailable) {
+      toast.error(tTour("departures.over_capacity_remaining", { seats: realtimeAvailableSeats }));
+      return;
+    }
+
+    try {
+      const latestAvailability = await checkAvailabilityAsync({
+        schedule_id: effectiveFormData.tour_schedule_id,
+        quantity_adult: effectiveFormData.quantity_adult,
+        quantity_child: effectiveFormData.quantity_child,
+        quantity_infant: effectiveFormData.quantity_infant,
+      });
+
+      if (!latestAvailability?.is_available) {
+        toast.error(tTour("departures.over_capacity_remaining", { seats: latestAvailability?.available_seats ?? 0 }));
+        return;
+      }
+    } catch {
+      toast.error(t("validation.schedule_required"));
       return;
     }
 
     createBooking(effectiveFormData, {
       onSuccess: (booking) => {
-        if (booking?.id) {
-          toast.success(t("step_confirm"));
-          if (onlinePaymentMethods.includes(effectiveFormData.payment_method as typeof onlinePaymentMethods[number])) {
+        const bookingCode = booking?.booking_code;
+        const paymentResultUrl = bookingCode
+          ? `${ROUTES.PAYMENT_RESULT}?booking_code=${encodeURIComponent(bookingCode)}`
+          : ROUTES.PAYMENT_RESULT;
+
+        toast.success(t("step_confirm"));
+
+        if (onlinePaymentMethods.includes(effectiveFormData.payment_method as typeof onlinePaymentMethods[number])) {
+          if (booking?.id) {
             createPayment({
               booking_id: booking.id,
               payment_method: effectiveFormData.payment_method as typeof onlinePaymentMethods[number],
@@ -186,10 +235,11 @@ export function BookingForm({ tour }: BookingFormProps) {
             return;
           }
 
-          if (booking.booking_code) {
-            router.push(`/payment/result?booking_code=${booking.booking_code}`);
-          }
+          router.push(paymentResultUrl);
+          return;
         }
+
+        router.push(paymentResultUrl);
       }
     });
   };
@@ -200,17 +250,69 @@ export function BookingForm({ tour }: BookingFormProps) {
   const selectedAvailableSeats = selectedSchedule
     ? selectedSchedule.max_people - selectedSchedule.booked_people
     : 0;
+  const realtimeAvailableSeats = availability?.available_seats ?? selectedAvailableSeats;
+  const totalSeatGuests = formData.quantity_adult + formData.quantity_child + formData.quantity_infant;
+  const isRealtimeUnavailable = availability?.is_available === false;
 
   const isOverCapacity =
     selectedSchedule !== undefined &&
-    formData.quantity_adult + formData.quantity_child > selectedAvailableSeats;
+    totalSeatGuests > realtimeAvailableSeats;
 
   const maxAdults = selectedSchedule
-    ? Math.max(1, selectedAvailableSeats - formData.quantity_child)
+    ? Math.max(1, realtimeAvailableSeats - formData.quantity_child - formData.quantity_infant)
     : 20;
   const maxChildren = selectedSchedule
-    ? Math.max(0, selectedAvailableSeats - formData.quantity_adult)
+    ? Math.max(0, realtimeAvailableSeats - formData.quantity_adult - formData.quantity_infant)
     : 20;
+  const maxInfants = selectedSchedule
+    ? Math.max(0, realtimeAvailableSeats - formData.quantity_adult - formData.quantity_child)
+    : 20;
+
+  useEffect(() => {
+    if (!selectedSchedule || realtimeAvailableSeats <= 0) return;
+
+    const nextAdults = Math.max(1, Math.min(formData.quantity_adult, realtimeAvailableSeats));
+    const seatsAfterAdults = Math.max(0, realtimeAvailableSeats - nextAdults);
+    const nextChildren = Math.max(0, Math.min(formData.quantity_child, seatsAfterAdults));
+    const seatsAfterChildren = Math.max(0, seatsAfterAdults - nextChildren);
+    const nextInfants = Math.max(0, Math.min(formData.quantity_infant, seatsAfterChildren));
+
+    if (
+      nextAdults === formData.quantity_adult &&
+      nextChildren === formData.quantity_child &&
+      nextInfants === formData.quantity_infant
+    ) {
+      return;
+    }
+
+    const adjustmentKey = [
+      effectiveScheduleId,
+      realtimeAvailableSeats,
+      nextAdults,
+      nextChildren,
+      nextInfants,
+    ].join(":");
+
+    setFormData((prev) => ({
+      ...prev,
+      quantity_adult: nextAdults,
+      quantity_child: nextChildren,
+      quantity_infant: nextInfants,
+    }));
+
+    if (autoAdjustedKeyRef.current !== adjustmentKey) {
+      autoAdjustedKeyRef.current = adjustmentKey;
+      toast.error(tTour("departures.over_capacity_remaining", { seats: realtimeAvailableSeats }));
+    }
+  }, [
+    effectiveScheduleId,
+    formData.quantity_adult,
+    formData.quantity_child,
+    formData.quantity_infant,
+    realtimeAvailableSeats,
+    selectedSchedule,
+    tTour,
+  ]);
 
   return (
     <div className="flex flex-col lg:flex-row gap-8 items-start">
@@ -231,7 +333,7 @@ export function BookingForm({ tour }: BookingFormProps) {
                 <button
                   type="button"
                   onClick={() => setForceSchedulePicker(true)}
-                  className="text-[11px] font-bold text-primary transition-colors hover:text-primary-hover uppercase tracking-widest"
+                  className="text-xs font-semibold uppercase tracking-normal text-primary transition-colors hover:text-primary-hover"
                 >
                   {t("change_departure")}
                 </button>
@@ -249,7 +351,7 @@ export function BookingForm({ tour }: BookingFormProps) {
                     }
                   }}
                   placeholder={td("select_date")}
-                  menuPortalTarget={typeof document !== "undefined" ? document.body : null}
+                  menuPortalTarget={selectPortalTarget}
                   menuPosition="fixed"
                 />
               </div>
@@ -258,7 +360,7 @@ export function BookingForm({ tour }: BookingFormProps) {
                 {selectedSchedule ? (
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div className="space-y-1">
-                      <p className="text-xs font-bold text-on-surface-subtle uppercase tracking-widest">
+                      <p className="text-xs font-semibold uppercase tracking-normal text-on-surface-subtle">
                         {t("selected_departure")}
                       </p>
                       <p className="text-base font-black text-on-surface uppercase">
@@ -267,7 +369,7 @@ export function BookingForm({ tour }: BookingFormProps) {
                     </div>
                     <div className="rounded-full bg-primary/10 px-4 py-2 text-xs font-black uppercase text-primary">
                       {selectedSchedule.booking_availability === "open"
-                        ? t("seats_left", { seats: selectedAvailableSeats })
+                        ? t("seats_left", { seats: realtimeAvailableSeats })
                         : td("schedule_full")}
                     </div>
                   </div>
@@ -277,7 +379,7 @@ export function BookingForm({ tour }: BookingFormProps) {
               </div>
             )}
             {errors.tour_schedule_id && (
-              <p className="text-xs text-red-400 font-bold uppercase tracking-wider">{errors.tour_schedule_id}</p>
+              <p className="text-xs font-semibold uppercase tracking-normal text-red-500">{errors.tour_schedule_id}</p>
             )}
           </section>
 
@@ -289,17 +391,23 @@ export function BookingForm({ tour }: BookingFormProps) {
                </h2>
             </div>
 
-            {isOverCapacity && (
-              <div className="p-4 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-3 animate-in fade-in duration-300">
+            {(isOverCapacity || isRealtimeUnavailable) && (
+              <div className="flex items-center gap-3 rounded-xl border border-red-500/20 bg-red-500/10 p-4 text-xs font-semibold uppercase tracking-normal text-red-500 animate-in fade-in duration-300">
                 <span className="w-2 h-2 rounded-full bg-red-500 animate-ping shrink-0" />
-                {tTour("departures.over_capacity_remaining", { seats: selectedAvailableSeats })}
+                {tTour("departures.over_capacity_remaining", { seats: realtimeAvailableSeats })}
               </div>
+            )}
+
+            {isCheckingAvailability && !isOverCapacity && !isRealtimeUnavailable && (
+              <p className="text-xs font-semibold uppercase tracking-normal text-on-surface-subtle">
+                {td("availability_checking")}
+              </p>
             )}
 
             <div className="divide-y divide-border/30">
               <QuantityCounter 
                 label={td("price_adult")} 
-                subLabel={`${tour.price_adult}đ ${td("per_person")}`}
+                subLabel={`${formatPriceVND(tour.price_adult, priceLocale)} ${td("per_person")}`}
                 value={formData.quantity_adult}
                 onChange={(val) => handleChange("quantity_adult", val)}
                 min={1}
@@ -307,7 +415,7 @@ export function BookingForm({ tour }: BookingFormProps) {
               />
               <QuantityCounter 
                 label={td("price_child")} 
-                subLabel={`${tour.price_child}đ ${td("per_person")}`}
+                subLabel={`${formatPriceVND(tour.price_child, priceLocale)} ${td("per_person")}`}
                 value={formData.quantity_child}
                 onChange={(val) => handleChange("quantity_child", val)}
                 min={0}
@@ -315,11 +423,11 @@ export function BookingForm({ tour }: BookingFormProps) {
               />
               <QuantityCounter 
                 label={td("price_infant")} 
-                subLabel={`${tour.price_infant}đ ${td("per_person")}`}
+                subLabel={`${formatPriceVND(tour.price_infant, priceLocale)} ${td("per_person")}`}
                 value={formData.quantity_infant}
                 onChange={(val) => handleChange("quantity_infant", val)}
                 min={0}
-                max={20}
+                max={maxInfants}
               />
             </div>
           </section>
@@ -340,7 +448,7 @@ export function BookingForm({ tour }: BookingFormProps) {
                     handleChange("customer_address", user.city || "");
                   }
                 }}
-                className="text-[11px] font-bold text-primary transition-colors hover:text-primary-hover uppercase tracking-widest"
+                className="text-xs font-semibold uppercase tracking-normal text-primary transition-colors hover:text-primary-hover"
                >
                  {t("fill_from_profile")}
                </button>
@@ -428,14 +536,14 @@ export function BookingForm({ tour }: BookingFormProps) {
                 </span>
              </label>
              {errors.agree_terms && (
-               <p className="text-xs text-red-400 font-bold uppercase tracking-wider">{errors.agree_terms}</p>
+               <p className="text-xs font-semibold uppercase tracking-normal text-red-500">{errors.agree_terms}</p>
              )}
 
              <Button 
                 type="submit" 
-                className="w-full h-16 text-lg font-black uppercase tracking-widest shadow-[0_10px_30px_-5px_rgba(139,106,85,0.4)]"
-                isLoading={isCreating || isCreatingPayment}
-                disabled={isCalculating || isCreatingPayment || isOverCapacity}
+                className="h-16 w-full text-lg font-semibold uppercase tracking-normal shadow-[0_10px_30px_-5px_rgba(255,56,92,0.28)]"
+                isLoading={isCreating || isCreatingPayment || isCheckingAvailability}
+                disabled={isCalculating || isCreatingPayment || isCheckingAvailability || isOverCapacity || isRealtimeUnavailable}
              >
                {t("continue_payment")}
              </Button>

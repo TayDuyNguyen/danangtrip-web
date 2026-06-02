@@ -18,7 +18,7 @@ interface SearchFiltersSheetProps {
   searchType?: "all" | "tour" | "location";
 }
 
-const sectionTitleClass = "text-[11px] font-semibold uppercase tracking-[0.24em] text-on-surface-subtle";
+const sectionTitleClass = "text-xs font-semibold uppercase tracking-normal text-on-surface-subtle";
 
 export const SearchFiltersSheet = ({
   isOpen,

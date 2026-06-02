@@ -38,7 +38,7 @@ export default function LandingHero({ title, subtitle, image, count }: Props) {
 
           <div className="space-y-4">
             <h1 className="reveal-up text-6xl font-semibold leading-[0.9] tracking-tighter text-on-surface md:text-3xl" style={{ animationDelay: "100ms" }}>
-              <span className="block text-primary">Discover</span>
+              <span className="block text-primary">{t("landing_hero.discover")}</span>
               <span className="block">{title}</span>
             </h1>
 
@@ -50,7 +50,7 @@ export default function LandingHero({ title, subtitle, image, count }: Props) {
           <div className="reveal-up flex gap-4" style={{ animationDelay: "300ms" }}>
             <div className="mt-4 h-px w-20 self-start bg-primary opacity-50" />
             <p className="text-sm font-semibold uppercase tracking-widest text-primary/80">
-              Premium Experiences curated for you
+              {t("landing_hero.curated_label")}
             </p>
           </div>
         </div>

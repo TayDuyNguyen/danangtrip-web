@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useCallback, useState } from "react";
+import { useMemo, useCallback, useEffect, useState } from "react";
 import { useSearchParams, usePathname } from "next/navigation";
 import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
@@ -20,6 +20,11 @@ export default function LocationListClient() {
   const t = useTranslations("locations");
 
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const q = searchParams.get("q") || "";
   const categoriesParam = searchParams.get("categories") || searchParams.get("category");
@@ -49,6 +54,7 @@ export default function LocationListClient() {
   );
 
   const { locations, pagination, isLoading } = useLocations(queryParams);
+  const showLoading = mounted && isLoading;
   const { data: rawCategories } = useLocationCategories();
   const { data: filterStats } = useLocationFilterStats();
   const categoryList = extractItems<Category>(rawCategories);
@@ -122,7 +128,7 @@ export default function LocationListClient() {
         onSearch={handleSearch}
         onOpenFilters={() => setIsMobileFiltersOpen(true)}
         hasActiveFilters={hasActiveFilters}
-        isLoading={isLoading && page === 1}
+        isLoading={showLoading && page === 1}
         query={q}
       />
 
@@ -134,7 +140,7 @@ export default function LocationListClient() {
         </aside>
 
         <main className="flex-1">
-          <LocationGrid locations={locations} isLoading={isLoading} />
+          <LocationGrid locations={locations} isLoading={showLoading} />
 
           <StandardPagination currentPage={page} totalPages={totalPages} onPageChange={handlePageChange} />
         </main>

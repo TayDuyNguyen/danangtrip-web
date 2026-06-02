@@ -31,7 +31,7 @@ export function DeleteRatingDialog({
       {/* Backdrop click closer */}
       <div className="absolute inset-0" onClick={isPending ? undefined : onClose} />
 
-      <div className="relative z-10 w-full max-w-md rounded-[28px] border border-border bg-white p-6 shadow-[0_24px_80px_rgba(15,23,42,0.18)] animate-in fade-in zoom-in-95 duration-300">
+      <div className="relative z-10 w-full max-w-md rounded-[20px] border border-border bg-white p-6 shadow-[0_16px_48px_rgba(0,0,0,0.20)] animate-in fade-in zoom-in-95 duration-300">
         <button
           type="button"
           disabled={isPending}

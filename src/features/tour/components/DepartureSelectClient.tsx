@@ -20,6 +20,7 @@ interface Props {
 
 export default function DepartureSelectClient({ tour }: Props) {
   const t = useTranslations("tour");
+  const tCommon = useTranslations("common");
   const router = useRouter();
 
   const {
@@ -99,12 +100,13 @@ export default function DepartureSelectClient({ tour }: Props) {
     });
 
     if (!result.success) {
-      toast.error(result.error.issues[0]?.message || t("detail.error_desc"));
+      const issueMessage = result.error.issues[0]?.message;
+      toast.error(issueMessage ? t(issueMessage) : t("detail.error_desc"));
       return;
     }
 
     if (isOverCapacity) {
-      toast.error(t("departures.over_capacity") || "Vượt quá số chỗ trống!");
+      toast.error(t("departures.over_capacity"));
       return;
     }
 
@@ -124,7 +126,7 @@ export default function DepartureSelectClient({ tour }: Props) {
       <div className="design-page flex min-h-screen items-center justify-center bg-surface">
         <div className="space-y-4 text-center">
           <p className="text-on-surface-subtle">{t("detail.error_desc")}</p>
-          <Button onClick={() => refetchSchedules()}>{t("common.retry") || "Thử lại"}</Button>
+          <Button onClick={() => refetchSchedules()}>{tCommon("error.retry")}</Button>
         </div>
       </div>
     );
@@ -152,7 +154,7 @@ export default function DepartureSelectClient({ tour }: Props) {
                 <div className="h-[400px] w-full animate-pulse rounded-[24px] border border-border bg-[#f3f4f6]" />
               ) : schedules.length === 0 ? (
                 <div className="flex h-[200px] w-full items-center justify-center rounded-xl border border-dashed border-border text-on-surface-subtle">
-                  {t("departures.no_schedules") || "Không có lịch khởi hành nào khả dụng."}
+                  {t("departures.no_schedules")}
                 </div>
               ) : (
                 <ScheduleCalendar schedules={schedules} selectedId={tour_schedule_id} onSelect={setTourScheduleId} />
@@ -211,7 +213,7 @@ export default function DepartureSelectClient({ tour }: Props) {
 
             {(calculateError || availabilityError) && (
               <p className="mt-2 text-xs text-on-surfacerror">
-                {t("departures.calc_error") || "Lỗi khi cập nhật giá hoặc chỗ trống."}
+                {t("departures.calc_error")}
               </p>
             )}
 
@@ -219,7 +221,7 @@ export default function DepartureSelectClient({ tour }: Props) {
               <Button
                 onClick={handleContinue}
                 disabled={isContinueDisabled}
-                className="h-14 w-full text-base font-bold uppercase tracking-wider shadow-[0_10px_20px_-10px_rgba(139,106,85,0.5)] disabled:opacity-50"
+                className="h-14 w-full text-base font-semibold uppercase tracking-normal shadow-[0_10px_20px_-10px_rgba(255,56,92,0.28)] disabled:opacity-50"
               >
                 {t("departures.continue")}
               </Button>

@@ -6,15 +6,32 @@
     "empty_title": "No tours found in this category",
     "empty_desc": "Try resetting the filters or go back to view all other tours."
   },
+  "list_subtitle": "Discover amazing tours in Da Nang",
   "landing": {
     "meta_title": "Da Nang Tours - Best Price, Daily Departure | DanangTrip",
     "meta_description": "Explore amazing Da Nang tours: Marble Mountains, Hoi An, Ba Na Hills, Cham Island. Book online, 24/7 support.",
     "hero_title": "Da Nang Tours",
-    "hero_subtitle": "Discover the most attractive tours in the most livable city in Vietnam."
+    "hero_subtitle": "Discover the most attractive tours in the most livable city in Vietnam.",
+    "destination_name": "Da Nang",
+    "faq_title": "Frequently Asked Questions",
+    "loading": "Loading Da Nang tours...",
+    "content": "<h2>Discover Da Nang - The city of bridges</h2><p>Da Nang is known not only for beautiful beaches like My Khe, but also for distinctive architecture, scenic landmarks, and memorable local experiences...</p>",
+    "faqs": [
+      {
+        "question": "When is the best time to visit Da Nang?",
+        "answer": "The ideal time is from April to August, when the weather is sunny with little rain, making it suitable for beach activities and sightseeing."
+      },
+      {
+        "question": "What are the most popular Da Nang tours?",
+        "answer": "Popular choices include Ba Na Hills, Marble Mountains - Hoi An, Cham Island, and Son Tra Peninsula tours."
+      }
+    ]
   },
   "subtitle": "Discover amazing journeys in Da Nang",
   "list": {
     "search_placeholder": "Search tours...",
+    "search_label": "Where",
+    "search_action": "Search",
     "filters_toggle": "Filters",
     "results_count": "Found <highlight>{count}</highlight> matching tours",
     "load_error": "Could not load tours. Please try again.",
@@ -35,6 +52,14 @@
     "price_max_placeholder": "Max",
     "available_from_label": "From",
     "available_to_label": "To",
+    "show_less": "Show less",
+    "show_more_categories": "Show {count} more",
+    "price_options": {
+      "under_500k": "Under 500k",
+      "from_500k_to_1m": "500k - 1M",
+      "from_1m_to_2m": "1M - 2M",
+      "over_2m": "Over 2M"
+    },
     "durations": {
       "half_day": "Half day",
       "one_day": "1 day",
@@ -146,6 +171,14 @@
     "note": "Note",
     "note_placeholder": "Special requests, food allergies, etc...",
     "payment_method": "Payment Method",
+    "validation": {
+      "schedule_required": "Please select a valid departure date.",
+      "adult_required": "At least 1 adult is required.",
+      "name_min": "Name must be at least 2 characters.",
+      "email_invalid": "Invalid email address.",
+      "phone_invalid": "Invalid phone number.",
+      "terms_required": "You must agree to the terms."
+    },
     "terms_agree": "I agree to the <terms>Terms of Use</terms> and <policy>Cancellation Policy</policy> of Danang Trip.",
     "terms_link": "Terms of Use",
     "policy_link": "Cancellation Policy",
@@ -205,6 +238,8 @@
     "meta_description": "View and manage your tour bookings list on DanangTrip.",
     "page_title": "My Bookings",
     "search_placeholder": "Search by booking code or tour name...",
+    "search_label": "Booking search",
+    "search_action": "Find",
     "tabs": {
       "all": "All",
       "pending": "Pending",
@@ -286,5 +321,9 @@
     "status_completed": "Completed",
     "section_timeline": "Booking Timeline",
     "error_desc": "An error occurred while loading booking details. Please try again."
+  },
+  "landing_hero": {
+    "discover": "Discover",
+    "curated_label": "Premium experiences curated for you"
   }
 }

@@ -2,6 +2,8 @@
   "title": "Kết quả tìm kiếm",
   "description": "Tìm kiếm các địa điểm và tour du lịch tuyệt vời tại Đà Nẵng",
   "found_results": "Tìm thấy {count} kết quả cho <strong>{query}</strong>",
+  "input_label": "Bạn muốn đi đâu?",
+  "input_action": "Tìm kiếm",
   "tabs": {
     "all": "Tất cả",
     "tour": "Tour du lịch",

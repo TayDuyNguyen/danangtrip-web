@@ -24,37 +24,37 @@ export function PaymentMethodSelector({ value, onChange }: PaymentMethodSelector
   const methods = [
     {
       id: "payos",
-      name: t("payment.methods.payos", { defaultValue: "Cổng thanh toán payOS" }),
+      name: t("payment.methods.payos"),
       icon: "/images/payment/payOS.png",
-      badge: t("payment.badges.automatic", { defaultValue: "Tự động" }),
+      badge: t("payment.badges.automatic"),
       enabled: isPayosEnabled,
     },
     {
       id: "vnpay",
-      name: t("payment.methods.vnpay", { defaultValue: "Cổng thanh toán VNPAY" }),
+      name: t("payment.methods.vnpay"),
       icon: "/images/payment/vnpay.png",
-      badge: t("payment.badges.automatic", { defaultValue: "Tự động" }),
+      badge: t("payment.badges.automatic"),
       enabled: isVnpayEnabled,
     },
     {
       id: "momo",
-      name: t("payment.methods.momo", { defaultValue: "Ví điện tử MoMo" }),
+      name: t("payment.methods.momo"),
       icon: "/images/payment/momo.png",
-      badge: t("payment.badges.automatic", { defaultValue: "Tự động" }),
+      badge: t("payment.badges.automatic"),
       enabled: isMomoEnabled,
     },
     {
       id: "zalopay",
-      name: t("payment.methods.zalopay", { defaultValue: "Ví điện tử ZaloPay" }),
+      name: t("payment.methods.zalopay"),
       icon: "/images/payment/zalopay.png",
-      badge: t("payment.badges.automatic", { defaultValue: "Tự động" }),
+      badge: t("payment.badges.automatic"),
       enabled: isZalopayEnabled,
     },
     {
       id: "bank_transfer",
-      name: t("payment.methods.bank_transfer_manual", { defaultValue: "Chuyển khoản thủ công / COD" }),
+      name: t("payment.methods.bank_transfer_manual"),
       icon: null,
-      badge: t("payment.badges.manual", { defaultValue: "Thủ công" }),
+      badge: t("payment.badges.manual"),
       enabled: isCodEnabled,
     }
   ].filter((m) => m.enabled);
@@ -74,7 +74,7 @@ export function PaymentMethodSelector({ value, onChange }: PaymentMethodSelector
           className={cn(
             "flex items-center justify-between p-4 rounded-xl cursor-pointer border-2 transition-all duration-300",
             value === method.id
-              ? "border-primary bg-primary/5 shadow-[0_0_20px_rgba(139,106,85,0.1)]"
+              ? "border-primary bg-primary/5 shadow-[0_0_20px_rgba(255,56,92,0.12)]"
               : "border-border bg-[#f7f7f7] hover:border-primary/30 hover:bg-white"
           )}
         >
@@ -105,7 +105,7 @@ export function PaymentMethodSelector({ value, onChange }: PaymentMethodSelector
             </div>
           </div>
           {method.badge && (
-            <span className="bg-success/20 text-success text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-tighter">
+            <span className="rounded-full bg-success/20 px-2 py-0.5 text-xs font-semibold uppercase tracking-normal text-success">
               {method.badge}
             </span>
           )}

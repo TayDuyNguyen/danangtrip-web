@@ -2,8 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { AnimatePresence, motion } from "framer-motion";
 import { useLocale } from "next-intl";
+import { AnimatePresence, motion } from "framer-motion";
 
 interface IntroSceneProps {
   images?: string[];
@@ -68,7 +68,7 @@ const INTRO_IMAGES: IntroImage[] = [
   },
 ];
 
-const SLIDE_INTERVAL_MS = 2800;
+const SLIDE_INTERVAL_MS = 7200;
 
 export default function IntroScene({ images, onSceneChange }: IntroSceneProps) {
   const locale = useLocale();
@@ -98,24 +98,31 @@ export default function IntroScene({ images, onSceneChange }: IntroSceneProps) {
 
   return (
     <div className="absolute inset-0 z-0 overflow-hidden bg-black">
-      <AnimatePresence mode="sync">
+      <AnimatePresence initial={false}>
         <motion.div
           key={current.src}
           className="absolute inset-0"
-          initial={{ opacity: 0, scale: 1.035 }}
-          animate={{ opacity: 1, scale: 1.005 }}
-          exit={{ opacity: 0, scale: 1 }}
-          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          initial={{ opacity: 0, scale: 1.035, filter: "blur(3px)" }}
+          animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+          exit={{ opacity: 0, scale: 1.025, filter: "blur(2px)" }}
+          transition={{ duration: 1.45, ease: [0.16, 1, 0.3, 1] }}
         >
-          <Image
-            src={current.src}
-            alt={isVi ? current.altVi : current.altEn}
-            fill
-            priority={index <= 1}
-            quality={100}
-            sizes="100vw"
-            className="object-cover object-center"
-          />
+          <motion.div
+            className="absolute inset-0"
+            initial={{ scale: 1 }}
+            animate={{ scale: 1.055 }}
+            transition={{ duration: SLIDE_INTERVAL_MS / 1000, ease: "linear" }}
+          >
+            <Image
+              src={current.src}
+              alt={isVi ? current.altVi : current.altEn}
+              fill
+              priority={index <= 1}
+              quality={100}
+              sizes="100vw"
+              className="object-cover object-center"
+            />
+          </motion.div>
         </motion.div>
       </AnimatePresence>
 
@@ -125,9 +132,9 @@ export default function IntroScene({ images, onSceneChange }: IntroSceneProps) {
       <motion.div
         key={`${current.src}-copy`}
         className="absolute bottom-8 left-6 z-20 max-w-sm rounded-full border border-white/16 bg-black/18 px-4 py-2 text-white/88 backdrop-blur-md md:left-10"
-        initial={{ opacity: 0, y: 16 }}
+        initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.65, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
       >
         <p className="text-[11px] font-semibold uppercase tracking-[0.22em]">
           {isVi ? current.titleVi : current.titleEn}

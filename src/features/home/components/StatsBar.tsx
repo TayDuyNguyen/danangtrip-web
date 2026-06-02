@@ -1,6 +1,6 @@
 "use client";
 
-import { memo } from "react";
+import { memo, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { IoLocationOutline, IoMapOutline, IoNewspaperOutline } from "@/components/icons/solar";
 import { useStatistics } from "../hooks/use-statistics";
@@ -10,6 +10,14 @@ const StatsBar = () => {
   const t = useTranslations();
   const { elementRef, isVisible } = useScrollReveal();
   const { stats } = useStatistics();
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // Use isVisible only after hydration to avoid SSR/client mismatch
+  const revealed = isMounted && isVisible;
 
   const statItems = [
     {
@@ -32,8 +40,8 @@ const StatsBar = () => {
   return (
     <div className="relative z-10 flex w-full justify-center" ref={elementRef}>
       <div
-        className={`-mt-10 mb-2 flex w-[calc(100%-2rem)] flex-wrap items-center justify-between gap-5 rounded-[28px] border border-border bg-white p-6 shadow-[0_20px_45px_rgba(0,0,0,0.08)] transition-all duration-700 md:w-[calc(100%-3rem)] md:p-7 lg:w-[calc(100%-4rem)] ${
-          isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
+        className={`-mt-10 mb-2 flex w-[calc(100%-2rem)] max-w-4xl flex-wrap items-center justify-between gap-5 rounded-[28px] border border-border bg-white p-6 shadow-[0_20px_45px_rgba(0,0,0,0.08)] transition-all duration-700 md:p-7 ${
+          revealed ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
         }`}
       >
         {statItems.map((item, index) => (
@@ -42,8 +50,8 @@ const StatsBar = () => {
             className="group flex min-w-[200px] flex-1 items-center gap-5 transition-all duration-700"
             style={{
               transitionDelay: `${(index + 1) * 150}ms`,
-              opacity: isVisible ? 1 : 0,
-              transform: isVisible ? "translateY(0)" : "translateY(20px)",
+              opacity: revealed ? 1 : 0,
+              transform: revealed ? "translateY(0)" : "translateY(20px)",
             }}
           >
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-[#ffd8e1] bg-[#fff1f3] transition-all duration-300 group-hover:border-primary/25 group-hover:bg-[#ffe4ea]">

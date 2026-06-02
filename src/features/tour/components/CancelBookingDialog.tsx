@@ -82,7 +82,7 @@ export function CancelBookingDialog({
             onClick={onClose}
             className="text-on-surface-subtle transition-colors hover:text-primary"
             disabled={isPending}
-            aria-label="Close"
+            aria-label={t("button_close")}
           >
             <X className="w-5 h-5" />
           </button>

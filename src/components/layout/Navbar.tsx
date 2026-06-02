@@ -18,7 +18,7 @@ export function Navbar() {
       <div className="flex items-center gap-4">
         {isAuthenticated && user ? (
           <>
-            <span className="text-[#a3a3a3]">{user.name}</span>
+            <span className="text-on-surface-subtle">{user.name}</span>
             <Button variant="secondary" size="sm" onClick={logout}>
               {t("auth.logout")}
             </Button>

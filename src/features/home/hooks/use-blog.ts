@@ -1,8 +1,7 @@
 "use client";
 
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { homeService } from "@/services/home.service";
-import { mapApiConfig } from "@/services/config.service";
 import type { BlogPost } from "@/types";
 import { shouldRetryQuery } from "@/lib/react-query";
 
@@ -11,16 +10,11 @@ import { shouldRetryQuery } from "@/lib/react-query";
  * Consolidates into single /home API and pre-warms global app config cache.
  */
 export const useBlog = (enabled: boolean = true) => {
-  const queryClient = useQueryClient();
-
   const query = useQuery({
-    queryKey: ["home", "unified-data"],
+    queryKey: ["home", "blogs-data"],
     queryFn: async () => {
-      const res = await homeService.getHomeData();
+      const res = await homeService.getHomeBlogs();
       if (res.success && res.data) {
-        if (res.data.config) {
-          queryClient.setQueryData(["app", "config"], mapApiConfig(res.data.config));
-        }
         return res.data;
       }
       throw res;

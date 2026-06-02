@@ -1,7 +1,8 @@
 "use client";
 
-import { memo } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
+import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "@/i18n/navigation";
 import { ROUTES } from "@/config";
 import { useTranslations, useLocale } from "next-intl";
@@ -10,15 +11,58 @@ import { useBlog } from "../hooks/use-blog";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 import { getHomeBlogImage } from "../utils/home-image-fallbacks";
 
+const BLOG_GRID_SIZE = 4;
+const BLOG_SLIDE_INTERVAL_MS = 6500;
+const imageMotion = {
+  initial: { opacity: 0, scale: 1.035, filter: "blur(3px)" },
+  animate: { opacity: 1, scale: 1, filter: "blur(0px)" },
+  exit: { opacity: 0, scale: 1.02, filter: "blur(2px)" },
+  transition: { duration: 1.15, ease: [0.16, 1, 0.3, 1] as const },
+};
+
+const copyMotion = {
+  initial: { opacity: 0, y: 12 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -8 },
+  transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] as const },
+};
+
 const TravelBlog = () => {
   const t = useTranslations();
   const locale = useLocale();
   const { elementRef, isVisible } = useScrollReveal();
   const { latestBlogs: blogs, isLoading } = useBlog();
 
-  // Pick first blog as hero, next 4 as grid items
+  // Pick first blog as hero, then rotate the remaining payload in compact pages.
   const heroPost = blogs?.[0];
-  const gridPosts = blogs?.slice(1, 5) || [];
+  const blogSlides = useMemo(() => {
+    const posts = blogs?.slice(1, 20) || [];
+    const slides = [];
+
+    for (let index = 0; index < posts.length; index += BLOG_GRID_SIZE) {
+      slides.push(posts.slice(index, index + BLOG_GRID_SIZE));
+    }
+
+    return slides;
+  }, [blogs]);
+  const [activeSlide, setActiveSlide] = useState(0);
+  const gridPosts = blogSlides[activeSlide] || [];
+
+  useEffect(() => {
+    setActiveSlide(0);
+  }, [blogSlides.length]);
+
+  useEffect(() => {
+    if (blogSlides.length <= 1) {
+      return;
+    }
+
+    const timer = window.setInterval(() => {
+      setActiveSlide((current) => (current + 1) % blogSlides.length);
+    }, BLOG_SLIDE_INTERVAL_MS);
+
+    return () => window.clearInterval(timer);
+  }, [blogSlides.length]);
 
   return (
     <section className="py-6 bg-surface/12 backdrop-blur-[1px] font-sans overflow-hidden">
@@ -28,12 +72,12 @@ const TravelBlog = () => {
           <div className={`max-w-2xl px-4 transition-all duration-700 delay-100 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
             <div className="flex items-center gap-3 mb-4">
               <span className="w-8 h-[2px] bg-primary/40" />
-              <span className="text-primary font-black text-[12px] tracking-[0.4em] uppercase">
+              <span className="text-xs font-semibold uppercase tracking-normal text-primary">
                 {t("home.blog.tagline")}
               </span>
             </div>
-            <h2 className="text-[36px] md:text-[48px] font-black leading-[1.1] text-on-surface">
-              {t("home.blog.title_prefix")} <span className="text-primary underline decoration-[#8b6a55]/30 underline-offset-8">{t("home.blog.title_highlight")}</span>
+            <h2 className="text-[32px] font-semibold leading-[1.1] text-on-surface md:text-[44px]">
+              {t("home.blog.title_prefix")} <span className="text-primary underline decoration-primary/30 underline-offset-8">{t("home.blog.title_highlight")}</span>
             </h2>
           </div>
           <Link
@@ -51,19 +95,19 @@ const TravelBlog = () => {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
               {/* Left Skeleton (Hero Card) */}
               <div className="relative flex h-[500px] flex-col justify-end rounded-[28px] border border-border bg-[#f7f7f7] p-8 animate-pulse lg:col-span-7 lg:h-[600px]">
-                <div className="h-6 w-24 bg-[#1c1c1c] rounded-full mb-6" />
-                <div className="h-10 w-3/4 bg-[#1c1c1c] rounded mb-4" />
-                <div className="h-4 w-1/2 bg-[#1c1c1c] rounded mb-8" />
-                <div className="absolute bottom-8 right-8 h-12 w-36 bg-[#1c1c1c] rounded-full" />
+                <div className="mb-6 h-6 w-24 rounded-full bg-[#e5e5e5]" />
+                <div className="mb-4 h-10 w-3/4 rounded bg-[#ebebeb]" />
+                <div className="mb-8 h-4 w-1/2 rounded bg-[#e5e5e5]" />
+                <div className="absolute bottom-8 right-8 h-12 w-36 rounded-full bg-[#ebebeb]" />
               </div>
 
               {/* Right Skeletons (4 Grid Cards) */}
               <div className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {Array.from({ length: 4 }).map((_, i) => (
                   <div key={i} className="relative flex h-[288px] flex-col justify-end rounded-[28px] border border-border bg-[#f7f7f7] p-6 animate-pulse">
-                    <div className="absolute top-4 right-4 h-6 w-16 bg-[#1c1c1c] rounded-full" />
-                    <div className="h-3 w-20 bg-[#1c1c1c] rounded mb-3" />
-                    <div className="h-5 w-5/6 bg-[#1c1c1c] rounded" />
+                    <div className="absolute right-4 top-4 h-6 w-16 rounded-full bg-[#e5e5e5]" />
+                    <div className="mb-3 h-3 w-20 rounded bg-[#e5e5e5]" />
+                    <div className="h-5 w-5/6 rounded bg-[#ebebeb]" />
                   </div>
                 ))}
               </div>
@@ -74,7 +118,7 @@ const TravelBlog = () => {
               <div className="lg:col-span-7 flex flex-col">
                 <Link
                   href={`${ROUTES.BLOG}/${heroPost.slug}`}
-                  className="group relative overflow-hidden rounded-2xl border border-border h-[500px] lg:h-[600px] flex flex-col justify-end p-8 md:p-12 shadow-2xl transition-all duration-500 hover:border-primary/30 hover:shadow-[0_30px_60px_rgba(139,106,85,0.15)] cursor-pointer"
+                  className="group relative flex h-[500px] cursor-pointer flex-col justify-end overflow-hidden rounded-2xl border border-border p-8 shadow-2xl transition-all duration-500 hover:border-primary/30 hover:shadow-[0_30px_60px_rgba(255,56,92,0.14)] md:p-12 lg:h-[600px]"
                 >
                   {/* Hero Background Image */}
                   <Image
@@ -90,8 +134,8 @@ const TravelBlog = () => {
 
                   {/* Left Column Text Overlay */}
                   <div className="relative z-10 flex flex-col max-w-xl">
-                    <span className="self-start bg-primary text-white text-[10px] font-black tracking-wider uppercase px-4 py-2 rounded-full mb-6 border border-white/10 shadow-md">
-                      {heroPost.categories?.[0]?.name || t("common.brand_name")}
+                    <span className="mb-6 self-start rounded-full border border-white/10 bg-primary px-4 py-2 text-xs font-semibold uppercase tracking-normal text-white shadow-md">
+                      {heroPost.categories?.[0]?.name || t("common.common.brand_name")}
                     </span>
 
                     <h3 className="text-white text-[28px] md:text-[36px] font-black leading-[1.15] mb-4 drop-shadow-2xl group-hover:text-primary transition-colors duration-300">
@@ -105,7 +149,7 @@ const TravelBlog = () => {
 
                   {/* Bottom Right Glass Pill Button */}
                   <div className="absolute bottom-8 right-8 z-20">
-                    <span className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-[13px] font-semibold uppercase tracking-wider text-white shadow-lg transition-all duration-300 hover:bg-primary-hover">
+                    <span className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-[13px] font-semibold uppercase tracking-normal text-white shadow-lg transition-all duration-300 hover:bg-primary-hover">
                       {t("home.blog.read_more")} <span className="text-[14px]">→</span>
                     </span>
                   </div>
@@ -113,48 +157,101 @@ const TravelBlog = () => {
               </div>
 
               {/* Right Column: 4 Grid Cards */}
-              <div className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-6">
-                {gridPosts.map((post) => (
-                  <Link
-                    key={post.id}
-                    href={`${ROUTES.BLOG}/${post.slug}`}
-                    className="group relative h-[288px] rounded-2xl overflow-hidden border border-border flex flex-col justify-end p-6 hover:-translate-y-1 hover:border-primary/30 hover:shadow-[0_20px_40px_rgba(139,106,85,0.15)] transition-all duration-500 cursor-pointer shadow-lg"
-                  >
-                    {/* Background Image */}
-                    <Image
-                      src={getHomeBlogImage(post.featured_image, post.id)}
-                      alt={post.title}
-                      fill
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 300px"
-                      className="object-cover transition-transform duration-1000 group-hover:scale-105"
-                    />
-                    {/* Dark gradient overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/45 to-transparent" />
+              <div className="lg:col-span-5">
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                    {Array.from({ length: BLOG_GRID_SIZE }).map((_, index) => {
+                      const post = gridPosts[index];
 
-                    {/* Small category tag in top right */}
-                    <span className="absolute right-4 top-4 z-10 rounded-full border border-border bg-white/95 px-3 py-1.5 text-[9px] font-semibold uppercase tracking-wider text-primary shadow-sm backdrop-blur-md">
-                      {post.categories?.[0]?.name || "Travel"}
-                    </span>
+                      if (!post) {
+                        return (
+                          <div
+                            key={`blog-empty-${index}`}
+                            className="relative hidden h-[288px] overflow-hidden rounded-2xl border border-border bg-[#0c0c0c] sm:block"
+                          />
+                        );
+                      }
 
-                    {/* Content overlay */}
-                    <div className="relative z-10 w-full flex flex-col">
-                      <span className="mb-2 flex items-center gap-1.5 text-[11px] font-medium tracking-wide text-white/76">
-                        <IoCalendarOutline size={12} className="text-primary/70" />
-                        {post.created_at ? new Date(post.created_at).toLocaleDateString(locale === 'vi' ? 'vi-VN' : 'en-US') : "18/04/2026"}
-                      </span>
+                      return (
+                      <Link
+                        key={`blog-slot-${index}`}
+                        href={`${ROUTES.BLOG}/${post.slug}`}
+                        className="group relative flex h-[288px] cursor-pointer flex-col justify-end overflow-hidden rounded-2xl border border-border bg-[#0c0c0c] p-6 shadow-lg transition-all duration-500 hover:-translate-y-1 hover:border-primary/30 hover:shadow-[0_20px_40px_rgba(255,56,92,0.12)]"
+                      >
+                        {/* Background Image */}
+                        <AnimatePresence initial={false}>
+                          <motion.div
+                            key={`blog-image-${index}-${post.id}`}
+                            className="absolute inset-0"
+                            {...imageMotion}
+                          >
+                            <Image
+                              src={getHomeBlogImage(post.featured_image, post.id)}
+                              alt={post.title}
+                              fill
+                              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 300px"
+                              className="object-cover transition-transform duration-1000 group-hover:scale-105"
+                            />
+                          </motion.div>
+                        </AnimatePresence>
+                        {/* Dark gradient overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/45 to-transparent" />
 
-                      {/* Translucent bottom bar */}
-                      <div className="flex items-center justify-between gap-3 mt-1 pt-3 border-t border-border/40">
-                        <h4 className="text-white text-[15px] font-bold group-hover:text-primary transition-colors duration-300 line-clamp-2 leading-snug flex-1">
-                          {post.title}
-                        </h4>
-                        <span className="text-primary text-[18px] font-black group-hover:translate-x-1.5 transition-transform duration-300">
-                          →
-                        </span>
-                      </div>
-                    </div>
-                  </Link>
-                ))}
+                        {/* Small category tag in top right */}
+                        <AnimatePresence initial={false}>
+                          <motion.span
+                            key={`blog-category-${index}-${post.id}`}
+                            className="absolute right-4 top-4 z-10 max-w-[calc(100%-2rem)] truncate rounded-full border border-border bg-white/95 px-3 py-1.5 text-xs font-semibold uppercase tracking-normal text-primary shadow-sm backdrop-blur-md"
+                            {...copyMotion}
+                          >
+                            {post.categories?.[0]?.name || t("home.blog.default_category")}
+                          </motion.span>
+                        </AnimatePresence>
+
+                        {/* Content overlay */}
+                        <AnimatePresence initial={false}>
+                          <motion.div
+                            key={`blog-copy-${index}-${post.id}`}
+                            className="relative z-10 w-full flex flex-col"
+                            {...copyMotion}
+                          >
+                            <span className="mb-2 flex items-center gap-1.5 text-[11px] font-medium tracking-wide text-white/76">
+                              <IoCalendarOutline size={12} className="text-primary/70" />
+                              {post.created_at ? new Date(post.created_at).toLocaleDateString(locale === 'vi' ? 'vi-VN' : 'en-US') : "18/04/2026"}
+                            </span>
+
+                            {/* Translucent bottom bar */}
+                            <div className="flex items-center justify-between gap-3 mt-1 pt-3 border-t border-border/40">
+                              <h4 className="text-white text-[15px] font-bold group-hover:text-primary transition-colors duration-300 line-clamp-2 leading-snug flex-1">
+                                {post.title}
+                              </h4>
+                              <span className="text-primary text-[18px] font-black group-hover:translate-x-1.5 transition-transform duration-300">
+                                →
+                              </span>
+                            </div>
+                          </motion.div>
+                        </AnimatePresence>
+                      </Link>
+                      );
+                    })}
+                </div>
+
+                {blogSlides.length > 1 && (
+                  <div className="mt-5 flex items-center justify-center gap-2">
+                    {blogSlides.map((_, index) => (
+                      <button
+                        key={index}
+                        type="button"
+                        aria-label={`Blog slide ${index + 1}`}
+                        onClick={() => setActiveSlide(index)}
+                        className={`h-2 rounded-full transition-all duration-300 ${
+                          activeSlide === index
+                            ? "w-8 bg-primary shadow-[0_8px_20px_rgba(255,56,92,0.25)]"
+                            : "w-2 bg-on-surface/25 hover:bg-primary/50"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           ) : (

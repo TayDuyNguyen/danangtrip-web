@@ -132,7 +132,7 @@ export function ForgotPasswordForm({ email: initialEmail = "" }: ForgotPasswordF
         <div className="absolute inset-[-2px] rounded-[10px] overflow-hidden pointer-events-none z-0 hidden sm:block">
           <div 
             className="absolute top-1/2 left-1/2 w-[200%] h-[200%] -translate-x-1/2 -translate-y-1/2 animate-[spin_4s_linear_infinite]" 
-            style={{ backgroundImage: 'conic-gradient(from 0deg, transparent 0 240deg, rgba(139,106,85,0.3) 300deg, #8b6a55 360deg)' }}
+            style={{ backgroundImage: 'conic-gradient(from 0deg, transparent 0 240deg, rgba(255,56,92,0.24) 300deg, #FF385C 360deg)' }}
           />
         </div>
 

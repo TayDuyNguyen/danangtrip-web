@@ -26,7 +26,7 @@ const LocationInfo: React.FC<LocationInfoProps> = ({ location }) => {
   return (
     <div className="space-y-8">
       <div className="space-y-4">
-        <div className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">
+        <div className="text-xs font-semibold uppercase tracking-normal text-primary">
           {location.district}
           {location.category && (
             <span className="ml-4 text-on-surface-subtle">
@@ -97,7 +97,7 @@ const LocationInfo: React.FC<LocationInfoProps> = ({ location }) => {
               <Phone className="h-5 w-5" />
             </div>
             <div>
-              <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-on-surface-subtle">
+              <p className="mb-1 text-xs font-semibold uppercase tracking-normal text-on-surface-subtle">
                 {t('detail.contact_phone_label')}
               </p>
               <p className="text-sm font-semibold text-on-surface">{location.phone}</p>
@@ -111,7 +111,7 @@ const LocationInfo: React.FC<LocationInfoProps> = ({ location }) => {
               <Globe className="h-5 w-5" />
             </div>
             <div className="overflow-hidden">
-              <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-on-surface-subtle">
+              <p className="mb-1 text-xs font-semibold uppercase tracking-normal text-on-surface-subtle">
                 {t('detail.contact_website_label')}
               </p>
               <p className="max-w-[160px] truncate text-sm font-semibold text-on-surface">
@@ -127,7 +127,7 @@ const LocationInfo: React.FC<LocationInfoProps> = ({ location }) => {
               <Clock className="h-5 w-5" />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-on-surface-subtle">
+              <p className="mb-1 text-xs font-semibold uppercase tracking-normal text-on-surface-subtle">
                 {t('detail.opening_hours')}
               </p>
               {openingHoursDisplay.kind === 'plain' ? (

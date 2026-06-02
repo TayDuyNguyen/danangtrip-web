@@ -43,7 +43,7 @@ export default function ReasonTag({ reason }: ReasonTagProps) {
   const meta = getReasonMeta();
 
   return (
-    <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-[10px] font-mono font-medium tracking-wide uppercase transition-all duration-300 ${meta.bg}`}>
+    <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-[11px] font-medium tracking-normal transition-all duration-300 ${meta.bg}`}>
       {meta.icon}
       <span>{meta.label}</span>
     </div>

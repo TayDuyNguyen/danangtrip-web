@@ -16,7 +16,7 @@ export function NotificationsEmptyState({ activeTab }: Props) {
   const isUnreadTab = activeTab === "unread";
 
   return (
-    <div className="mx-auto flex max-w-2xl animate-in slide-in-from-bottom-4 fade-in flex-col items-center justify-center rounded-[28px] border border-border bg-white px-4 py-20 text-center shadow-[0_16px_48px_rgba(15,23,42,0.08)] duration-500">
+    <div className="mx-auto flex max-w-2xl animate-in slide-in-from-bottom-4 fade-in flex-col items-center justify-center rounded-[20px] border border-border bg-white px-4 py-20 text-center shadow-[0_1px_3px_rgba(0,0,0,0.08)] duration-500">
       <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-border bg-[#f7f7f7] text-on-surface-subtle transition-all duration-500 group">
         {isUnreadTab ? (
           <CheckCircle className="w-8 h-8 text-primary transition-transform duration-500 group-hover:scale-110" />

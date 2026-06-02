@@ -6,7 +6,7 @@ import { Link } from "@/i18n/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { Calendar, Users, InfoCircle, Clock } from "@/components/icons/solar";
 import { Badge } from "@/components/ui";
-import { formatNumber } from "@/utils/format";
+import { formatPriceVND } from "@/utils/format";
 import type { Booking } from "@/types";
 import { cn } from "@/lib/utils";
 
@@ -25,6 +25,7 @@ export function BookingHistoryCard({
   const tp = useTranslations("tour.payment");
   const tTour = useTranslations("tour");
   const locale = useLocale();
+  const priceLocale = locale === "vi" ? "vi-VN" : "en-US";
 
   const item = booking.booking_items?.[0] || booking.items?.[0];
   const tour = item?.tour;
@@ -103,10 +104,10 @@ export function BookingHistoryCard({
 
   return (
     <div
-      className="w-full max-w-full overflow-hidden rounded-[28px] border border-border bg-white reveal-up shadow-[0_18px_54px_rgba(15,23,42,0.08)] transition-all duration-300 hover:border-primary/25 hover:shadow-[0_24px_64px_rgba(15,23,42,0.11)]"
+      className="w-full max-w-full overflow-hidden rounded-[20px] border border-border bg-white reveal-up shadow-[0_1px_3px_rgba(0,0,0,0.08)] transition-all duration-300 hover:border-primary/25 hover:shadow-[0_8px_16px_rgba(0,0,0,0.12)]"
       style={{ animationDelay: `${index * 50}ms` }}
     >
-      <div className="group relative flex flex-col overflow-hidden rounded-[28px] bg-white p-5 md:flex-row md:p-6 gap-6">
+      <div className="group relative flex flex-col overflow-hidden rounded-[20px] bg-white p-5 md:flex-row md:p-6 gap-6">
         
         {/* Thumbnail Image */}
         <div className="relative h-36 w-full shrink-0 overflow-hidden rounded-2xl bg-[#f7f7f7] md:w-44">
@@ -124,7 +125,7 @@ export function BookingHistoryCard({
           
           {/* Top Row: Booking Code & Statuses */}
           <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
-            <span className="font-mono text-xs text-on-surface-subtle font-bold tracking-wider">
+            <span className="text-xs text-on-surface-subtle font-semibold">
               {t("booking_code")}: <span className="select-all text-on-surface">{booking.booking_code}</span>
             </span>
             <div className="flex items-center gap-2">
@@ -155,7 +156,7 @@ export function BookingHistoryCard({
           </h4>
 
           {/* Middle Row: Info Grid */}
-          <div className="mb-5 grid grid-cols-1 gap-x-4 gap-y-3 font-mono text-[12px] text-on-surface-subtle sm:grid-cols-2 md:grid-cols-3">
+          <div className="mb-5 grid grid-cols-1 gap-x-4 gap-y-3 text-[12px] text-on-surface-subtle sm:grid-cols-2 md:grid-cols-3">
             <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4 text-primary shrink-0" />
               <div className="flex flex-col">
@@ -206,7 +207,7 @@ export function BookingHistoryCard({
                 {t("total_amount")}
               </span>
               <span className="text-xl font-bold text-primary">
-                {formatNumber(Number(booking.final_amount))}đ
+                {formatPriceVND(Number(booking.final_amount), priceLocale)}
               </span>
             </div>
 

@@ -153,7 +153,7 @@ export function FavoritesPageClient() {
 
       {/* Control Panel (Sort & View Toggles) */}
       {validItems.length > 0 && (
-        <div className="flex flex-col items-center justify-between gap-4 rounded-[28px] border border-border bg-white p-4 shadow-[0_16px_48px_rgba(15,23,42,0.08)] md:flex-row">
+        <div className="flex flex-col items-center justify-between gap-4 rounded-[20px] border border-border bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.08)] md:flex-row">
           <FavoritesSortSelect value={sort} onChange={handleSortChange} />
           <FavoritesViewToggle view={view} onChange={setView} />
         </div>
@@ -161,7 +161,7 @@ export function FavoritesPageClient() {
 
       {/* Grid or List content */}
       {isError ? (
-        <div className="mx-auto max-w-xl rounded-[28px] border border-border bg-white p-12 text-center shadow-[0_16px_48px_rgba(15,23,42,0.08)]">
+        <div className="mx-auto max-w-xl rounded-[20px] border border-border bg-white p-12 text-center shadow-[0_1px_3px_rgba(0,0,0,0.08)]">
           <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-500/10">
             <InfoCircle className="w-6 h-6 text-red-500" />
           </div>

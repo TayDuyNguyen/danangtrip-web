@@ -55,7 +55,7 @@ const HotTours = () => {
           <div className={`transition-all duration-700 delay-100 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
             <div className="flex items-center gap-3 mb-4">
               <IoFlame className="text-sun text-3xl animate-pulse" />
-              <span className="text-sun font-black text-[12px] tracking-[0.4em] uppercase">
+              <span className="text-xs font-semibold uppercase tracking-normal text-primary">
                 {t("home.hot_tours.tagline")}
               </span>
             </div>
@@ -74,26 +74,26 @@ const HotTours = () => {
           {/* Navigation Buttons */}
           <button
             onClick={scrollLeft}
-            className={`absolute left-0 top-[40%] -translate-y-1/2 -translate-x-1/2 z-30 w-12 h-12 rounded-full bg-surface border border-border text-on-surface hover:bg-surface-container items-center justify-center text-white shadow-xl transition-all hidden lg:flex active:scale-90 hover:scale-110 opacity-0 ${
+            className={`absolute left-0 top-[40%] -translate-y-1/2 -translate-x-1/2 z-30 w-10 h-10 rounded-full bg-surface border border-border text-on-surface hover:bg-primary hover:border-primary hover:text-white flex items-center justify-center shadow-md transition-all hidden lg:flex active:scale-90 hover:scale-110 opacity-0 ${
               canScrollLeft
-                ? "group-hover/nav:opacity-100 hover:bg-surface-container hover:text-primary cursor-pointer"
-                : "group-hover/nav:opacity-20 pointer-events-none cursor-default"
+                ? "group-hover/nav:opacity-100 cursor-pointer"
+                : "group-hover/nav:opacity-10 pointer-events-none cursor-default"
             }`}
             aria-label={t("common.accessibility.previous")}
           >
-            <IoChevronBackOutline size={20} />
+            <IoChevronBackOutline size={18} />
           </button>
 
           <button
             onClick={scrollRight}
-            className={`absolute right-0 top-[40%] -translate-y-1/2 translate-x-1/2 z-30 w-12 h-12 rounded-full bg-surface border border-border text-on-surface hover:bg-surface-container items-center justify-center text-white shadow-xl transition-all hidden lg:flex active:scale-90 hover:scale-110 opacity-0 ${
+            className={`absolute right-0 top-[40%] -translate-y-1/2 translate-x-1/2 z-30 w-10 h-10 rounded-full bg-surface border border-border text-on-surface hover:bg-primary hover:border-primary hover:text-white flex items-center justify-center shadow-md transition-all hidden lg:flex active:scale-90 hover:scale-110 opacity-0 ${
               canScrollRight
-                ? "group-hover/nav:opacity-100 hover:bg-surface-container hover:text-primary cursor-pointer"
-                : "group-hover/nav:opacity-20 pointer-events-none cursor-default"
+                ? "group-hover/nav:opacity-100 cursor-pointer"
+                : "group-hover/nav:opacity-10 pointer-events-none cursor-default"
             }`}
             aria-label={t("common.accessibility.next")}
           >
-            <IoChevronForwardOutline size={20} />
+            <IoChevronForwardOutline size={18} />
           </button>
 
           {/* Scrollable Container */}
@@ -117,7 +117,7 @@ const HotTours = () => {
                     sizes="(max-width: 768px) 280px, 340px"
                     className="object-cover transition-transform duration-700 group-hover:scale-110"
                   />
-                  <div className="absolute top-[16px] right-[16px] bg-sun text-white font-black text-[10px] tracking-wider uppercase rounded-full px-[12px] py-[6px] shadow-lg z-10">
+                  <div className="absolute right-[16px] top-[16px] z-10 rounded-full bg-primary px-[12px] py-[6px] text-xs font-semibold uppercase tracking-normal text-white shadow-lg">
                     {t("search.badges.hot")}
                   </div>
                 </Link>
@@ -145,7 +145,7 @@ const HotTours = () => {
                     <div className="absolute top-0 left-0 right-0 h-px bg-[#262626]" />
 
                     <div className="flex flex-col">
-                      <span className="mb-1 text-[11px] font-bold uppercase tracking-wider text-on-surface-subtle">{t("common.tour.price_from")}</span>
+                      <span className="mb-1 text-xs font-semibold uppercase tracking-normal text-on-surface-subtle">{t("common.tour.price_from")}</span>
                       <span className="text-[20px] font-black text-primary">
                         {formatPriceVND(tour.price_adult, locale === 'vi' ? 'vi-VN' : 'en-US')}
                       </span>

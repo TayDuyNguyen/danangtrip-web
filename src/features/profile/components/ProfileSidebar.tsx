@@ -89,7 +89,10 @@ export function ProfileSidebar() {
    */
   const basePath = pathname.replace(new RegExp(`^\\/${locale}`), "") || "/";
 
-  const isActive = (href: string) => basePath === href;
+  const isActive = (href: string) =>
+    href === PROTECTED_ROUTES.PROFILE
+      ? basePath === href
+      : basePath === href || basePath.startsWith(`${href}/`);
 
   const displayName = user?.name || user?.email?.split("@")[0] || "?";
   const avatarInitial = displayName.charAt(0).toUpperCase();
@@ -102,7 +105,7 @@ export function ProfileSidebar() {
       className="w-full lg:w-64 shrink-0"
     >
       {/* User Avatar & Info */}
-      <div className="mb-4 flex flex-col items-center gap-3 rounded-[24px] border border-border bg-white p-6 text-center shadow-[0_12px_34px_rgba(0,0,0,0.06)]">
+      <div className="mb-4 flex flex-col items-center gap-3 rounded-[20px] border border-border bg-white p-6 text-center shadow-[0_1px_3px_rgba(0,0,0,0.08)]">
         <div
           className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl border border-border bg-[#fff1f3] text-[20px] font-semibold text-primary transition-all duration-300 hover:border-primary"
           aria-hidden="true"
@@ -128,7 +131,7 @@ export function ProfileSidebar() {
       {/* Navigation Items */}
       <nav
         aria-label="Profile settings navigation"
-        className="overflow-hidden rounded-[24px] border border-border bg-white shadow-[0_12px_34px_rgba(0,0,0,0.06)]"
+        className="overflow-hidden rounded-[20px] border border-border bg-white shadow-[0_1px_3px_rgba(0,0,0,0.08)]"
       >
         {SIDEBAR_ITEMS.map((item, index) => {
           const Icon = item.icon;
@@ -145,7 +148,7 @@ export function ProfileSidebar() {
                 active
                   ? isDestructive
                     ? "border-l-red-500 bg-red-50 text-red-500"
-                    : "border-l-primary bg-[#fff4f6] text-on-surface"
+                    : "border-l-primary bg-[#fff4f6] font-semibold text-primary"
                   : isDestructive
                   ? "border-l-transparent text-on-surface-subtle hover:text-red-500 hover:bg-red-50"
                   : "border-l-transparent text-on-surface-subtle hover:text-on-surface hover:bg-[#fafafa]",

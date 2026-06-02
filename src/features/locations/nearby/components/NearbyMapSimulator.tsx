@@ -52,12 +52,12 @@ export default function NearbyMapSimulator({
     if (userCoords) {
       return { 
         ...userCoords, 
-        label: t("nearby.map.user_marker") || "Your position",
-        address: t("nearby.map.user_address") || "Đà Nẵng, Việt Nam"
+        label: t("nearby.map.user_marker"),
+        address: t("nearby.map.user_address")
       };
     }
 
-    return { ...DA_NANG_CENTER, label: "Da Nang", address: "Đà Nẵng, Việt Nam" };
+    return { ...DA_NANG_CENTER, label: t("nearby.map.city_center"), address: t("nearby.map.user_address") };
   }, [activeLocation, t, userCoords]);
 
 
@@ -66,10 +66,10 @@ export default function NearbyMapSimulator({
       <div className="flex flex-col gap-3 border-b border-border bg-white px-4 py-4 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <p className="text-[11px] font-black uppercase tracking-[0.18em] text-primary">
-            {t("nearby.radius.label") || "Search radius"} {radius} km
+            {t("nearby.radius.label")} {radius} km
           </p>
           <h2 className="mt-1 text-lg font-semibold text-on-surface">
-            {activeLocation?.name || t("nearby.map.user_marker") || "Your position"}
+            {activeLocation?.name || t("nearby.map.user_marker")}
           </h2>
           <p className="mt-1 flex flex-wrap items-center gap-1.5 text-xs font-semibold text-on-surface-subtle">
             <span>GPS: {mapTarget.lat.toFixed(5)}, {mapTarget.lng.toFixed(5)}</span>
@@ -91,7 +91,7 @@ export default function NearbyMapSimulator({
                 href={PUBLIC_ROUTES.LOCATION_DETAIL(activeLocation.slug)}
                 className="inline-flex items-center justify-center rounded-xl bg-primary hover:bg-[#5c3822] px-4 py-2.5 text-xs font-black text-white transition leading-none h-10 shadow-md"
               >
-                {t("nearby.map.view_details") ? t("nearby.map.view_details").replace(" →", "") : "Chi tiết"}
+                {t("nearby.map.view_details").replace(" →", "")}
               </a>
               <a
                 href={directionsUrl}
@@ -111,7 +111,7 @@ export default function NearbyMapSimulator({
             type="button"
             onClick={() => setZoom((value) => Math.max(10, value - 1))}
             className="grid h-10 w-10 place-items-center rounded-xl border border-border bg-[#fafafa] text-lg font-black text-on-surface transition hover:border-primary hover:bg-primary/10"
-            aria-label="Zoom out"
+            aria-label={t("nearby.map.zoom_out")}
           >
             -
           </button>
@@ -122,7 +122,7 @@ export default function NearbyMapSimulator({
             type="button"
             onClick={() => setZoom((value) => Math.min(17, value + 1))}
             className="grid h-10 w-10 place-items-center rounded-xl border border-border bg-[#fafafa] text-lg font-black text-on-surface transition hover:border-primary hover:bg-primary/10"
-            aria-label="Zoom in"
+            aria-label={t("nearby.map.zoom_in")}
           >
             +
           </button>

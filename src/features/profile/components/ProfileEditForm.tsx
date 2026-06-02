@@ -189,10 +189,10 @@ export function ProfileEditForm({
   const showAvatarImage = Boolean(displayAvatar) && failedAvatarUrl !== displayAvatar;
 
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-4 rounded-[28px] border border-border bg-white p-6 shadow-[0_24px_80px_rgba(15,23,42,0.08)] duration-500 sm:p-8">
+    <div className="animate-in fade-in slide-in-from-bottom-4 rounded-[20px] border border-border bg-white p-6 shadow-[0_1px_3px_rgba(0,0,0,0.08)] duration-500 sm:p-8">
       {/* Header */}
       <div className="mb-8 flex items-start gap-4 border-b border-border pb-6">
-        <div className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
+        <div className="w-10 h-10 rounded-xl bg-[#fff1f3] border border-primary/20 flex items-center justify-center shrink-0">
           <Sparkles className="w-5 h-5 text-primary" aria-hidden="true" />
         </div>
         <div>

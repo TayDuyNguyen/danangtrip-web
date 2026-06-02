@@ -161,12 +161,15 @@ const TourCategories = () => {
           <div className={`transition-all duration-700 delay-100 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
             <div className="flex items-center gap-3 mb-2">
               <span className="w-8 h-[2px] bg-primary/40" />
-              <span className="text-primary font-black text-[12px] tracking-[0.4em] uppercase">
-                {t("home.featured_tours.badge")}
+              <span className="text-xs font-semibold uppercase tracking-normal text-primary">
+                {t("home.tour_categories.tagline")}
               </span>
             </div>
-            <h2 className="text-[28px] md:text-[34px] font-black text-on-surface leading-tight">
-              {t("home.tour_categories.title")}
+            <h2 className="text-[28px] font-semibold leading-[1.1] text-on-surface md:text-[34px]">
+              {t("home.tour_categories.title_prefix")}{" "}
+              <span className="text-primary underline decoration-primary/30 underline-offset-8">
+                {t("home.tour_categories.title_highlight")}
+              </span>
             </h2>
           </div>
           <Link

@@ -3,7 +3,7 @@ import { useLocale } from "next-intl";
 import { useTranslations } from "next-intl";
 import { paymentService } from "@/services/payment.service";
 import { bookingService } from "@/services/booking.service";
-import type { CreatePaymentPayload } from "@/types";
+import type { CreatePaymentPayload, RetryPaymentPayload } from "@/types";
 import { toast } from "sonner";
 
 export const usePayment = () => {
@@ -37,8 +37,15 @@ export const usePayment = () => {
   });
 
   const retryPaymentMutation = useMutation({
-    mutationFn: (bookingCode: string) =>
-      paymentService.retry(bookingCode, { return_url: getReturnUrl() }),
+    mutationFn: (payload: string | { bookingCode: string; payment_method?: RetryPaymentPayload["payment_method"] }) => {
+      const bookingCode = typeof payload === "string" ? payload : payload.bookingCode;
+      const paymentMethod = typeof payload === "string" ? undefined : payload.payment_method;
+
+      return paymentService.retry(bookingCode, {
+        return_url: getReturnUrl(),
+        payment_method: paymentMethod,
+      });
+    },
     onSuccess: (res) => {
       if (res.data?.payment_url) {
         window.location.href = res.data.payment_url;

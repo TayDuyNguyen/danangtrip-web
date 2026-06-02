@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
-import { IoMailOutline, IoLockClosedOutline, IoPersonOutline } from "@/components/icons/solar";
+import { ROUTES } from "@/config";
+import { IoHomeOutline, IoMailOutline, IoLockClosedOutline, IoPersonOutline } from "@/components/icons/solar";
 import { useAuth } from "../hooks/use-auth";
 import { Input } from "@/components/ui";
 import { useFieldFocus } from "@/hooks/use-field-focus";
@@ -25,6 +26,9 @@ export function RegisterForm({ onSuccess, redirectUrl }: RegisterFormProps) {
   
   const { register, isLoading, error } = useAuth();
   const { isFocused, getFocusProps } = useFieldFocus<"name" | "email" | "password" | "confirmPassword">();
+  const loginHref = redirectUrl
+    ? `/login?callbackUrl=${encodeURIComponent(redirectUrl)}`
+    : "/login";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,14 +65,14 @@ export function RegisterForm({ onSuccess, redirectUrl }: RegisterFormProps) {
   };
 
   return (
-    <div className="design-page flex min-h-screen justify-center items-center p-4 sm:p-8 mt-8 md:mt-0">
+    <div className="design-page flex min-h-screen justify-center items-center p-4 py-10 sm:p-8">
       <div className="relative flex h-auto w-full max-w-md rounded-[28px] shadow-[0_18px_48px_rgba(0,0,0,0.08)] lg:h-[700px] lg:w-3/4 lg:max-w-4xl xl:w-2/3">
         
         {/* Animated Border Background */}
         <div className="pointer-events-none absolute inset-[-2px] z-0 overflow-hidden rounded-[30px]">
           <div 
             className="absolute top-1/2 left-1/2 w-[200%] h-[200%] -translate-x-1/2 -translate-y-1/2 animate-[spin_4s_linear_infinite]" 
-            style={{ backgroundImage: 'conic-gradient(from 0deg, transparent 0 240deg, rgba(139,106,85,0.3) 300deg, #8b6a55 360deg)' }}
+            style={{ backgroundImage: 'conic-gradient(from 0deg, transparent 0 240deg, rgba(255,56,92,0.24) 300deg, #FF385C 360deg)' }}
           />
         </div>
 
@@ -90,6 +94,14 @@ export function RegisterForm({ onSuccess, redirectUrl }: RegisterFormProps) {
         {/* Right panel - form */}
           <div className="flex flex-1 items-center justify-center bg-white p-5 sm:p-8">
             <div className="w-full max-w-md">
+            <Link
+              href={ROUTES.HOME}
+              className="mb-5 inline-flex h-10 items-center gap-2 rounded-full border border-border bg-white px-4 text-sm font-medium text-on-surface-subtle transition hover:border-[#cfcfcf] hover:bg-[#f7f7f7] hover:text-on-surface"
+            >
+              <IoHomeOutline className="h-4 w-4" />
+              {t("back_home")}
+            </Link>
+
             <h2 className="mb-8 text-center text-[32px] font-semibold uppercase tracking-[-0.03em] text-on-surface lg:text-left">
               {t("title")}
             </h2>
@@ -155,11 +167,11 @@ export function RegisterForm({ onSuccess, redirectUrl }: RegisterFormProps) {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full rounded-full border border-primary bg-primary py-3 font-semibold uppercase tracking-wider text-white transition-all duration-300 hover:bg-primary-hover hover:border-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full border border-primary bg-primary px-5 py-3 font-semibold uppercase tracking-wider text-white transition-all duration-300 hover:border-primary-hover hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-70"
               >
                 {isLoading ? (
                   <>
-                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                    <svg className="h-5 w-5 animate-spin text-white" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                     </svg>
@@ -174,7 +186,7 @@ export function RegisterForm({ onSuccess, redirectUrl }: RegisterFormProps) {
             <p className="mt-6 text-center text-sm text-on-surface-subtle">
               {t("has_account")}{" "}
               <Link
-                href="/login"
+                href={loginHref}
                 className="text-primary font-medium hover:text-[#c59a5f] hover:underline transition"
               >
                 {t("login_now")}

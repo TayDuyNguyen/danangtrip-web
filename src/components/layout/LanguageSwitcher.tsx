@@ -55,12 +55,12 @@ const LanguageSwitcher = ({ isScrolled }: { isScrolled: boolean }) => {
         suppressHydrationWarning
         onClick={() => setIsOpen(!isOpen)}
         disabled={isPending}
-        className={`flex items-center gap-2.5 px-3 py-1.5 rounded-full transition-all duration-300 border ${isScrolled
+        className={`flex items-center justify-center gap-0 2xl:gap-2.5 w-10 h-10 p-0 2xl:w-auto 2xl:h-auto 2xl:px-3 2xl:py-1.5 rounded-full transition-all duration-300 border ${isScrolled
             ? "border-border bg-surface-container text-on-surface hover:border-primary/30 hover:bg-surface-container-high"
             : "border-on-surface/15 bg-on-surface/5 text-on-surface hover:border-on-surface/30 hover:bg-on-surface/10"
           } ${isPending ? "opacity-50 cursor-not-allowed" : ""} group z-50`}
       >
-        <div className="relative w-5 h-5 rounded-full overflow-hidden border border-white/20 shadow-sm">
+        <div className="relative w-5 h-5 rounded-full overflow-hidden border border-white/20 shadow-sm shrink-0">
           <Image
             src={currentLanguage.flag}
             alt={currentLanguage.name}
@@ -69,9 +69,9 @@ const LanguageSwitcher = ({ isScrolled }: { isScrolled: boolean }) => {
             className="object-cover"
           />
         </div>
-        <span className="text-xs font-bold uppercase tracking-wider">{locale}</span>
+        <span className="hidden 2xl:inline text-xs font-bold uppercase tracking-wider">{locale}</span>
         <IoChevronDownOutline
-          className={`text-xs transition-transform duration-300 ${isOpen ? "rotate-180" : ""
+          className={`hidden 2xl:block text-xs transition-transform duration-300 ${isOpen ? "rotate-180" : ""
             } ${isScrolled ? "text-on-surface-subtle" : "text-on-surface-variant"}`}
         />
       </button>

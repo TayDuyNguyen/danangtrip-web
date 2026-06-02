@@ -8,6 +8,7 @@ export interface CreatePaymentPayload {
 
 export interface RetryPaymentPayload {
   return_url?: string;
+  payment_method?: Extract<PaymentMethod, "bank_transfer" | "payos" | "momo" | "vnpay" | "zalopay">;
 }
 
 export interface Payment {

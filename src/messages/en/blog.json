@@ -2,6 +2,8 @@
   "title": "Da Nang Travel Guide",
   "subtitle": "Discover the beauty, culture, and cuisine of Vietnam's most livable city through expert sharing articles.",
   "search_placeholder": "Search articles...",
+  "search_label": "Search articles",
+  "search_action": "Search",
   "read_now": "READ NOW",
   "categories": "Categories",
   "all_posts": "All Posts",

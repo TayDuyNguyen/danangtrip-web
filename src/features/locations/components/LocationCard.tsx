@@ -106,11 +106,11 @@ export default function LocationCard({ location, isFavorite = false }: LocationC
 
             <div className="absolute left-4 top-4 flex flex-col gap-2">
               {location.is_featured && (
-                <span className="rounded-full bg-primary px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest text-white shadow-sm">
+                <span className="rounded-full bg-primary px-4 py-1.5 text-xs font-semibold uppercase tracking-normal text-white shadow-sm">
                   {t("badges.featured")}
                 </span>
               )}
-              <span className="rounded-full bg-white/92 px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest text-on-surface shadow-sm backdrop-blur-sm">
+              <span className="rounded-full bg-white/92 px-4 py-1.5 text-xs font-semibold uppercase tracking-normal text-on-surface shadow-sm backdrop-blur-sm">
                 {location.district}
               </span>
             </div>
@@ -132,7 +132,7 @@ export default function LocationCard({ location, isFavorite = false }: LocationC
                   <IoStar className="text-xs" />
                   <span className="font-semibold text-on-surface">{rating.toFixed(1)}</span>
                 </div>
-                <span className="text-[11px] text-on-surface-subtle">
+                <span className="text-xs text-on-surface-subtle">
                   ({location.review_count} {t("reviews")})
                 </span>
               </div>
@@ -144,13 +144,13 @@ export default function LocationCard({ location, isFavorite = false }: LocationC
 
             <div className="flex items-end justify-between gap-3">
               <div className="flex flex-col">
-                <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-on-surface-subtle">
+                <span className="text-xs font-semibold uppercase tracking-normal text-on-surface-subtle">
                   {t("price.from")}
                 </span>
                 <span className="text-lg font-semibold text-primary">{formatPrice(location.price_min)}</span>
               </div>
 
-              <span className="rounded-full border border-border bg-[#fafafa] px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-on-surface transition-all group-hover:border-primary/25 group-hover:bg-[#fff1f3] group-hover:text-primary">
+              <span className="rounded-full border border-border bg-[#fafafa] px-4 py-2 text-xs font-semibold uppercase tracking-normal text-on-surface transition-all group-hover:border-primary/25 group-hover:bg-[#fff1f3] group-hover:text-primary">
                 {t("buttons.view_details")}
               </span>
             </div>

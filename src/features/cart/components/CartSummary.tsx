@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { Button, Input } from "@/components/ui";
 import type { CartItem } from "@/types";
 import { toast } from "sonner";
+import { formatPriceVND } from "@/utils/format";
 
 interface CartSummaryProps {
   items: CartItem[];
@@ -13,7 +14,9 @@ interface CartSummaryProps {
 
 export function CartSummary({ items }: CartSummaryProps) {
   const t = useTranslations("cart");
+  const locale = useLocale();
   const router = useRouter();
+  const priceLocale = locale === "vi" ? "vi-VN" : "en-US";
 
   const [promoCode, setPromoCode] = useState("");
   const [discountPercent, setDiscountPercent] = useState(0);
@@ -104,14 +107,14 @@ export function CartSummary({ items }: CartSummaryProps) {
 
   return (
     <div className="sticky top-24 space-y-6 rounded-[28px] border border-border bg-white p-6 shadow-[0_18px_54px_rgba(15,23,42,0.08)] reveal-up delay-100">
-      <h3 className="border-b border-border pb-4 text-sm font-black uppercase tracking-widest text-on-surface">
+      <h3 className="border-b border-border pb-4 text-sm font-semibold uppercase tracking-normal text-on-surface">
         {t("summary_title")}
       </h3>
 
       {/* Step-by-step booking list — shown only when multiple tours are selected */}
       {activeItems.length > 1 && (
         <div className="space-y-2">
-          <p className="text-[10px] font-bold text-on-surface-subtle uppercase tracking-widest">
+          <p className="text-xs font-semibold uppercase tracking-normal text-on-surface-subtle">
             {t("order_sequence", { count: activeItems.length })}
           </p>
           <div className="space-y-1.5">
@@ -130,7 +133,7 @@ export function CartSummary({ items }: CartSummaryProps) {
                 >
                   {/* Step number bubble */}
                   <span
-                    className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black shrink-0 ${
+                    className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${
                       isNext
                         ? "bg-primary text-white"
                         : "bg-white text-on-surface-subtle border border-border"
@@ -140,7 +143,7 @@ export function CartSummary({ items }: CartSummaryProps) {
                   </span>
                   <span className="truncate flex-1">{tour.name}</span>
                   {isNext && (
-                    <span className="text-[9px] font-black uppercase tracking-wider text-primary shrink-0">
+                    <span className="shrink-0 text-xs font-semibold uppercase tracking-normal text-primary">
                       {t("next_up")}
                     </span>
                   )}
@@ -148,7 +151,7 @@ export function CartSummary({ items }: CartSummaryProps) {
               );
             })}
           </div>
-          <p className="text-[10px] text-on-surface-subtle leading-relaxed pt-1">
+          <p className="pt-1 text-xs leading-relaxed text-on-surface-subtle">
             {t("multi_booking_hint")}
           </p>
         </div>
@@ -158,7 +161,7 @@ export function CartSummary({ items }: CartSummaryProps) {
         {/* Subtotal */}
         <div className="flex justify-between items-center text-sm">
           <span className="text-on-surface-subtle font-medium">{t("subtotal")}</span>
-          <span className="text-on-surface font-bold tabular-nums">{subtotal.toLocaleString()}đ</span>
+          <span className="text-on-surface font-bold tabular-nums">{formatPriceVND(subtotal, priceLocale)}</span>
         </div>
 
         {/* Discount */}
@@ -167,7 +170,7 @@ export function CartSummary({ items }: CartSummaryProps) {
             <span className="font-medium">
               {t("discount")} ({appliedCode})
             </span>
-            <span className="font-bold tabular-nums">-{discountAmount.toLocaleString()}đ</span>
+            <span className="font-bold tabular-nums">-{formatPriceVND(discountAmount, priceLocale)}</span>
           </div>
         )}
 
@@ -184,7 +187,7 @@ export function CartSummary({ items }: CartSummaryProps) {
           </div>
           <Button
             type="submit"
-            className="h-10 px-4 text-xs font-bold uppercase tracking-widest shrink-0"
+            className="h-10 shrink-0 px-4 text-xs font-semibold uppercase tracking-normal"
             disabled={discountPercent > 0 || !promoCode.trim()}
           >
             {t("promo_apply")}
@@ -193,11 +196,11 @@ export function CartSummary({ items }: CartSummaryProps) {
 
         {/* Final Total */}
         <div className="border-t border-border pt-4 flex justify-between items-end">
-          <span className="text-sm font-black text-on-surface uppercase tracking-widest">
+          <span className="text-sm font-semibold uppercase tracking-normal text-on-surface">
             {t("final_total")}
           </span>
           <span className="text-2xl font-black text-primary tracking-tight tabular-nums">
-            {finalTotal.toLocaleString()}đ
+            {formatPriceVND(finalTotal, priceLocale)}
           </span>
         </div>
       </div>
@@ -206,7 +209,7 @@ export function CartSummary({ items }: CartSummaryProps) {
       <Button
         onClick={handleCheckout}
         disabled={activeItems.length === 0}
-        className="w-full h-12 text-xs font-black uppercase tracking-widest"
+        className="h-12 w-full text-xs font-semibold uppercase tracking-normal"
       >
         {activeItems.length > 1
           ? t("book_first_now", { count: activeItems.length })
