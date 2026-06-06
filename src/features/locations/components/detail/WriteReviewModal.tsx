@@ -54,15 +54,11 @@ export default function WriteReviewModal({ open, onClose, locationId }: Props) {
     },
   });
 
-  if (!open) {
-    return null;
-  }
+  if (!open) return null;
 
   const onPickFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
     const list = e.target.files;
-    if (!list?.length) {
-      return;
-    }
+    if (!list?.length) return;
     const next = [...files, ...Array.from(list)].slice(0, 5);
     setFiles(next);
     e.target.value = "";
@@ -74,52 +70,47 @@ export default function WriteReviewModal({ open, onClose, locationId }: Props) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-md"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 p-4 backdrop-blur-[3px]"
       role="dialog"
       aria-modal="true"
       aria-labelledby="write-review-title"
     >
-      <div className="relative max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-lg border border-[#262626] bg-[#080808] p-6 shadow-2xl">
+      <div className="relative max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-[28px] border border-border bg-white p-6 shadow-[0_24px_64px_rgba(15,23,42,0.16)]">
         <button
           type="button"
           onClick={() => {
             reset();
             onClose();
           }}
-          className="absolute right-4 top-4 rounded-full p-2 text-[#a3a3a3] transition-colors hover:bg-[#171717]"
+          className="absolute right-4 top-4 rounded-full border border-border bg-[#fafafa] p-2 text-on-surface-subtle transition-colors hover:border-primary/25 hover:bg-white hover:text-on-surface"
           aria-label={t("detail.review_cancel")}
         >
           <X className="h-5 w-5" />
         </button>
 
-        <h2 id="write-review-title" className="pr-10 text-xl font-bold text-white">
+        <h2 id="write-review-title" className="pr-10 text-xl font-semibold text-on-surface">
           {t("detail.review_modal_title")}
         </h2>
 
         <div className="mt-6 space-y-2">
-          <p className="text-sm font-medium text-[#d4d4d4]">{t("detail.review_score_label")}</p>
+          <p className="text-sm font-medium text-on-surface">{t("detail.review_score_label")}</p>
           <div className="flex gap-1">
             {[1, 2, 3, 4, 5].map((n) => (
               <button
                 key={n}
                 type="button"
                 onClick={() => setScore(n)}
-                className="rounded-md p-1 transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8b6a55]"
+                className="rounded-md p-1 transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                 aria-label={`${n} stars`}
               >
-                <Star
-                  className={cn(
-                    "h-8 w-8",
-                    n <= score ? "fill-[#8b6a55] text-[#8b6a55]" : "text-[#404040]"
-                  )}
-                />
+                <Star className={cn("h-8 w-8", n <= score ? "fill-primary text-primary" : "text-border")} />
               </button>
             ))}
           </div>
         </div>
 
         <div className="mt-4 space-y-2">
-          <label htmlFor="review-comment" className="text-sm font-medium text-[#d4d4d4]">
+          <label htmlFor="review-comment" className="text-sm font-medium text-on-surface">
             {t("detail.review_comment_label")}
           </label>
           <textarea
@@ -127,31 +118,27 @@ export default function WriteReviewModal({ open, onClose, locationId }: Props) {
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             rows={4}
-            className="w-full resize-none rounded-lg border border-[#262626] bg-[#111111] p-3 text-sm text-white outline-none ring-[#8b6a55] focus:border-transparent focus:ring-2"
+            className="w-full resize-none rounded-[18px] border border-border bg-white p-3 text-sm text-on-surface outline-none ring-primary focus:border-primary/20 focus:ring-2 focus:ring-primary/15"
             placeholder={t("detail.review_comment_placeholder")}
           />
         </div>
 
         <div className="mt-4 space-y-2">
-          <p className="text-sm font-medium text-[#d4d4d4]">{t("detail.review_images_label")}</p>
-          <p className="text-xs text-[#737373]">{t("detail.review_images_hint")}</p>
+          <p className="text-sm font-medium text-on-surface">{t("detail.review_images_label")}</p>
+          <p className="text-xs text-on-surface-subtle">{t("detail.review_images_hint")}</p>
           <input
             type="file"
             accept="image/jpeg,image/png,image/webp"
             multiple
             onChange={onPickFiles}
-            className="text-sm text-[#a3a3a3] file:mr-3 file:rounded-lg file:border file:border-[#262626] file:bg-[#171717] file:px-3 file:py-2 file:text-sm file:font-semibold file:text-white"
+            className="text-sm text-on-surface-subtle file:mr-3 file:rounded-[14px] file:border file:border-border file:bg-[#fafafa] file:px-3 file:py-2 file:text-sm file:font-semibold file:text-on-surface"
           />
           {files.length > 0 ? (
-            <ul className="mt-2 space-y-1 text-xs text-[#a3a3a3]">
+            <ul className="mt-2 space-y-1 text-xs text-on-surface-subtle">
               {files.map((f, i) => (
-                <li key={`${f.name}-${i}`} className="flex items-center justify-between gap-2">
+                <li key={`${f.name}-${i}`} className="flex items-center justify-between gap-2 rounded-[14px] bg-[#fafafa] px-3 py-2">
                   <span className="truncate">{f.name}</span>
-                  <button
-                    type="button"
-                    onClick={() => removeFile(i)}
-                    className="shrink-0 text-red-300 hover:underline"
-                  >
+                  <button type="button" onClick={() => removeFile(i)} className="shrink-0 text-red-500 hover:underline">
                     {t("detail.review_remove_file")}
                   </button>
                 </li>
@@ -161,13 +148,7 @@ export default function WriteReviewModal({ open, onClose, locationId }: Props) {
         </div>
 
         <div className="mt-6 flex flex-wrap gap-3">
-          <Button
-            type="button"
-            variant="primary"
-            className="bg-[#171717] border border-[#262626] hover:border-[#8b6a55] hover:text-[#8b6a55]"
-            isLoading={submit.isPending}
-            onClick={() => submit.mutate()}
-          >
+          <Button type="button" variant="primary" className="border border-transparent" isLoading={submit.isPending} onClick={() => submit.mutate()}>
             {t("detail.review_submit")}
           </Button>
           <Button

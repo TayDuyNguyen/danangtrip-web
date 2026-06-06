@@ -55,12 +55,12 @@ const LanguageSwitcher = ({ isScrolled }: { isScrolled: boolean }) => {
         suppressHydrationWarning
         onClick={() => setIsOpen(!isOpen)}
         disabled={isPending}
-        className={`flex items-center gap-2.5 px-3 py-1.5 rounded-full transition-all duration-300 border ${isScrolled
-            ? "border-[#262626] bg-[#111111] text-white hover:border-[#8b6a55]/30 hover:bg-[#171717]"
-            : "border-white/10 bg-white/10 text-white hover:border-white/30 hover:bg-white/20"
+        className={`flex items-center justify-center gap-0 2xl:gap-2.5 w-10 h-10 p-0 2xl:w-auto 2xl:h-auto 2xl:px-3 2xl:py-1.5 rounded-full transition-all duration-300 border ${isScrolled
+            ? "border-border bg-surface-container text-on-surface hover:border-primary/30 hover:bg-surface-container-high"
+            : "border-on-surface/15 bg-on-surface/5 text-on-surface hover:border-on-surface/30 hover:bg-on-surface/10"
           } ${isPending ? "opacity-50 cursor-not-allowed" : ""} group z-50`}
       >
-        <div className="relative w-5 h-5 rounded-full overflow-hidden border border-white/20 shadow-sm">
+        <div className="relative w-5 h-5 rounded-full overflow-hidden border border-white/20 shadow-sm shrink-0">
           <Image
             src={currentLanguage.flag}
             alt={currentLanguage.name}
@@ -69,16 +69,16 @@ const LanguageSwitcher = ({ isScrolled }: { isScrolled: boolean }) => {
             className="object-cover"
           />
         </div>
-        <span className="text-xs font-bold uppercase tracking-wider">{locale}</span>
+        <span className="hidden 2xl:inline text-xs font-bold uppercase tracking-wider">{locale}</span>
         <IoChevronDownOutline
-          className={`text-xs transition-transform duration-300 ${isOpen ? "rotate-180" : ""
-            } ${isScrolled ? "text-on-surface-subtle" : "text-white/60"}`}
+          className={`hidden 2xl:block text-xs transition-transform duration-300 ${isOpen ? "rotate-180" : ""
+            } ${isScrolled ? "text-on-surface-subtle" : "text-on-surface-variant"}`}
         />
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-3 w-44 bg-[#111111] rounded-xl shadow-2xl border border-[#262626] overflow-hidden py-1 z-50 animate-in fade-in zoom-in-95 duration-200">
-          <div className="px-4 py-2.5 border-b border-[#262626] mb-1">
+        <div className="absolute right-0 mt-3 w-44 bg-surface-container-lowest rounded-xl shadow-2xl border border-border overflow-hidden py-1 z-50 animate-in fade-in zoom-in-95 duration-200">
+          <div className="px-4 py-2.5 border-b border-border mb-1">
             <span className="text-[10px] font-bold text-on-surface-subtle uppercase tracking-widest leading-none">
               {t("language.select")}
             </span>
@@ -91,8 +91,8 @@ const LanguageSwitcher = ({ isScrolled }: { isScrolled: boolean }) => {
                 suppressHydrationWarning
                 onClick={() => onSelectChange(lang.code)}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 group/item ${locale === lang.code
-                  ? "bg-[#171717] text-[#8b6a55] font-bold"
-                  : "text-white hover:bg-[#171717]"
+                  ? "bg-surface-container-high text-primary font-bold"
+                  : "text-on-surface hover:bg-surface-container"
                   }`}
               >
                 <div className="relative w-6 h-6 rounded-full overflow-hidden shadow-sm group-hover/item:scale-110 transition-transform">
@@ -106,7 +106,7 @@ const LanguageSwitcher = ({ isScrolled }: { isScrolled: boolean }) => {
                 </div>
                 <span className="flex-1 text-left">{lang.name}</span>
                 {locale === lang.code && (
-                  <span className="w-1.5 h-1.5 bg-[#8b6a55] rounded-full"></span>
+                  <span className="w-1.5 h-1.5 bg-primary rounded-full"></span>
                 )}
               </button>
             ))}

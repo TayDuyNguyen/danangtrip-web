@@ -27,6 +27,8 @@ interface BookingsSearchFieldProps {
   initialValue: string;
   isLoading: boolean;
   placeholder: string;
+  label: string;
+  actionText: string;
   onDebouncedChange: (value: string) => void;
 }
 
@@ -34,6 +36,8 @@ function BookingsSearchField({
   initialValue,
   isLoading,
   placeholder,
+  label,
+  actionText,
   onDebouncedChange,
 }: BookingsSearchFieldProps) {
   const [value, setValue] = useState(initialValue);
@@ -52,6 +56,9 @@ function BookingsSearchField({
       placeholder={placeholder}
       isLoading={isLoading}
       aria-label={placeholder}
+      debounceMs={0}
+      label={label}
+      actionText={actionText}
     />
   );
 }
@@ -124,11 +131,11 @@ export function BookingsHistoryClient() {
   ];
 
   return (
-    <div className="space-y-8 pb-16">
+    <div className="w-full max-w-full space-y-8 overflow-hidden pb-16">
       
       {/* Search and Tabs Header Panel */}
-      <div className="glass-shell shadow-lg rounded-2xl border-white/5 overflow-hidden">
-        <div className="glass-inner bg-surface-container-low p-6 space-y-6">
+      <div className="overflow-hidden rounded-[20px] border border-border bg-white shadow-[0_1px_3px_rgba(0,0,0,0.08)]">
+        <div className="space-y-6 p-4 sm:p-6">
           
           {/* Controls: Search */}
           <div className="flex flex-col md:flex-row gap-4 items-center">
@@ -145,13 +152,15 @@ export function BookingsHistoryClient() {
                 )
               }
               placeholder={t("search_placeholder")}
+              label={t("search_label")}
+              actionText={t("search_action")}
               isLoading={isLoading}
             />
           </div>
 
           {/* Filter Tabs */}
           <div className="border-t border-border pt-4">
-            <div className="flex items-center overflow-x-auto no-scrollbar gap-2 pb-1">
+            <div className="flex max-w-full items-center gap-2 overflow-x-auto no-scrollbar pb-1">
               {tabs.map((tab) => {
                 const isActive = activeTab === tab.key;
                 return (
@@ -169,7 +178,7 @@ export function BookingsHistoryClient() {
                     className={`shrink-0 rounded-full px-5 py-2.5 text-xs font-bold transition-all duration-300 ${
                       isActive
                         ? "bg-primary text-white border-primary shadow-lg shadow-primary/20 scale-100"
-                        : "bg-surface-container border border-border text-on-surface-variant hover:text-white hover:border-primary/45 active:scale-95"
+                        : "bg-white border border-border text-on-surface-subtle hover:bg-[#f7f7f7] hover:text-on-surface hover:border-primary/45 active:scale-95"
                     }`}
                   >
                     {tab.label}
@@ -184,7 +193,7 @@ export function BookingsHistoryClient() {
 
       {/* Main List Rendering */}
       {isError ? (
-        <div className="rounded-2xl border border-border bg-surface-container p-8 text-center shadow-xl">
+        <div className="rounded-[20px] border border-border bg-white p-8 text-center shadow-[0_1px_3px_rgba(0,0,0,0.08)]">
           <div className="w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-4">
             <InfoCircle className="w-6 h-6 text-red-500" />
           </div>
@@ -200,20 +209,20 @@ export function BookingsHistoryClient() {
         // Premium Skeleton Area
         <div className="space-y-6">
           {[...Array(3)].map((_, i) => (
-            <div key={i} className="animate-pulse rounded-2xl bg-surface border border-border p-6 flex flex-col md:flex-row gap-6">
-              <div className="w-full md:w-44 h-36 rounded-xl bg-surface-container shrink-0" />
+            <div key={i} className="flex animate-pulse flex-col gap-6 rounded-[20px] border border-border bg-white p-6 md:flex-row">
+              <div className="h-36 w-full shrink-0 rounded-2xl bg-[#f7f7f7] md:w-44" />
               <div className="flex-1 space-y-4 py-1">
-                <div className="h-4 bg-surface-container rounded w-1/4" />
-                <div className="h-6 bg-surface-container rounded w-3/4" />
+                <div className="h-4 w-1/4 rounded bg-[#f7f7f7]" />
+                <div className="h-6 w-3/4 rounded bg-[#f7f7f7]" />
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4 pt-2">
-                  <div className="h-10 bg-surface-container rounded" />
-                  <div className="h-10 bg-surface-container rounded" />
-                  <div className="h-10 bg-surface-container rounded" />
+                  <div className="h-10 rounded bg-[#f7f7f7]" />
+                  <div className="h-10 rounded bg-[#f7f7f7]" />
+                  <div className="h-10 rounded bg-[#f7f7f7]" />
                 </div>
                 <div className="h-px bg-border/50 my-2" />
                 <div className="flex justify-between items-center pt-2">
-                  <div className="h-8 bg-surface-container rounded w-32" />
-                  <div className="h-8 bg-surface-container rounded w-24" />
+                  <div className="h-8 w-32 rounded bg-[#f7f7f7]" />
+                  <div className="h-8 w-24 rounded bg-[#f7f7f7]" />
                 </div>
               </div>
             </div>
@@ -221,8 +230,8 @@ export function BookingsHistoryClient() {
         </div>
       ) : bookings.length === 0 ? (
         // Empty State
-        <div className="glass-shell rounded-2xl">
-          <div className="glass-inner bg-surface-container-low/50">
+        <div className="rounded-[20px] border border-border bg-white shadow-[0_1px_3px_rgba(0,0,0,0.08)]">
+          <div>
             <EmptyState
               title={t("empty_title")}
               description={t("empty_desc")}

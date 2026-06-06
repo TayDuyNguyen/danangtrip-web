@@ -2,12 +2,13 @@ import type { PaymentMethod, PaymentStatus } from "./booking.types";
 
 export interface CreatePaymentPayload {
   booking_id: number;
-  payment_method: Extract<PaymentMethod, "momo" | "vnpay" | "zalopay">;
+  payment_method: Extract<PaymentMethod, "bank_transfer" | "payos" | "momo" | "vnpay" | "zalopay">;
   return_url?: string;
 }
 
 export interface RetryPaymentPayload {
   return_url?: string;
+  payment_method?: Extract<PaymentMethod, "bank_transfer" | "payos" | "momo" | "vnpay" | "zalopay">;
 }
 
 export interface Payment {

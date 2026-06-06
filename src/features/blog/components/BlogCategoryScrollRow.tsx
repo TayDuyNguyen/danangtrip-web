@@ -67,7 +67,7 @@ export function BlogCategoryScrollRow({ children, scrollKey = 0 }: BlogCategoryS
   };
 
   const navBtnClass =
-    "flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-neutral-700 bg-neutral-900 text-[#a3a3a3] transition-colors hover:border-[#8B6A55]/50 hover:text-white disabled:pointer-events-none disabled:opacity-25";
+    "flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border bg-white text-on-surface-subtle shadow-sm transition-colors hover:border-primary/30 hover:text-on-surface hover:bg-[#fafafa] disabled:pointer-events-none disabled:opacity-25";
 
   return (
     <div className="flex items-center gap-2">

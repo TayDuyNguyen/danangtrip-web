@@ -100,8 +100,8 @@ export function BookingStatusTimeline({ booking }: BookingStatusTimelineProps) {
   ];
 
   return (
-    <div className="w-full rounded-2xl bg-surface border border-border p-5 md:p-6 reveal-up">
-      <h3 className="text-sm font-black text-white uppercase tracking-wider mb-8 flex items-center gap-2">
+    <div className="w-full rounded-[20px] border border-border bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.08)] md:p-6 reveal-up">
+      <h3 className="mb-8 flex items-center gap-2 text-sm font-semibold uppercase tracking-normal text-on-surface">
         <Clock className="w-4.5 h-4.5 text-primary shrink-0" />
         {t("section_timeline")}
       </h3>
@@ -120,7 +120,7 @@ export function BookingStatusTimeline({ booking }: BookingStatusTimelineProps) {
 
           switch (step.status) {
             case "completed":
-              stepColorClass = "bg-primary text-white border-primary shadow-[0_0_12px_rgba(139,106,85,0.3)]";
+              stepColorClass = "bg-primary text-white border-primary shadow-[0_0_12px_rgba(255,56,92,0.24)]";
               icon = <CheckCircle2 className="w-5 h-5" />;
               break;
             case "cancelled":
@@ -128,12 +128,12 @@ export function BookingStatusTimeline({ booking }: BookingStatusTimelineProps) {
               icon = <X className="w-5 h-5" />;
               break;
             case "active":
-              stepColorClass = "bg-surface text-primary border-primary shadow-[0_0_12px_rgba(139,106,85,0.15)] animate-pulse";
+              stepColorClass = "bg-white text-primary border-primary shadow-[0_0_12px_rgba(255,56,92,0.18)] animate-pulse";
               icon = <Clock className="w-5 h-5 text-primary animate-spin" style={{ animationDuration: '6s' }} />;
               break;
             case "pending":
             default:
-              stepColorClass = "bg-surface-container-high text-on-surface-subtle border-border";
+              stepColorClass = "bg-[#f7f7f7] text-on-surface-subtle border-border";
               icon = <span className="text-xs font-bold">{step.id}</span>;
               break;
           }
@@ -170,19 +170,19 @@ export function BookingStatusTimeline({ booking }: BookingStatusTimelineProps) {
               )}>
                 <span
                   className={cn(
-                    "text-xs font-black uppercase tracking-wider",
-                    step.status === "completed" || step.status === "active" ? "text-white" : "text-on-surface-subtle",
+                    "text-xs font-semibold uppercase tracking-normal",
+                    step.status === "completed" || step.status === "active" ? "text-on-surface" : "text-on-surface-subtle",
                     step.status === "cancelled" && "text-red-400 font-bold"
                   )}
                 >
                   {step.title}
                 </span>
                 {step.time ? (
-                  <span className="text-[10px] text-on-surface-variant font-mono mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis w-full">
+                  <span className="mt-0.5 w-full overflow-hidden text-ellipsis whitespace-nowrap text-[11px] text-on-surface-subtle">
                     {step.time}
                   </span>
                 ) : (
-                  <span className="text-[10px] text-on-surface-variant font-mono mt-0.5">—</span>
+                  <span className="mt-0.5 text-[11px] text-on-surface-subtle">—</span>
                 )}
               </div>
             </div>

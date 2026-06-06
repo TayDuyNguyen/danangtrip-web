@@ -1,19 +1,10 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Category } from "@/types";
-import { DANANG_DISTRICTS } from "@/utils/constants";
-import { 
-  IoGridOutline, 
-  IoLeafOutline, 
-  IoUmbrellaOutline, 
-  IoBusinessOutline, 
-  IoFlashOutline, 
-  IoCompassOutline,
-  IoStar,
-  IoCloseOutline,
-  IoChevronDownOutline
-} from "@/components/icons/solar";
+import type { Category } from "@/types";
+import { useLocationDistricts } from "../hooks/use-locations";
+import { IoChevronDownOutline, IoCloseOutline, IoStar } from "@/components/icons/solar";
 import { cn } from "@/utils/string";
+import { CategoryIconRenderer } from "@/utils/category-icon";
 
 interface LocationFiltersProps {
   activeCategories?: number[];
@@ -21,6 +12,11 @@ interface LocationFiltersProps {
   activePriceLevel?: number;
   activeRating?: number;
   categories?: Category[];
+  filterStats?: {
+    districts: Record<string, number>;
+    price_levels: Record<string, number>;
+    ratings: Record<string, number>;
+  };
   onCategoriesChange?: (ids: number[]) => void;
   onDistrictsChange: (districts: string[]) => void;
   onPriceLevelChange: (level?: number) => void;
@@ -29,17 +25,6 @@ interface LocationFiltersProps {
   hideCategories?: boolean;
 }
 
-const CategoryIcon = ({ icon, className }: { icon: string | null; className?: string }) => {
-  switch (icon) {
-    case "mountain": return <IoLeafOutline className={className} />;
-    case "beach_access": return <IoUmbrellaOutline className={className} />;
-    case "fort": return <IoBusinessOutline className={className} />;
-    case "trending_up": return <IoFlashOutline className={className} />;
-    case "adventure": return <IoCompassOutline className={className} />;
-    default: return <IoGridOutline className={className} />;
-  }
-};
-
 interface SectionHeaderProps {
   title: string;
   isExpanded: boolean;
@@ -47,302 +32,392 @@ interface SectionHeaderProps {
 }
 
 const SectionHeader = ({ title, isExpanded, onToggle }: SectionHeaderProps) => (
-  <button 
+  <button
     onClick={onToggle}
-    className="w-full flex items-center justify-between group pl-1 mb-6 transition-colors"
+    className="mb-5 flex w-full items-center justify-between pl-1 transition-colors"
   >
-    <h4 className="text-[11px] font-black uppercase tracking-[0.3em] text-on-surface-variant/50 group-hover:text-[#8b6a55] transition-colors">
+    <h4 className="text-[11px] font-semibold uppercase tracking-[0.24em] text-on-surface-subtle">
       {title}
     </h4>
-    <IoChevronDownOutline className={cn(
-      "text-lg text-on-surface-variant/30 transition-transform duration-500",
-      isExpanded ? "rotate-0" : "-rotate-90"
-    )} />
+    <IoChevronDownOutline
+      className={cn(
+        "text-[18px] text-on-surface-subtle transition-transform duration-300",
+        isExpanded ? "rotate-0" : "-rotate-90"
+      )}
+    />
   </button>
 );
 
-export default function LocationFilters({ 
-  activeCategories = [], 
-  activeDistricts, 
+const itemTextClass = (isActive: boolean) =>
+  isActive ? "font-semibold text-on-surface" : "text-on-surface-subtle group-hover:text-on-surface";
+
+export default function LocationFilters({
+  activeCategories = [],
+  activeDistricts,
   activePriceLevel,
   activeRating,
   categories = [],
-  onCategoriesChange, 
+  filterStats,
+  onCategoriesChange,
   onDistrictsChange,
   onPriceLevelChange,
   onRatingChange,
   onReset,
-  hideCategories = false
+  hideCategories = false,
 }: LocationFiltersProps) {
   const t = useTranslations("locations");
+  const { data: districtsList = [] } = useLocationDistricts();
 
-  // Section expansion states
+  const totalLocationsCount = useMemo(
+    () => categories.reduce((sum, category) => sum + (category.locations_count ?? 0), 0),
+    [categories]
+  );
+
   const [expanded, setExpanded] = useState({
     categories: true,
     districts: true,
     price: true,
-    rating: true
+    rating: true,
   });
+  const [showAllCategories, setShowAllCategories] = useState(false);
+  const [showAllDistricts, setShowAllDistricts] = useState(false);
 
   const toggleSection = (section: keyof typeof expanded) => {
-    setExpanded(prev => ({ ...prev, [section]: !prev[section] }));
+    setExpanded((prev) => ({ ...prev, [section]: !prev[section] }));
   };
 
   const toggleCategory = (id: number) => {
     if (!onCategoriesChange) return;
-    const newIds = activeCategories.includes(id)
-      ? activeCategories.filter(i => i !== id)
+
+    const nextIds = activeCategories.includes(id)
+      ? activeCategories.filter((item) => item !== id)
       : [...activeCategories, id];
-    onCategoriesChange(newIds);
+
+    onCategoriesChange(nextIds);
   };
 
   const toggleDistrict = (name: string) => {
-    const newDists = activeDistricts.includes(name)
-      ? activeDistricts.filter(d => d !== name)
+    const nextDistricts = activeDistricts.includes(name)
+      ? activeDistricts.filter((district) => district !== name)
       : [...activeDistricts, name];
-    onDistrictsChange(newDists);
+
+    onDistrictsChange(nextDistricts);
   };
 
+  const visibleCategories = showAllCategories ? categories : categories.slice(0, 8);
+  const visibleDistricts = showAllDistricts ? districtsList : districtsList.slice(0, 8);
+
   return (
-    <div className="bg-surface-container-lowest rounded-xl p-8 shadow-xl shadow-black/30 border border-[#262626] space-y-10">
-      {/* Categories */}
+    <div className="space-y-8 rounded-[28px] border border-border bg-white p-6 shadow-[0_16px_40px_rgba(0,0,0,0.08)]">
       {!hideCategories && categories.length > 0 && (
         <div>
-          <SectionHeader 
-            title={t("filters.categories")} 
-            isExpanded={expanded.categories} 
-            onToggle={() => toggleSection("categories")} 
+          <SectionHeader
+            title={t("filters.categories")}
+            isExpanded={expanded.categories}
+            onToggle={() => toggleSection("categories")}
           />
-          <div className={cn(
-            "space-y-3 transition-all duration-500 overflow-hidden",
-            expanded.categories ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0 pointer-events-none"
-          )}>
-            {/* All Option */}
-            <label className="flex items-center justify-between group cursor-pointer pb-2">
+          <div
+            className={cn(
+              "space-y-2 overflow-hidden transition-all duration-300",
+              expanded.categories ? "max-h-[1200px] opacity-100" : "pointer-events-none max-h-0 opacity-0"
+            )}
+          >
+            <label className="group flex cursor-pointer items-center justify-between rounded-2xl px-3 py-2 transition-colors hover:bg-[#f7f7f7]">
               <div className="flex items-center gap-4">
                 <div className="relative flex items-center">
                   <input
                     type="checkbox"
                     checked={activeCategories.length === 0}
                     onChange={() => onCategoriesChange && onCategoriesChange([])}
-                    className="peer appearance-none w-6 h-6 rounded-lg border-2 border-outline-variant/30 checked:bg-[#8b6a55] checked:border-[#8b6a55] transition-all duration-300"
+                    className="peer h-6 w-6 appearance-none rounded-lg border-2 border-[#e6e6e6] bg-white transition-all checked:border-primary checked:bg-primary"
                   />
-                  <svg className="absolute w-4 h-4 text-white opacity-0 peer-checked:opacity-100 left-1 pointer-events-none transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="4">
+                  <svg
+                    className="pointer-events-none absolute left-1 h-4 w-4 text-white opacity-0 transition-opacity peer-checked:opacity-100"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  >
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
-                <span className={cn(
-                  "text-[15px] font-bold transition-colors",
-                  activeCategories.length === 0 ? "text-[#8b6a55]" : "text-on-surface"
-                )}>
+                <span className={cn("text-[15px] transition-colors", itemTextClass(activeCategories.length === 0))}>
                   {t("filters.all")}
                 </span>
               </div>
+              <span className="text-sm text-on-surface-subtle">({totalLocationsCount})</span>
             </label>
 
-            {categories.map((cat) => (
-              <label 
-                key={cat.id}
-                className="flex items-center justify-between group cursor-pointer"
+            {visibleCategories.map((category) => {
+              const isActive = activeCategories.includes(category.id);
+
+              return (
+                <label
+                  key={category.id}
+                  className="group flex cursor-pointer items-center justify-between rounded-2xl px-3 py-2 transition-colors hover:bg-[#f7f7f7]"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="relative flex items-center">
+                      <input
+                        type="checkbox"
+                        checked={isActive}
+                        onChange={() => toggleCategory(category.id)}
+                        className="peer h-6 w-6 appearance-none rounded-lg border-2 border-[#e6e6e6] bg-white transition-all checked:border-primary checked:bg-primary"
+                      />
+                      <svg
+                        className="pointer-events-none absolute left-1 h-4 w-4 text-white opacity-0 transition-opacity peer-checked:opacity-100"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+
+                    <div
+                      className={cn(
+                        "flex h-10 w-10 items-center justify-center rounded-xl transition-all",
+                        isActive ? "bg-[#fff1f3] text-primary" : "bg-[#f7f7f7] text-on-surface-subtle"
+                      )}
+                    >
+                      <CategoryIconRenderer icon={category.icon} className="text-xl" />
+                    </div>
+
+                    <span className={cn("text-[15px] transition-colors", itemTextClass(isActive))}>
+                      {category.name}
+                    </span>
+                  </div>
+
+                  <span className="text-sm text-on-surface-subtle">({category.locations_count ?? 0})</span>
+                </label>
+              );
+            })}
+
+            {categories.length > 8 && (
+              <button
+                type="button"
+                onClick={() => setShowAllCategories((prev) => !prev)}
+                className="px-3 pt-2 text-left text-sm font-semibold text-primary transition-colors hover:text-primary/80"
               >
-                <div className="flex items-center gap-4">
-                  <div className="relative flex items-center">
-                    <input
-                      type="checkbox"
-                      checked={activeCategories.includes(cat.id)}
-                      onChange={() => toggleCategory(cat.id)}
-                      className="peer appearance-none w-6 h-6 rounded-lg border-2 border-outline-variant/30 checked:bg-[#8b6a55] checked:border-[#8b6a55] transition-all duration-300"
-                    />
-                    <svg className="absolute w-4 h-4 text-white opacity-0 peer-checked:opacity-100 left-1 pointer-events-none transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="4">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  <div className={cn(
-                    "w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300",
-                    activeCategories.includes(cat.id) ? "bg-[#171717] text-[#8b6a55]" : "bg-surface-container-low text-on-surface-variant/50"
-                  )}>
-                    <CategoryIcon icon={cat.icon} className="text-xl" />
-                  </div>
-                  <span className={cn(
-                    "text-[15px] font-bold transition-colors",
-                    activeCategories.includes(cat.id) ? "text-[#8b6a55]" : "text-on-surface"
-                  )}>
-                    {cat.name}
-                  </span>
-                </div>
-                <span className="text-xs font-medium text-on-surface-variant/40 group-hover:text-on-surface-variant transition-colors">
-                  (28)
-                </span>
-              </label>
-            ))}
+                {showAllCategories
+                  ? t("filters.show_less")
+                  : t("filters.show_more_categories", { count: categories.length - 8 })}
+              </button>
+            )}
           </div>
         </div>
       )}
 
-      {/* Districts */}
-      <div>
-        <SectionHeader 
-          title={t("filters.districts")} 
-          isExpanded={expanded.districts} 
-          onToggle={() => toggleSection("districts")} 
-        />
-        <div className={cn(
-          "space-y-3 transition-all duration-500 overflow-hidden",
-          expanded.districts ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0 pointer-events-none"
-        )}>
-          {/* All Option */}
-          <label className="flex items-center justify-between group cursor-pointer pb-2">
-            <div className="flex items-center gap-4">
-              <div className="relative flex items-center">
-                <input
-                  type="checkbox"
-                  checked={activeDistricts.length === 0}
-                  onChange={() => onDistrictsChange([])}
-                  className="peer appearance-none w-6 h-6 rounded-lg border-2 border-outline-variant/30 checked:bg-[#8b6a55] checked:border-[#8b6a55] transition-all duration-300"
-                />
-                <svg className="absolute w-4 h-4 text-white opacity-0 peer-checked:opacity-100 left-1 pointer-events-none transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="4">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-              <span className={cn(
-                "text-[15px] font-bold transition-colors",
-                activeDistricts.length === 0 ? "text-[#8b6a55]" : "text-on-surface"
-              )}>
-                {t("filters.all")}
-              </span>
-            </div>
-          </label>
-
-          {DANANG_DISTRICTS.map((dist) => (
-            <label 
-              key={dist.id}
-              className="flex items-center justify-between group cursor-pointer"
-            >
+      {districtsList.length > 0 && (
+        <div>
+          <SectionHeader
+            title={t("filters.districts")}
+            isExpanded={expanded.districts}
+            onToggle={() => toggleSection("districts")}
+          />
+          <div
+            className={cn(
+              "space-y-2 overflow-hidden transition-all duration-300",
+              expanded.districts ? "max-h-[640px] opacity-100" : "pointer-events-none max-h-0 opacity-0"
+            )}
+          >
+            <label className="group flex cursor-pointer items-center justify-between rounded-2xl px-3 py-2 transition-colors hover:bg-[#f7f7f7]">
               <div className="flex items-center gap-4">
                 <div className="relative flex items-center">
                   <input
                     type="checkbox"
-                    checked={activeDistricts.includes(dist.name)}
-                    onChange={() => toggleDistrict(dist.name)}
-                    className="peer appearance-none w-6 h-6 rounded-lg border-2 border-outline-variant/30 checked:bg-[#8b6a55] checked:border-[#8b6a55] transition-all duration-300"
+                    checked={activeDistricts.length === 0}
+                    onChange={() => onDistrictsChange([])}
+                    className="peer h-6 w-6 appearance-none rounded-lg border-2 border-[#e6e6e6] bg-white transition-all checked:border-primary checked:bg-primary"
                   />
-                  <svg className="absolute w-4 h-4 text-white opacity-0 peer-checked:opacity-100 left-1 pointer-events-none transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="4">
+                  <svg
+                    className="pointer-events-none absolute left-1 h-4 w-4 text-white opacity-0 transition-opacity peer-checked:opacity-100"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  >
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
-                <span className={cn(
-                  "text-[15px] font-bold transition-colors",
-                  activeDistricts.includes(dist.name) ? "text-[#8b6a55]" : "text-on-surface"
-                )}>
-                  {dist.name}
+                <span className={cn("text-[15px] transition-colors", itemTextClass(activeDistricts.length === 0))}>
+                  {t("filters.all")}
                 </span>
               </div>
-              <span className="text-xs font-medium text-on-surface-variant/40 group-hover:text-on-surface-variant transition-colors">
-                (18)
-              </span>
+              <span className="text-sm text-on-surface-subtle">({totalLocationsCount})</span>
             </label>
-          ))}
-        </div>
-      </div>
 
-      {/* Price Level */}
+            {visibleDistricts.map((district) => {
+              const isActive = activeDistricts.includes(district.name);
+
+              return (
+                <label
+                  key={district.id}
+                  className="group flex cursor-pointer items-center justify-between rounded-2xl px-3 py-2 transition-colors hover:bg-[#f7f7f7]"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="relative flex items-center">
+                      <input
+                        type="checkbox"
+                        checked={isActive}
+                        onChange={() => toggleDistrict(district.name)}
+                        className="peer h-6 w-6 appearance-none rounded-lg border-2 border-[#e6e6e6] bg-white transition-all checked:border-primary checked:bg-primary"
+                      />
+                      <svg
+                        className="pointer-events-none absolute left-1 h-4 w-4 text-white opacity-0 transition-opacity peer-checked:opacity-100"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+
+                    <span className={cn("text-[15px] transition-colors", itemTextClass(isActive))}>
+                      {district.name}
+                    </span>
+                  </div>
+
+                  <span className="text-sm text-on-surface-subtle">
+                    ({filterStats?.districts[district.name] ?? 0})
+                  </span>
+                </label>
+              );
+            })}
+
+            {districtsList.length > 8 && (
+              <button
+                type="button"
+                onClick={() => setShowAllDistricts((prev) => !prev)}
+                className="px-3 pt-2 text-left text-sm font-semibold text-primary transition-colors hover:text-primary/80"
+              >
+                {showAllDistricts
+                  ? t("filters.show_less")
+                  : t("filters.show_more_districts", { count: districtsList.length - 8 })}
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
       <div>
-        <SectionHeader 
-          title={t("filters.price_level")} 
-          isExpanded={expanded.price} 
-          onToggle={() => toggleSection("price")} 
+        <SectionHeader
+          title={t("filters.price_level")}
+          isExpanded={expanded.price}
+          onToggle={() => toggleSection("price")}
         />
-        <div className={cn(
-          "space-y-3 transition-all duration-500 overflow-hidden",
-          expanded.price ? "max-h-[300px] opacity-100" : "max-h-0 opacity-0 pointer-events-none"
-        )}>
+        <div
+          className={cn(
+            "space-y-2 overflow-hidden transition-all duration-300",
+            expanded.price ? "max-h-[320px] opacity-100" : "pointer-events-none max-h-0 opacity-0"
+          )}
+        >
           {[
             { value: undefined, label: t("filters.all") },
             { value: 1, label: t("price.free") },
             { value: 2, label: t("price.budget") },
             { value: 3, label: t("price.mid_range") },
-          ].map((option) => (
-            <label 
-              key={String(option.value)}
-              className="flex items-center gap-4 group cursor-pointer"
-            >
-              <div className="relative flex items-center">
-                <input
-                  type="radio"
-                  name="price_level"
-                  checked={activePriceLevel === option.value}
-                  onChange={() => onPriceLevelChange(option.value)}
-                  className="peer appearance-none w-6 h-6 rounded-full border-2 border-outline-variant/30 checked:border-[#8b6a55] transition-all duration-300"
-                />
-                <div className="absolute w-3 h-3 bg-[#8b6a55] rounded-full opacity-0 peer-checked:opacity-100 left-1.5 transition-opacity" />
-              </div>
-              <span className={cn(
-                "text-[15px] font-bold transition-colors",
-                activePriceLevel === option.value ? "text-[#8b6a55]" : "text-on-surface"
-              )}>
-                {option.label}
-              </span>
-            </label>
-          ))}
+            { value: 4, label: t("price.high_end") },
+          ].map((option) => {
+            const isActive = activePriceLevel === option.value;
+
+            return (
+              <label
+                key={String(option.value)}
+                className="group flex cursor-pointer items-center justify-between rounded-2xl px-3 py-2 transition-colors hover:bg-[#f7f7f7]"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="relative flex items-center">
+                    <input
+                      type="radio"
+                      name="price_level"
+                      checked={isActive}
+                      onChange={() => onPriceLevelChange(option.value)}
+                      className="peer h-6 w-6 appearance-none rounded-full border-2 border-[#e6e6e6] bg-white transition-all checked:border-primary"
+                    />
+                    <div className="absolute left-1.5 h-3 w-3 rounded-full bg-primary opacity-0 transition-opacity peer-checked:opacity-100" />
+                  </div>
+
+                  <span className={cn("text-[15px] transition-colors", itemTextClass(isActive))}>
+                    {option.label}
+                  </span>
+                </div>
+
+                <span className="text-sm text-on-surface-subtle">
+                  ({option.value === undefined ? totalLocationsCount : (filterStats?.price_levels[option.value] ?? 0)})
+                </span>
+              </label>
+            );
+          })}
         </div>
       </div>
 
-      {/* Rating */}
       <div>
-        <SectionHeader 
-          title={t("filters.rating")} 
-          isExpanded={expanded.rating} 
-          onToggle={() => toggleSection("rating")} 
+        <SectionHeader
+          title={t("filters.rating")}
+          isExpanded={expanded.rating}
+          onToggle={() => toggleSection("rating")}
         />
-        <div className={cn(
-          "space-y-3 transition-all duration-500 overflow-hidden",
-          expanded.rating ? "max-h-[300px] opacity-100" : "max-h-0 opacity-0 pointer-events-none"
-        )}>
+        <div
+          className={cn(
+            "space-y-2 overflow-hidden transition-all duration-300",
+            expanded.rating ? "max-h-[320px] opacity-100" : "pointer-events-none max-h-0 opacity-0"
+          )}
+        >
           {[
             { value: undefined, label: t("filters.all") },
             { value: 4, label: t("filters.rating_4_plus") },
             { value: 3, label: t("filters.rating_3_plus") },
-          ].map((option) => (
-            <label 
-              key={String(option.value)}
-              className="flex items-center gap-4 group cursor-pointer"
-            >
-              <div className="relative flex items-center">
-                <input
-                  type="radio"
-                  name="rating"
-                  checked={activeRating === option.value}
-                  onChange={() => onRatingChange(option.value)}
-                  className="peer appearance-none w-6 h-6 rounded-full border-2 border-outline-variant/30 checked:border-[#8b6a55] transition-all duration-300"
-                />
-                <div className="absolute w-3 h-3 bg-[#8b6a55] rounded-full opacity-0 peer-checked:opacity-100 left-1.5 transition-opacity" />
-              </div>
-              <div className="flex items-center gap-2">
-                <span className={cn(
-                  "text-[15px] font-bold transition-colors",
-                  activeRating === option.value ? "text-[#8b6a55]" : "text-on-surface"
-                )}>
-                  {option.label}
-                </span>
-                {option.value && (
-                  <div className="flex gap-0.5">
-                    {[1, 2, 3, 4].map(i => (
-                      <IoStar key={i} className="text-xs text-amber-500" />
-                    ))}
+          ].map((option) => {
+            const isActive = activeRating === option.value;
+
+            return (
+              <label
+                key={String(option.value)}
+                className="group flex cursor-pointer items-center justify-between rounded-2xl px-3 py-2 transition-colors hover:bg-[#f7f7f7]"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="relative flex items-center">
+                    <input
+                      type="radio"
+                      name="rating"
+                      checked={isActive}
+                      onChange={() => onRatingChange(option.value)}
+                      className="peer h-6 w-6 appearance-none rounded-full border-2 border-[#e6e6e6] bg-white transition-all checked:border-primary"
+                    />
+                    <div className="absolute left-1.5 h-3 w-3 rounded-full bg-primary opacity-0 transition-opacity peer-checked:opacity-100" />
                   </div>
-                )}
-              </div>
-            </label>
-          ))}
+
+                  <div className="flex items-center gap-2">
+                    <span className={cn("text-[15px] transition-colors", itemTextClass(isActive))}>
+                      {option.label}
+                    </span>
+                    {option.value && (
+                      <div className="flex gap-0.5 text-amber-500">
+                        {[1, 2, 3, 4].map((star) => (
+                          <IoStar key={star} className="text-xs" />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <span className="text-sm text-on-surface-subtle">
+                  ({option.value === undefined ? totalLocationsCount : (filterStats?.ratings[option.value] ?? 0)})
+                </span>
+              </label>
+            );
+          })}
         </div>
       </div>
 
-      {/* Reset Button */}
       <button
         onClick={onReset}
-        className="w-full py-5 px-6 bg-surface-container-low hover:bg-surface-container-high text-on-surface font-black rounded-xl transition-all active:scale-95 flex items-center justify-center gap-3 border border-[#262626] group mt-4"
+        className="group mt-2 flex w-full items-center justify-center gap-3 rounded-[22px] border border-border bg-[#f7f7f7] px-6 py-4 font-semibold text-on-surface transition-all hover:border-primary/25 hover:bg-[#fff4f6] hover:text-primary active:scale-[0.99]"
       >
-        <IoCloseOutline className="text-2xl group-hover:rotate-180 transition-transform duration-500" />
+        <IoCloseOutline className="text-[18px] transition-transform duration-300 group-hover:rotate-180" />
         {t("filters.reset")}
       </button>
     </div>

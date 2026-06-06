@@ -85,7 +85,7 @@ export interface Location {
   phone: string | null;
   email: string | null;
   website: string | null;
-  opening_hours: string | LocationOpeningHoursMap | null;
+  opening_hours: string | string[] | LocationOpeningHoursMap | null;
   price_min: number | null;
   price_max: number | null;
   price_level: number | null;  // 1-4
@@ -104,8 +104,9 @@ export interface Location {
   content?: string;
   amenities?: LocationAmenity[];
   reviews?: LocationReview[];
-  /** Resolved category label when API includes it */
-  category?: string;
+  tags?: { id: number | string; name: string; slug: string }[];
+  /** Resolved category label when API includes it — may be a string or full object */
+  category?: string | { id: number; name: string; slug: string; icon?: string | null; description?: string; image?: string | null; sort_order?: number; status?: string; created_at?: string; updated_at?: string; icon_background?: string | null };
 }
 
 export interface TourCategory {
@@ -135,6 +136,9 @@ export interface TourSchedule {
   price_adult?: string | number | null;
   price_child?: string | number | null;
   price_infant?: string | number | null;
+  departure_code?: string | null;
+  departure_place?: string | null;
+  booking_deadline?: string | null;
   created_at?: string;
   updated_at?: string;
 }
@@ -221,6 +225,9 @@ export interface Weather {
   temp: number;
   condition: string;
   icon: string;
+  rainProbability?: number;
+  precipitation?: number;
+  forecastHours?: number;
 }
 
 export interface Config {
@@ -233,5 +240,22 @@ export interface Config {
     twitter?: string;
     youtube?: string;
     website?: string;
+  };
+  payment?: {
+    payos?: boolean;
+    cod?: boolean;
+    vnpay?: boolean;
+    momo?: boolean;
+    zalopay?: boolean;
+  };
+  brand?: {
+    website_name?: string;
+    logo?: string;
+    favicon?: string;
+  };
+  policy?: {
+    terms?: string;
+    privacy?: string;
+    data_protection?: string;
   };
 }

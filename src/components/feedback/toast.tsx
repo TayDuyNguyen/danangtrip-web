@@ -34,7 +34,7 @@ export function Toast({
     success: "bg-[#1a1f14] text-[#929852] border-[#2f3b25]",
     error: "bg-[#2a1616] text-[#d88484] border-[#5f2f2f]",
     warning: "bg-[#2b1f14] text-[#c59a5f] border-[#5c3822]",
-    info: "bg-[#171717] text-[#8b6a55] border-[#262626]",
+    info: "bg-surface-container-highest text-primary border-border",
   };
 
   return (

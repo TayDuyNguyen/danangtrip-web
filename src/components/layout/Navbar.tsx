@@ -10,7 +10,7 @@ export function Navbar() {
   const t = useTranslations("common");
 
   return (
-    <nav className="bg-[#030303]/95 backdrop-blur-md border-b border-[#262626] px-4 py-3 flex justify-between items-center">
+    <nav className="bg-surface-container-lowest/95 backdrop-blur-md border-b border-border px-4 py-3 flex justify-between items-center">
       <Link href="/dashboard" className="font-semibold text-lg text-white">
         {t("common.admin_panel")}
       </Link>
@@ -18,7 +18,7 @@ export function Navbar() {
       <div className="flex items-center gap-4">
         {isAuthenticated && user ? (
           <>
-            <span className="text-[#a3a3a3]">{user.name}</span>
+            <span className="text-on-surface-subtle">{user.name}</span>
             <Button variant="secondary" size="sm" onClick={logout}>
               {t("auth.logout")}
             </Button>

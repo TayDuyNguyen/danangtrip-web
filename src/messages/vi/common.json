@@ -13,6 +13,7 @@
   },
   "common": {
     "brand_name": "Đà Nẵng Trip",
+    "brand_subtitle": "Khám phá Đà Nẵng như người bản địa",
     "admin_panel": "Bảng quản trị",
     "menu": "Menu",
     "loading": "Đang tải...",
@@ -62,7 +63,8 @@
     "url_invalid": "URL không hợp lệ",
     "password_mismatch": "Mật khẩu không khớp",
     "range_error": "Giá trị phải từ {min} đến {max}",
-    "terms_required": "Bạn phải đồng ý với điều khoản dịch vụ"
+    "terms_required": "Bạn phải đồng ý với điều khoản dịch vụ",
+    "delete_account_confirm": "Bạn phải xác nhận đồng ý xóa tài khoản"
   },
   "api_errors": {
     "validation_failed": "Vui lòng kiểm tra lại thông tin đã nhập và thử lại.",

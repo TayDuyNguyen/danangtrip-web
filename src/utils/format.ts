@@ -137,3 +137,20 @@ export const kebabCase = (str: string): string => {
     .replace(/[\s_]+/g, "-")
     .toLowerCase();
 };
+
+/**
+ * Formats a raw number to a price string with thousands dot separator for input fields
+ */
+export const formatInputPrice = (value: number | undefined): string => {
+  if (value === undefined || value === null) return "";
+  return String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+};
+
+/**
+ * Parses a formatted price string back to a raw number
+ */
+export const parseInputPrice = (displayValue: string): number | undefined => {
+  const clean = displayValue.replace(/\D/g, "");
+  if (!clean) return undefined;
+  return Number(clean);
+};

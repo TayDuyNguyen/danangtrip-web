@@ -9,25 +9,61 @@ import {
   SearchState 
 } from "../types/search.types";
 import { mapSearchStateToParams } from "../utils/search-mapper";
-import type { Tour, Location } from "@/types";
+import type { Tour, Location, PaginatedResponse } from "@/types";
 import { extractItems } from "@/utils";
+
+const resolveSearchResultsPayload = (
+  payload: unknown
+): PaginatedResponse<Tour | Location> | undefined => {
+  if (payload && typeof payload === "object" && "results" in payload) {
+    return (payload as { results?: PaginatedResponse<Tour | Location> }).results;
+  }
+
+  return payload as PaginatedResponse<Tour | Location> | undefined;
+};
+
+const resolveTotal = (payload: unknown, fallback: number): number => {
+  if (payload && typeof payload === "object" && "total" in payload) {
+    const total = Number((payload as { total?: unknown }).total);
+    if (!Number.isNaN(total)) {
+      return total;
+    }
+  }
+
+  return fallback;
+};
+
+const resolveLastPage = (payload: unknown): number => {
+  if (payload && typeof payload === "object" && "last_page" in payload) {
+    const lastPage = Number((payload as { last_page?: unknown }).last_page);
+    if (!Number.isNaN(lastPage) && lastPage > 0) {
+      return lastPage;
+    }
+  }
+
+  return 1;
+};
 
 export const useSearch = (params: SearchState) => {
   const { q, type } = params;
   const t = useTranslations("home");
   
-  const { data: searchData, isLoading } = useQuery({
+  const { data: searchData, isLoading, isFetching } = useQuery({
     queryKey: ["search", params],
     queryFn: async () => {
-      // ... same logic
       const fetches = [];
+      const combinedPerType = 6;
       
       if (type === "all" || type === "tour") {
-        fetches.push(searchService.search(mapSearchStateToParams(params, "tour")));
+        fetches.push(
+          searchService.search(mapSearchStateToParams(params, "tour", type === "all" ? combinedPerType : undefined))
+        );
       }
       
       if (type === "all" || type === "location") {
-        fetches.push(searchService.search(mapSearchStateToParams(params, "location")));
+        fetches.push(
+          searchService.search(mapSearchStateToParams(params, "location", type === "all" ? combinedPerType : undefined))
+        );
       }
 
       const results = await Promise.all(fetches);
@@ -35,17 +71,21 @@ export const useSearch = (params: SearchState) => {
       let allItems: SearchResult[] = [];
       let tourCount = 0;
       let locationCount = 0;
+      let tourLastPage = 1;
+      let locationLastPage = 1;
 
       results.forEach((res, index) => {
         const fetchType = type === "all" ? (index === 0 ? "tour" : "location") : type;
         const payload = res.data;
+        const resultsPayload = resolveSearchResultsPayload(payload);
         const tourItems =
-          fetchType === "tour" ? (extractItems<Tour>(payload) as Tour[]) : [];
+          fetchType === "tour" ? (extractItems<Tour>(resultsPayload) as Tour[]) : [];
         const locationItems =
-          fetchType === "location" ? (extractItems<Location>(payload) as Location[]) : [];
+          fetchType === "location" ? (extractItems<Location>(resultsPayload) as Location[]) : [];
 
         if (fetchType === "tour") {
-          tourCount = payload?.total ?? tourItems.length;
+          tourCount = resolveTotal(resultsPayload, tourItems.length);
+          tourLastPage = resolveLastPage(resultsPayload);
           const transformedTours: TourSearchResult[] = tourItems.map((tour) => ({
             id: tour.id,
             type: "tour" as const,
@@ -63,7 +103,8 @@ export const useSearch = (params: SearchState) => {
           }));
           allItems = [...allItems, ...transformedTours];
         } else {
-          locationCount = payload?.total ?? locationItems.length;
+          locationCount = resolveTotal(resultsPayload, locationItems.length);
+          locationLastPage = resolveLastPage(resultsPayload);
           const transformedLocations: LocationSearchResult[] = locationItems.map((loc) => ({
             id: loc.id,
             type: "location" as const,
@@ -84,19 +125,43 @@ export const useSearch = (params: SearchState) => {
       });
 
       if (type === "all") {
-        allItems.sort((a, b) => {
+        const toursOnly = allItems.filter((item) => item.type === "tour") as TourSearchResult[];
+        const locationsOnly = allItems.filter((item) => item.type === "location") as LocationSearchResult[];
+
+        toursOnly.sort((a, b) => {
           if (a.featured && !b.featured) return -1;
           if (!a.featured && b.featured) return 1;
-          
-          const scoreA = a.type === "tour" 
-            ? (a as TourSearchResult).bookingCount 
-            : (a as LocationSearchResult).viewCount;
-          const scoreB = b.type === "tour" 
-            ? (b as TourSearchResult).bookingCount 
-            : (b as LocationSearchResult).viewCount;
-          return scoreB - scoreA;
+          return (b.bookingCount ?? 0) - (a.bookingCount ?? 0);
         });
+
+        locationsOnly.sort((a, b) => {
+          if (a.featured && !b.featured) return -1;
+          if (!a.featured && b.featured) return 1;
+          return (b.viewCount ?? 0) - (a.viewCount ?? 0);
+        });
+
+        const interleaved: SearchResult[] = [];
+        const maxLen = Math.max(toursOnly.length, locationsOnly.length);
+        for (let i = 0; i < maxLen; i++) {
+          if (i < toursOnly.length) {
+            interleaved.push(toursOnly[i]);
+          }
+          if (i < locationsOnly.length) {
+            interleaved.push(locationsOnly[i]);
+          }
+        }
+        allItems = interleaved;
       }
+
+      const meta =
+        type === "all"
+          ? ({
+              current_page: params.page || 1,
+              last_page: Math.max(tourLastPage, locationLastPage),
+              per_page: combinedPerType * 2,
+              total: tourCount + locationCount,
+            } as PaginatedResponse<Tour | Location>)
+          : resolveSearchResultsPayload(results[0]?.data);
 
       return {
         items: allItems,
@@ -105,18 +170,19 @@ export const useSearch = (params: SearchState) => {
           tour: tourCount,
           location: locationCount
         },
-        meta: type === "all" ? undefined : results[0]?.data,
+        meta,
       };
     },
-    enabled: !!q.trim(),
+    enabled: !!q.trim() || type !== "all",
     staleTime: 1000 * 60 * 5,
   });
 
   return useMemo(() => ({
     results: searchData?.items || [],
     isLoading,
+    isFetching,
     counts: searchData?.counts || { all: 0, tour: 0, location: 0 },
     meta: searchData?.meta,
-  }), [searchData, isLoading]);
+  }), [searchData, isFetching, isLoading]);
 };
 

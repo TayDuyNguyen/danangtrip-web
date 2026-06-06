@@ -83,12 +83,18 @@ export default function LeafletNearbyMap({
 
     mapRef.current = map;
 
-    // Force map size recalculation after a minor delay to avoid gray rendering boxes
-    setTimeout(() => {
-      map.invalidateSize();
+    // Force map size recalculation after a minor delay to avoid gray rendering boxes.
+    const resizeTimer = window.setTimeout(() => {
+      if (mapRef.current !== map) return;
+      try {
+        map.invalidateSize();
+      } catch {
+        // Leaflet can throw if the container was removed before the delayed resize runs.
+      }
     }, 200);
 
     return () => {
+      window.clearTimeout(resizeTimer);
       if (mapRef.current) {
         mapRef.current.remove();
         mapRef.current = null;
@@ -198,20 +204,21 @@ export default function LeafletNearbyMap({
           display: none !important;
         }
         .leaflet-bar {
-          border: 1px solid #262626 !important;
-          background-color: #111111 !important;
+          border: 1px solid #dddddd !important;
+          background-color: #ffffff !important;
           border-radius: 12px !important;
+          box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12) !important;
           overflow: hidden;
         }
         .leaflet-bar a {
-          background-color: #111111 !important;
-          color: #ffffff !important;
-          border-bottom: 1px solid #262626 !important;
+          background-color: #ffffff !important;
+          color: #222222 !important;
+          border-bottom: 1px solid #ebebeb !important;
           transition: all 0.2s;
         }
         .leaflet-bar a:hover {
-          background-color: #1c1c1c !important;
-          color: #8b6a55 !important;
+          background-color: #f7f7f7 !important;
+          color: #ff385c !important;
         }
         .leaflet-control-zoom {
           border: none !important;

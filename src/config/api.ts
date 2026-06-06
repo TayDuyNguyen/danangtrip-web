@@ -30,6 +30,7 @@ export const API_ENDPOINTS = {
     RATINGS: "/user/ratings",
     FAVORITES: "/user/favorites",
     FAVORITES_CHECK: "/user/favorites/check", // Use query params ?location_id= or ?tour_id=
+    DELETE_ACCOUNT: "/user/account",
   },
   BOOKINGS: {
     CALCULATE: "/bookings/calculate",
@@ -57,6 +58,7 @@ export const API_ENDPOINTS = {
     FEATURED: "/locations/featured",
     DETAIL: (slug: string) => `/locations/${slug}`,
     CATEGORIES: "/categories",
+    FILTER_STATS: "/locations/filter-stats",
     IMAGES: (id: number) => `/locations/${id}/images`,
     RATINGS: (id: number) => `/locations/${id}/ratings`,
     RATING_STATS: (id: number) => `/locations/${id}/rating-stats`,
@@ -85,10 +87,25 @@ export const API_ENDPOINTS = {
     SUGGESTIONS: "/search/suggestions",
     POPULAR: "/search/popular",
     TRENDING: "/search/trending",
+    TRENDING_INSIGHTS: "/search/trending-insights",
+    INTERACTIONS: "/search/interactions",
   },
   CONTACTS: "/contacts",
   LANDING_PAGES: {
     DETAIL: (slug: string) => `/landing-pages/${slug}`,
   },
   RECOMMENDATIONS: "/recommendations",
+  CART: {
+    GET: "/cart",
+    STORE: "/cart/items",
+    UPDATE: (id: number | string) => `/cart/items/${id}`,
+    DELETE: (id: number | string) => `/cart/items/${id}`,
+    CLEAR: "/cart",
+    MERGE: "/cart/merge",
+  },
+  HOME: "/home",
+  HOME_LOCATIONS: "/home/locations",
+  HOME_TOURS: "/home/tours",
+  HOME_BLOGS: "/home/blogs",
+  CONFIG: "/config",
 };

@@ -1,12 +1,16 @@
 import { api } from "@/lib/axios";
 import { API_ENDPOINTS } from "@/config";
-import type { ApiResponse, PaginatedResponse, FavoriteItem, FavoritesListParams } from "@/types";
+import type { ApiResponse, PaginatedResponse, FavoriteIdsResponse, FavoriteItem, FavoritesListParams } from "@/types";
 
 export const favoriteService = {
   getFavorites: async (
     params?: FavoritesListParams
   ): Promise<ApiResponse<PaginatedResponse<FavoriteItem>>> => {
     return api.get(API_ENDPOINTS.USER.FAVORITES, params);
+  },
+
+  getFavoriteIds: async (): Promise<ApiResponse<FavoriteIdsResponse>> => {
+    return api.get(API_ENDPOINTS.USER.FAVORITES, { ids_only: true });
   },
 
   addFavorite: async (params: { location_id?: number; tour_id?: number }): Promise<ApiResponse<unknown>> => {

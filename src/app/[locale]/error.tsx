@@ -13,13 +13,13 @@ export default function Error({ error, reset }: ErrorPageProps) {
   const t = useTranslations("common");
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#080808] p-4">
-      <div className="text-center max-w-lg w-full bg-[#111111]/90 p-12 rounded-xl shadow-xl shadow-black/40 border border-[#262626] animate-in fade-in zoom-in duration-500">
-        <div className="w-24 h-24 bg-[#171717] rounded-xl flex items-center justify-center mx-auto mb-8 animate-bounce border border-[#5c3822]/40">
-          <IoAlertCircleOutline className="text-5xl text-[#8b6a55]" />
+    <div className="flex min-h-screen items-center justify-center bg-[#fbfbfb] p-4">
+      <div className="text-on-surface-subtleenter animate-in fade-in zoom-in duration-500 w-full max-w-lg rounded-[32px] border border-border bg-white p-12 shadow-[0_24px_80px_rgba(15,23,42,0.12)]">
+        <div className="mx-auto mb-8 flex h-24 w-24 items-center justify-center rounded-[24px] border border-primary/10 bg-primary/8 animate-bounce">
+          <IoAlertCircleOutline className="text-on-surface-subtlexl text-primary" />
         </div>
         
-        <h1 className="text-4xl font-black text-white mb-4 tracking-tight">
+        <h1 className="mb-4 text-4xl font-semibold tracking-tight text-on-surface">
           {t("error.title")}
         </h1>
         
@@ -30,7 +30,7 @@ export default function Error({ error, reset }: ErrorPageProps) {
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <button
             onClick={reset}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 border border-[#8b6a55] text-base font-bold rounded-xl text-white bg-[#8b6a55] hover:bg-[#5c3822] shadow-lg shadow-black/30 transition-all duration-300 hover:-translate-y-1 active:scale-95"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-primary bg-primary px-8 py-4 text-base font-semibold text-white transition-all duration-300 hover:bg-primary-hover sm:w-auto"
           >
             <IoRefreshOutline className="text-xl" />
             {t("error.retry")}
@@ -38,7 +38,7 @@ export default function Error({ error, reset }: ErrorPageProps) {
           
           <Link
             href="/"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 border border-[#262626] text-base font-bold rounded-xl text-white bg-[#171717] hover:bg-[#1f1f1f] transition-all duration-300 hover:border-[#8b6a55]/30"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-border bg-[#f7f7f7] px-8 py-4 text-base font-semibold text-on-surface transition-all duration-300 hover:border-primary/20 hover:bg-[#efefef] sm:w-auto"
           >
             <IoHomeOutline className="text-xl" />
             {t("error.go_home")}

@@ -18,6 +18,7 @@ export const PUBLIC_ROUTES = {
   CONTACT: "/contact",
   ABOUT: "/about",
   SEARCH: "/search",
+  CART: "/cart",
   DESTINATION_DA_NANG: "/du-lich-da-nang",
 } as const;
 
@@ -56,8 +57,9 @@ export const PROTECTED_ROUTES = {
   BOOKINGS: "/profile/bookings",
   BOOKING_BY_CODE: (bookingCode: string) => `/profile/bookings/code/${bookingCode}`,
   FAVORITES: "/profile/favorites",
-  NOTIFICATIONS: "/notifications",
+  NOTIFICATIONS: "/profile/notifications",
   RECOMMENDATIONS: "/profile/recommendations",
+  DELETE_ACCOUNT: "/profile/delete",
 } as const;
 
 // Dashboard routes (require authentication + admin/staff role)

@@ -19,7 +19,7 @@ export const useWeather = () => {
       }
       throw res;
     },
-    staleTime: 15 * 60 * 1000,
+    staleTime: 5 * 60 * 1000,
     retry: shouldRetryQuery,
   });
 

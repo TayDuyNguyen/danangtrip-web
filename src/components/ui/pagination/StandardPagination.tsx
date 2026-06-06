@@ -46,13 +46,13 @@ const StandardPagination = ({
             <button
                 onClick={() => onPageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="flex items-center justify-center w-10 h-10 rounded-lg bg-surface-container-low border border-[#262626] text-on-surface-variant hover:border-[#8b6a55] hover:text-[#8b6a55] disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 active:scale-95 group"
+                className="flex items-center justify-center w-10 h-10 rounded-lg bg-surface-container-low border border-border text-on-surface-variant hover:border-primary hover:text-primary disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 active:scale-95 group"
             >
                 <IoChevronBack className="text-xl group-hover:-translate-x-1 transition-transform" />
             </button>
 
             {/* Page Numbers */}
-            <div className="flex items-center gap-2 p-1.5 bg-surface-container-low/70 backdrop-blur-md border border-[#262626] rounded-xl">
+            <div className="flex items-center gap-2 p-1.5 bg-surface-container-low/70 backdrop-blur-md border border-border rounded-xl">
                 {generatePageNumbers().map((page, index) => (
                     <Fragment key={index}>
                         {page === '...' ? (
@@ -65,8 +65,8 @@ const StandardPagination = ({
                                 className={cn(
                                     "w-10 h-10 rounded-lg font-bold text-sm transition-all duration-300 scale-100 active:scale-95",
                                     currentPage === page
-                                        ? "bg-[#171717] text-white border border-[#8b6a55]"
-                                        : "text-on-surface-variant hover:bg-surface-container-high hover:text-[#8b6a55]"
+                                        ? "bg-surface-container-highest text-white border border-primary"
+                                        : "text-on-surface-variant hover:bg-surface-container-high hover:text-primary"
                                 )}
                             >
                                 {page}
@@ -80,7 +80,7 @@ const StandardPagination = ({
             <button
                 onClick={() => onPageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="flex items-center justify-center w-10 h-10 rounded-lg bg-surface-container-low border border-[#262626] text-on-surface-variant hover:border-[#8b6a55] hover:text-[#8b6a55] disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 active:scale-95 group"
+                className="flex items-center justify-center w-10 h-10 rounded-lg bg-surface-container-low border border-border text-on-surface-variant hover:border-primary hover:text-primary disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 active:scale-95 group"
             >
                 <IoChevronForward className="text-xl group-hover:translate-x-1 transition-transform" />
             </button>

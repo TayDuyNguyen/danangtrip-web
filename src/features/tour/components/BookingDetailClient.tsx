@@ -1,9 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { useTranslations, useLocale } from "next-intl";
+import Image from "next/image";
+import { useState, type ReactNode } from "react";
+import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { useBookingDetail, useBookingDetailByCode } from "../hooks/useBookingQueries";
+import { usePayment } from "@/features/payment/hooks/usePayment";
+import { useAppConfig } from "@/hooks/use-app-config";
 import { BookingStatusTimeline } from "./BookingStatusTimeline";
 import { BookingTourInfoCard } from "./BookingTourInfoCard";
 import { BookingCustomerInfoCard } from "./BookingCustomerInfoCard";
@@ -13,17 +16,69 @@ import { bookingService } from "@/services/booking.service";
 import { ChevronLeft, InfoCircle } from "@/components/icons/solar";
 import { Button } from "@/components/ui";
 import { toast } from "sonner";
-import { Download, Printer } from "lucide-react";
+import { CreditCard, Download, Printer, XCircle } from "lucide-react";
+import type { PaymentMethod } from "@/types";
 
 interface BookingDetailClientProps {
   id?: string;
   bookingCode?: string;
 }
 
+interface ActionIconButtonProps {
+  label: string;
+  children: ReactNode;
+  onClick: () => void;
+  disabled?: boolean;
+  isLoading?: boolean;
+  tone?: "default" | "primary" | "danger";
+}
+
+function ActionIconButton({
+  label,
+  children,
+  onClick,
+  disabled,
+  isLoading,
+  tone = "default",
+}: ActionIconButtonProps) {
+  const toneClass = {
+    default: "border-border bg-white text-on-surface-subtle hover:border-primary/40 hover:bg-[#fff4f6] hover:text-primary",
+    primary: "border-primary bg-primary text-white hover:bg-[#e31c5f]",
+    danger: "border-red-200 bg-red-50 text-red-500 hover:border-red-300 hover:bg-red-100",
+  }[tone];
+
+  return (
+    <div className="group relative inline-flex">
+      <button
+        type="button"
+        aria-label={label}
+        title={label}
+        onClick={onClick}
+        disabled={disabled || isLoading}
+        className={`flex h-11 w-11 items-center justify-center rounded-full border transition-all duration-200 active:scale-95 disabled:cursor-not-allowed disabled:opacity-60 ${toneClass}`}
+      >
+        {isLoading ? (
+          <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <path className="opacity-80" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+          </svg>
+        ) : (
+          children
+        )}
+      </button>
+      <span className="pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 w-max max-w-[180px] -translate-x-1/2 rounded-full bg-[#222222] px-3 py-1.5 text-[11px] font-medium text-white opacity-0 shadow-[0_8px_16px_rgba(0,0,0,0.16)] transition-opacity duration-150 group-hover:opacity-100">
+        {label}
+      </span>
+    </div>
+  );
+}
+
 export function BookingDetailClient({ id, bookingCode }: BookingDetailClientProps) {
   const t = useTranslations("tour.history");
-  const locale = useLocale();
+  const tBooking = useTranslations("tour.booking");
   const router = useRouter();
+  const { retryPayment, isRetrying } = usePayment();
+  const { data: appConfig } = useAppConfig();
 
   const detailQuery = useBookingDetail(id as string);
   const detailByCodeQuery = useBookingDetailByCode(bookingCode as string);
@@ -31,6 +86,7 @@ export function BookingDetailClient({ id, bookingCode }: BookingDetailClientProp
   const { data: response, isLoading, error, refetch } = bookingCode ? detailByCodeQuery : detailQuery;
   const [isCancelOpen, setIsCancelOpen] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<Extract<PaymentMethod, "payos" | "vnpay" | "momo" | "zalopay"> | null>(null);
 
   const booking = response;
   const item = booking?.booking_items?.[0] || booking?.items?.[0];
@@ -46,9 +102,9 @@ export function BookingDetailClient({ id, bookingCode }: BookingDetailClientProp
 
   if (error || !booking || !item) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[400px] text-center p-6 border border-border rounded-2xl bg-surface reveal-up">
+      <div className="flex min-h-[400px] flex-col items-center justify-center rounded-[20px] border border-border bg-white p-6 text-center shadow-[0_1px_3px_rgba(0,0,0,0.08)] reveal-up">
         <InfoCircle className="w-12 h-12 text-red-500 mb-4" />
-        <h3 className="text-xl font-bold text-white mb-2">
+        <h3 className="mb-2 text-xl font-bold text-on-surface">
           {error ? t("error_load") : t("empty_title")}
         </h3>
         <p className="text-sm text-on-surface-subtle max-w-md mb-6">
@@ -75,6 +131,33 @@ export function BookingDetailClient({ id, bookingCode }: BookingDetailClientProp
   }
 
   const canCancel = (booking.booking_status === "pending" || booking.booking_status === "confirmed") && !isPast;
+  const onlinePaymentMethods = ["payos", "vnpay", "momo", "zalopay"] as const;
+  const methodLabels: Record<(typeof onlinePaymentMethods)[number], string> = {
+    payos: "PayOS",
+    vnpay: "VNPAY",
+    momo: "MoMo",
+    zalopay: "ZaloPay",
+  };
+  const methodIcons: Record<(typeof onlinePaymentMethods)[number], string> = {
+    payos: "/images/payment/payOS.png",
+    vnpay: "/images/payment/vnpay.png",
+    momo: "/images/payment/momo.png",
+    zalopay: "/images/payment/zalopay.png",
+  };
+  const paymentOptions = onlinePaymentMethods
+    .filter((method) => {
+      if (!appConfig?.payment) return method === booking.payment_method || method === "payos";
+      return appConfig.payment[method] !== false;
+    });
+  const activePaymentMethod =
+    selectedPaymentMethod ||
+    (onlinePaymentMethods.includes(booking.payment_method as (typeof onlinePaymentMethods)[number])
+      ? (booking.payment_method as Extract<PaymentMethod, "payos" | "vnpay" | "momo" | "zalopay">)
+      : "payos");
+  const canContinuePayment =
+    onlinePaymentMethods.includes(booking.payment_method as (typeof onlinePaymentMethods)[number]) &&
+    ["pending", "failed", "unpaid", "partially_paid"].includes(booking.payment_status) &&
+    booking.booking_status !== "cancelled";
 
   const handleDownloadInvoice = async () => {
     // Pre-flight check: Trạng thái thanh toán phải là "success"
@@ -104,7 +187,7 @@ export function BookingDetailClient({ id, bookingCode }: BookingDetailClientProp
       window.URL.revokeObjectURL(blobUrl);
       
       toast.success(
-        locale === "vi" ? "Đang tải xuống hóa đơn PDF của bạn..." : "Downloading your PDF invoice...",
+        t("invoice_downloading"),
         {
           style: {
             background: "#ECFDF5",
@@ -156,69 +239,57 @@ export function BookingDetailClient({ id, bookingCode }: BookingDetailClientProp
         <div className="flex items-center gap-4">
           <button
             onClick={() => router.push("/profile/bookings")}
-            className="p-2.5 rounded-full border border-border bg-surface-container hover:bg-surface-container-high transition-colors active:scale-95"
-            aria-label="Back"
+            className="rounded-full border border-border bg-white p-2.5 text-on-surface shadow-sm transition-colors hover:border-primary/30 hover:bg-[#f7f7f7] hover:text-primary active:scale-95"
+            aria-label={t("back_to_list")}
           >
-            <ChevronLeft className="w-5 h-5 text-white" />
+            <ChevronLeft className="w-5 h-5" />
           </button>
           <div>
-            <h1 className="text-2xl font-bold text-white">{t("detail_title")}</h1>
-            <p className="text-xs text-on-surface-subtle font-mono mt-1">
-              {t("booking_code")}: <span className="text-white select-all font-bold">{booking.booking_code}</span>
+            <h1 className="text-2xl font-bold text-on-surface">{t("detail_title")}</h1>
+            <p className="text-xs text-on-surface-subtle mt-1">
+              {t("booking_code")}: <span className="select-all font-bold text-on-surface">{booking.booking_code}</span>
             </p>
           </div>
         </div>
 
         {/* Print & Cancel Actions */}
-        <div className="flex items-center gap-3">
-          <Button
-            variant="secondary"
+        <div className="flex flex-wrap items-center justify-end gap-3">
+          <ActionIconButton
+            label={isDownloading ? t("invoice_downloading") : t("button_download_invoice")}
             onClick={handleDownloadInvoice}
             disabled={isDownloading}
-            className={`px-5 py-2.5 rounded-full text-xs font-semibold text-white border border-border bg-surface-container hover:border-primary/50 flex items-center gap-2 transition-all duration-200 ${
-              isDownloading ? "bg-[#3385D6] border-[#3385D6] hover:bg-[#3385D6]/90 cursor-not-allowed" : ""
-            }`}
+            isLoading={isDownloading}
           >
-            {isDownloading ? (
-              <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-            ) : (
-              <Download className="w-4 h-4 text-primary" />
-            )}
-            <span>{isDownloading ? t("invoice_downloading") : t("button_download_invoice")}</span>
-          </Button>
+            <Download className="h-4 w-4" />
+          </ActionIconButton>
 
-          <Button
-            variant="secondary"
+          <ActionIconButton
+            label={t("button_print_invoice")}
             onClick={handlePrint}
-            className="px-5 py-2.5 rounded-full text-xs font-semibold text-white border border-border bg-surface-container hover:border-primary/50 flex items-center gap-2 transition-all duration-200"
           >
-            <Printer className="w-4 h-4 text-on-surface-subtle" />
-            <span>{t("button_print_invoice")}</span>
-          </Button>
+            <Printer className="h-4 w-4" />
+          </ActionIconButton>
 
           {canCancel && (
-            <Button
-              variant="secondary"
+            <ActionIconButton
+              label={t("button_cancel_booking")}
               onClick={() => setIsCancelOpen(true)}
-              className="px-5 py-2.5 rounded-full text-xs font-semibold text-red-400 border-red-500/20 bg-red-500/5 hover:border-red-500/50 hover:bg-red-500/10"
+              tone="danger"
             >
-              {t("button_cancel_booking")}
-            </Button>
+              <XCircle className="h-4 w-4" />
+            </ActionIconButton>
           )}
         </div>
       </div>
 
       {/* Print-only Invoice Header */}
       <div className="hidden print:block border-b border-border pb-6 text-center space-y-2">
-        <h1 className="text-3xl font-bold text-white uppercase tracking-wider">{t("invoice_title")}</h1>
-        <p className="text-sm font-mono text-on-surface-subtle">
-          {t("booking_code")}: <span className="text-white font-bold">{booking.booking_code}</span>
+        <h1 className="text-3xl font-bold text-on-surface uppercase tracking-wider">{t("invoice_title")}</h1>
+        <p className="text-sm text-on-surface-subtle">
+          {t("booking_code")}: <span className="font-bold text-on-surface">{booking.booking_code}</span>
         </p>
         <p className="text-xs text-on-surface-subtle">
-          {t("booked_date")}: <span className="text-white font-medium">{new Date(booking.booked_at).toLocaleString()}</span>
+          {t("booked_date")}: <span className="font-medium text-on-surface">{new Date(booking.booked_at).toLocaleString()}</span>
         </p>
       </div>
 
@@ -241,14 +312,75 @@ export function BookingDetailClient({ id, bookingCode }: BookingDetailClientProp
           {/* Price Summary */}
           <BookingPriceSummaryCard booking={booking} />
 
+          {canContinuePayment && (
+            <div className="rounded-[20px] border border-border bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.08)] print:hidden">
+              <div className="mb-4 flex items-center justify-between gap-3">
+                <div>
+                  <h3 className="text-sm font-semibold uppercase tracking-normal text-on-surface">
+                    {tBooking("payment_method")}
+                  </h3>
+                  <p className="mt-1 text-xs text-on-surface-subtle">
+                    {tBooking("continue_payment")}
+                  </p>
+                </div>
+                <ActionIconButton
+                  label={tBooking("continue_payment")}
+                  onClick={() =>
+                    retryPayment({
+                      bookingCode: booking.booking_code,
+                      payment_method: activePaymentMethod,
+                    })
+                  }
+                  isLoading={isRetrying}
+                  disabled={isRetrying}
+                  tone="primary"
+                >
+                  <CreditCard className="h-4 w-4" />
+                </ActionIconButton>
+              </div>
+
+              <div className="grid grid-cols-4 gap-2">
+                {paymentOptions.map((method) => {
+                  const isActive = activePaymentMethod === method;
+                  return (
+                    <div key={method} className="group relative">
+                      <button
+                        type="button"
+                        aria-label={methodLabels[method]}
+                        title={methodLabels[method]}
+                        onClick={() => setSelectedPaymentMethod(method)}
+                        className={`flex h-12 w-full items-center justify-center rounded-2xl border transition-all duration-200 active:scale-95 ${
+                          isActive
+                            ? "border-primary bg-[#fff4f6] shadow-[0_2px_8px_rgba(255,56,92,0.18)]"
+                            : "border-border bg-white hover:border-[#cfcfcf] hover:bg-[#f7f7f7]"
+                        }`}
+                      >
+                        <Image
+                          src={methodIcons[method]}
+                          alt=""
+                          width={24}
+                          height={24}
+                          className="h-6 w-6 object-contain"
+                        />
+                      </button>
+                      <span className="pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 w-max -translate-x-1/2 rounded-full bg-[#222222] px-3 py-1.5 text-[11px] font-medium text-white opacity-0 shadow-[0_8px_16px_rgba(0,0,0,0.16)] transition-opacity duration-150 group-hover:opacity-100">
+                        {methodLabels[method]}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           {/* Cancellation Info Panel if Cancelled */}
           {booking.booking_status === "cancelled" && booking.cancellation_reason && (
-            <div className="p-5 rounded-2xl border border-red-500/10 bg-red-500/5 text-xs text-red-300 leading-relaxed space-y-2.5 reveal-up">
+            <div className="space-y-2.5 rounded-[20px] border border-red-200 bg-red-50 p-5 text-xs leading-relaxed text-red-600 reveal-up">
               <div className="flex items-center gap-2 font-bold text-red-400">
                 <InfoCircle className="w-5 h-5 shrink-0" />
                 <span>{t("cancellation_reason_label")}</span>
               </div>
-              <p className="font-mono bg-surface p-3 rounded-xl border border-border">
+              <p className="rounded-xl border border-red-100 bg-white p-3">
                 {booking.cancellation_reason}
               </p>
             </div>
@@ -260,7 +392,7 @@ export function BookingDetailClient({ id, bookingCode }: BookingDetailClientProp
               <Button
                 variant="primary"
                 onClick={() => router.push(`/tours/${item.tour?.slug}`)}
-                className="w-full py-3.5 rounded-full text-sm font-bold bg-primary text-white shadow-xl hover:shadow-2xl active:scale-95"
+                className="w-full py-3.5 rounded-full text-sm font-semibold bg-primary text-white hover:bg-[#e31c5f] active:scale-95"
               >
                 {t("rebook_button")}
               </Button>
@@ -284,74 +416,68 @@ export function BookingDetailClient({ id, bookingCode }: BookingDetailClientProp
 function BookingDetailSkeleton() {
   return (
     <div className="space-y-8 animate-pulse">
-      {/* Header Skeleton */}
       <div className="flex items-center justify-between border-b border-border pb-6">
         <div className="flex items-center gap-4">
-          <div className="w-10 h-10 rounded-full bg-surface-container" />
+          <div className="h-10 w-10 rounded-full bg-[#eceff3]" />
           <div className="space-y-2">
-            <div className="h-6 w-48 bg-surface-container rounded" />
-            <div className="h-4 w-32 bg-surface-container-low rounded" />
+            <div className="h-6 w-48 rounded bg-[#eceff3]" />
+            <div className="h-4 w-32 rounded bg-[#f3f4f6]" />
           </div>
         </div>
         <div className="flex gap-3">
-          <div className="h-10 w-24 bg-surface-container rounded-full" />
-          <div className="h-10 w-24 bg-surface-container rounded-full" />
+          <div className="h-10 w-24 rounded-full bg-[#eceff3]" />
+          <div className="h-10 w-24 rounded-full bg-[#eceff3]" />
         </div>
       </div>
 
-      {/* Grid Skeleton */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
-          {/* Timeline Skeleton */}
-          <div className="h-44 bg-surface border border-border rounded-2xl p-6 flex flex-col justify-between">
-            <div className="h-4 w-32 bg-surface-container rounded" />
+          <div className="flex h-44 flex-col justify-between rounded-[20px] border border-border bg-white p-6">
+            <div className="h-4 w-32 rounded bg-[#eceff3]" />
             <div className="flex justify-between items-center px-4">
               {[1, 2, 3, 4].map((i) => (
                 <div key={i} className="flex flex-col items-center gap-2">
-                  <div className="w-10 h-10 rounded-full bg-surface-container" />
-                  <div className="h-3 w-16 bg-surface-container-low rounded" />
+                  <div className="h-10 w-10 rounded-full bg-[#eceff3]" />
+                  <div className="h-3 w-16 rounded bg-[#f3f4f6]" />
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Tour Card Skeleton */}
-          <div className="h-36 bg-surface border border-border rounded-2xl p-6 flex gap-6">
-            <div className="w-36 h-24 bg-surface-container rounded-xl shrink-0" />
+          <div className="flex h-36 gap-6 rounded-[20px] border border-border bg-white p-6">
+            <div className="h-24 w-36 shrink-0 rounded-xl bg-[#eceff3]" />
             <div className="flex-1 space-y-4">
-              <div className="h-5 w-2/3 bg-surface-container rounded" />
-              <div className="h-3 w-1/3 bg-surface-container-low rounded" />
-              <div className="h-3 w-1/2 bg-surface-container-low rounded" />
+              <div className="h-5 w-2/3 rounded bg-[#eceff3]" />
+              <div className="h-3 w-1/3 rounded bg-[#f3f4f6]" />
+              <div className="h-3 w-1/2 rounded bg-[#f3f4f6]" />
             </div>
           </div>
 
-          {/* Customer Info Skeleton */}
-          <div className="h-48 bg-surface border border-border rounded-2xl p-6 space-y-6">
-            <div className="h-4 w-36 bg-surface-container rounded" />
+          <div className="h-48 space-y-6 rounded-[20px] border border-border bg-white p-6">
+            <div className="h-4 w-36 rounded bg-[#eceff3]" />
             <div className="space-y-3">
-              <div className="h-3 w-1/3 bg-surface-container-low rounded" />
-              <div className="h-3 w-1/2 bg-surface-container-low rounded" />
-              <div className="h-3 w-1/4 bg-surface-container-low rounded" />
+              <div className="h-3 w-1/3 rounded bg-[#f3f4f6]" />
+              <div className="h-3 w-1/2 rounded bg-[#f3f4f6]" />
+              <div className="h-3 w-1/4 rounded bg-[#f3f4f6]" />
             </div>
           </div>
         </div>
 
-        {/* Right Column Price Skeleton */}
-        <div className="h-64 bg-surface border border-border rounded-2xl p-6 flex flex-col justify-between">
-          <div className="h-4 w-32 bg-surface-container rounded" />
+        <div className="flex h-64 flex-col justify-between rounded-[20px] border border-border bg-white p-6">
+          <div className="h-4 w-32 rounded bg-[#eceff3]" />
           <div className="space-y-3">
             <div className="flex justify-between">
-              <div className="h-3 w-20 bg-surface-container-low rounded" />
-              <div className="h-3 w-16 bg-surface-container-low rounded" />
+              <div className="h-3 w-20 rounded bg-[#f3f4f6]" />
+              <div className="h-3 w-16 rounded bg-[#f3f4f6]" />
             </div>
             <div className="flex justify-between">
-              <div className="h-3 w-24 bg-surface-container-low rounded" />
-              <div className="h-3 w-16 bg-surface-container-low rounded" />
+              <div className="h-3 w-24 rounded bg-[#f3f4f6]" />
+              <div className="h-3 w-16 rounded bg-[#f3f4f6]" />
             </div>
           </div>
           <div className="pt-4 border-t border-border flex justify-between items-end">
-            <div className="h-4 w-16 bg-surface-container rounded" />
-            <div className="h-6 w-24 bg-surface-container rounded" />
+            <div className="h-4 w-16 rounded bg-[#eceff3]" />
+            <div className="h-6 w-24 rounded bg-[#eceff3]" />
           </div>
         </div>
       </div>

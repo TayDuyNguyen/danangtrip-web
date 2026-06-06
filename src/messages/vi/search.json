@@ -2,6 +2,8 @@
   "title": "Kết quả tìm kiếm",
   "description": "Tìm kiếm các địa điểm và tour du lịch tuyệt vời tại Đà Nẵng",
   "found_results": "Tìm thấy {count} kết quả cho <strong>{query}</strong>",
+  "input_label": "Bạn muốn đi đâu?",
+  "input_action": "Tìm kiếm",
   "tabs": {
     "all": "Tất cả",
     "tour": "Tour du lịch",
@@ -9,9 +11,12 @@
   },
   "filters": {
     "title": "Bộ lọc nâng cao",
+    "close": "Đóng bộ lọc",
     "price_range": "Khoảng giá",
     "rating": "Đánh giá",
     "category": "Danh mục",
+    "location_category": "Danh mục địa điểm",
+    "tour_category": "Danh mục tour",
     "district": "Quận/Huyện",
     "apply": "Áp dụng",
     "reset": "Đặt lại",
@@ -33,7 +38,8 @@
   },
   "card": {
     "starting_from": "Chỉ từ",
-    "default_location": "Đà Nẵng, Việt Nam"
+    "default_location": "Đà Nẵng, Việt Nam",
+    "price_level": "Mức giá"
   },
   "empty": {
     "title": "Không tìm thấy kết quả",
@@ -41,6 +47,8 @@
   },
   "trending": {
     "title": "Xu hướng tìm kiếm",
+    "fallback_label": "Phổ biến gần đây",
+    "history_title": "Tìm kiếm gần đây",
     "items": {
       "son_tra": "Bán đảo Sơn Trà",
       "asia_park": "Asia Park",
@@ -53,8 +61,11 @@
     "subtitle": "Gợi ý những trải nghiệm tuyệt vời nhất dành cho bạn"
   },
   "suggestions": {
+    "keywords_title": "✨ Chủ đề gợi ý",
     "locations_title": "📍 Địa điểm",
     "tours_title": "🗺 Tour du lịch",
+    "recent_searches": "Tìm kiếm gần đây",
+    "clear_history": "Xóa lịch sử",
     "view_all": "🔍 Xem tất cả kết quả cho \"{query}\"",
     "no_results": "Không tìm thấy kết quả phù hợp",
     "loading": "Đang tìm kiếm...",
@@ -62,6 +73,7 @@
     "error": "Không tải được gợi ý, vui lòng thử lại",
     "views": "{count} lượt xem",
     "bookings": "{count} đặt",
-    "search_placeholder": "Nhập từ khóa tìm kiếm..."
+    "search_placeholder": "Nhập từ khóa tìm kiếm...",
+    "loading_trending": "Nhập từ khóa để bắt đầu tìm kiếm..."
   }
 }

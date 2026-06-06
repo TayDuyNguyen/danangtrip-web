@@ -6,10 +6,10 @@ export default function NotFound() {
   const t = useTranslations("common");
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#080808]">
-      <div className="text-center px-4">
-        <h1 className="text-6xl font-bold text-white mb-6 group-hover:scale-110 transition-transform duration-300">404</h1>
-        <h2 className="text-3xl font-bold text-white mb-4">
+    <div className="flex min-h-screen items-center justify-center bg-[#fbfbfb] px-4">
+      <div className="text-on-surface-subtleenter w-full max-w-xl rounded-[32px] border border-border bg-white px-8 py-12 shadow-[0_24px_80px_rgba(15,23,42,0.12)]">
+        <h1 className="mb-6 text-6xl font-semibold text-primary transition-transform duration-300">404</h1>
+        <h2 className="mb-4 text-on-surface-subtlexl font-semibold text-on-surface">
           {t("error.not_found_title")}
         </h2>
         <p className="text-on-surface-subtle mb-8 max-w-md mx-auto text-lg leading-relaxed">
@@ -18,13 +18,13 @@ export default function NotFound() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <Link
             href="/"
-            className="inline-flex items-center px-8 py-3.5 border border-[#8b6a55] text-base font-bold rounded-xl text-white bg-[#8b6a55] hover:bg-[#5c3822] shadow-lg shadow-black/30 transition-all duration-300 hover:-translate-y-1 active:scale-95"
+            className="inline-flex items-center rounded-full border border-primary bg-primary px-8 py-3.5 text-base font-semibold text-white transition-all duration-300 hover:bg-primary-hover"
           >
             {t("error.go_home")}
           </Link>
           <button
             onClick={() => window.history.back()}
-            className="inline-flex items-center px-8 py-3.5 border border-[#262626] text-base font-bold rounded-xl text-white bg-[#171717] hover:bg-[#1f1f1f] transition-all duration-300 hover:border-[#8b6a55]/30"
+            className="inline-flex items-center rounded-full border border-border bg-[#f7f7f7] px-8 py-3.5 text-base font-semibold text-on-surface transition-all duration-300 hover:border-primary/20 hover:bg-[#efefef]"
           >
             {t("error.back")}
           </button>

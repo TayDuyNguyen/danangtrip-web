@@ -2,11 +2,13 @@
 
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
-import { IoLogoFacebook, IoLogoTwitter, IoCopyOutline, IoShareOutline } from "@/components/icons/solar";
+import { IoLogoFacebook, IoLogoTwitter, IoCopyOutline } from "@/components/icons/solar";
 
 /**
  * Molecule: ShareButtons
- * Social sharing controls for the blog detail page.
+ * Updated to match Stitch design:
+ * - Section heading with border-l-4 brand accent
+ * - Round icon buttons with glass background
  */
 export const ShareButtons = () => {
   const t = useTranslations("blog");
@@ -27,33 +29,32 @@ export const ShareButtons = () => {
   };
 
   return (
-    <div className="p-8 glass-surface rounded-3xl border border-white/10 space-y-6">
-      <h3 className="text-lg font-bold text-white flex items-center gap-2">
-        <IoShareOutline className="text-primary" size={20} />
+    <div className="space-y-4 rounded-[28px] border border-border bg-white p-6 shadow-[0_16px_48px_rgba(15,23,42,0.08)]">
+      <h3 className="border-l-4 border-primary pl-3 text-lg font-semibold text-on-surface">
         {t("share")}
       </h3>
 
-      <div className="flex gap-4">
+      <div className="flex gap-3">
         <button
           onClick={handleShareFB}
-          className="w-12 h-12 rounded-full flex items-center justify-center bg-white/5 border border-white/10 text-neutral-400 hover:bg-primary hover:text-white transition-all duration-300"
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-[#f7f7f7] text-on-surface-subtle transition-all duration-300 hover:border-primary hover:bg-primary hover:text-white"
           title={t("share_fb")}
         >
-          <IoLogoFacebook size={24} />
+          <IoLogoFacebook size={20} />
         </button>
         <button
           onClick={handleShareX}
-          className="w-12 h-12 rounded-full flex items-center justify-center bg-white/5 border border-white/10 text-neutral-400 hover:bg-primary hover:text-white transition-all duration-300"
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-[#f7f7f7] text-on-surface-subtle transition-all duration-300 hover:border-primary hover:bg-primary hover:text-white"
           title={t("share_x")}
         >
-          <IoLogoTwitter size={24} />
+          <IoLogoTwitter size={20} />
         </button>
         <button
           onClick={handleCopyLink}
-          className="w-12 h-12 rounded-full flex items-center justify-center bg-white/5 border border-white/10 text-neutral-400 hover:bg-primary hover:text-white transition-all duration-300"
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-[#f7f7f7] text-on-surface-subtle transition-all duration-300 hover:border-primary hover:bg-primary hover:text-white"
           title={t("copy_link")}
         >
-          <IoCopyOutline size={22} />
+          <IoCopyOutline size={18} />
         </button>
       </div>
     </div>

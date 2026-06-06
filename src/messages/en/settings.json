@@ -8,7 +8,8 @@
     "bookings": "My Bookings",
     "favorites": "Saved Places",
     "notifications": "Notifications",
-    "recommendations": "Recommended for you"
+    "recommendations": "Recommended for you",
+    "delete_account": "Delete Account"
   },
   "breadcrumb": {
     "home": "Home",
@@ -18,7 +19,9 @@
     "recommendations": "Recommended for you",
     "bookings": "My Bookings",
     "booking_detail": "Booking Detail",
-    "favorites": "Saved Places"
+    "favorites": "Saved Places",
+    "notifications": "Notifications",
+    "delete_account": "Delete Account"
   },
   "change_password": {
     "page_title": "Change Password",
@@ -47,5 +50,58 @@
     "success_toast": "Password changed successfully!",
     "error_wrong_current": "Current password is incorrect.",
     "error_generic": "An error occurred. Please try again later."
+  },
+  "delete_account": {
+    "page_title": "Delete Account",
+    "meta_description": "Permanently delete your DaNangTrip account.",
+    "heading": "Delete Account",
+    "subtitle": "This action cannot be undone",
+    "warning_title": "⚠️ Before deleting, please note:",
+    "warning_1": "All personal data will be permanently deleted",
+    "warning_2": "Booking history and ratings will be deleted",
+    "warning_3": "Saved/favorite places will be deleted",
+    "warning_4": "You will not be able to recover this account",
+    "active_bookings_warning": "You have active bookings. Please cancel or complete them before deleting your account.",
+    "view_bookings": "View bookings →",
+    "confirm_checkbox_label": "I understand that deleting my account is permanent and cannot be undone.",
+    "password_label": "Enter password to confirm *",
+    "password_placeholder": "Enter your password...",
+    "cancel_button": "Cancel",
+    "submit_button": "Delete Account",
+    "submitting_button": "Deleting...",
+    "modal_title": "Confirm account deletion?",
+    "modal_body_1": "Your account will be permanently deleted.",
+    "modal_body_2": "This action CANNOT be undone.",
+    "modal_cancel": "Cancel",
+    "modal_confirm": "Delete Permanently",
+    "success_toast": "Your account has been deleted successfully.",
+    "error_wrong_password": "Wrong password.",
+    "error_generic": "An error occurred. Please try again later."
+  },
+  "profile_edit": {
+    "page_title": "Edit Profile",
+    "heading": "Edit Profile",
+    "description": "Update your personal information to use our services more easily.",
+    "full_name_label": "Full Name",
+    "full_name_placeholder": "Enter your full name",
+    "phone_label": "Phone Number",
+    "phone_placeholder": "Enter your phone number",
+    "birthdate_label": "Date of Birth",
+    "birthdate_placeholder": "Select your birth date",
+    "gender_label": "Gender",
+    "gender_male": "Male",
+    "gender_female": "Female",
+    "gender_other": "Other",
+    "gender_prefer_not_to_say": "Prefer not to say",
+    "city_label": "City / Province",
+    "city_placeholder": "Enter your city or living region",
+    "submit_button": "Save Changes",
+    "cancel_button": "Cancel",
+    "success_toast": "Profile updated successfully!",
+    "error_generic": "An error occurred. Please try again later.",
+    "avatar_heading": "Profile Avatar",
+    "avatar_description": "PNG, JPG formats. Maximum size 2MB.",
+    "avatar_upload_success": "Avatar updated successfully!",
+    "avatar_upload_error": "Failed to update avatar."
   }
 }

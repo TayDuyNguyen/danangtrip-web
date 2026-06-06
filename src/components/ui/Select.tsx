@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useId, useState, useEffect } from "react";
 import ReactSelect, {
   type Props as ReactSelectProps,
   type StylesConfig,
@@ -23,6 +23,8 @@ interface SelectProps extends Omit<ReactSelectProps<SelectOption, false, GroupBa
   helperText?: string;
   containerClassName?: string;
   isFocused?: boolean;
+  /** Always show label (profile/settings forms on dark backgrounds). */
+  persistentLabel?: boolean;
   variant?: "default" | "glass" | "minimal";
   menuPortalTarget?: HTMLElement | null;
   menuPosition?: "absolute" | "fixed";
@@ -51,6 +53,7 @@ export const Select = ({
   error,
   helperText,
   isFocused: externalFocused,
+  persistentLabel = false,
   options,
   value,
   onChange,
@@ -66,6 +69,11 @@ export const Select = ({
   const selectInputId = `${reactId.replace(/:/g, "")}-select-input`;
   const [internalFocused, setInternalFocused] = useState(false);
   const isFocused = externalFocused || internalFocused;
+
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const isGlass = variant === "glass";
   const isMinimal = variant === "minimal";
@@ -84,7 +92,7 @@ export const Select = ({
       border: "none",
       borderBottom: isGlass || isMinimal
         ? "none"
-        : `1px solid ${error ? "#ef4444" : isFocused ? "#8b6a55" : "#262626"}`,
+        : `1px solid ${error ? "#ef4444" : isFocused ? "#FF385C" : persistentLabel ? "#525252" : "#262626"}`,
       borderRadius: isMinimal ? "8px" : "0",
       boxShadow: "none",
       padding: "0",
@@ -124,7 +132,7 @@ export const Select = ({
     placeholder: (provided) => ({
       ...provided,
       margin: "0",
-      color: isGlass ? "rgba(255, 255, 255, 0.7)" : "#737373",
+      color: isGlass ? "rgba(255, 255, 255, 0.82)" : "#6A6A6A",
       fontSize: "16px",
       fontWeight: "500",
       width: "100%",
@@ -142,38 +150,45 @@ export const Select = ({
     }),
     dropdownIndicator: (provided) => ({
       ...provided,
-      color: isGlass ? "white" : (isFocused ? "#8b6a55" : "#737373"),
+      color: isGlass ? "white" : (isFocused ? "#FF385C" : "#737373"),
       padding: "0",
       paddingRight: isGlass ? "8px" : "0",
       transition: "color 0.3s ease",
     }),
     menu: (provided) => ({
       ...provided,
-      backgroundColor: "#080808",
-      borderRadius: "12px",
-      border: "1px solid #262626",
-      boxShadow: "0 12px 30px rgba(0, 0, 0, 0.4)",
+      backgroundColor: isMinimal ? "#ffffff" : "#080808",
+      borderRadius: "18px",
+      border: isMinimal ? "1px solid #ebebeb" : "1px solid #262626",
+      boxShadow: isMinimal ? "0 20px 50px rgba(0, 0, 0, 0.14)" : "0 12px 30px rgba(0, 0, 0, 0.4)",
       overflow: "hidden",
       zIndex: 50,
       marginTop: "8px",
+      padding: "6px",
+    }),
+    menuList: (provided) => ({
+      ...provided,
       padding: "4px",
+      maxHeight: "240px",
+      scrollbarWidth: "thin",
+      scrollbarColor: "rgba(255, 56, 92, 0.8) rgba(0, 0, 0, 0.03)",
     }),
     option: (provided, state) => ({
       ...provided,
       backgroundColor: state.isSelected
-        ? "#8b6a55"
+        ? "#FF385C"
         : state.isFocused
-          ? "#171717"
+          ? (isMinimal ? "#f7f7f7" : "#171717")
           : "transparent",
-      color: state.isSelected ? "#ffffff" : "#d4d4d4",
+      color: state.isSelected ? "#ffffff" : (isMinimal ? "#222222" : "#d4d4d4"),
       fontSize: "14px",
       fontWeight: state.isSelected ? "700" : "500",
       padding: "10px 12px",
-      borderRadius: "8px",
+      borderRadius: "12px",
       marginBottom: "2px",
       cursor: "pointer",
       "&:active": {
-        backgroundColor: state.isSelected ? "#8b6a55" : "#171717",
+        backgroundColor: state.isSelected ? "#FF385C" : (isMinimal ? "#f7f7f7" : "#171717"),
       },
       transition: "all 0.15s ease",
     }),
@@ -189,43 +204,69 @@ export const Select = ({
         <label
           htmlFor={selectInputId}
           className={cn(
-            "block text-xs font-bold mb-1 uppercase tracking-widest transition-all duration-300 transform",
-            isFocused || error || value
-              ? "translate-y-0 opacity-100"
-              : "text-transparent -translate-y-1 opacity-0",
-            isFocused ? "text-primary" : (error ? "text-red-500" : "text-on-surface-variant")
+            "mb-1 block text-[12px] font-semibold uppercase tracking-normal transition-all duration-300",
+            persistentLabel
+              ? cn(
+                  "translate-y-0 opacity-100",
+                  isFocused || value ? "text-primary" : error ? "text-red-500" : "text-[#d4d4d4]"
+                )
+              : cn(
+                  "transform",
+                  isFocused || error || value
+                    ? "translate-y-0 opacity-100"
+                    : "text-transparent -translate-y-1 opacity-0",
+                  isFocused ? "text-primary" : error ? "text-red-500" : "text-on-surface-variant"
+                )
           )}
         >
           {label}
         </label>
       )}
 
-      <ReactSelect
-        instanceId={props.instanceId || reactId}
-        inputId={selectInputId}
-        aria-label={isMinimal && !label ? String(finalPlaceholder) : undefined}
-        components={{ DropdownIndicator }}
-        onFocus={() => setInternalFocused(true)}
-        onBlur={() => setInternalFocused(false)}
-        styles={customStyles}
-        options={options}
-        value={value}
-        onChange={onChange}
-        placeholder={finalPlaceholder}
-        isSearchable={isSearchable}
-        menuPortalTarget={menuPortalTarget}
-        menuPosition={menuPosition}
-        className={className}
-        {...props}
-      />
+      {mounted ? (
+        <ReactSelect
+          instanceId={props.instanceId || reactId}
+          inputId={selectInputId}
+          aria-label={isMinimal && !label ? String(finalPlaceholder) : undefined}
+          classNamePrefix="dt-select"
+          components={{ DropdownIndicator }}
+          onFocus={() => setInternalFocused(true)}
+          onBlur={() => setInternalFocused(false)}
+          styles={customStyles}
+          options={options}
+          value={value}
+          onChange={onChange}
+          placeholder={finalPlaceholder}
+          isSearchable={isSearchable}
+          menuPortalTarget={menuPortalTarget}
+          menuPosition={menuPosition}
+          className={className}
+          {...props}
+        />
+      ) : (
+        <div
+          className={cn(
+            "w-full bg-surface-container/30 border-b border-border flex items-center justify-between text-on-surface-subtle",
+            isMinimal ? "h-[40px] rounded-lg px-3 bg-surface-container" : isGlass ? "h-[40px] px-3" : "h-[56px] px-3",
+            className
+          )}
+        >
+          <span className="text-base text-neutral-500 font-medium truncate">
+            {value && !Array.isArray(value) && "label" in value ? value.label : finalPlaceholder}
+          </span>
+          <UilAngleDown size={16} className="text-on-surface-subtle shrink-0" />
+        </div>
+      )}
 
-      <div className="h-5 overflow-hidden">
-        {error && (
-          <p className="mt-1 text-xs text-red-500 animate-in fade-in slide-in-from-top-1 duration-300">
-            {error}
-          </p>
-        )}
-      </div>
+      {(!isMinimal || error) && (
+        <div className="h-5 overflow-hidden">
+          {error && (
+            <p className="mt-1 text-xs text-red-500 animate-in fade-in slide-in-from-top-1 duration-300">
+              {error}
+            </p>
+          )}
+        </div>
+      )}
 
       {helperText && !error && (
         <p className="text-on-surface-variant text-sm mt-1">{helperText}</p>

@@ -17,7 +17,10 @@
   "discovery": {
     "title": "Explore Da Nang Locations",
     "subtitle": "{count} exciting tourist spots waiting for you to discover and experience",
-    "search_placeholder": "Search for location names, areas..."
+    "search_placeholder": "Search for location names, areas...",
+    "badge": "Discover Da Nang",
+    "search_label": "Where",
+    "search_action": "Explore"
   },
   "filters": {
     "title": "Filters",
@@ -29,7 +32,12 @@
     "rating": "Rating",
     "rating_4_plus": "4+ stars",
     "rating_3_plus": "3+ stars",
-    "reset": "Reset Filters"
+    "reset": "Reset Filters",
+    "close": "Close filters",
+    "show_results": "Show results ({count})",
+    "show_less": "Show less",
+    "show_more_categories": "Show {count} more",
+    "show_more_districts": "Show {count} more"
   },
   "categories": {
     "sightseeing": "Sightseeing",
@@ -55,9 +63,11 @@
     "from": "From",
     "free": "Free",
     "budget": "Budget ($)",
-    "mid_range": "Mid-range ($$)"
+    "mid_range": "Mid-range ($$)",
+    "high_end": "High-end ($$$)"
   },
   "reviews": "reviews",
+  "locations_count": "locations",
   "buttons": {
     "view_details": "View Details",
     "favorite_aria": "Favorite"
@@ -68,10 +78,12 @@
     "breadcrumb_home": "Home",
     "breadcrumb_locations": "Locations",
     "share": "Share",
-    "save": "Save",
+    "save": "Favorite",
     "book_now": "Book Now",
     "contact_consultancy": "Contact Consultancy",
+    "price_label": "Reference price",
     "price_per_person": "/ person",
+    "free": "Free",
     "price_note": "* Price is for reference only, subject to change",
     "view_on_map": "View on map",
     "address_suffix": "Da Nang, Vietnam",
@@ -121,6 +133,8 @@
     "weather_unavailable": "Weather data is unavailable. Please try again later."
   },
   "nearby": {
+    "meta_title": "Discover Da Nang tourist places near you | DanangTrip",
+    "meta_description": "Scan your GPS location to easily discover nearby tourist spots, restaurants, cafes, and entertainment in Da Nang, complete with interactive map routing.",
     "title": "Places Near You",
     "subtitle": "Find tourist spots, dining, and entertainment based on your actual GPS distance.",
     "breadcrumb_nearby": "Nearby",
@@ -146,6 +160,9 @@
     "map": {
       "user_marker": "Your location",
       "user_address": "Da Nang, Vietnam",
+      "city_center": "Da Nang",
+      "zoom_out": "Zoom out",
+      "zoom_in": "Zoom in",
       "view_details": "View details →",
       "distance": "{distance} km away",
       "directions": "Directions"
@@ -171,5 +188,14 @@
       "subtitle": "No worries! You can select any Da Nang district below to explore exciting locations instantly.",
       "select_district": "Explore locations in:"
     }
+  },
+  "sorting": {
+    "label": "Sort by",
+    "latest": "Newest",
+    "rating_high": "Top Rated",
+    "most_reviews": "Most Reviewed",
+    "most_views": "Most Viewed",
+    "price_low_high": "Price: Low to High",
+    "price_high_low": "Price: High to Low"
   }
 }

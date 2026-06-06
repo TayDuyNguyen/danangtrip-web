@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useState, useEffect } from "react";
 import { Minus, Plus } from "lucide-react";
 import { cn } from "@/utils/string";
 
@@ -11,6 +12,7 @@ interface QuantityCounterProps {
   min?: number;
   max?: number;
   className?: string;
+  disabled?: boolean;
 }
 
 export function QuantityCounter({
@@ -21,13 +23,36 @@ export function QuantityCounter({
   min = 0,
   max = 20,
   className,
+  disabled = false,
 }: QuantityCounterProps) {
+  const [inputValue, setInputValue] = useState(String(value));
+
+  useEffect(() => {
+    setInputValue(String(value));
+  }, [value]);
+
   const handleDecrement = () => {
-    if (value > min) onChange(value - 1);
+    if (!disabled && value > min) onChange(value - 1);
   };
 
   const handleIncrement = () => {
-    if (value < max) onChange(value + 1);
+    if (!disabled && value < max) onChange(value + 1);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rawVal = e.target.value;
+    setInputValue(rawVal);
+
+    const parsed = parseInt(rawVal, 10);
+    if (!isNaN(parsed)) {
+      const clamped = Math.max(min, Math.min(max, parsed));
+      onChange(clamped);
+    }
+  };
+
+  const handleBlur = () => {
+    // Re-sync input field with the validated value on blur
+    setInputValue(String(value));
   };
 
   return (
@@ -41,21 +66,42 @@ export function QuantityCounter({
         <button
           type="button"
           onClick={handleDecrement}
-          disabled={value <= min}
-          className="w-8 h-8 rounded-full border border-border flex items-center justify-center text-on-surface-variant hover:border-primary hover:text-primary transition-all disabled:opacity-30 disabled:cursor-not-allowed active:scale-90"
+          disabled={disabled || value <= min}
+          className={cn(
+            "w-8 h-8 rounded-full border flex items-center justify-center transition-all active:scale-90",
+            disabled || value <= min
+              ? "border-border text-on-surface-variant/50 cursor-not-allowed bg-[#f7f7f7]"
+              : "border-border bg-white text-on-surface hover:bg-primary/10 hover:border-primary hover:text-primary"
+          )}
         >
           <Minus className="w-4 h-4" />
         </button>
         
-        <span className="w-6 text-center text-lg font-black tabular-nums">
-          {value}
-        </span>
+        <input
+          type="number"
+          value={inputValue}
+          onChange={handleInputChange}
+          onBlur={handleBlur}
+          disabled={disabled}
+          min={min}
+          max={max}
+          className={cn(
+            "w-12 text-center text-lg font-black tabular-nums text-on-surface bg-transparent border-b border-transparent hover:border-border focus:border-primary focus:outline-none transition-all [appearance:textfield] [&::-webkit-outer-spin-button]:margin-0 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:margin-0 [&::-webkit-inner-spin-button]:appearance-none",
+            disabled && "opacity-50"
+          )}
+          aria-label={label}
+        />
 
         <button
           type="button"
           onClick={handleIncrement}
-          disabled={value >= max}
-          className="w-8 h-8 rounded-full bg-surface-container-high border border-border flex items-center justify-center text-on-surface hover:bg-primary hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed active:scale-90"
+          disabled={disabled || value >= max}
+          className={cn(
+            "w-8 h-8 rounded-full border flex items-center justify-center transition-all active:scale-90",
+            disabled || value >= max
+              ? "border-border text-on-surface-variant/50 cursor-not-allowed bg-[#f7f7f7]"
+              : "border-primary/30 bg-primary/10 text-primary hover:bg-primary hover:text-white hover:border-primary"
+          )}
         >
           <Plus className="w-4 h-4" />
         </button>

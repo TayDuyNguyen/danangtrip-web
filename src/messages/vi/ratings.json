@@ -44,6 +44,11 @@
     "images_label": "Ảnh đính kèm",
     "upload_placeholder": "Thêm ảnh",
     "upload_hint": "Tối đa 5 ảnh. Dung lượng < 5MB/ảnh.",
+    "comment_min_error": "Vui lòng nhập tối thiểu 10 ký tự.",
+    "existing_images_label": "Ảnh hiện tại trên hệ thống",
+    "close_aria": "Đóng cửa sổ sửa đánh giá",
+    "current_preview_alt": "Ảnh hiện tại",
+    "local_preview_alt": "Ảnh vừa chọn",
     "submit": "Lưu thay đổi",
     "cancel": "Hủy bỏ",
     "updating": "Đang cập nhật..."

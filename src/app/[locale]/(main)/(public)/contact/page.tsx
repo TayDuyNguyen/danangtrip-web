@@ -18,8 +18,8 @@ export default function ContactPage() {
       <ContactHero />
 
       {/* Main Content Section */}
-      <div className="design-container design-section pb-32">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 xl:gap-12">
+      <div className="design-container pb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 xl:gap-4">
           {/* Contact Info - Sticky on Desktop */}
           <aside className="lg:col-span-4 xl:col-span-4">
             <div className="lg:sticky lg:top-32">

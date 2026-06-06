@@ -86,8 +86,8 @@ export function NotificationItemCard({
         };
       default:
         return {
-          icon: <Bell className={`${baseClass} text-[#8b6a55]`} />,
-          bg: "bg-[#8b6a55]/10 border border-[#8b6a55]/20",
+          icon: <Bell className={`${baseClass} text-primary`} />,
+          bg: "bg-primary/10 border border-primary/20",
         };
     }
   };
@@ -121,15 +121,15 @@ export function NotificationItemCard({
   return (
     <div
       onClick={handleCardClick}
-      className={`bg-[#080808]/40 border rounded-2xl p-4 md:p-5 flex gap-4 items-start relative transition-all duration-300 backdrop-blur-md cursor-pointer select-none group ${
+      className={`group relative flex cursor-pointer select-none items-start gap-4 rounded-[24px] border bg-white p-4 transition-all duration-300 md:p-5 ${
         isUnread
-          ? "border-[#8b6a55]/30 hover:border-[#8b6a55]/50 shadow-sm shadow-[#8b6a55]/5"
-          : "border-[#262626] hover:border-[#383838]"
-      } ${isRemoving || isPending ? "opacity-50 pointer-events-none scale-95 duration-250" : "scale-100"}`}
+          ? "border-primary/25 shadow-[0_14px_40px_rgba(255,56,92,0.08)] hover:border-primary/45"
+          : "border-border shadow-[0_12px_34px_rgba(15,23,42,0.06)] hover:border-primary/25"
+      } ${isRemoving || isPending ? "pointer-events-none scale-95 opacity-50 duration-250" : "scale-100 hover:-translate-y-0.5"}`}
     >
       {/* Unread indicator vertical strip */}
       {isUnread && (
-        <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#8b6a55] rounded-l-2xl" />
+        <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-l-2xl" />
       )}
 
       {/* Category Icon */}
@@ -144,25 +144,25 @@ export function NotificationItemCard({
         <div className="flex items-center gap-2 flex-wrap">
           <h4
             className={`text-sm font-bold tracking-tight transition-colors duration-300 ${
-              isUnread ? "text-white" : "text-neutral-400 group-hover:text-neutral-200"
+              isUnread ? "text-on-surface" : "text-on-surface-subtle group-hover:text-on-surface"
             }`}
           >
             {item.title}
           </h4>
           {isUnread && (
-            <span className="w-2 h-2 rounded-full bg-[#8b6a55] flex-shrink-0 animate-pulse" />
+            <span className="w-2 h-2 rounded-full bg-primary flex-shrink-0 animate-pulse" />
           )}
         </div>
         
         <p
           className={`text-xs leading-relaxed transition-colors duration-300 ${
-            isUnread ? "text-neutral-300" : "text-neutral-500 group-hover:text-neutral-400"
+            isUnread ? "text-on-surface-subtle" : "text-on-surface-subtle group-hover:text-on-surface"
           }`}
         >
           {item.message}
         </p>
 
-        <span className="block text-[10px] font-mono text-neutral-600 group-hover:text-neutral-500 transition-colors duration-300 mt-2">
+        <span className="mt-2 block text-[11px] text-on-surface-subtle transition-colors duration-300 group-hover:text-on-surface">
           {formatTimeAgo(item.created_at)}
         </span>
       </div>
@@ -170,13 +170,13 @@ export function NotificationItemCard({
       {/* Actions */}
       <div className="flex items-center gap-1.5 self-center flex-shrink-0">
         {targetUrl && (
-          <ChevronRight className="w-4 h-4 text-neutral-600 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-neutral-400" />
+          <ChevronRight className="h-4 w-4 text-on-surface-subtle transition-transform duration-300 group-hover:translate-x-1 group-hover:text-primary" />
         )}
         
         <button
           onClick={handleDeleteClick}
           disabled={isRemoving}
-          className="w-8 h-8 rounded-lg flex items-center justify-center text-neutral-600 hover:text-red-500 hover:bg-red-500/10 border border-transparent hover:border-red-500/20 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 focus:opacity-100 disabled:pointer-events-none"
+          className="flex h-8 w-8 items-center justify-center rounded-lg border border-transparent text-on-surface-subtle opacity-100 transition-all duration-300 hover:border-red-500/20 hover:bg-red-500/10 hover:text-red-500 focus:opacity-100 disabled:pointer-events-none md:opacity-0 md:group-hover:opacity-100"
           title={t("delete")}
         >
           <Trash2 className="w-4 h-4" />

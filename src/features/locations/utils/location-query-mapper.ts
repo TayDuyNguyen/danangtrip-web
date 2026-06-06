@@ -9,6 +9,7 @@ export interface LocationQueryParams {
   isFeatured?: boolean;
   priceLevel?: number;
   minRating?: number;
+  favoriteIds?: number[];
 }
 
 export interface BackendLocationQueryParams {
@@ -22,6 +23,7 @@ export interface BackendLocationQueryParams {
   is_featured?: boolean;
   price_level?: number;
   min_rating?: number;
+  favorite_ids?: number[];
 }
 
 /**
@@ -40,6 +42,7 @@ export const mapLocationQueryParams = (params: LocationQueryParams): BackendLoca
   if (params.isFeatured !== undefined) mapped.is_featured = params.isFeatured;
   if (params.priceLevel) mapped.price_level = params.priceLevel;
   if (params.minRating) mapped.min_rating = params.minRating;
+  if (params.favoriteIds && params.favoriteIds.length > 0) mapped.favorite_ids = params.favoriteIds;
 
   return mapped;
 };

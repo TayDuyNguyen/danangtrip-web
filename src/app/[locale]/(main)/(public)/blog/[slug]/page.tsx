@@ -122,37 +122,43 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
       <ReadingProgressBar />
 
       <div className="container mx-auto px-4 pt-12 md:pt-20">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           
-          <div className="lg:col-span-8 space-y-16">
+          <div className="lg:col-span-8 space-y-10">
             <BlogDetailHeader post={post} locale={locale} />
 
+            {/* Featured Image — glass-retro panel */}
             {post.featured_image && (
-              <div className="reveal-up reveal-delay-100">
-                <div className="glass-shell p-1">
-                   <div className="relative aspect-video rounded-lg overflow-hidden glass-inner">
-                      <Image
-                        src={post.featured_image}
-                        alt={post.title}
-                        fill
-                        priority
-                        className="object-cover transition-transform duration-1000 hover:scale-105"
-                      />
-                   </div>
+              <div className="reveal-up reveal-delay-100 rounded-2xl overflow-hidden glass-retro">
+                <div className="relative aspect-video w-full">
+                  <Image
+                    src={post.featured_image}
+                    alt={post.title}
+                    fill
+                    priority
+                    className="object-cover"
+                  />
+                  {/* Gradient overlay at bottom of image */}
+                  <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/60 to-transparent" />
                 </div>
               </div>
             )}
 
-            <div className="reveal-up reveal-delay-200">
+            {/* Rich text content */}
+            <div className="reveal-up reveal-delay-200 p-6 md:p-10 glass-retro rounded-2xl">
               <BlogRichText content={processedContent} />
             </div>
 
-            <AuthorCard author={post.author} />
+            {/* Author card */}
+            <div className="reveal-up reveal-delay-300">
+              <AuthorCard author={post.author} />
+            </div>
 
             {relatedPosts.length > 0 && (
               <RelatedPosts posts={relatedPosts} />
             )}
           </div>
+
 
           <div className="lg:col-span-4 hidden lg:block reveal-up reveal-delay-300">
              <BlogDetailSidebar 

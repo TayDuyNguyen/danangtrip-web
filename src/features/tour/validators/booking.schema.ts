@@ -2,18 +2,18 @@ import { z } from "zod";
 
 export const bookingSchema = z.object({
   tour_id: z.number(),
-  tour_schedule_id: z.number().min(1, "vui lòng chọn ngày khởi hành"),
-  quantity_adult: z.number().min(1, "tối thiểu 1 người lớn"),
+  tour_schedule_id: z.number().min(1, "validation.schedule_required"),
+  quantity_adult: z.number().min(1, "validation.adult_required"),
   quantity_child: z.number().min(0).default(0),
   quantity_infant: z.number().min(0).default(0),
-  customer_name: z.string().min(2, "tên tối thiểu 2 ký tự"),
-  customer_email: z.string().email("email không hợp lệ"),
-  customer_phone: z.string().regex(/^[0-9]{10,11}$/, "số điện thoại không hợp lệ"),
+  customer_name: z.string().min(2, "validation.name_min"),
+  customer_email: z.string().email("validation.email_invalid"),
+  customer_phone: z.string().regex(/^[0-9]{10,11}$/, "validation.phone_invalid"),
   customer_address: z.string().optional().nullable(),
   customer_note: z.string().optional().nullable(),
-  payment_method: z.enum(["momo", "vnpay", "zalopay", "bank_transfer"]),
+  payment_method: z.enum(["momo", "vnpay", "zalopay", "bank_transfer", "payos"]),
   agree_terms: z.boolean().refine((val) => val === true, {
-    message: "bạn phải đồng ý với điều khoản",
+    message: "validation.terms_required",
   }),
 });
 

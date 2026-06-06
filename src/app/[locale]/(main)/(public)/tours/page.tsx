@@ -8,7 +8,7 @@ import TourGrid from "@/features/tour/components/TourGrid";
 import { SearchInput, Select, type SelectOption } from "@/components/ui";
 import { StandardPagination } from "@/components/ui/pagination";
 import { SlidersHorizontal } from "@/components/icons/solar";
-import { useState, Suspense } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { cn } from "@/lib/utils";
 import { extractItems } from "@/utils";
 import type { Tour, TourCategory } from "@/types";
@@ -41,6 +41,13 @@ function ToursContent() {
   const { data: categoriesResponse } = useTourCategories();
 
   const [showMobileFilters, setShowMobileFilters] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [selectPortalTarget, setSelectPortalTarget] = useState<HTMLElement | null>(null);
+
+  useEffect(() => {
+    setMounted(true);
+    setSelectPortalTarget(document.body);
+  }, []);
 
   const toursPayload = toursResponse?.data;
   const tours = extractItems<Tour>(toursPayload);
@@ -50,6 +57,7 @@ function ToursContent() {
   );
 
   const categories = extractItems<TourCategory>(categoriesResponse?.data);
+  const showLoading = mounted && isLoading;
 
   const sortSelectValue = `${filters.sort_by || "created_at"}-${filters.sort_order || "desc"}`;
   const sortSelectLabel =
@@ -66,15 +74,15 @@ function ToursContent() {
   return (
     <div className="design-page layout-main-shell">
       {/* Header Section */}
-      <div className="relative pt-32 pb-12 overflow-hidden">
-        <div className="absolute inset-0 bg-linear-to-b from-[#8b6a55]/10 to-transparent pointer-events-none" />
+      <div className="relative overflow-hidden pt-10 pb-6 md:pt-14 md:pb-8">
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#fff1f3] to-transparent" />
         <div className="design-container">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div className="reveal-up">
-              <h1 className="text-4xl md:text-5xl font-black text-on-surface mb-4">
+              <h1 className="mb-4 text-4xl font-semibold tracking-[-0.04em] text-on-surface md:text-[52px]">
                 {t("title")}
               </h1>
-              <p className="text-on-surface-subtle text-lg max-w-2xl">
+              <p className="max-w-2xl text-[18px] leading-7 text-on-surface-subtle">
                 {t("subtitle")}
               </p>
             </div>
@@ -84,14 +92,16 @@ function ToursContent() {
                 placeholder={t("list.search_placeholder")}
                 value={filters.search || ""}
                 onChange={(val: string) => setFilters({ search: val })}
+                label={t("list.search_label")}
+                actionText={t("list.search_action")}
               />
             </div>
           </div>
         </div>
       </div>
 
-      <div className="design-container mt-12 pb-24">
-        <div className="flex flex-col lg:flex-row gap-10">
+      <div className="design-container mt-6 pb-16">
+        <div className="flex flex-col lg:flex-row gap-3">
           {/* Mobile Filter Toggle */}
           <button
             type="button"
@@ -142,7 +152,7 @@ function ToursContent() {
                 <div className="w-48">
                   <Select
                     variant="minimal"
-                    menuPortalTarget={typeof document !== "undefined" ? document.body : null}
+                    menuPortalTarget={selectPortalTarget}
                     options={[
                       { value: "created_at-desc", label: t("sort.newest") },
                       { value: "booking_count-desc", label: t("sort.popular") },
@@ -170,7 +180,7 @@ function ToursContent() {
 
             {isError ? (
               <div
-                className="rounded-xl border border-border bg-surface-container p-8 text-center"
+                className="rounded-xl border border-border bg-surface-container p-8 text-on-surface-subtleenter"
                 role="alert"
               >
                 <p className="text-on-surface mb-4">{t("list.load_error")}</p>
@@ -184,11 +194,11 @@ function ToursContent() {
               </div>
             ) : (
               <>
-                <TourGrid tours={tours} isLoading={isLoading} />
+                <TourGrid tours={tours} isLoading={showLoading} />
 
-                {!isLoading && totalPages > 1 && (
+                {!showLoading && totalPages > 1 && (
                   <div
-                    className="mt-12 flex justify-center reveal-up"
+                    className="mt-4 flex justify-center reveal-up"
                     style={{ animationDelay: "400ms" }}
                   >
                     <StandardPagination

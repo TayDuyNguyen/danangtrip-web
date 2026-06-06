@@ -1,6 +1,7 @@
 "use client";
 
-import { memo } from "react";
+import { memo, useState, useEffect } from "react";
+import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import type { IconType } from "@/components/icons/solar";
@@ -16,6 +17,11 @@ import { useAppConfig } from "@/hooks/use-app-config";
 const Footer = () => {
   const t = useTranslations("common");
   const { data: siteConfig } = useAppConfig();
+  const [logoFailed, setLogoFailed] = useState(false);
+
+  useEffect(() => {
+    setLogoFailed(false);
+  }, [siteConfig?.brand?.logo]);
 
   const socialLinks: { icon: IconType; color: string; path: string | null }[] = [
     { icon: IoLogoFacebook, color: "hover:bg-[#1877F2]", path: siteConfig?.social_links?.facebook ?? null },
@@ -25,19 +31,36 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-surface-container-lowest text-on-surface pt-24 pb-12 overflow-hidden relative border-t border-border">
-      <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2" />
-
-      <div className="design-container relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20">
+    <footer className="relative mx-auto mb-6 w-[calc(100%-3rem)] select-none overflow-hidden rounded-[28px] border border-border bg-white px-6 pb-10 pt-16 text-on-surface shadow-[0_24px_80px_rgba(15,23,42,0.08)] md:w-[calc(100%-4rem)] md:px-16 lg:w-[calc(100%-5rem)]">
+      <div className="relative z-10 w-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {/* Brand & Social */}
           <div className="space-y-6 text-center md:text-left">
             <Link href={ROUTES.HOME} className="flex items-center justify-center md:justify-start gap-2 group">
-              <div className="w-12 h-12 bg-surface-container-high rounded-lg border border-border flex items-center justify-center text-on-surface">
-                <span className="text-2xl font-bold uppercase">D</span>
-              </div>
-                <span className="text-2xl font-bold tracking-tight uppercase">
-                {t("common.brand_name").split(" ")[0]} <span className="text-primary">{t("common.brand_name").split(" ").slice(1).join(" ")}</span>
+              {siteConfig?.brand?.logo && !logoFailed ? (
+                <div className="w-12 h-12 rounded-xl border border-border overflow-hidden bg-white p-0.5 flex items-center justify-center shrink-0">
+                  <Image
+                    src={siteConfig.brand.logo}
+                    alt={siteConfig?.brand?.website_name || t("common.brand_name")}
+                    width={48}
+                    height={48}
+                    className="h-full w-full object-contain"
+                    onError={() => setLogoFailed(true)}
+                    unoptimized
+                  />
+                </div>
+              ) : (
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-border bg-[#f7f7f7] text-on-surface">
+                  <span className="text-2xl font-bold uppercase">
+                    {(siteConfig?.brand?.website_name || t("common.brand_name")).charAt(0)}
+                  </span>
+                </div>
+              )}
+              <span className="text-2xl font-bold tracking-tight uppercase">
+                {(siteConfig?.brand?.website_name || t("common.brand_name")).split(" ")[0]}{" "}
+                <span className="text-primary">
+                  {(siteConfig?.brand?.website_name || t("common.brand_name")).split(" ").slice(1).join(" ")}
+                </span>
               </span>
             </Link>
             <p className="text-on-surface-subtle text-sm leading-relaxed max-w-xs mx-auto md:mx-0">
@@ -46,7 +69,7 @@ const Footer = () => {
             <div className="flex items-center justify-center md:justify-start gap-4">
               {socialLinks.map((social, idx) => {
                 const IconComponent = social.icon;
-                const baseClass = `w-10 h-10 rounded-lg bg-surface border border-border flex items-center justify-center text-xl transition-all duration-300 ${social.color} text-on-surface-subtle`;
+                const baseClass = `w-10 h-10 rounded-full bg-[#f7f7f7] border border-border flex items-center justify-center text-xl transition-all duration-300 ${social.color} text-on-surface-subtle hover:text-white`;
                 if (!social.path) {
                   return (
                     <span
@@ -64,7 +87,7 @@ const Footer = () => {
                     href={social.path}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`${baseClass} hover:scale-110 active:scale-95 hover:text-on-surface hover:border-primary`}
+                    className={`${baseClass} hover:scale-110 active:scale-95 hover:border-primary`}
                   >
                     <IconComponent className="w-5 h-5" />
                   </a>
@@ -75,7 +98,7 @@ const Footer = () => {
 
           {/* Quick Links / Explore */}
           <div className="text-center md:text-left">
-            <h4 className="text-lg font-semibold mb-6 text-white uppercase tracking-[0.15em]">
+            <h4 className="text-lg font-semibold mb-6 text-on-surface uppercase tracking-[0.15em]">
               {t("footer.quick_links")}
             </h4>
             <ul className="space-y-4">
@@ -83,7 +106,7 @@ const Footer = () => {
                 <li key={link.path}>
                   <Link
                     href={link.path}
-                    className="text-[#a3a3a3] hover:text-[#8b6a55] transition-all duration-300 flex items-center justify-center md:justify-start gap-2 text-sm"
+                    className="text-on-surface-subtle hover:text-primary transition-all duration-300 flex items-center justify-center md:justify-start gap-2 text-sm"
                   >
                     {t(link.name)}
                   </Link>
@@ -94,20 +117,50 @@ const Footer = () => {
 
           {/* Support */}
           <div className="text-center md:text-left">
-            <h4 className="text-lg font-semibold mb-6 text-white uppercase tracking-[0.15em]">
+            <h4 className="text-lg font-semibold mb-6 text-on-surface uppercase tracking-[0.15em]">
               {t("footer.for_partners")}
             </h4>
             <ul className="space-y-4">
               <li><Link href={ROUTES.CONTACT} className="text-on-surface-subtle hover:text-primary transition-all duration-300 text-sm">{t("footer.contact")}</Link></li>
               <li><Link href={ROUTES.CONTACT} className="text-on-surface-subtle hover:text-primary transition-all duration-300 text-sm">{t("footer.support")}</Link></li>
-              <li><span className="text-on-surface-variant text-sm block">{t("footer.terms")} — {t("footer.coming_soon")}</span></li>
-              <li><span className="text-on-surface-variant text-sm block">{t("footer.privacy")} — {t("footer.coming_soon")}</span></li>
+              <li>
+                {siteConfig?.policy?.terms ? (
+                  <a
+                    href={siteConfig.policy.terms}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-on-surface-subtle hover:text-primary transition-all duration-300 text-sm block"
+                  >
+                    {t("footer.terms")}
+                  </a>
+                ) : (
+                  <span className="text-on-surface-variant text-sm block">
+                    {t("footer.terms")} — {t("footer.coming_soon")}
+                  </span>
+                )}
+              </li>
+              <li>
+                {siteConfig?.policy?.privacy ? (
+                  <a
+                    href={siteConfig.policy.privacy}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-on-surface-subtle hover:text-primary transition-all duration-300 text-sm block"
+                  >
+                    {t("footer.privacy")}
+                  </a>
+                ) : (
+                  <span className="text-on-surface-variant text-sm block">
+                    {t("footer.privacy")} — {t("footer.coming_soon")}
+                  </span>
+                )}
+              </li>
             </ul>
           </div>
 
           {/* Contact Information */}
           <div className="text-center md:text-left">
-            <h4 className="text-lg font-semibold mb-6 text-white uppercase tracking-[0.15em]">
+            <h4 className="text-lg font-semibold mb-6 text-on-surface uppercase tracking-[0.15em]">
               {t("footer.contact")}
             </h4>
             <ul className="space-y-4 text-sm text-on-surface-subtle">

@@ -1,8 +1,9 @@
 "use client";
 
-import { useId } from "react";
+import { useEffect, useId, useMemo, useState } from "react";
 import { UilSearch } from "@iconscout/react-unicons";
 import { cn } from "@/utils/string";
+import { debounce } from "@/utils/debounce";
 
 interface SearchInputProps {
   value: string;
@@ -10,8 +11,12 @@ interface SearchInputProps {
   placeholder?: string;
   isLoading?: boolean;
   className?: string;
-  /** Accessible name when no visible label is provided */
+  onFocus?: React.FocusEventHandler<HTMLInputElement>;
+  onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
   "aria-label"?: string;
+  debounceMs?: number;
+  label?: string;
+  actionText?: string;
 }
 
 export default function SearchInput({
@@ -20,44 +25,86 @@ export default function SearchInput({
   placeholder,
   isLoading,
   className,
+  onFocus,
+  onKeyDown,
   "aria-label": ariaLabel,
+  debounceMs = 500,
+  label = "Search",
+  actionText = "Go",
 }: SearchInputProps) {
   const autoId = useId();
   const inputId = `search-input-${autoId.replace(/:/g, "")}`;
+  const [localValue, setLocalValue] = useState(value);
+
+  useEffect(() => {
+    setLocalValue(value);
+  }, [value]);
+
+  const debouncedOnChange = useMemo(() => {
+    if (debounceMs === 0) return null;
+    return debounce((val: string) => {
+      onChange(val);
+    }, debounceMs);
+  }, [onChange, debounceMs]);
+
+  useEffect(() => {
+    return () => {
+      debouncedOnChange?.cancel();
+    };
+  }, [debouncedOnChange]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onChange(e.target.value);
+    const val = e.target.value;
+    setLocalValue(val);
+
+    if (debouncedOnChange) {
+      debouncedOnChange(val);
+    } else {
+      onChange(val);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      debouncedOnChange?.cancel();
+      onChange(localValue);
+    }
+
+    onKeyDown?.(e);
   };
 
   return (
-    <div
-      className={cn(
-        "relative group flex-1 w-full rounded-xl transition-all duration-300 overflow-hidden",
-        isLoading ? "ring-2 ring-primary ring-offset-2 ring-offset-background" : "",
-        className
-      )}
-    >
-      {isLoading && (
-        <div className="absolute inset-0 z-0 overflow-hidden rounded-xl">
-          <div className="absolute -inset-full animate-[spin_3s_linear_infinite] bg-[conic-gradient(from_0deg,transparent_0deg,transparent_300deg,#8b6a55_360deg)] motion-reduce:animate-none" />
+    <div className={cn("relative w-full", className)}>
+      <div
+        className={cn(
+          "group relative flex min-h-[76px] w-full items-center overflow-hidden rounded-[24px] border border-border bg-white px-4 shadow-[0_12px_34px_rgba(0,0,0,0.07)] transition-all duration-200 hover:shadow-[0_16px_42px_rgba(0,0,0,0.1)] focus-within:border-[#222222] sm:min-h-[84px] sm:rounded-[28px] sm:px-5",
+          isLoading ? "opacity-100" : ""
+        )}
+      >
+        <div className="mr-3 flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#f7f7f7] text-[#6a6a6a] transition-colors group-focus-within:bg-[#fff1f3] group-focus-within:text-primary sm:mr-4 sm:h-12 sm:w-12">
+          <UilSearch size={20} aria-hidden />
         </div>
-      )}
 
-      <div className="relative z-10 bg-surface-container-low/70 backdrop-blur-md border border-border group-focus-within:border-primary w-full h-full flex items-center rounded-xl overflow-hidden m-px">
-        <UilSearch
-          size={20}
-          className="absolute left-5 top-1/2 -translate-y-1/2 text-on-surface-variant/50 group-focus-within:text-primary transition-colors duration-300 pointer-events-none"
-          aria-hidden
-        />
-        <input
-          id={inputId}
-          type="search"
-          value={value}
-          onChange={handleChange}
-          placeholder={placeholder}
-          aria-label={ariaLabel ?? placeholder ?? "Search"}
-          className="w-full bg-transparent border-none py-4 pl-12 pr-6 text-base font-semibold placeholder:text-on-surface-variant/40 focus:ring-4 focus:ring-primary/10 transition-all duration-300 outline-none"
-        />
+        <div className="min-w-0 flex-1">
+          <label htmlFor={inputId} className="block text-[12px] font-semibold leading-none text-on-surface">
+            {label}
+          </label>
+          <input
+            id={inputId}
+            type="search"
+            value={localValue}
+            onChange={handleChange}
+            onFocus={onFocus}
+            onKeyDown={handleKeyDown}
+            placeholder={placeholder}
+            aria-label={ariaLabel ?? placeholder ?? label}
+            className="mt-2 w-full border-none bg-transparent pr-2 text-[15px] font-medium text-on-surface outline-none placeholder:text-on-surface-subtle sm:text-[16px]"
+          />
+        </div>
+
+        <div className="hidden shrink-0 rounded-full bg-[#ff385c] px-4 py-2 text-[13px] font-semibold text-white shadow-[0_8px_20px_rgba(255,56,92,0.24)] sm:block">
+          {actionText}
+        </div>
       </div>
     </div>
   );

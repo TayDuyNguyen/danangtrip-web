@@ -99,10 +99,10 @@ export function MyRatingsClient() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-2 animate-in fade-in duration-500">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight mb-1">
+          <h1 className="mb-1 text-2xl font-semibold tracking-tight text-on-surface">
             {t("title")}
           </h1>
-          <p className="text-sm text-[#737373] font-medium">
+          <p className="text-sm font-medium text-on-surface-subtle">
             {isLoading
               ? "..."
               : t("header.count_single", { count: pagination.total })}
@@ -111,7 +111,7 @@ export function MyRatingsClient() {
       </div>
 
       {/* Filter Tabs */}
-      <div className="border-b border-[#262626] flex overflow-x-auto gap-2 min-w-max pb-px">
+      <div className="border-b border-border flex overflow-x-auto gap-2 min-w-max pb-px">
         {(["all", "location", "tour"] as const).map((tab) => {
           const active = activeTab === tab;
           return (
@@ -121,8 +121,8 @@ export function MyRatingsClient() {
               className={cn(
                 "px-5 py-3 text-sm font-semibold relative transition-all duration-200",
                 active
-                  ? "text-white border-b-2 border-b-[#8b6a55]"
-                  : "text-[#737373] hover:text-white"
+                  ? "text-on-surface border-b-2 border-b-primary"
+                  : "text-on-surface-subtle hover:text-on-surface"
               )}
             >
               {t(`tabs.${tab}`, { count: active ? pagination.total : "..." })}
@@ -137,17 +137,17 @@ export function MyRatingsClient() {
           {[1, 2, 3].map((n) => (
             <div
               key={n}
-              className="bg-[#0a0a0a]/40 border border-[#262626]/60 rounded-xl p-5 space-y-4 animate-pulse"
+              className="bg-surface-container/40 border border-border/60 rounded-xl p-5 space-y-4 animate-pulse"
             >
               <div className="flex items-center gap-3">
-                <div className="w-14 h-14 bg-[#171717] rounded-lg" />
+                <div className="w-14 h-14 bg-surface-container-highest rounded-lg" />
                 <div className="space-y-2 flex-1">
-                  <div className="h-4 bg-[#171717] rounded w-1/4" />
-                  <div className="h-3 bg-[#171717] rounded w-1/3" />
+                  <div className="h-4 bg-surface-container-highest rounded w-1/4" />
+                  <div className="h-3 bg-surface-container-highest rounded w-1/3" />
                 </div>
               </div>
-              <div className="h-4 bg-[#171717] rounded w-3/4" />
-              <div className="h-4 bg-[#171717] rounded w-1/2" />
+              <div className="h-4 bg-surface-container-highest rounded w-3/4" />
+              <div className="h-4 bg-surface-container-highest rounded w-1/2" />
             </div>
           ))}
         </div>
@@ -166,18 +166,18 @@ export function MyRatingsClient() {
         </div>
       ) : listItems.length === 0 ? (
         // Empty State
-        <div className="flex flex-col items-center justify-center text-center py-16 px-4 bg-[#0a0a0a]/30 border border-[#262626] border-dashed rounded-xl animate-in fade-in duration-500">
-          <div className="w-20 h-20 bg-[#171717] rounded-full border border-[#262626] flex items-center justify-center text-[#737373] mb-6 relative">
+        <div className="flex flex-col items-center justify-center text-center py-8 px-4 bg-surface-container/30 border border-border border-dashed rounded-xl animate-in fade-in duration-500">
+          <div className="relative mb-6 flex h-20 w-20 items-center justify-center rounded-full border border-border bg-surface-container-highest text-on-surface-subtle">
             <MessageSquare className="h-10 w-10" />
-            <div className="absolute top-0 right-0 w-4 h-4 bg-[#8b6a55] rounded-full border-2 border-[#080808]" />
+            <div className="absolute right-0 top-0 h-4 w-4 rounded-full border-2 border-white bg-primary" />
           </div>
-          <h3 className="text-lg font-bold text-white mb-2">{t("empty.title")}</h3>
-          <p className="text-sm text-[#737373] max-w-sm mb-6 leading-relaxed">
+          <h3 className="mb-2 text-lg font-semibold text-on-surface">{t("empty.title")}</h3>
+          <p className="mb-6 max-w-sm text-sm leading-relaxed text-on-surface-subtle">
             {t("empty.subtitle")}
           </p>
           <Link
             href="/tours"
-            className="px-6 py-3 rounded-lg bg-[#8b6a55] hover:bg-[#725442] text-white font-bold text-sm tracking-tight transition-all"
+            className="px-6 py-3 rounded-full bg-primary hover:bg-[#e31c5f] text-white font-semibold text-sm tracking-tight transition-all"
           >
             {t("empty.cta")}
           </Link>
@@ -199,18 +199,18 @@ export function MyRatingsClient() {
 
           {/* Pagination Controls */}
           {pagination.lastPage > 1 && (
-            <div className="flex justify-center items-center gap-3 mt-6 pt-4 border-t border-[#1a1a1a]">
+            <div className="mt-6 flex items-center justify-center gap-3 border-t border-border pt-4">
               <button
                 type="button"
                 disabled={page === 1}
                 onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-                className="p-2 rounded-lg border border-[#262626] bg-[#0a0a0a] text-[#737373] hover:text-white disabled:opacity-30 disabled:hover:text-[#737373] transition-colors"
+                className="rounded-lg border border-border bg-white p-2 text-on-surface-subtle transition-colors hover:bg-[#f7f7f7] hover:text-on-surface disabled:opacity-30 disabled:hover:bg-white disabled:hover:text-on-surface-subtle"
                 aria-label="Previous Page"
               >
                 <ChevronLeft className="h-4 w-4" />
               </button>
 
-              <span className="text-xs text-[#737373] font-semibold">
+              <span className="text-xs font-semibold text-on-surface-subtle">
                 Trang {pagination.currentPage} / {pagination.lastPage}
               </span>
 
@@ -220,7 +220,7 @@ export function MyRatingsClient() {
                 onClick={() =>
                   setPage((prev) => Math.min(prev + 1, pagination.lastPage))
                 }
-                className="p-2 rounded-lg border border-[#262626] bg-[#0a0a0a] text-[#737373] hover:text-white disabled:opacity-30 disabled:hover:text-[#737373] transition-colors"
+                className="rounded-lg border border-border bg-white p-2 text-on-surface-subtle transition-colors hover:bg-[#f7f7f7] hover:text-on-surface disabled:opacity-30 disabled:hover:bg-white disabled:hover:text-on-surface-subtle"
                 aria-label="Next Page"
               >
                 <ChevronRight className="h-4 w-4" />
@@ -258,7 +258,7 @@ export function MyRatingsClient() {
         >
           <button
             type="button"
-            className="absolute right-4 top-4 p-2 rounded-lg text-[#737373] hover:text-white bg-[#111111]/80 hover:bg-[#1c1c1c]/80 transition-all z-10"
+            className="absolute right-4 top-4 z-10 rounded-lg bg-black/40 p-2 text-white/80 transition-all hover:bg-black/55 hover:text-white"
             onClick={() => setLightboxUrl(null)}
           >
             <X className="h-5 w-5" />

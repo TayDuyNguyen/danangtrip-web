@@ -8,7 +8,7 @@ import { Textarea, Button } from "@/components/ui";
 import { InfoCircle, X } from "@/components/icons/solar";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import axios from "axios";
+import { getApiErrorMessage } from "@/utils/api-error";
 
 interface CancelBookingDialogProps {
   isOpen: boolean;
@@ -59,34 +59,30 @@ export function CancelBookingDialog({
           onClose();
         },
         onError: (err: unknown) => {
-          let errorMessage = t("cancel_failed");
-          if (axios.isAxiosError(err)) {
-            errorMessage = err.response?.data?.message || errorMessage;
-          }
-          toast.error(errorMessage);
+          toast.error(getApiErrorMessage(err, t("cancel_failed")));
         },
       }
     );
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md transition-opacity duration-300 animate-fade-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 p-4 backdrop-blur-md transition-opacity duration-300 animate-fade-in">
       <div 
         className={cn(
-          "relative w-full max-w-lg overflow-hidden border border-border shadow-2xl rounded-2xl bg-surface",
+          "relative w-full max-w-lg overflow-hidden rounded-[28px] border border-border bg-white shadow-[0_24px_70px_rgba(15,23,42,0.18)]",
           "transition-all duration-300 scale-100 reveal-up"
         )}
       >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-border px-6 py-4">
-          <h3 className="text-lg font-bold text-white flex items-center gap-2">
+          <h3 className="flex items-center gap-2 text-lg font-bold text-on-surface">
             {t("cancel_title")}
           </h3>
           <button
             onClick={onClose}
-            className="text-on-surface-subtle hover:text-white transition-colors"
+            className="text-on-surface-subtle transition-colors hover:text-primary"
             disabled={isPending}
-            aria-label="Close"
+            aria-label={t("button_close")}
           >
             <X className="w-5 h-5" />
           </button>
@@ -119,7 +115,7 @@ export function CancelBookingDialog({
               rows={4}
               disabled={isPending}
               className={cn(
-                "w-full bg-surface-container border rounded-xl px-4 py-3 text-sm text-on-surface focus:border-primary/50 outline-none transition-colors placeholder:text-on-surface-subtle/50",
+                "w-full rounded-xl border bg-white px-4 py-3 text-sm text-on-surface outline-none transition-colors placeholder:text-on-surface-subtle/50 focus:border-primary/50",
                 error ? "border-red-500 focus:border-red-500" : "border-border"
               )}
             />
@@ -137,7 +133,7 @@ export function CancelBookingDialog({
               variant="secondary"
               onClick={onClose}
               disabled={isPending}
-              className="px-5 py-2.5 rounded-full border-border text-on-surface hover:bg-surface-container-high transition-colors"
+              className="rounded-full border-border px-5 py-2.5 text-on-surface transition-colors hover:bg-[#f7f7f7]"
             >
               {t("button_close")}
             </Button>

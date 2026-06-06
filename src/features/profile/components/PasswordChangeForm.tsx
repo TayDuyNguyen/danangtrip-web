@@ -52,7 +52,7 @@ function getStrengthLevel(score: number): 0 | 1 | 2 | 3 {
 const STRENGTH_COLORS: Record<number, string> = {
   0: "bg-red-500",
   1: "bg-orange-400",
-  2: "bg-[#8b6a55]",
+  2: "bg-primary",
   3: "bg-emerald-400",
 };
 
@@ -66,8 +66,8 @@ const STRENGTH_LABEL_KEYS: Record<number, string> = {
 const STRENGTH_TEXT_COLORS: Record<number, string> = {
   0: "text-red-400",
   1: "text-orange-400",
-  2: "text-[#8b6a55]",
-  3: "text-emerald-400",
+  2: "text-primary",
+  3: "text-emerald-500",
 };
 
 // ─── Main Component ────────────────────────────────────────────────────────────
@@ -169,17 +169,17 @@ export function PasswordChangeForm({
     Object.values(checks).every(Boolean);
 
   return (
-    <div className="bg-[#0a0a0a]/60 border border-[#262626] rounded-xl p-6 sm:p-8 backdrop-blur-md animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="animate-in fade-in slide-in-from-bottom-4 rounded-[20px] border border-border bg-white p-6 shadow-[0_1px_3px_rgba(0,0,0,0.08)] duration-500 sm:p-8">
       {/* Header */}
-      <div className="flex items-start gap-4 mb-8 pb-6 border-b border-[#1a1a1a]">
-        <div className="w-10 h-10 rounded-lg bg-[#8b6a55]/10 border border-[#8b6a55]/20 flex items-center justify-center shrink-0">
-          <Shield className="w-5 h-5 text-[#8b6a55]" aria-hidden="true" />
+      <div className="mb-8 flex items-start gap-4 border-b border-border pb-6">
+        <div className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
+          <Shield className="w-5 h-5 text-primary" aria-hidden="true" />
         </div>
         <div>
-          <h2 className="text-white font-bold text-lg tracking-tight">
+          <h2 className="text-lg font-semibold tracking-tight text-on-surface">
             {t("change_password.heading")}
           </h2>
-          <p className="text-[#737373] text-sm mt-0.5">
+          <p className="mt-0.5 text-sm text-on-surface-subtle">
             {t("change_password.description")}
           </p>
         </div>
@@ -209,7 +209,7 @@ export function PasswordChangeForm({
         />
 
         {/* Divider */}
-        <div className="border-t border-[#1a1a1a]" />
+        <div className="border-t border-border" />
 
         {/* New password */}
         <Input
@@ -234,7 +234,7 @@ export function PasswordChangeForm({
             aria-live="polite"
           >
             <div className="flex items-center justify-between">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-[#525252]">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-on-surface-subtle">
                 {t("change_password.strength_label")}
               </span>
               <span
@@ -255,7 +255,7 @@ export function PasswordChangeForm({
                     "h-1 rounded-full transition-all duration-400",
                     i <= strengthLevel && showStrength
                       ? STRENGTH_COLORS[strengthLevel]
-                      : "bg-[#1a1a1a]"
+                      : "bg-[#ececec]"
                   )}
                 />
               ))}
@@ -276,13 +276,13 @@ export function PasswordChangeForm({
                     key={key}
                     className={cn(
                       "flex items-center gap-2 text-xs transition-colors duration-300",
-                      passed ? "text-emerald-400" : "text-[#525252]"
+                      passed ? "text-emerald-500" : "text-on-surface-subtle"
                     )}
                   >
                     {passed ? (
                       <CheckCircle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
                     ) : (
-                      <XCircle className="w-3.5 h-3.5 shrink-0 text-[#404040]" aria-hidden="true" />
+                      <XCircle className="h-3.5 w-3.5 shrink-0 text-[#c4c4c4]" aria-hidden="true" />
                     )}
                     <span>{label}</span>
                   </li>
@@ -313,21 +313,21 @@ export function PasswordChangeForm({
           <p
             className={cn(
               "flex items-center gap-1.5 text-xs -mt-4 animate-in fade-in duration-300",
-              checks.match ? "text-emerald-400" : "text-[#525252]"
+              checks.match ? "text-emerald-500" : "text-on-surface-subtle"
             )}
             aria-live="polite"
           >
             {checks.match ? (
               <CheckCircle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
             ) : (
-              <XCircle className="w-3.5 h-3.5 shrink-0 text-[#404040]" aria-hidden="true" />
+              <XCircle className="h-3.5 w-3.5 shrink-0 text-[#c4c4c4]" aria-hidden="true" />
             )}
             {t("change_password.checklist_match")}
           </p>
         )}
 
         {/* Action buttons */}
-        <div className="flex flex-col-reverse sm:flex-row gap-3 pt-2 border-t border-[#1a1a1a]">
+        <div className="flex flex-col-reverse gap-3 border-t border-border pt-2 sm:flex-row">
           <Button
             type="button"
             variant="secondary"

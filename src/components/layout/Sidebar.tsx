@@ -18,14 +18,14 @@ export function Sidebar() {
 
   return (
     <aside
-      className={`bg-[#030303] text-white transition-all duration-300 border-r border-[#262626] ${
+      className={`bg-surface-container-lowest text-on-surface transition-all duration-300 border-r border-border ${
         sidebar.isCollapsed ? "w-16" : "w-64"
       }`}
     >
-      <div className="p-4 border-b border-[#262626]">
+      <div className="p-4 border-b border-border">
         <button
           onClick={toggleSidebarCollapse}
-          className="w-full text-left text-[#a3a3a3] hover:text-[#8b6a55] font-semibold"
+          className="w-full text-left text-on-surface-subtle hover:text-primary font-semibold cursor-pointer"
         >
           {sidebar.isCollapsed ? "→" : "←"}
         </button>
@@ -38,8 +38,8 @@ export function Sidebar() {
             href={item.href}
             className={`block px-4 py-2.5 text-sm font-semibold transition-all duration-200 ${
               pathname === item.href
-                ? "text-[#8b6a55] bg-[#171717] border-l-2 border-[#8b6a55]"
-                : "text-[#d4d4d4] hover:bg-[#171717] hover:text-[#8b6a55]"
+                ? "text-primary bg-surface-container border-l-2 border-primary"
+                : "text-on-surface-subtle hover:bg-surface-container hover:text-primary"
             }`}
           >
             {sidebar.isCollapsed ? item.label[0] : item.label}

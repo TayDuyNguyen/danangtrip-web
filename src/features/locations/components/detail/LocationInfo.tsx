@@ -2,7 +2,7 @@
 
 import React, { useMemo } from 'react';
 import { MapPin, Phone, Globe, Clock, CheckCircle2 } from "@/components/icons/solar";
-import { Badge, RatingStars } from '@/components/ui';
+import { RatingStars } from '@/components/ui';
 import type { Location } from '@/types';
 import { useTranslations } from 'next-intl';
 import { normalizeOpeningHoursDisplay } from '@/features/locations/utils/opening-hours-display';
@@ -10,6 +10,9 @@ import { normalizeOpeningHoursDisplay } from '@/features/locations/utils/opening
 interface LocationInfoProps {
   location: Location;
 }
+
+const infoCardClass =
+  "group flex items-center gap-4 rounded-[22px] border border-border bg-[#fafafa] p-5 transition-all duration-300 hover:border-primary/20 hover:bg-white";
 
 const LocationInfo: React.FC<LocationInfoProps> = ({ location }) => {
   const t = useTranslations('locations');
@@ -22,105 +25,118 @@ const LocationInfo: React.FC<LocationInfoProps> = ({ location }) => {
 
   return (
     <div className="space-y-8">
-      {/* Header Info */}
       <div className="space-y-4">
-        <div className="flex flex-wrap gap-2">
-          {location.category ? (
-            <Badge variant="success" className="uppercase tracking-wider">
-              {location.category}
-            </Badge>
-          ) : null}
-          <Badge variant="secondary" className="bg-surface-container-low text-on-surface-variant">
-            {location.district}
-          </Badge>
+        <div className="text-xs font-semibold uppercase tracking-normal text-primary">
+          {location.district}
+          {location.category && (
+            <span className="ml-4 text-on-surface-subtle">
+              / {typeof location.category === 'string' ? location.category : location.category.name}
+            </span>
+          )}
         </div>
-        
-        <h1 className="text-4xl font-bold tracking-tight text-foreground md:text-5xl">
+
+        <h1 className="text-4xl font-semibold leading-[1.1] tracking-tight text-on-surface md:text-3xl">
           {location.name}
         </h1>
 
-        <div className="flex items-center gap-4">
-          <RatingStars 
-            rating={avgRating} 
-            count={location.review_count} 
-            showText 
-            size="lg" 
-          />
-          <div className="h-4 w-px bg-border" />
-          <div className="flex items-center gap-1.5 text-on-surface-variant">
-            <MapPin className="h-4 w-4 text-primary" />
-            <span className="text-sm font-medium">{location.address}</span>
-          </div>
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-on-surface-subtle">
+          <RatingStars rating={avgRating} count={location.review_count} showText size="sm" />
+          {location.address && (
+            <div className="flex items-center gap-1.5">
+              <MapPin className="h-4 w-4 shrink-0 text-primary" />
+              <span>{location.address}</span>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Description */}
-      <div className="prose prose-blue max-w-none text-on-surface-variant">
-        <p className="text-lg leading-relaxed">
-          {location.description}
-        </p>
+      <div className="max-w-none space-y-4 text-base leading-relaxed text-on-surface-subtle">
+        {location.description && <p className="whitespace-pre-wrap">{location.description}</p>}
         {location.content && (
-          <div className="mt-4" dangerouslySetInnerHTML={{ __html: location.content }} />
+          <div
+            className="prose prose-neutral max-w-none prose-p:text-on-surface-subtle prose-headings:text-on-surface prose-strong:text-on-surface prose-a:text-primary"
+            dangerouslySetInnerHTML={{ __html: location.content }}
+          />
         )}
       </div>
 
-      {/* Amenities */}
+      {location.tags && location.tags.length > 0 && (
+        <div className="flex flex-wrap gap-2 pt-2">
+          {location.tags.map((tag) => (
+            <span
+              key={String(tag.id)}
+              className="cursor-pointer rounded-full border border-border bg-[#fafafa] px-3.5 py-1.5 text-xs font-semibold text-on-surface-subtle transition-all duration-300 hover:border-primary/30 hover:bg-white hover:text-primary"
+            >
+              #{tag.name}
+            </span>
+          ))}
+        </div>
+      )}
+
       {location.amenities && location.amenities.length > 0 && (
-        <div className="space-y-4 rounded-2xl bg-surface-container-low p-6 shadow-sm border border-border">
-          <h3 className="text-xl font-bold text-foreground flex items-center gap-2">
-            {t('detail.amenities_title')}
-          </h3>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+        <div className="rounded-[28px] border border-border bg-[#fcfcfc] p-6 space-y-4">
+          <div className="flex items-center gap-3">
+            <div className="h-6 w-1.5 rounded-full bg-primary" />
+            <h3 className="text-xl font-semibold tracking-tight text-on-surface">{t('detail.amenities_title')}</h3>
+          </div>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
             {location.amenities.map((amenity) => (
-              <div key={String(amenity.id)} className="flex items-center gap-2 text-on-surface-variant">
-                <CheckCircle2 className="h-5 w-5 shrink-0 text-success" />
-                <span className="text-sm font-medium">{amenity.name}</span>
+              <div key={String(amenity.id)} className="flex items-center gap-2 text-sm text-on-surface-subtle">
+                <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" />
+                <span>{amenity.name}</span>
               </div>
             ))}
           </div>
         </div>
       )}
 
-      {/* Contact Info */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {location.phone && (
-          <a href={`tel:${location.phone.replace(/\s/g, '')}`} className="flex items-center gap-3 rounded-xl border border-border bg-surface-container-lowest p-4 transition-all hover:border-success hover:shadow-md">
-            <div className="rounded-lg bg-success/10 p-2 text-success">
+          <a href={`tel:${location.phone.replace(/\s/g, '')}`} className={infoCardClass}>
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border bg-white text-on-surface-subtle transition-all duration-300 group-hover:border-primary/20 group-hover:text-primary">
               <Phone className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-xs text-on-surface-subtle">{t('detail.contact_phone_label')}</p>
-              <p className="text-sm font-bold text-foreground">{location.phone}</p>
-            </div>
-          </a>
-        )}
-        
-        {location.website && (
-          <a href={location.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded-xl border border-border bg-surface-container-lowest p-4 transition-all hover:border-primary hover:shadow-md">
-            <div className="rounded-lg bg-primary/10 p-2 text-primary">
-              <Globe className="h-5 w-5" />
-            </div>
-            <div>
-              <p className="text-xs text-on-surface-subtle">{t('detail.contact_website_label')}</p>
-              <p className="text-sm font-bold text-foreground truncate max-w-[150px]">{location.website.replace(/^https?:\/\//, '')}</p>
+              <p className="mb-1 text-xs font-semibold uppercase tracking-normal text-on-surface-subtle">
+                {t('detail.contact_phone_label')}
+              </p>
+              <p className="text-sm font-semibold text-on-surface">{location.phone}</p>
             </div>
           </a>
         )}
 
-        {openingHoursDisplay ? (
-          <div className="flex items-start gap-3 rounded-xl border border-border bg-surface-container-lowest p-4 transition-all hover:border-primary hover:shadow-md">
-            <div className="rounded-lg bg-primary/10 p-2 text-primary">
+        {location.website && (
+          <a href={location.website} target="_blank" rel="noopener noreferrer" className={infoCardClass}>
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border bg-white text-on-surface-subtle transition-all duration-300 group-hover:border-primary/20 group-hover:text-primary">
+              <Globe className="h-5 w-5" />
+            </div>
+            <div className="overflow-hidden">
+              <p className="mb-1 text-xs font-semibold uppercase tracking-normal text-on-surface-subtle">
+                {t('detail.contact_website_label')}
+              </p>
+              <p className="max-w-[160px] truncate text-sm font-semibold text-on-surface">
+                {location.website.replace(/^https?:\/\//, '')}
+              </p>
+            </div>
+          </a>
+        )}
+
+        {openingHoursDisplay && (
+          <div className={infoCardClass}>
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border bg-white text-on-surface-subtle transition-all duration-300 group-hover:border-primary/20 group-hover:text-primary">
               <Clock className="h-5 w-5" />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-xs text-on-surface-subtle">{t('detail.opening_hours')}</p>
+              <p className="mb-1 text-xs font-semibold uppercase tracking-normal text-on-surface-subtle">
+                {t('detail.opening_hours')}
+              </p>
               {openingHoursDisplay.kind === 'plain' ? (
-                <p className="text-sm font-bold text-foreground">{openingHoursDisplay.text}</p>
+                <p className="whitespace-pre-line text-sm font-semibold text-on-surface">{openingHoursDisplay.text}</p>
               ) : (
-                <ul className="mt-1 space-y-1 text-sm font-bold text-foreground">
+                <ul className="mt-1 space-y-1 text-sm font-semibold text-on-surface">
                   {openingHoursDisplay.rows.map((row) => (
                     <li key={row.dayKey} className="flex gap-2">
-                      <span className="shrink-0 text-on-surface-variant">
+                      <span className="shrink-0 text-on-surface-subtle">
                         {t(`detail.opening_weekday.${row.dayKey}`)}
                       </span>
                       <span>{row.hours}</span>
@@ -130,7 +146,7 @@ const LocationInfo: React.FC<LocationInfoProps> = ({ location }) => {
               )}
             </div>
           </div>
-        ) : null}
+        )}
       </div>
     </div>
   );

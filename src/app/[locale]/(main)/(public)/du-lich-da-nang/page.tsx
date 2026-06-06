@@ -55,15 +55,15 @@ async function LandingContent({ locale, searchParams }: { locale: string; search
       <LandingHero 
         title={landing?.hero_title || t("landing.hero_title")}
         subtitle={landing?.hero_subtitle || t("landing.hero_subtitle")}
-        image={landing?.hero_image || "/images/destinations/da-nang-hero.jpg"}
+        image={landing?.hero_image || "/images/hero-bg.png"}
         count={tours.length}
       />
 
-      <div className="design-container mt-12">
+      <div className="design-container mt-4">
         <DestinationTourLandingClient 
           initialTours={tours}
           categories={categories}
-          destinationName="Đà Nẵng"
+          destinationName={t("landing.destination_name")}
         />
 
         {/* SEO Content */}
@@ -75,7 +75,7 @@ async function LandingContent({ locale, searchParams }: { locale: string; search
 
         {/* FAQ Section */}
         <FAQSection 
-          title="Câu hỏi thường gặp"
+          title={t("landing.faq_title")}
           items={faqs}
         />
       </div>
@@ -88,9 +88,16 @@ export default async function DaNangLandingPage({ params, searchParams }: Props)
   const sParams = await searchParams;
   
   setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "tour" });
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense
+      fallback={
+        <div className="design-container py-16 text-sm font-medium text-muted-foreground">
+          {t("landing.loading")}
+        </div>
+      }
+    >
       <LandingContent locale={locale} searchParams={sParams} />
     </Suspense>
   );

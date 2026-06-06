@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
 import { ROUTES } from "@/config";
-import { IoMailOutline, IoLockClosedOutline } from "@/components/icons/solar";
+import { IoHomeOutline, IoMailOutline, IoLockClosedOutline } from "@/components/icons/solar";
 import { useAuth } from "../hooks/use-auth";
 import { Input } from "@/components/ui";
 
@@ -42,6 +42,9 @@ export function LoginForm({ onSuccess, redirectUrl }: LoginFormProps) {
 
   const emailFocus = getFocusProps("email");
   const passwordFocus = getFocusProps("password");
+  const registerHref = redirectUrl
+    ? `/register?callbackUrl=${encodeURIComponent(redirectUrl)}`
+    : "/register";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,19 +60,19 @@ export function LoginForm({ onSuccess, redirectUrl }: LoginFormProps) {
   };
 
   return (
-    <div className="design-page flex min-h-screen justify-center items-center p-4 sm:p-8">
-      <div className="relative flex w-full max-w-md lg:max-w-4xl lg:w-3/4 xl:w-2/3 h-auto lg:h-[550px] shadow-[0_0_40px_rgba(139,106,85,0.12)] rounded-xl glow-effect">
+    <div className="design-page flex min-h-screen justify-center items-center p-4 py-10 sm:p-8">
+      <div className="relative flex h-auto w-full max-w-md rounded-[28px] shadow-[0_18px_48px_rgba(0,0,0,0.08)] lg:h-[550px] lg:w-3/4 lg:max-w-4xl xl:w-2/3">
         
         {/* Animated Border Background */}
-        <div className="absolute inset-[-2px] rounded-[10px] overflow-hidden pointer-events-none z-0">
+        <div className="pointer-events-none absolute inset-[-2px] z-0 overflow-hidden rounded-[30px]">
           <div 
             className="absolute top-1/2 left-1/2 w-[200%] h-[200%] -translate-x-1/2 -translate-y-1/2 animate-[spin_4s_linear_infinite]" 
-            style={{ backgroundImage: 'conic-gradient(from 0deg, transparent 0 240deg, rgba(139,106,85,0.3) 300deg, #8b6a55 360deg)' }}
+            style={{ backgroundImage: 'conic-gradient(from 0deg, transparent 0 240deg, rgba(255,56,92,0.24) 300deg, #FF385C 360deg)' }}
           />
         </div>
 
         {/* Main Content Container */}
-        <div className="relative z-10 flex w-full h-full rounded-xl overflow-hidden bg-[#080808] border border-[#262626]">
+        <div className="relative z-10 flex h-full w-full overflow-hidden rounded-[28px] border border-border bg-white">
           {/* Left panel - gradient background */}
           <div
             className="hidden lg:flex flex-1 bg-linear-to-br from-[#5c3822] to-[#080808] flex-col pt-12 pl-8 pr-16 text-white relative"
@@ -84,21 +87,29 @@ export function LoginForm({ onSuccess, redirectUrl }: LoginFormProps) {
         </div>
 
         {/* Right panel - form */}
-        <div className="flex flex-1 items-center justify-center p-5 sm:p-8 bg-[#080808]">
+        <div className="flex flex-1 items-center justify-center p-5 sm:p-8 bg-surface-container-low">
           <div className="w-full max-w-md">
+            <Link
+              href={ROUTES.HOME}
+              className="mb-5 inline-flex h-10 items-center gap-2 rounded-full border border-border bg-white px-4 text-sm font-medium text-on-surface-subtle transition hover:border-[#cfcfcf] hover:bg-[#f7f7f7] hover:text-on-surface"
+            >
+              <IoHomeOutline className="h-4 w-4" />
+              {t("back_home")}
+            </Link>
+
             {/* Mobile title */}
-            <div className="flex items-center justify-center mb-6 sm:mb-8 lg:hidden">
-              <span className="font-bold text-[#8b6a55] text-xl text-center uppercase">
+            <div className="mb-6 flex items-center justify-center sm:mb-8 lg:hidden">
+              <span className="text-xl font-semibold uppercase text-primary">
                 {t("title")}
               </span>
             </div>
 
-            <h2 className="hidden lg:block text-3xl font-bold uppercase text-white mb-8 text-center lg:text-left">
+            <h2 className="mb-8 hidden text-[32px] font-semibold uppercase tracking-[-0.03em] text-on-surface lg:block lg:text-left">
               {t("title")}
             </h2>
 
             {error && (
-              <div className="mb-4 p-3 bg-red-500/20 border border-red-500 rounded text-red-400 text-sm text-center">
+              <div className="mb-4 rounded-xl border border-red-200 bg-red-50 p-3 text-center text-sm text-red-500">
                 {error}
               </div>
             )}
@@ -131,18 +142,18 @@ export function LoginForm({ onSuccess, redirectUrl }: LoginFormProps) {
               />
 
               <div className="flex items-center justify-between">
-                <label className="flex items-center gap-2 text-sm text-[#a3a3a3] cursor-pointer hover:text-white transition">
+                <label className="flex cursor-pointer items-center gap-2 text-sm text-on-surface-subtle transition hover:text-on-surface">
                   <input
                     type="checkbox"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
-                    className="accent-[#8b6a55] w-4 h-4 rounded border-[#404040]"
+                    className="h-4 w-4 rounded border-[#404040] accent-primary"
                   />
                   {t("remember_me")}
                 </label>
                 <Link
                   href={ROUTES.FORGOT_PASSWORD}
-                  className="text-sm text-[#8b6a55] hover:text-[#c59a5f] hover:underline transition"
+                  className="text-sm text-primary hover:text-[#c59a5f] hover:underline transition"
                 >
                   {t("forgot_password")}
                 </Link>
@@ -151,11 +162,11 @@ export function LoginForm({ onSuccess, redirectUrl }: LoginFormProps) {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full flex items-center justify-center gap-2 bg-[#171717] hover:border-[#8b6a55] border border-[#262626] disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-full transition-all duration-300 uppercase tracking-wider"
+                className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full border border-primary bg-primary px-5 py-3 font-semibold uppercase tracking-wider text-white transition-all duration-300 hover:border-primary-hover hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-70"
               >
                 {isLoading ? (
                   <>
-                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                    <svg className="h-5 w-5 animate-spin text-white" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                     </svg>
@@ -169,29 +180,29 @@ export function LoginForm({ onSuccess, redirectUrl }: LoginFormProps) {
 
             {/* Divider */}
             <div className="flex items-center gap-3 my-6">
-              <div className="flex-1 h-px bg-[#262626]" />
-              <span className="text-sm text-[#737373]">{t("or_login_with")}</span>
-              <div className="flex-1 h-px bg-[#262626]" />
+              <div className="h-px flex-1 bg-border" />
+              <span className="text-sm text-on-surface-subtle">{t("or_login_with")}</span>
+              <div className="h-px flex-1 bg-border" />
             </div>
 
             {/* Social login */}
             <div className="flex gap-3">
-              <button className="flex-1 flex items-center justify-center gap-2 border border-[#262626] rounded-lg py-2.5 hover:bg-[#171717] transition text-sm font-medium text-[#d4d4d4] hover:text-white">
+              <button className="flex flex-1 items-center justify-center gap-2 rounded-2xl border border-border py-2.5 text-sm font-medium text-on-surface-subtle transition hover:bg-[#f7f7f7] hover:text-on-surface">
                 <GoogleIcon />
                 Google
               </button>
-              <button className="flex-1 flex items-center justify-center gap-2 border border-[#262626] rounded-lg py-2.5 hover:bg-[#171717] transition text-sm font-medium text-[#d4d4d4] hover:text-white">
+              <button className="flex flex-1 items-center justify-center gap-2 rounded-2xl border border-border py-2.5 text-sm font-medium text-on-surface-subtle transition hover:bg-[#f7f7f7] hover:text-on-surface">
                 <FacebookIcon />
                 Facebook
               </button>
             </div>
 
             {/* Register link */}
-            <p className="text-center text-sm text-[#737373] mt-6">
+            <p className="mt-6 text-center text-sm text-on-surface-subtle">
               {t("no_account")}{" "}
               <Link
-                href="/register"
-                className="text-[#8b6a55] font-medium hover:text-[#c59a5f] hover:underline transition"
+                href={registerHref}
+                className="text-primary font-medium hover:text-[#c59a5f] hover:underline transition"
               >
                 {t("register_now")}
               </Link>

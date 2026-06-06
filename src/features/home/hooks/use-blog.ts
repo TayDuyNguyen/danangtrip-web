@@ -1,24 +1,27 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { blogService } from "@/services/blog.service";
+import { homeService } from "@/services/home.service";
 import type { BlogPost } from "@/types";
 import { shouldRetryQuery } from "@/lib/react-query";
 
 /**
  * Enhanced useBlog hook using TanStack Query for deduplication and caching.
+ * Consolidates into single /home API and pre-warms global app config cache.
  */
-export const useBlog = () => {
+export const useBlog = (enabled: boolean = true) => {
   const query = useQuery({
-    queryKey: ["home", "blog", "latest"],
+    queryKey: ["home", "blogs-data"],
     queryFn: async () => {
-      const response = await blogService.getLatest({ page: 1, per_page: 3 });
-      if (response.success && response.data) {
-        return response.data.data || [];
+      const res = await homeService.getHomeBlogs();
+      if (res.success && res.data) {
+        return res.data;
       }
-      throw response;
+      throw res;
     },
-    staleTime: 10 * 60 * 1000, // 10 minutes
+    select: (data) => data.latest_blogs?.data || [],
+    enabled,
+    staleTime: 5 * 60 * 1000,
     retry: shouldRetryQuery,
   });
 

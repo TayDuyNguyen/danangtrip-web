@@ -80,25 +80,25 @@ export function EditRatingModal({
     >
       <div className="absolute inset-0" onClick={isPending ? undefined : onClose} />
 
-      <div className="relative w-full max-w-lg rounded-xl border border-[#262626] bg-[#0a0a0a] p-6 shadow-2xl backdrop-blur-md animate-in fade-in zoom-in-95 duration-300 z-10 max-h-[90vh] overflow-y-auto">
+      <div className="relative z-10 max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-[20px] border border-border bg-white p-6 shadow-[0_16px_48px_rgba(0,0,0,0.20)] animate-in fade-in zoom-in-95 duration-300">
         <button
           type="button"
           disabled={isPending}
           onClick={onClose}
-          className="absolute right-4 top-4 rounded-lg p-1.5 text-[#737373] hover:text-white hover:bg-white/5 transition-all"
-          aria-label="Close modal"
+          className="absolute right-4 top-4 rounded-lg p-1.5 text-on-surface-subtle transition-all hover:bg-[#f7f7f7] hover:text-on-surface"
+          aria-label={t("close_aria")}
         >
           <X className="h-4 w-4" />
         </button>
 
-        <h2 id="edit-modal-title" className="text-xl font-bold text-white mb-6">
+        <h2 id="edit-modal-title" className="mb-6 text-xl font-semibold text-on-surface">
           {t("title")}
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Star selector */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-[#d4d4d4] block">
+            <label className="block text-sm font-medium text-on-surface">
               {t("score_label")}
             </label>
             <div className="flex gap-1">
@@ -108,12 +108,12 @@ export function EditRatingModal({
                   type="button"
                   disabled={isPending}
                   onClick={() => setScore(n)}
-                  className="rounded-md p-0.5 transition-transform hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#8b6a55]"
+                  className="rounded-md p-0.5 transition-transform hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                 >
                   <Star
                     className={cn(
                       "h-8 w-8 transition-colors",
-                      n <= score ? "fill-[#8b6a55] text-[#8b6a55]" : "text-[#404040]"
+                      n <= score ? "fill-primary text-primary" : "text-[#d4d4d8]"
                     )}
                   />
                 </button>
@@ -124,15 +124,15 @@ export function EditRatingModal({
           {/* Comment input */}
           <div className="space-y-2">
             <div className="flex justify-between items-center">
-              <label htmlFor="edit-comment" className="text-sm font-medium text-[#d4d4d4]">
+              <label htmlFor="edit-comment" className="text-sm font-medium text-on-surface">
                 {t("comment_label")}
               </label>
               <span
                 className={cn(
                   "text-xs",
                   comment.trim().length < 10 || comment.trim().length > 500
-                    ? "text-[#737373]"
-                    : "text-[#8b6a55]"
+                    ? "text-on-surface-subtle"
+                    : "text-primary"
                 )}
               >
                 {t("char_counter", { count: comment.trim().length })}
@@ -145,12 +145,12 @@ export function EditRatingModal({
               rows={4}
               disabled={isPending}
               maxLength={500}
-              className="w-full resize-none rounded-lg border border-[#262626] bg-[#111111]/80 p-3 text-sm text-white outline-none ring-[#8b6a55] focus:border-transparent focus:ring-2 transition-all duration-200"
+              className="w-full resize-none rounded-2xl border border-border bg-[#fafafa] p-3 text-sm text-on-surface outline-none ring-primary transition-all duration-200 focus:border-transparent focus:ring-2"
               placeholder={t("comment_placeholder")}
             />
             {comment.trim().length > 0 && comment.trim().length < 10 && (
               <p className="text-xs text-red-400 font-medium">
-                Vui lòng nhập tối thiểu 10 ký tự.
+                {t("comment_min_error")}
               </p>
             )}
           </div>
@@ -159,17 +159,17 @@ export function EditRatingModal({
           {initialImages.length > 0 && (
             <div className="space-y-2">
               <span className="text-xs font-semibold text-[#525252] uppercase tracking-wider block">
-                Ảnh hiện tại trên hệ thống
+                {t("existing_images_label")}
               </span>
               <div className="flex gap-2 flex-wrap">
                 {initialImages.map((img) => (
                   <div
                     key={img.id}
-                    className="relative w-14 h-14 rounded-lg overflow-hidden border border-[#262626]"
+                    className="relative w-14 h-14 rounded-lg overflow-hidden border border-border"
                   >
                     <Image
                       src={img.image_url}
-                      alt="Current preview"
+                      alt={t("current_preview_alt")}
                       fill
                       sizes="56px"
                       className="object-cover"
@@ -182,21 +182,21 @@ export function EditRatingModal({
 
           {/* Upload new images */}
           <div className="space-y-2">
-            <span className="text-sm font-medium text-[#d4d4d4] block">
+            <span className="block text-sm font-medium text-on-surface">
               {t("images_label")}
             </span>
             <div className="relative">
               <label
                 className={cn(
-                  "flex flex-col items-center justify-center border border-dashed border-[#262626] hover:border-[#8b6a55]/60 hover:bg-[#8b6a55]/5 rounded-lg py-5 px-4 cursor-pointer text-center transition-all duration-200",
+                  "flex flex-col items-center justify-center border border-dashed border-border hover:border-primary/60 hover:bg-primary/5 rounded-lg py-5 px-4 cursor-pointer text-center transition-all duration-200",
                   isPending && "pointer-events-none opacity-50"
                 )}
               >
                 <UploadCloud className="h-6 w-6 text-[#525252] mb-1.5" />
-                <span className="text-xs font-semibold text-white mb-0.5">
+                <span className="mb-0.5 text-xs font-semibold text-on-surface">
                   {t("upload_placeholder")}
                 </span>
-                <span className="text-[10px] text-[#737373]">
+                <span className="text-[10px] text-on-surface-subtle">
                   {t("upload_hint")}
                 </span>
                 <input
@@ -218,11 +218,11 @@ export function EditRatingModal({
                   return (
                     <div
                       key={`${file.name}-${i}`}
-                      className="relative w-14 h-14 rounded-lg overflow-hidden border border-[#262626] group shrink-0"
+                      className="relative w-14 h-14 rounded-lg overflow-hidden border border-border group shrink-0"
                     >
                       <Image
                         src={url}
-                        alt="Local file preview"
+                        alt={t("local_preview_alt")}
                         fill
                         sizes="56px"
                         className="object-cover"
@@ -248,7 +248,7 @@ export function EditRatingModal({
               variant="primary"
               disabled={!isValid || isPending}
               isLoading={isPending}
-              className="w-full bg-[#8b6a55] hover:bg-[#725442] text-white font-semibold py-2.5 rounded-lg border-transparent shrink-0"
+              className="w-full bg-primary hover:bg-[#e31c5f] text-white font-semibold py-2.5 rounded-full border-transparent shrink-0"
             >
               {isPending ? t("updating") : t("submit")}
             </Button>
@@ -257,7 +257,7 @@ export function EditRatingModal({
               variant="secondary"
               disabled={isPending}
               onClick={onClose}
-              className="w-full bg-[#171717] border border-[#262626] hover:border-white/10 hover:bg-white/5 text-[#d4d4d4] font-semibold py-2.5 rounded-lg"
+              className="w-full rounded-lg border border-border bg-[#f7f7f7] py-2.5 font-semibold text-on-surface hover:bg-[#efefef]"
             >
               {t("cancel")}
             </Button>

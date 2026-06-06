@@ -25,15 +25,15 @@ export function ProfileLayoutWrapper({
   const t = useTranslations("settings");
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10">
+    <div className="mx-auto w-full max-w-6xl overflow-hidden px-0 py-8 sm:px-4 sm:py-10">
       {/* Breadcrumbs */}
       <nav
         aria-label="Breadcrumb"
-        className="flex items-center gap-1.5 text-xs text-[#525252] mb-8 reveal-up"
+        className="mb-8 flex items-center gap-1.5 text-xs text-on-surface-subtle reveal-up"
       >
         <Link
           href="/"
-          className="flex items-center gap-1 hover:text-[#8b6a55] transition-colors duration-200"
+          className="flex items-center gap-1 hover:text-primary transition-colors duration-200"
           aria-label={t("breadcrumb.home")}
         >
           <Home className="w-3.5 h-3.5" aria-hidden="true" />
@@ -42,16 +42,16 @@ export function ProfileLayoutWrapper({
 
         {breadcrumbs.map((crumb, idx) => (
           <span key={idx} className="flex items-center gap-1.5">
-            <ChevronRight className="w-3 h-3 text-[#333333]" aria-hidden="true" />
+            <ChevronRight className="h-3 w-3 text-[#c4c4c4]" aria-hidden="true" />
             {crumb.href ? (
               <Link
                 href={crumb.href}
-                className="hover:text-[#8b6a55] transition-colors duration-200"
+                className="hover:text-primary transition-colors duration-200"
               >
                 {t(crumb.labelKey)}
               </Link>
             ) : (
-              <span className="text-[#737373]" aria-current="page">
+              <span className="text-on-surface-subtle" aria-current="page">
                 {t(crumb.labelKey)}
               </span>
             )}
@@ -60,19 +60,19 @@ export function ProfileLayoutWrapper({
       </nav>
 
       {/* Mobile: Horizontal tab strip */}
-      <div className="lg:hidden w-full overflow-x-auto pb-2 mb-6 reveal-up">
+      <div className="lg:hidden w-full max-w-full overflow-x-auto pb-2 mb-6 reveal-up no-scrollbar">
         <ProfileMobileNav />
       </div>
 
       {/* Desktop: Two-column layout */}
-      <div className="flex flex-col lg:flex-row gap-8 items-start">
+      <div className="flex w-full max-w-full flex-col items-start gap-8 lg:flex-row">
         {/* Sidebar – visible only on lg+ */}
         <div className="hidden lg:block shrink-0 reveal-up reveal-delay-100">
           <ProfileSidebar />
         </div>
 
         {/* Main content */}
-        <main className="flex-1 min-w-0 reveal-up reveal-delay-200">
+        <main className="w-full min-w-0 max-w-full flex-1 reveal-up reveal-delay-200">
           {children}
         </main>
       </div>

@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import type { User } from "@/types";
 import { clearTokens, setAccessToken } from "@/utils/auth.helper";
+import { safeLocalStorage } from "@/utils/safe-local-storage";
 
 interface AuthState {
   user: User | null;
@@ -68,7 +69,7 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: "auth-storage",
-      storage: createJSONStorage(() => localStorage),
+      storage: createJSONStorage(() => safeLocalStorage),
       partialize: (state) => ({
         user: state.user,
         token: state.token,
@@ -77,4 +78,5 @@ export const useAuthStore = create<AuthState>()(
     }
   )
 );
+
 

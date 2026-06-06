@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useTranslations } from "next-intl";
 import { ChevronDown, X, Check } from "@/components/icons/solar";
 import { TourCategory } from "@/types";
 import { cn } from "@/lib/utils";
 import { TourFilterParams } from "../types";
+import { formatInputPrice } from "@/utils/format";
 
 interface FilterSidebarProps {
   categories: TourCategory[];
@@ -32,7 +33,7 @@ const SectionHeader = ({ title, isExpanded, onToggle }: { title: string, isExpan
 
 const getDateInputClassName = (hasValue: boolean) => cn(
   "w-full rounded-lg border px-3 py-2 text-sm transition-all duration-200",
-  "bg-surface-container text-on-surface [color-scheme:dark]",
+  "bg-white text-on-surface [color-scheme:light]",
   "focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/25",
   "[&::-webkit-calendar-picker-indicator]:cursor-pointer",
   "[&::-webkit-calendar-picker-indicator]:rounded-md",
@@ -59,6 +60,51 @@ export default function FilterSidebar({
     duration: true,
     departureDate: true
   });
+  const [showAllCategories, setShowAllCategories] = useState(false);
+
+  const priceOptions = useMemo(() => [
+    { label: t("price_options.under_500k"), min: undefined, max: 500000 },
+    { label: t("price_options.from_500k_to_1m"), min: 500000, max: 1000000 },
+    { label: t("price_options.from_1m_to_2m"), min: 1000000, max: 2000000 },
+    { label: t("price_options.over_2m"), min: 2000000, max: undefined },
+  ], [t]);
+
+  // --- Local Price States for Debouncing ---
+  const [localMin, setLocalMin] = useState(filters.price_min !== undefined ? formatInputPrice(filters.price_min) : "");
+  const [localMax, setLocalMax] = useState(filters.price_max !== undefined ? formatInputPrice(filters.price_max) : "");
+
+  // Sync prop changes (e.g. quick options click or reset button click)
+  useEffect(() => {
+    setLocalMin(filters.price_min !== undefined ? formatInputPrice(filters.price_min) : "");
+  }, [filters.price_min]);
+
+  useEffect(() => {
+    setLocalMax(filters.price_max !== undefined ? formatInputPrice(filters.price_max) : "");
+  }, [filters.price_max]);
+
+  // Debounce price min update (600ms)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const rawMin = localMin.replace(/\D/g, "");
+      const parsedMin = rawMin ? Number(rawMin) : undefined;
+      if (parsedMin !== filters.price_min) {
+        onFilterChange({ price_min: parsedMin });
+      }
+    }, 600);
+    return () => clearTimeout(timer);
+  }, [localMin, onFilterChange, filters.price_min]);
+
+  // Debounce price max update (600ms)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const rawMax = localMax.replace(/\D/g, "");
+      const parsedMax = rawMax ? Number(rawMax) : undefined;
+      if (parsedMax !== filters.price_max) {
+        onFilterChange({ price_max: parsedMax });
+      }
+    }, 600);
+    return () => clearTimeout(timer);
+  }, [localMax, onFilterChange, filters.price_max]);
 
   const toggleSection = (section: keyof typeof expanded) => {
     setExpanded(prev => ({ ...prev, [section]: !prev[section] }));
@@ -74,8 +120,10 @@ export default function FilterSidebar({
     onFilterChange({ duration: isSelected ? undefined : val });
   };
 
+  const visibleCategories = showAllCategories ? categories : categories.slice(0, 7);
+
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 rounded-[28px] border border-border bg-white p-6 shadow-[0_18px_54px_rgba(15,23,42,0.08)]">
       {/* Categories */}
       {showCategoryFilter && (
         <div className="border-b border-border pb-4">
@@ -88,7 +136,27 @@ export default function FilterSidebar({
             "space-y-2 mt-2 transition-all duration-300 overflow-hidden",
             expanded.categories ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
           )}>
-            {categories.map((cat) => (
+            <label
+              className="flex items-center gap-3 cursor-pointer group"
+            >
+              <div className="relative flex items-center">
+                <input
+                  type="checkbox"
+                  checked={filters.tour_category_id === undefined}
+                  onChange={() => onFilterChange({ tour_category_id: undefined })}
+                  className="peer appearance-none w-5 h-5 rounded border border-border checked:bg-primary checked:border-primary transition-all"
+                />
+                <Check className="absolute w-3 h-3 text-on-primary opacity-0 peer-checked:opacity-100 left-1 pointer-events-none transition-opacity" />
+              </div>
+              <span className={cn(
+                "text-sm transition-colors",
+                filters.tour_category_id === undefined ? "text-primary font-bold" : "text-on-surface-subtle group-hover:text-on-surface"
+              )}>
+                {t("all_categories")}
+              </span>
+            </label>
+
+            {visibleCategories.map((cat) => (
               <label
                 key={cat.id}
                 className="flex items-center gap-3 cursor-pointer group"
@@ -104,12 +172,23 @@ export default function FilterSidebar({
                 </div>
                 <span className={cn(
                   "text-sm transition-colors",
-                  filters.tour_category_id === cat.id ? "text-primary font-bold" : "text-on-surface-variant group-hover:text-on-surface"
+                  filters.tour_category_id === cat.id ? "text-primary font-bold" : "text-on-surface-subtle group-hover:text-on-surface"
                 )}>
                   {cat.name}
                 </span>
               </label>
             ))}
+            {categories.length > 7 && (
+              <button
+                type="button"
+                onClick={() => setShowAllCategories((prev) => !prev)}
+                className="pt-2 text-left text-sm font-semibold text-primary transition-colors hover:text-primary/80"
+              >
+                {showAllCategories
+                  ? t("show_less")
+                  : t("show_more_categories", { count: categories.length - 7 })}
+              </button>
+            )}
           </div>
         </div>
       )}
@@ -123,27 +202,67 @@ export default function FilterSidebar({
         />
         <div className={cn(
           "space-y-4 mt-4 transition-all duration-300 overflow-hidden",
-          expanded.price ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
+          expanded.price ? "max-h-80 opacity-100" : "max-h-0 opacity-0"
         )}>
+          {/* Quick options grid */}
+          <div className="grid grid-cols-2 gap-2">
+            {priceOptions.map((opt) => {
+              const isSelected = filters.price_min === opt.min && filters.price_max === opt.max;
+              return (
+                <button
+                  key={opt.label}
+                  type="button"
+                  onClick={() => {
+                    if (isSelected) {
+                      onFilterChange({ price_min: undefined, price_max: undefined });
+                    } else {
+                      onFilterChange({ price_min: opt.min, price_max: opt.max });
+                    }
+                  }}
+                  className={cn(
+                    "py-2 px-3 text-xs font-bold rounded-lg border transition-all text-center cursor-pointer select-none",
+                    isSelected
+                      ? "bg-primary border-primary text-white"
+                      : "bg-white border-border text-on-surface-subtle hover:border-primary hover:bg-primary/10 hover:text-primary"
+                  )}
+                >
+                  {opt.label}
+                </button>
+              );
+            })}
+          </div>
+
           <div className="flex items-center gap-2">
-            <div className="flex-1">
+            <div className="flex-1 relative">
               <input
-                type="number"
+                type="text"
                 placeholder={t("price_min_placeholder")}
-                value={filters.price_min || ""}
-                onChange={(e) => onFilterChange({ price_min: e.target.value ? Number(e.target.value) : undefined })}
-                className="w-full bg-surface-container border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary"
+                value={localMin}
+                onChange={(e) => {
+                  const clean = e.target.value.replace(/\D/g, "");
+                  const formatted = clean ? formatInputPrice(Number(clean)) : "";
+                  e.target.value = formatted;
+                  setLocalMin(formatted);
+                }}
+                className="w-full rounded-lg border border-border bg-white py-2 pl-3 pr-7 text-sm text-on-surface focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15"
               />
+              <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-on-surface-subtle select-none">đ</span>
             </div>
             <span className="text-on-surface-subtle">-</span>
-            <div className="flex-1">
+            <div className="flex-1 relative">
               <input
-                type="number"
+                type="text"
                 placeholder={t("price_max_placeholder")}
-                value={filters.price_max || ""}
-                onChange={(e) => onFilterChange({ price_max: e.target.value ? Number(e.target.value) : undefined })}
-                className="w-full bg-surface-container border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary"
+                value={localMax}
+                onChange={(e) => {
+                  const clean = e.target.value.replace(/\D/g, "");
+                  const formatted = clean ? formatInputPrice(Number(clean)) : "";
+                  e.target.value = formatted;
+                  setLocalMax(formatted);
+                }}
+                className="w-full rounded-lg border border-border bg-white py-2 pl-3 pr-7 text-sm text-on-surface focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15"
               />
+              <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-on-surface-subtle select-none">đ</span>
             </div>
           </div>
         </div>
@@ -180,7 +299,7 @@ export default function FilterSidebar({
               </div>
               <span className={cn(
                 "text-sm transition-colors",
-                filters.duration === option.value ? "text-primary font-bold" : "text-on-surface-variant group-hover:text-on-surface"
+                filters.duration === option.value ? "text-primary font-bold" : "text-on-surface-subtle group-hover:text-on-surface"
               )}>
                 {option.label}
               </span>
@@ -228,7 +347,7 @@ export default function FilterSidebar({
       {/* Clear Button */}
       <button
         onClick={onReset}
-        className="w-full py-3 px-4 bg-surface-container hover:bg-border text-on-surface text-sm font-bold rounded-xl transition-all flex items-center justify-center gap-2"
+        className="flex w-full items-center justify-center gap-2 rounded-full border border-border bg-[#f7f7f7] px-4 py-3 text-sm font-bold text-on-surface transition-all hover:border-primary/30 hover:bg-white hover:text-primary"
       >
         <X className="w-4 h-4" />
         {t("clear_all")}

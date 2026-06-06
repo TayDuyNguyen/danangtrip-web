@@ -35,11 +35,11 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           <label
             htmlFor={textareaId}
             className={cn(
-              "block text-[11px] font-bold mb-1 uppercase tracking-[0.2em] transition-all duration-300 transform",
+              "mb-1 block text-[12px] font-semibold uppercase tracking-normal transition-all duration-300 transform",
               isFocused || error
                 ? "translate-y-0 opacity-100"
                 : "text-transparent -translate-y-1 opacity-0",
-              isFocused ? "text-primary" : (error ? "text-red-400" : "")
+              isFocused ? "text-primary" : (error ? "text-red-500" : "")
             )}
           >
             {label}
@@ -49,13 +49,13 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         {/* Textarea container */}
         <div
           className={cn(
-            "flex border-b px-0 transition-all duration-300 ease-out",
+            "flex rounded-2xl border bg-white px-4 transition-all duration-300 ease-out",
             error
-              ? "border-red-500"
+              ? "border-red-500 bg-rose-50/60"
               : isFocused
-                ? "border-primary"
+                ? "border-primary shadow-[0_0_0_3px_rgba(255,56,92,0.12)]"
                 : "border-border",
-            "bg-transparent"
+            "shadow-sm"
           )}
         >
           {/* Textarea field */}
@@ -65,9 +65,9 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
             rows={rows}
             suppressHydrationWarning
             className={cn(
-              "w-full py-3 bg-transparent outline-none placeholder:text-on-surface-variant",
+              "w-full bg-transparent py-3 outline-none placeholder:text-on-surface-subtle",
               "transition-all duration-300 focus:placeholder-transparent",
-              "text-sm sm:text-base text-white font-medium resize-none"
+              "resize-none text-sm font-medium text-on-surface sm:text-base"
             )}
             {...props}
           />

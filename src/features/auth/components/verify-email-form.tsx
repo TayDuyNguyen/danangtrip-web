@@ -178,29 +178,29 @@ export function VerifyEmailForm({ otp: initialOtp, email }: VerifyEmailFormProps
   };
 
   return (
-    <div className="design-page flex min-h-screen justify-center items-center p-4 sm:p-8 relative overflow-hidden bg-[#080808]">
+    <div className="design-page flex min-h-screen justify-center items-center p-4 sm:p-8 relative overflow-hidden bg-surface-container-low">
       {/* Dynamic Background Effect */}
       <AmbientBackground />
 
       {/* Main card box with gradient borders on desktop */}
-      <div className="relative flex w-full max-w-md shadow-[0_0_40px_rgba(139,106,85,0.12)] rounded-xl glow-effect animate-reveal-up">
+      <div className="relative flex w-full max-w-md rounded-[28px] shadow-[0_18px_48px_rgba(0,0,0,0.08)] animate-reveal-up">
         
         {/* Animated Border Background (Hidden on mobile for performance) */}
         {status !== "success" && (
           <div className="absolute inset-[-2px] rounded-[10px] overflow-hidden pointer-events-none z-0 hidden sm:block">
             <div 
               className="absolute top-1/2 left-1/2 w-[200%] h-[200%] -translate-x-1/2 -translate-y-1/2 animate-[spin_4s_linear_infinite]" 
-              style={{ backgroundImage: 'conic-gradient(from 0deg, transparent 0 240deg, rgba(139,106,85,0.3) 300deg, #8b6a55 360deg)' }}
+              style={{ backgroundImage: 'conic-gradient(from 0deg, transparent 0 240deg, rgba(255,56,92,0.24) 300deg, #FF385C 360deg)' }}
             />
           </div>
         )}
 
         {/* Inner surface */}
-        <div className="relative z-10 w-full rounded-xl overflow-hidden bg-[#080808] border border-[#262626] p-6 sm:p-8 flex flex-col items-center text-center">
+        <div className="relative z-10 flex w-full flex-col items-center overflow-hidden rounded-[28px] border border-border bg-white p-6 text-center sm:p-8">
           
           {/* Brand/App name at the top */}
           <div className="mb-6">
-            <span className="font-bold text-[#8b6a55] text-lg uppercase tracking-wider">
+            <span className="font-bold text-primary text-lg uppercase tracking-wider">
               {t("brand_name")}
             </span>
           </div>
@@ -209,13 +209,13 @@ export function VerifyEmailForm({ otp: initialOtp, email }: VerifyEmailFormProps
           {status === "verifying" && (
             <div className="py-8 space-y-6 flex flex-col items-center">
               <div className="relative flex items-center justify-center">
-                <div className="w-16 h-16 border-4 border-[#262626] border-t-[#8b6a55] rounded-full animate-spin" />
+                <div className="h-16 w-16 animate-spin rounded-full border-4 border-border border-t-primary" />
               </div>
               <div className="space-y-2">
-                <h2 className="text-xl font-bold text-white uppercase tracking-wide">
+                <h2 className="text-xl font-semibold text-on-surface uppercase tracking-wide">
                   {t("verifying.title")}
                 </h2>
-                <p className="text-sm text-[#737373] max-w-xs">
+                <p className="text-sm text-on-surface-subtle max-w-xs">
                   {t("verifying.subtitle")}
                 </p>
               </div>
@@ -225,24 +225,24 @@ export function VerifyEmailForm({ otp: initialOtp, email }: VerifyEmailFormProps
           {/* 2. STATE: Success verification */}
           {status === "success" && (
             <div className="py-8 space-y-6 flex flex-col items-center">
-              <div className="w-16 h-16 bg-[#8b6a55]/10 border border-[#8b6a55]/20 rounded-full flex items-center justify-center text-[#8b6a55] animate-[pulse_2s_infinite]">
+              <div className="w-16 h-16 bg-primary/10 border border-primary/20 rounded-full flex items-center justify-center text-primary animate-[pulse_2s_infinite]">
                 <CheckCircle2 className="w-10 h-10" />
               </div>
               <div className="space-y-2">
-                <h2 className="text-xl font-bold text-white uppercase tracking-wide">
+                <h2 className="text-xl font-semibold text-on-surface uppercase tracking-wide">
                   {t("success.title")}
                 </h2>
-                <p className="text-sm text-[#a3a3a3] max-w-xs">
+                <p className="text-sm text-on-surface-subtle max-w-xs">
                   {t("success.subtitle")}
                 </p>
               </div>
               <div className="pt-4 space-y-3 w-full">
-                <p className="text-xs text-[#737373] italic">
+                <p className="text-xs italic text-on-surface-subtle">
                   {t("success.redirect", { seconds: redirectSeconds })}
                 </p>
                 <button
                   onClick={() => router.push("/")}
-                  className="w-full flex items-center justify-center bg-[#171717] hover:border-[#8b6a55] hover:text-[#8b6a55] border border-[#262626] text-white font-semibold py-3 rounded-full transition-all duration-300 uppercase tracking-wider text-xs"
+                  className="w-full flex items-center justify-center bg-primary hover:bg-primary-hover border border-primary text-white font-semibold py-3 rounded-full transition-all duration-300 uppercase tracking-wider text-xs"
                 >
                   {t("success.home_btn")}
                 </button>
@@ -257,7 +257,7 @@ export function VerifyEmailForm({ otp: initialOtp, email }: VerifyEmailFormProps
                 <IoAlertCircleOutline className="w-10 h-10" />
               </div>
               <div className="space-y-2">
-                <h2 className="text-xl font-bold text-white uppercase tracking-wide">
+                <h2 className="text-xl font-semibold text-on-surface uppercase tracking-wide">
                   {t("failure.title")}
                 </h2>
                 <p className="text-sm text-red-400 max-w-xs px-2">
@@ -267,7 +267,7 @@ export function VerifyEmailForm({ otp: initialOtp, email }: VerifyEmailFormProps
               <div className="pt-4 w-full">
                 <button
                   onClick={handleRetryWithOtp}
-                  className="w-full flex items-center justify-center bg-[#171717] hover:border-[#8b6a55] hover:text-[#8b6a55] border border-[#262626] text-white font-semibold py-3 rounded-full transition-all duration-300 uppercase tracking-wider text-xs"
+                  className="w-full flex items-center justify-center bg-primary hover:bg-primary-hover border border-primary text-white font-semibold py-3 rounded-full transition-all duration-300 uppercase tracking-wider text-xs"
                 >
                   {t("failure.retry_btn")}
                 </button>
@@ -278,21 +278,21 @@ export function VerifyEmailForm({ otp: initialOtp, email }: VerifyEmailFormProps
           {/* 4. STATE: Already Verified */}
           {status === "already_verified" && (
             <div className="py-6 space-y-6 flex flex-col items-center w-full">
-              <div className="w-16 h-16 bg-[#8b6a55]/10 border border-[#8b6a55]/20 rounded-full flex items-center justify-center text-[#8b6a55]">
+              <div className="w-16 h-16 bg-primary/10 border border-primary/20 rounded-full flex items-center justify-center text-primary">
                 <CheckCircle2 className="w-10 h-10" />
               </div>
               <div className="space-y-2">
-                <h2 className="text-xl font-bold text-white uppercase tracking-wide">
+                <h2 className="text-xl font-semibold text-on-surface uppercase tracking-wide">
                   {t("already_verified.title")}
                 </h2>
-                <p className="text-sm text-[#a3a3a3] max-w-xs px-2">
+                <p className="text-sm text-on-surface-subtle max-w-xs px-2">
                   {t("already_verified.subtitle")}
                 </p>
               </div>
               <div className="pt-4 w-full">
                 <button
                   onClick={() => router.push("/")}
-                  className="w-full flex items-center justify-center bg-[#171717] hover:border-[#8b6a55] hover:text-[#8b6a55] border border-[#262626] text-white font-semibold py-3 rounded-full transition-all duration-300 uppercase tracking-wider text-xs"
+                  className="w-full flex items-center justify-center bg-primary hover:bg-primary-hover border border-primary text-white font-semibold py-3 rounded-full transition-all duration-300 uppercase tracking-wider text-xs"
                 >
                   {t("already_verified.home_btn")}
                 </button>
@@ -303,23 +303,23 @@ export function VerifyEmailForm({ otp: initialOtp, email }: VerifyEmailFormProps
           {/* 5. STATE: Manual OTP entry */}
           {status === "otp" && (
             <form onSubmit={handleManualSubmit} className="w-full space-y-6 flex flex-col items-center">
-              <div className="w-12 h-12 bg-[#8b6a55]/10 border border-[#8b6a55]/20 rounded-full flex items-center justify-center text-[#8b6a55] mb-2">
+              <div className="w-12 h-12 bg-primary/10 border border-primary/20 rounded-full flex items-center justify-center text-primary mb-2">
                 <IoMailOutline className="w-6 h-6" />
               </div>
 
               <div className="space-y-2 text-center">
-                <h2 className="text-xl font-bold text-white uppercase tracking-wide">
+                <h2 className="text-xl font-semibold text-on-surface uppercase tracking-wide">
                   {t("otp.title")}
                 </h2>
                 {email ? (
-                  <p className="text-xs text-[#737373]">
+                  <p className="text-xs text-on-surface-subtle">
                     {t("otp.subtitle")}{" "}
-                    <span className="text-white font-semibold block sm:inline mt-1 sm:mt-0 font-mono">
+                     <span className="text-on-surface font-semibold block sm:inline mt-1 sm:mt-0 font-mono">
                       {email}
                     </span>
                   </p>
                 ) : (
-                  <p className="text-xs text-[#737373]">
+                  <p className="text-xs text-on-surface-subtle">
                     {t("otp.description")}
                   </p>
                 )}
@@ -344,7 +344,7 @@ export function VerifyEmailForm({ otp: initialOtp, email }: VerifyEmailFormProps
               <button
                 type="submit"
                 disabled={otpValue.length < 6 || verifyMutation.isPending}
-                className="w-full flex items-center justify-center gap-2 bg-[#171717] hover:border-[#8b6a55] hover:text-[#8b6a55] border border-[#262626] disabled:opacity-50 disabled:hover:text-white disabled:hover:border-[#262626] disabled:cursor-not-allowed text-white font-semibold py-3 rounded-full transition-all duration-300 uppercase tracking-wider text-xs"
+                 className="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary-hover border border-primary disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-full transition-all duration-300 uppercase tracking-wider text-xs"
               >
                 {verifyMutation.isPending ? (
                   <>
@@ -361,9 +361,9 @@ export function VerifyEmailForm({ otp: initialOtp, email }: VerifyEmailFormProps
 
               {/* Resend Verification Email Section */}
               <div className="flex flex-col sm:flex-row items-center justify-center gap-1.5 pt-2 text-xs">
-                <span className="text-[#737373]">{t("resend.prompt")}</span>
+                <span className="text-on-surface-subtle">{t("resend.prompt")}</span>
                 {resendCooldown > 0 ? (
-                  <span className="text-[#a3a3a3] font-medium">
+                  <span className="font-medium text-on-surface-subtle">
                     {t("resend.countdown", { seconds: resendCooldown })}
                   </span>
                 ) : (
@@ -371,7 +371,7 @@ export function VerifyEmailForm({ otp: initialOtp, email }: VerifyEmailFormProps
                     type="button"
                     onClick={handleResend}
                     disabled={resendMutation.isPending}
-                    className="text-[#8b6a55] hover:text-[#c59a5f] hover:underline font-semibold disabled:opacity-50 disabled:no-underline transition-all cursor-pointer"
+                    className="text-primary hover:text-[#c59a5f] hover:underline font-semibold disabled:opacity-50 disabled:no-underline transition-all cursor-pointer"
                   >
                     {resendMutation.isPending ? t("otp.submitting") : t("resend.btn")}
                   </button>
@@ -383,7 +383,7 @@ export function VerifyEmailForm({ otp: initialOtp, email }: VerifyEmailFormProps
                 <button
                   type="button"
                   onClick={() => router.push("/login")}
-                  className="flex items-center gap-1 text-xs text-[#737373] hover:text-white transition-all cursor-pointer"
+                   className="flex items-center gap-1 text-xs text-on-surface-subtle hover:text-on-surface transition-all cursor-pointer"
                 >
                   <IoChevronBack className="w-3.5 h-3.5" />
                   <span>{t("back_to_login")}</span>

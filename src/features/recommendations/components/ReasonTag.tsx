@@ -22,13 +22,13 @@ export default function ReasonTag({ reason }: ReasonTagProps) {
         return {
           icon: <IoTrendingUp className="text-emerald-500 text-xs shrink-0" />,
           label: t("booked"),
-          bg: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+          bg: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20",
         };
       case "viewed":
         return {
           icon: <IoCompassOutline className="text-amber-500 text-xs shrink-0" />,
           label: t("viewed"),
-          bg: "bg-amber-500/10 text-amber-400 border-amber-500/20",
+          bg: "bg-amber-500/10 text-amber-600 border-amber-500/20",
         };
       case "popular":
       default:
@@ -43,7 +43,7 @@ export default function ReasonTag({ reason }: ReasonTagProps) {
   const meta = getReasonMeta();
 
   return (
-    <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-[10px] font-mono font-medium tracking-wide uppercase transition-all duration-300 ${meta.bg}`}>
+    <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-[11px] font-medium tracking-normal transition-all duration-300 ${meta.bg}`}>
       {meta.icon}
       <span>{meta.label}</span>
     </div>

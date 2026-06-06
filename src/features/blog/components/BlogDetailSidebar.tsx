@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { format } from "date-fns";
 import { vi, enUS } from "date-fns/locale";
-import { IoTrendingUp, IoNewspaperOutline } from "@/components/icons/solar";
+import { IoTrendingUp } from "@/components/icons/solar";
 import { formatCompactNumber } from "@/utils/format";
 import { BlogPost } from "@/types";
 import { TocHeading } from "../types";
@@ -29,17 +29,11 @@ export const BlogDetailSidebar = ({ popularPosts, tocHeadings }: BlogDetailSideb
   const dateLocale = locale === "vi" ? vi : enUS;
 
   return (
-    <aside className="space-y-10 sticky top-24">
-      {/* Table of Contents */}
+    <aside className="sticky top-24 space-y-8">
       <TableOfContents headings={tocHeadings} />
-
-      {/* Share Buttons */}
       <ShareButtons />
-
-      {/* Popular Posts (Re-styled for detail sidebar) */}
-      <div className="space-y-8">
-        <h3 className="text-xl font-bold text-white flex items-center gap-2">
-          <span className="w-1.5 h-6 bg-primary rounded-full" />
+      <div className="space-y-6 rounded-[28px] border border-border bg-white p-6 shadow-[0_16px_48px_rgba(15,23,42,0.08)]">
+        <h3 className="border-l-4 border-primary pl-3 text-lg font-semibold text-on-surface">
           {t("popular_posts")}
         </h3>
         
@@ -72,24 +66,23 @@ export const BlogDetailSidebar = ({ popularPosts, tocHeadings }: BlogDetailSideb
               <Link
                 key={post.id}
                 href={`/${locale}/blog/${post.slug}`}
-                className="flex gap-4 group"
+                className="group flex gap-4 rounded-2xl p-2 transition-colors hover:bg-[#fafafa]"
               >
-                <div className="relative w-20 h-20 rounded-2xl overflow-hidden shrink-0 border border-white/5">
+                <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg border border-border">
                   <Image
                     src={image}
                     alt={post.title}
                     fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    className="object-cover transition-transform duration-300 group-hover:scale-110"
                   />
                 </div>
                 <div className="flex-1 space-y-2 py-1">
-                  <h4 className="text-sm font-bold text-white line-clamp-2 group-hover:text-primary transition-colors leading-snug">
+                  <h4 className="line-clamp-2 text-sm font-medium leading-snug text-on-surface transition-colors group-hover:text-primary">
                     {post.title}
                   </h4>
-                  <div className="flex items-center gap-3 text-[10px] text-neutral-500">
-                    <span className="flex items-center gap-1">
-                      <IoNewspaperOutline size={12} className="text-primary" />
-                      {post.published_at ? format(new Date(post.published_at), "dd MMM, yyyy", { locale: dateLocale }) : "-"}
+                  <div className="flex items-center gap-3 text-xs text-on-surface-subtle">
+                    <span>
+                      {post.published_at ? format(new Date(post.published_at), "dd 'thg' M, yyyy", { locale: dateLocale }) : "-"}
                     </span>
                     <span className="flex items-center gap-1">
                       <IoTrendingUp size={12} className="text-primary" />

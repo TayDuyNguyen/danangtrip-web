@@ -20,43 +20,51 @@ export const useSearchSuggestions = (query: string, type: string) => {
       const q = debouncedQuery.trim();
       
       const res = await searchService.getSuggestions(q, 5);
-      const items = extractItems<Record<string, unknown> | string>(res.data);
+      const rawData = res.data;
+      const suggestionsPayload = (rawData && typeof rawData === "object" && "suggestions" in rawData)
+        ? (rawData as { suggestions: unknown }).suggestions
+        : rawData;
+      const items = extractItems<Record<string, unknown> | string>(suggestionsPayload);
 
-      // Backend có thể trả mảng chuỗi (từ khóa) thay vì entity
-      if (items.length > 0 && typeof items[0] === "string") {
-        const strings = items as string[];
-        const mapped = strings.map((title, i) => ({
-          id: -(i + 1),
-          type: "location" as SearchSuggestionType,
-          title,
-          slug: "",
-          subtitle: "",
-          thumbnail: null as string | null,
+      const mappedStrings: SearchSuggestionItem[] = items
+        .filter((item): item is string => typeof item === "string")
+        .map((title, i) => {
+          const normalized = title.toLowerCase();
+          const isTour = normalized.startsWith("tour");
+          return {
+            id: -(i + 1),
+            type: (isTour ? "tour" : "location") as SearchSuggestionType,
+            title,
+            slug: "",
+            subtitle: "",
+            thumbnail: null as string | null,
+            rating: 0,
+            reviewCount: 0,
+            viewCount: 0,
+          };
+        });
+
+      const objectItems = items.filter(
+        (item): item is Record<string, unknown> => typeof item === "object" && item !== null
+      );
+
+      const keywords: SearchSuggestionItem[] = objectItems
+        .filter((item) => (item as { type?: string }).type === "keyword")
+        .map((keyword, i) => ({
+          id: Number(keyword.id ?? -(100 + i)),
+          type: "keyword" as SearchSuggestionType,
+          title: String(keyword.title ?? keyword.name ?? ""),
+          slug: String(keyword.slug ?? ""),
+          subtitle: String(keyword.subtitle ?? ""),
+          thumbnail: (keyword.thumbnail as string | null) ?? null,
           rating: 0,
           reviewCount: 0,
           viewCount: 0,
+          score: Number(keyword.score ?? 0),
         }));
 
-        let locations: SearchSuggestionItem[] = [];
-        let tours: SearchSuggestionItem[] = [];
-        if (type === "location") locations = mapped;
-        else if (type === "tour") {
-          tours = mapped.map((m) => ({ ...m, type: "tour" as SearchSuggestionType }));
-        } else {
-          const half = Math.ceil(mapped.length / 2);
-          locations = mapped.slice(0, half);
-          tours = mapped.slice(half).map((m) => ({ ...m, type: "tour" as SearchSuggestionType }));
-        }
-
-        return {
-          locations,
-          tours,
-          total: locations.length + tours.length,
-        };
-      }
-
-      const locations: SearchSuggestionItem[] = items
-        .filter((item): item is Record<string, unknown> => typeof item === "object" && item !== null && (item as { type?: string }).type === "location")
+      const locations: SearchSuggestionItem[] = objectItems
+        .filter((item): item is Record<string, unknown> => (item as { type?: string }).type === "location")
         .map((loc) => ({
           id: Number(loc.id),
           type: "location" as SearchSuggestionType,
@@ -69,8 +77,8 @@ export const useSearchSuggestions = (query: string, type: string) => {
           viewCount: Number(loc.view_count ?? 0),
         }));
 
-      const tours: SearchSuggestionItem[] = items
-        .filter((item): item is Record<string, unknown> => typeof item === "object" && item !== null && (item as { type?: string }).type === "tour")
+      const tours: SearchSuggestionItem[] = objectItems
+        .filter((item): item is Record<string, unknown> => (item as { type?: string }).type === "tour")
         .map((tour) => ({
           id: Number(tour.id),
           type: "tour" as SearchSuggestionType,
@@ -89,10 +97,17 @@ export const useSearchSuggestions = (query: string, type: string) => {
         }))
         .sort((a: SearchSuggestionItem, b: SearchSuggestionItem) => (b.bookingCount || 0) - (a.bookingCount || 0));
 
+      const stringLocations = type === "tour" ? [] : mappedStrings.filter((m) => m.type === "location");
+      const stringTours = type === "location" ? [] : mappedStrings.filter((m) => m.type === "tour");
+
+      const finalLocations = [...locations, ...stringLocations];
+      const finalTours = [...tours, ...stringTours];
+
       return {
-        locations,
-        tours,
-        total: locations.length + tours.length,
+        keywords,
+        locations: finalLocations,
+        tours: finalTours,
+        total: keywords.length + finalLocations.length + finalTours.length,
       };
     },
     enabled: isEnabled,

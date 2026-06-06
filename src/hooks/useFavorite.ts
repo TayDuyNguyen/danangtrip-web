@@ -28,6 +28,7 @@ export function useFavoriteToggle(params: { location_id?: number; tour_id?: numb
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["favorite-check", params] });
+      queryClient.invalidateQueries({ queryKey: ["favorites"] });
     },
   });
 }

@@ -1,4 +1,5 @@
 import NearbyClient from "@/features/locations/nearby/components/NearbyClient";
+import { getTranslations } from "next-intl/server";
 
 interface PageProps {
   params: Promise<{ locale: string }>;
@@ -6,16 +7,11 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps) {
   const { locale } = await params;
-  
-  const isEn = locale === "en";
+  const t = await getTranslations({ locale, namespace: "locations" });
 
   return {
-    title: isEn
-      ? "Discover Da Nang Tourist Places Near You | DanangTrip"
-      : "Tìm Địa điểm du lịch gần bạn ở Đà Nẵng | DanangTrip",
-    description: isEn
-      ? "Scan your GPS location to easily discover nearby tourist spots, restaurants, cafes, and entertainment in Da Nang, complete with interactive map routing."
-      : "Quét vị trí GPS hiện tại của bạn để tìm nhanh các điểm tham quan, ẩm thực, khu vui chơi gần đây ở Đà Nẵng với chỉ dẫn khoảng cách và bản đồ mượt mà.",
+    title: t("nearby.meta_title"),
+    description: t("nearby.meta_description"),
   };
 }
 

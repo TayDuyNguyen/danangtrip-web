@@ -8,9 +8,8 @@ import { getApiErrorMessage } from "@/utils";
 
 /**
  * Enhanced useStatistics hook using TanStack Query.
- * Strict Mode: No mock fallback data allowed.
  */
-export const useStatistics = () => {
+export const useStatistics = (enabled: boolean = true) => {
   const query = useQuery({
     queryKey: ["home", "statistics"],
     queryFn: async () => {
@@ -18,7 +17,8 @@ export const useStatistics = () => {
       if (res.success && res.data) return res.data;
       throw res;
     },
-    staleTime: 30 * 60 * 1000,
+    enabled,
+    staleTime: 5 * 60 * 1000,
     retry: shouldRetryQuery,
   });
 

@@ -14,11 +14,12 @@ interface LoadingProp {
 
 const Spinner = ({ color, size }: { color: string; size: number }) => (
     <div
-        className="rounded-full border-4 border-transparent animate-spin"
+        className="rounded-full border-4 border-solid animate-spin"
         style={{
             width: size,
             height: size,
-            borderBottomColor: color,
+            borderColor: `${color}20`, // 12% opacity for the track border
+            borderTopColor: color,    // solid color for the spinning head
         }}
     />
 );

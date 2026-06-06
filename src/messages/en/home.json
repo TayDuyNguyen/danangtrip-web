@@ -8,6 +8,14 @@
   "search_type_location": "Location",
   "search_type_tour": "Tour",
   "search_button": "Search",
+  "hero_airbnb_badge": "Inspired by Airbnb, tailored for Da Nang",
+  "hero_search_title": "Explore Da Nang",
+  "hero_search_subtitle": "Find dining spots, places to visit, and local tours in one clean, easy search bar.",
+  "hero_where_label": "Where to?",
+  "hero_type_label": "Explore type",
+  "hero_chip_beaches": "Beaches",
+  "hero_chip_food_tours": "Food tours",
+  "hero_chip_local_guides": "Local guides",
   "trending": "Trending",
   "stats": {
     "users": "Customers",
@@ -21,6 +29,7 @@
     "sunny": "Sunny",
     "cloudy": "Cloudy",
     "rainy": "Rainy",
+    "rain_chance": "{percent}% rain chance in the next {hours} hours",
     "unknown": "Unknown"
   },
   "categories_title": "What do you want to explore?",
@@ -39,7 +48,11 @@
     "title_highlight": "Locations",
     "subtitle": "The most iconic and attractive landmarks that you cannot miss when coming to Da Nang.",
     "no_data": "No locations found in this category",
-    "default_address": "Da Nang"
+    "default_address": "Da Nang",
+    "default_description": "Discover the unique beauty of one of Da Nang's most popular destinations...",
+    "hot_spot": "Hot Spot",
+    "map_title": "Map Coordinate Pin",
+    "reviews_label": "reviews"
   },
   "filters": {
     "all": "All",
@@ -49,17 +62,24 @@
     "entertainment": "Entertainment"
   },
   "tour_categories": {
+    "tagline": "Tour categories",
     "title": "Tour Categories",
+    "title_prefix": "Explore tours by",
+    "title_highlight": "Category",
     "cta": "Explore now"
   },
   "featured_tours": {
     "badge": "Explore",
     "title": "Featured Tours",
+    "title_prefix": "Featured",
+    "title_highlight": "Tours",
     "special_tour": "Special Tour"
   },
   "hot_tours": {
     "tagline": "Trending Now",
     "title": "Hottest Tours of the Week",
+    "title_prefix": "Hottest Tours",
+    "title_highlight": "This Week",
     "subtitle": "Don't miss the most sought-after journeys with shocking promotional prices.",
     "cta": "Get deals now",
     "explore_more": "Explore more"
@@ -70,7 +90,8 @@
     "title_highlight": "Guide",
     "subtitle": "Explore stories, experiences and Da Nang travel tips from journey experts.",
     "see_all": "All posts",
-    "read_more": "Read more"
+    "read_more": "Read more",
+    "default_category": "Travel"
   },
   "discovery": {
     "tagline": "Why Choose Us",

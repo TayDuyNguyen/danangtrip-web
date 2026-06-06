@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { useTranslations, useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
@@ -13,8 +14,10 @@ import {
   Bell,
   Sparkles,
   Star,
+  Trash2,
 } from "lucide-react";
 import { cn } from "@/utils/string";
+import { resolveMediaUrl } from "@/utils/media-url";
 
 interface SidebarItem {
   key: string;
@@ -66,6 +69,12 @@ const SIDEBAR_ITEMS: SidebarItem[] = [
     href: PROTECTED_ROUTES.NOTIFICATIONS,
     icon: Bell,
   },
+  {
+    key: "delete_account",
+    labelKey: "sidebar.delete_account",
+    href: PROTECTED_ROUTES.DELETE_ACCOUNT,
+    icon: Trash2,
+  },
 ];
 
 export function ProfileSidebar() {
@@ -80,9 +89,15 @@ export function ProfileSidebar() {
    */
   const basePath = pathname.replace(new RegExp(`^\\/${locale}`), "") || "/";
 
-  const isActive = (href: string) => basePath === href;
+  const isActive = (href: string) =>
+    href === PROTECTED_ROUTES.PROFILE
+      ? basePath === href
+      : basePath === href || basePath.startsWith(`${href}/`);
 
-  const avatarInitial = user?.name?.charAt(0).toUpperCase() ?? "?";
+  const displayName = user?.name || user?.email?.split("@")[0] || "?";
+  const avatarInitial = displayName.charAt(0).toUpperCase();
+  const avatarUrl = resolveMediaUrl(user?.avatar);
+  const [failedAvatarUrl, setFailedAvatarUrl] = useState<string | null>(null);
 
   return (
     <aside
@@ -90,28 +105,38 @@ export function ProfileSidebar() {
       className="w-full lg:w-64 shrink-0"
     >
       {/* User Avatar & Info */}
-      <div className="bg-[#0a0a0a]/60 border border-[#262626] rounded-xl p-6 mb-4 backdrop-blur-md flex flex-col items-center gap-3 text-center">
+      <div className="mb-4 flex flex-col items-center gap-3 rounded-[20px] border border-border bg-white p-6 text-center shadow-[0_1px_3px_rgba(0,0,0,0.08)]">
         <div
-          className="w-16 h-16 bg-[#171717] text-white rounded-xl border border-[#262626] flex items-center justify-center text-2xl font-bold
-            hover:border-[#8b6a55] transition-all duration-300"
+          className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl border border-border bg-[#fff1f3] text-[20px] font-semibold text-primary transition-all duration-300 hover:border-primary"
           aria-hidden="true"
         >
-          {avatarInitial}
+          {avatarUrl && failedAvatarUrl !== avatarUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={avatarUrl}
+              alt={displayName}
+              className="w-full h-full object-cover"
+              onError={() => setFailedAvatarUrl(avatarUrl)}
+            />
+          ) : (
+            avatarInitial
+          )}
         </div>
         <div className="min-w-0">
-          <p className="text-white font-semibold text-sm truncate">{user?.name}</p>
-          <p className="text-[#737373] text-xs truncate mt-0.5">{user?.email}</p>
+          <p className="truncate text-sm font-semibold text-on-surface">{displayName}</p>
+          <p className="mt-0.5 truncate text-xs text-on-surface-subtle">{user?.email}</p>
         </div>
       </div>
 
       {/* Navigation Items */}
       <nav
         aria-label="Profile settings navigation"
-        className="bg-[#0a0a0a]/60 border border-[#262626] rounded-xl overflow-hidden backdrop-blur-md"
+        className="overflow-hidden rounded-[20px] border border-border bg-white shadow-[0_1px_3px_rgba(0,0,0,0.08)]"
       >
         {SIDEBAR_ITEMS.map((item, index) => {
           const Icon = item.icon;
           const active = isActive(item.href);
+          const isDestructive = item.key === "delete_account";
           return (
             <Link
               key={item.key}
@@ -121,15 +146,25 @@ export function ProfileSidebar() {
                 "flex items-center gap-3 px-5 py-3.5 text-sm font-medium transition-all duration-200 relative group",
                 "border-l-2",
                 active
-                  ? "border-l-[#8b6a55] bg-[#8b6a55]/8 text-white"
-                  : "border-l-transparent text-[#737373] hover:text-white hover:bg-white/5",
-                index !== 0 && "border-t border-t-[#1a1a1a]"
+                  ? isDestructive
+                    ? "border-l-red-500 bg-red-50 text-red-500"
+                    : "border-l-primary bg-[#fff4f6] font-semibold text-primary"
+                  : isDestructive
+                  ? "border-l-transparent text-on-surface-subtle hover:text-red-500 hover:bg-red-50"
+                  : "border-l-transparent text-on-surface-subtle hover:text-on-surface hover:bg-[#fafafa]",
+                index !== 0 && "border-t border-t-border"
               )}
             >
               <Icon
                 className={cn(
                   "w-4 h-4 shrink-0 transition-colors duration-200",
-                  active ? "text-[#8b6a55]" : "text-[#525252] group-hover:text-[#8b6a55]"
+                  active
+                    ? isDestructive
+                      ? "text-red-500"
+                      : "text-primary"
+                    : isDestructive
+                    ? "text-[#525252] group-hover:text-red-500"
+                    : "text-[#525252] group-hover:text-primary"
                 )}
               />
               <span>{t(item.labelKey)}</span>

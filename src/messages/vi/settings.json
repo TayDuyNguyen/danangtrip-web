@@ -8,7 +8,8 @@
     "bookings": "Đơn đặt tour",
     "favorites": "Địa điểm yêu thích",
     "notifications": "Thông báo",
-    "recommendations": "Gợi ý cho bạn"
+    "recommendations": "Gợi ý cho bạn",
+    "delete_account": "Xóa tài khoản"
   },
   "breadcrumb": {
     "home": "Trang chủ",
@@ -18,7 +19,9 @@
     "recommendations": "Gợi ý cho bạn",
     "bookings": "Đơn đặt tour",
     "booking_detail": "Chi tiết đơn đặt tour",
-    "favorites": "Địa điểm yêu thích"
+    "favorites": "Địa điểm yêu thích",
+    "notifications": "Thông báo",
+    "delete_account": "Xóa tài khoản"
   },
   "change_password": {
     "page_title": "Đổi mật khẩu",
@@ -47,5 +50,58 @@
     "success_toast": "Đổi mật khẩu thành công!",
     "error_wrong_current": "Mật khẩu hiện tại không đúng.",
     "error_generic": "Có lỗi xảy ra. Vui lòng thử lại sau."
+  },
+  "delete_account": {
+    "page_title": "Xóa tài khoản",
+    "meta_description": "Xóa vĩnh viễn tài khoản của bạn khỏi hệ thống DaNangTrip.",
+    "heading": "Xóa tài khoản",
+    "subtitle": "Hành động này không thể hoàn tác",
+    "warning_title": "⚠️ Trước khi xóa, hãy lưu ý:",
+    "warning_1": "Tất cả dữ liệu cá nhân sẽ bị xóa vĩnh viễn",
+    "warning_2": "Lịch sử đặt tour và đánh giá sẽ bị xóa",
+    "warning_3": "Địa điểm yêu thích sẽ bị xóa",
+    "warning_4": "Bạn sẽ không thể khôi phục tài khoản này",
+    "active_bookings_warning": "Bạn có đơn hàng đang hoạt động. Vui lòng hủy hoặc hoàn thành trước khi xóa tài khoản.",
+    "view_bookings": "Xem đơn hàng →",
+    "confirm_checkbox_label": "Tôi hiểu rằng việc xóa tài khoản là vĩnh viễn và không thể hoàn tác.",
+    "password_label": "Nhập mật khẩu để xác nhận *",
+    "password_placeholder": "Nhập mật khẩu của bạn...",
+    "cancel_button": "Hủy",
+    "submit_button": "Xóa tài khoản",
+    "submitting_button": "Đang xóa...",
+    "modal_title": "Xác nhận xóa tài khoản?",
+    "modal_body_1": "Tài khoản của bạn sẽ bị xóa vĩnh viễn.",
+    "modal_body_2": "Hành động này KHÔNG THỂ hoàn tác.",
+    "modal_cancel": "Hủy",
+    "modal_confirm": "Xóa vĩnh viễn",
+    "success_toast": "Tài khoản đã được xóa thành công.",
+    "error_wrong_password": "Mật khẩu không đúng.",
+    "error_generic": "Có lỗi xảy ra. Vui lòng thử lại sau."
+  },
+  "profile_edit": {
+    "page_title": "Chỉnh sửa hồ sơ",
+    "heading": "Chỉnh sửa hồ sơ",
+    "description": "Cập nhật thông tin cá nhân của bạn để sử dụng các dịch vụ tiện lợi hơn.",
+    "full_name_label": "Họ và tên",
+    "full_name_placeholder": "Nhập họ và tên của bạn",
+    "phone_label": "Số điện thoại",
+    "phone_placeholder": "Nhập số điện thoại của bạn",
+    "birthdate_label": "Ngày sinh",
+    "birthdate_placeholder": "Chọn ngày sinh",
+    "gender_label": "Giới tính",
+    "gender_male": "Nam",
+    "gender_female": "Nữ",
+    "gender_other": "Khác",
+    "gender_prefer_not_to_say": "Không muốn tiết lộ",
+    "city_label": "Thành phố / Tỉnh thành",
+    "city_placeholder": "Nhập thành phố hoặc khu vực sinh sống",
+    "submit_button": "Lưu thay đổi",
+    "cancel_button": "Hủy",
+    "success_toast": "Cập nhật thông tin hồ sơ thành công!",
+    "error_generic": "Có lỗi xảy ra. Vui lòng thử lại sau.",
+    "avatar_heading": "Ảnh đại diện",
+    "avatar_description": "Định dạng PNG, JPG. Dung lượng tối đa 2MB.",
+    "avatar_upload_success": "Ảnh đại diện đã được cập nhật thành công!",
+    "avatar_upload_error": "Cập nhật ảnh đại diện thất bại."
   }
 }

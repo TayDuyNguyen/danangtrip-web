@@ -1,6 +1,6 @@
 import { Location, Tour } from "./entities.types";
 
-export type SearchSuggestionType = "location" | "tour";
+export type SearchSuggestionType = "location" | "tour" | "keyword";
 
 export interface SearchSuggestionItem {
   id: number;
@@ -14,9 +14,11 @@ export interface SearchSuggestionItem {
   // Metadata for sorting
   viewCount: number;
   bookingCount?: number;
+  score?: number;
 }
 
 export interface SearchSuggestionsData {
+  keywords: SearchSuggestionItem[];
   locations: SearchSuggestionItem[];
   tours: SearchSuggestionItem[];
   total: number;

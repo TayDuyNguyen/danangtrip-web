@@ -7,19 +7,16 @@ interface AuthorCardProps {
   author: BlogAuthor;
 }
 
-/**
- * Molecule: AuthorCard
- * Displays author info with social links.
- * Glass surface and gradient border shell according to DESIGN.md.
- */
 export const AuthorCard = ({ author }: AuthorCardProps) => {
   const t = useTranslations("blog");
 
+  const fallbackBio =
+    "Chuyen gia du lich tai Da Nang, dam me kham pha va chia se nhung goc nhin moi me ve thanh pho dang song nhat Viet Nam.";
+
   return (
-    <section className="relative p-8 rounded-3xl overflow-hidden glass-surface border border-white/10 reveal-up">
-      <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
-        {/* Avatar Shell */}
-        <div className="relative w-24 h-24 rounded-full overflow-hidden shrink-0 border-2 border-white/10 shadow-2xl">
+    <section className="reveal-up rounded-[28px] border border-border bg-white p-6 shadow-[0_16px_48px_rgba(15,23,42,0.08)]">
+      <div className="flex flex-col items-center gap-6 text-center sm:flex-row sm:items-start sm:text-left">
+        <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-full border-2 border-primary/20 shadow-[0_14px_30px_rgba(255,56,92,0.12)] sm:h-24 sm:w-24">
           <Image
             src={author.avatar || "/images/placeholder-avatar.jpg"}
             alt={author.full_name}
@@ -28,35 +25,37 @@ export const AuthorCard = ({ author }: AuthorCardProps) => {
           />
         </div>
 
-        {/* Content */}
-        <div className="flex-1 text-center md:text-left space-y-4">
-          <header className="space-y-1">
-            <span className="text-[10px] font-bold text-primary uppercase tracking-[0.2em]">
-              {t("author")}
-            </span>
-            <h4 className="text-2xl font-bold text-white tracking-tight">
-              {author.full_name}
-            </h4>
-          </header>
+        <div className="flex-1 space-y-3">
+          <div className="space-y-1">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-primary">{t("author")}</span>
+            <h4 className="text-xl font-semibold tracking-tight text-on-surface">{author.full_name}</h4>
+          </div>
 
-          <p className="text-neutral-400 text-sm leading-relaxed max-w-2xl">
-            {author.bio || "Chuyên gia du lịch tại Đà Nẵng, đam mê khám phá và chia sẻ những góc nhìn mới lạ về thành phố đáng sống nhất Việt Nam."}
-          </p>
+          <p className="max-w-2xl text-sm leading-relaxed text-on-surface-subtle">{author.bio || fallbackBio}</p>
 
-          {/* Social Links */}
-          <div className="flex items-center justify-center md:justify-start gap-4 pt-2">
+          <div className="flex items-center justify-center gap-3 pt-1 sm:justify-start">
             {author.social_links?.facebook && (
-              <a href={author.social_links.facebook} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center bg-white/5 border border-white/10 text-neutral-400 hover:bg-primary hover:text-white transition-all duration-300">
-                <IoLogoFacebook size={20} />
+              <a
+                href={author.social_links.facebook}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-[#f7f7f7] text-on-surface-subtle transition-all duration-300 hover:border-primary hover:bg-primary hover:text-white"
+              >
+                <IoLogoFacebook size={18} />
               </a>
             )}
             {author.social_links?.instagram && (
-              <a href={author.social_links.instagram} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center bg-white/5 border border-white/10 text-neutral-400 hover:bg-primary hover:text-white transition-all duration-300">
-                <IoLogoInstagram size={20} />
+              <a
+                href={author.social_links.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-[#f7f7f7] text-on-surface-subtle transition-all duration-300 hover:border-primary hover:bg-primary hover:text-white"
+              >
+                <IoLogoInstagram size={18} />
               </a>
             )}
-            <div className="w-10 h-10 rounded-full flex items-center justify-center bg-white/5 border border-white/10 text-neutral-400 hover:bg-primary hover:text-white transition-all duration-300 cursor-pointer">
-              <IoLogoYoutube size={20} />
+            <div className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-border bg-[#f7f7f7] text-on-surface-subtle transition-all duration-300 hover:border-primary hover:bg-primary hover:text-white">
+              <IoLogoYoutube size={18} />
             </div>
           </div>
         </div>

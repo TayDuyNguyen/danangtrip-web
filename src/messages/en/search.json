@@ -2,6 +2,8 @@
   "title": "Search Results",
   "description": "Find amazing locations and tours in Da Nang",
   "found_results": "Found {count} results for <strong>{query}</strong>",
+  "input_label": "Where",
+  "input_action": "Search",
   "tabs": {
     "all": "All",
     "tour": "Tours",
@@ -9,9 +11,12 @@
   },
   "filters": {
     "title": "Filters",
+    "close": "Close filters",
     "price_range": "Price Range",
     "rating": "Rating",
     "category": "Category",
+    "location_category": "Location Category",
+    "tour_category": "Tour Category",
     "district": "District",
     "apply": "Apply",
     "reset": "Reset",
@@ -33,7 +38,8 @@
   },
   "card": {
     "starting_from": "Starting from",
-    "default_location": "Da Nang, Vietnam"
+    "default_location": "Da Nang, Vietnam",
+    "price_level": "Price level"
   },
   "empty": {
     "title": "No results found",
@@ -41,6 +47,8 @@
   },
   "trending": {
     "title": "Trending Searches",
+    "fallback_label": "Popular recently",
+    "history_title": "Recent Searches",
     "items": {
       "son_tra": "Son Tra Peninsula",
       "asia_park": "Asia Park",
@@ -53,8 +61,11 @@
     "subtitle": "Suggestions for the best experiences for you"
   },
   "suggestions": {
+    "keywords_title": "✨ Suggested themes",
     "locations_title": "📍 Locations",
     "tours_title": "🗺 Tours",
+    "recent_searches": "Recent searches",
+    "clear_history": "Clear history",
     "view_all": "🔍 View all results for \"{query}\"",
     "no_results": "No results found",
     "loading": "Searching...",
@@ -62,6 +73,7 @@
     "error": "Failed to load suggestions, please try again",
     "views": "{count} views",
     "bookings": "{count} bookings",
-    "search_placeholder": "Search for tours and places..."
+    "search_placeholder": "Search for tours and places...",
+    "loading_trending": "Type to search..."
   }
 }

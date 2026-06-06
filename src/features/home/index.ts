@@ -6,3 +6,6 @@ export { default as TourCategories } from "./components/TourCategories";
 export { default as FeaturedTours } from "./components/FeaturedTours";
 export { default as HotTours } from "./components/HotTours";
 export { default as TravelBlog } from "./components/TravelBlog";
+export { default as Recommendations } from "./components/Recommendations";
+export { default as HomeSectionReveal } from "./components/HomeSectionReveal";
+
