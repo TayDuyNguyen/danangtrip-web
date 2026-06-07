@@ -65,7 +65,12 @@ export default function DestinationTourLandingClient({
             <div className="mb-6 flex items-center justify-between lg:hidden">
               <div>
                 <h2 className="text-lg font-semibold text-on-surface">{t("filters.title")}</h2>
-                <p className="mt-1 text-sm text-on-surface-subtle">{t("list.results_count", { count: total })}</p>
+                <p className="mt-1 text-sm text-on-surface-subtle">
+                  {t.rich("list.results_count", {
+                    count: total,
+                    highlight: (chunks) => <span className="font-semibold text-on-surface">{chunks}</span>,
+                  })}
+                </p>
               </div>
               <button
                 onClick={() => setShowMobileFilters(false)}
