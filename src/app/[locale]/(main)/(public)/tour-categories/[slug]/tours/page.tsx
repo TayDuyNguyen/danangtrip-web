@@ -1,8 +1,5 @@
 import { Suspense } from "react";
 import { getTranslations } from "next-intl/server";
-import { tourService } from "@/services/tour.service";
-import { extractItems } from "@/utils";
-import type { TourCategory } from "@/types";
 import CategoryToursClient from "@/features/tour/category/components/CategoryToursClient";
 
 type Props = {
@@ -12,23 +9,14 @@ type Props = {
 export async function generateMetadata({ params }: Props) {
   const resolvedParams = await params;
   const t = await getTranslations({ locale: resolvedParams.locale, namespace: "tour" });
-  
-  let categoryName = resolvedParams.slug;
-  try {
-    const res = await tourService.getCategories();
-    if (res.success && res.data) {
-      const categoryList = extractItems<TourCategory>(res.data);
-      const cat = categoryList.find(c => c.slug === resolvedParams.slug);
-      if (cat) {
-        categoryName = cat.name;
-      }
-    }
-  } catch {
-    categoryName = resolvedParams.slug.charAt(0).toUpperCase() + resolvedParams.slug.slice(1);
-  }
+  const categoryName = resolvedParams.slug
+    .split("-")
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 
   return {
-    title: `${categoryName} | Đà Nẵng Trip`,
+    title: categoryName,
     description: t("subtitle"),
   };
 }

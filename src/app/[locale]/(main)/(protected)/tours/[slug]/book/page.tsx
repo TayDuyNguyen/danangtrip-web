@@ -1,9 +1,8 @@
-import { Suspense } from "react";
+import { cache, Suspense } from "react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
-import { tourService } from "@/services/tour.service";
 import { BookingForm } from "@/features/tour/components/BookingForm";
 import { BookingProgressSteps } from "@/features/tour/components/BookingProgressSteps";
 import { Link } from "@/i18n/navigation";
@@ -11,18 +10,22 @@ import { ChevronLeft } from "@/components/icons/solar";
 import { Loading } from "@/components/ui";
 import type { Metadata } from "next";
 import type { Tour } from "@/types";
+import { serverApiGet } from "@/lib/server-api";
 
 interface Props {
   params: Promise<{ locale: string; slug: string }>;
 }
+
+const getTour = cache(async (slug: string) => {
+  return serverApiGet<Tour>(`/tours/${encodeURIComponent(slug)}`, { revalidate: 300 });
+});
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;
   const t = await getTranslations({ locale, namespace: "tour.booking" });
   
   try {
-    const response = await tourService.getDetail(slug);
-    const tour = response.data;
+    const tour = await getTour(slug);
 
     if (!tour) return { title: "DanangTrip" };
 
@@ -43,8 +46,7 @@ export default async function TourBookingPage({ params }: Props) {
   // Prefetch tour detail
   let tour: Tour | undefined;
   try {
-    const response = await tourService.getDetail(slug);
-    tour = response.data;
+    tour = await getTour(slug);
 
     if (!tour) notFound();
 

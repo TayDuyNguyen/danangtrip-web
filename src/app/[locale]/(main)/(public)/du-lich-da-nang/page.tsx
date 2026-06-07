@@ -4,10 +4,9 @@ import { getTranslations } from "next-intl/server";
 import LandingHero from "@/features/tour/components/LandingHero";
 import DestinationTourLandingClient from "@/features/tour/components/DestinationTourLandingClient";
 import FAQSection from "@/features/tour/components/FAQSection";
-import { tourService } from "@/services/tour.service";
-import { extractItems } from "@/utils";
+import { serverApiGet } from "@/lib/server-api";
 import { Metadata } from "next";
-import type { Tour, TourCategory } from "@/types";
+import type { LandingPage, PaginatedResponse, Tour, TourCategory } from "@/types";
 
 interface Props {
   params: Promise<{ locale: string }>;
@@ -37,14 +36,18 @@ async function LandingContent({ locale, searchParams }: { locale: string; search
   };
 
   const [toursResponse, categoriesResponse, landingResponse] = await Promise.all([
-    tourService.getAll(filters),
-    tourService.getCategories(),
-    tourService.getLandingPage("da-nang").catch(() => ({ data: null })),
+    serverApiGet<PaginatedResponse<Tour>>("/tours", {
+      locale,
+      params: filters,
+      revalidate: 300,
+    }),
+    serverApiGet<TourCategory[]>("/tour-categories", { locale, revalidate: 3600 }),
+    serverApiGet<LandingPage>("/landing-pages/da-nang", { locale, revalidate: 300 }).catch(() => null),
   ]);
 
-  const tours = extractItems<Tour>(toursResponse?.data);
-  const categories = extractItems<TourCategory>(categoriesResponse?.data);
-  const landing = landingResponse?.data;
+  const tours = toursResponse.data ?? [];
+  const categories = categoriesResponse;
+  const landing = landingResponse;
 
   // Use translations as fallback for landing content
   const content = landing?.content || t("landing.content");
