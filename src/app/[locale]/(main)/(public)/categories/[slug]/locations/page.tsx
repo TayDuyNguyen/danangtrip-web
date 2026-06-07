@@ -1,8 +1,5 @@
 import { Suspense } from "react";
 import { getTranslations } from "next-intl/server";
-import { locationService } from "@/services/location.service";
-import { extractItems } from "@/utils";
-import { Category } from "@/types";
 import CategoryLocationListClient from "@/features/locations/category/components/CategoryLocationListClient";
 
 type Props = {
@@ -12,24 +9,14 @@ type Props = {
 export async function generateMetadata({ params }: Props) {
   const resolvedParams = await params;
   const t = await getTranslations({ locale: resolvedParams.locale, namespace: "locations" });
-  
-  let categoryName = resolvedParams.slug;
-  try {
-    const res = await locationService.getCategories();
-    if (res.success && res.data) {
-      const categoryList = extractItems<Category>(res.data);
-      const cat = categoryList.find(c => c.slug === resolvedParams.slug);
-      if (cat) {
-        categoryName = cat.name;
-      }
-    }
-  } catch {
-    // fallback to slug capitalized if API fails
-    categoryName = resolvedParams.slug.charAt(0).toUpperCase() + resolvedParams.slug.slice(1);
-  }
+  const categoryName = resolvedParams.slug
+    .split("-")
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 
   return {
-    title: `${categoryName} | Đà Nẵng Trip`,
+    title: categoryName,
     description: t("discovery.subtitle", { count: 0 }).replace("{count}", ""),
   };
 }

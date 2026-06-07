@@ -1,6 +1,6 @@
 import { Metadata } from "next";
+import { cache } from "react";
 import { notFound } from "next/navigation";
-import { blogService } from "@/services/blog.service";
 import { BlogPost, PaginatedResponse } from "@/types";
 import { TocHeading } from "@/features/blog/types";
 import { ReadingProgressBar } from "@/features/blog/components/ReadingProgressBar";
@@ -10,6 +10,7 @@ import { AuthorCard } from "@/features/blog/components/AuthorCard";
 import { RelatedPosts } from "@/features/blog/components/RelatedPosts";
 import { BlogDetailSidebar } from "@/features/blog/components/BlogDetailSidebar";
 import Image from "next/image";
+import { serverApiGet } from "@/lib/server-api";
 
 interface BlogDetailPageProps {
   params: Promise<{
@@ -17,6 +18,10 @@ interface BlogDetailPageProps {
     slug: string;
   }>;
 }
+
+const getBlogPost = cache(async (slug: string) => {
+  return serverApiGet<BlogPost>(`/blog/${encodeURIComponent(slug)}`, { revalidate: 300 });
+});
 
 /**
  * Utility to process content: 
@@ -56,10 +61,8 @@ export async function generateMetadata({ params }: BlogDetailPageProps): Promise
   const { slug } = await params;
   
   try {
-    const response = await blogService.getDetail(slug);
-    if (!response.success || !response.data) return { title: "Post Not Found" };
-
-    const post = response.data;
+    const post = await getBlogPost(slug);
+    if (!post) return { title: "Post Not Found" };
     return {
       title: post.title,
       description: post.excerpt || post.title,
@@ -83,39 +86,55 @@ export async function generateMetadata({ params }: BlogDetailPageProps): Promise
  */
 export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
   const { locale, slug } = await params;
-  
-  let post: BlogPost;
-  let popularPosts: BlogPost[] = [];
-  let relatedPosts: BlogPost[] = [];
-  let processedContent: string = "";
-  let tocHeadings: TocHeading[] = [];
 
-  try {
-    const postResponse = await blogService.getDetail(slug);
-    if (!postResponse.success || !postResponse.data) {
-      notFound();
-    }
-    post = postResponse.data;
-
-    const [sidebarResponse, relatedResponse] = await Promise.all([
-      blogService.getSidebarData(),
-      post.categories[0]?.id 
-        ? blogService.getLatest({ category_id: post.categories[0].id, per_page: 4 })
-        : Promise.resolve({ success: true, data: { data: [] } })
-    ]);
-
-    popularPosts = sidebarResponse.data?.popular_posts.slice(0, 5) ?? [];
-    const paginator = relatedResponse.data as PaginatedResponse<BlogPost>;
-    relatedPosts = paginator?.data?.filter((p: BlogPost) => p.id !== post.id).slice(0, 3) ?? [];
-    
-    // Process content for TOC interactions
-    const processed = processContent(post.content);
-    processedContent = processed.content;
-    tocHeadings = processed.headings;
-
-  } catch (error) {
-    throw error; 
+  const post = await getBlogPost(slug);
+  if (!post) {
+    notFound();
   }
+
+  const [popularResult, relatedResult] = await Promise.allSettled([
+    serverApiGet<PaginatedResponse<BlogPost>>("/blog", {
+      locale,
+      params: { page: 1, per_page: 5, sort: "popular" },
+      revalidate: 300,
+    }),
+    post.categories[0]?.id
+      ? serverApiGet<PaginatedResponse<BlogPost>>("/blog", {
+          locale,
+          params: { category_id: post.categories[0].id, per_page: 4 },
+          revalidate: 300,
+        })
+      : Promise.resolve({ data: [] } as Pick<PaginatedResponse<BlogPost>, "data">),
+  ]);
+
+  const popularPosts =
+    popularResult.status === "fulfilled"
+      ? popularResult.value.data?.slice(0, 5) ?? []
+      : [];
+  const relatedPosts =
+    relatedResult.status === "fulfilled"
+      ? relatedResult.value.data
+          ?.filter((relatedPost: BlogPost) => relatedPost.id !== post.id)
+          .slice(0, 3) ?? []
+      : [];
+
+  if (popularResult.status === "rejected") {
+    console.warn("Popular blog posts could not be loaded", {
+      slug,
+      error: popularResult.reason,
+    });
+  }
+
+  if (relatedResult.status === "rejected") {
+    console.warn("Related blog posts could not be loaded", {
+      slug,
+      error: relatedResult.reason,
+    });
+  }
+
+  const processed = processContent(post.content);
+  const processedContent = processed.content;
+  const tocHeadings = processed.headings;
 
   return (
     <main className="relative min-h-screen pb-20">

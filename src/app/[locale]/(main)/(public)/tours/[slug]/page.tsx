@@ -1,20 +1,25 @@
 import type { Metadata } from "next";
+import { cache } from "react";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import { tourService } from "@/services/tour.service";
 import TourDetailClient from "@/features/tour/components/TourDetailClient";
+import { serverApiGet } from "@/lib/server-api";
+import type { Tour } from "@/types";
 
 type TourDetailPageProps = {
   params: Promise<{ slug: string; locale: string }>;
 };
+
+const getTour = cache(async (slug: string) => {
+  return serverApiGet<Tour>(`/tours/${encodeURIComponent(slug)}`, { revalidate: 300 });
+});
 
 export async function generateMetadata({ params }: TourDetailPageProps): Promise<Metadata> {
   const { slug, locale } = await params;
   const t = await getTranslations({ locale, namespace: "tour" });
 
   try {
-    const response = await tourService.getDetail(slug);
-    const tour = response.data;
+    const tour = await getTour(slug);
 
     if (!tour) {
       return { title: `${t("detail.not_found")} — ${t("detail.meta_brand")}` };
@@ -36,8 +41,7 @@ export default async function TourDetailPage({ params }: TourDetailPageProps) {
   const { slug } = await params;
   let tour;
   try {
-    const response = await tourService.getDetail(slug);
-    tour = response.data;
+    tour = await getTour(slug);
   } catch {
     return notFound();
   }
