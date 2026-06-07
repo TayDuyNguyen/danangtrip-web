@@ -225,7 +225,7 @@ export function ResetPasswordForm({ token = "", email: initialEmail = "" }: Rese
       {/* Premium Ambient Background */}
       <AmbientBackground />
 
-      <div className="relative flex h-auto w-full max-w-md rounded-xl shadow-[0_0_40px_rgba(255,56,92,0.12)] glow-effect animate-reveal-up lg:h-[550px] lg:w-3/4 lg:max-w-4xl xl:w-2/3">
+      <div className="relative flex h-auto w-full max-w-md rounded-xl shadow-[0_0_40px_rgba(255,56,92,0.12)] glow-effect animate-reveal-up lg:min-h-[550px] lg:w-3/4 lg:max-w-4xl xl:w-2/3">
         
         {/* Conic-gradient Spinning Border Effect (Hidden on mobile for performance) */}
         <div className="absolute inset-[-2px] rounded-[10px] overflow-hidden pointer-events-none z-0 hidden sm:block">

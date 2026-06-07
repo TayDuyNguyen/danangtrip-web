@@ -126,7 +126,7 @@ export function ForgotPasswordForm({ email: initialEmail = "" }: ForgotPasswordF
       {/* Dynamic Background Effect */}
       <AmbientBackground />
 
-      <div className="relative flex h-auto w-full max-w-md rounded-[28px] shadow-[0_18px_48px_rgba(0,0,0,0.08)] animate-reveal-up lg:h-[550px] lg:w-3/4 lg:max-w-4xl xl:w-2/3">
+      <div className="relative flex h-auto w-full max-w-md rounded-[28px] shadow-[0_18px_48px_rgba(0,0,0,0.08)] animate-reveal-up lg:min-h-[550px] lg:w-3/4 lg:max-w-4xl xl:w-2/3">
         
         {/* Animated Border Background (Hidden on mobile for performance) */}
         <div className="absolute inset-[-2px] rounded-[10px] overflow-hidden pointer-events-none z-0 hidden sm:block">
