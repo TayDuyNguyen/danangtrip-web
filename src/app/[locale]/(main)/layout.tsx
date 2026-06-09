@@ -1,7 +1,7 @@
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import AmbientBackgroundLazy from "@/components/layout/AmbientBackgroundLazy";
-import CopilotFloatingWidget from "@/features/copilot/components/CopilotFloatingWidget";
+import CopilotFloatingWidgetLazy from "@/features/copilot/components/CopilotFloatingWidgetLazy";
 
 export default function MainLayout({
   children,
@@ -13,7 +13,7 @@ export default function MainLayout({
       <AmbientBackgroundLazy />
       <Header />
       <div className="pt-[92px]">{children}</div>
-      <CopilotFloatingWidget />
+      <CopilotFloatingWidgetLazy />
       <Footer />
     </div>
   );
