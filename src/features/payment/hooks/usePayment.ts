@@ -95,5 +95,18 @@ export const useBookingForPayment = (bookingCode?: string | null) => {
       return res.data;
     },
     enabled: !!bookingCode,
+    refetchInterval: (query) => {
+      const data = query.state.data;
+      if (
+        data?.payment_status === "pending" ||
+        data?.payment_status === "unpaid" ||
+        data?.payment_status === "partially_paid"
+      ) {
+        return 3000;
+      }
+
+      return false;
+    },
+    refetchIntervalInBackground: true,
   });
 };
