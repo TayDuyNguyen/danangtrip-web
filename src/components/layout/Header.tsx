@@ -18,7 +18,7 @@ import {
   IoPersonOutline,
   IoHouseOutline,
   IoLocationOutline,
-  IoCompassOutline,
+  IoMapOutline,
   IoPlaneOutline,
   IoNewspaperOutline,
   IoMailOutline,
@@ -28,7 +28,7 @@ import { IoNotificationsOutline } from "react-icons/io5";
 const NAV_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   "nav.home": IoHouseOutline,
   "nav.locations": IoLocationOutline,
-  "nav.nearby": IoCompassOutline,
+  "nav.map": IoMapOutline,
   "nav.travel": IoPlaneOutline,
   "nav.blog": IoNewspaperOutline,
   "nav.contact": IoMailOutline,
@@ -59,9 +59,12 @@ const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
+  const userMenuRef = useRef<HTMLDivElement>(null);
 
   useClickOutside(notificationRef, () => setIsNotificationOpen(false));
+  useClickOutside(userMenuRef, () => setIsUserMenuOpen(false));
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 24);
@@ -248,8 +251,13 @@ const Header = () => {
             <CartIcon />
 
             {isAuthenticated ? (
-              <div className="relative group/user hidden sm:block">
-                <button className="flex items-center justify-center gap-0 2xl:gap-2 rounded-full border border-border bg-white w-10 h-10 p-0 2xl:w-auto 2xl:h-auto 2xl:p-1.5 2xl:pr-3 shadow-[0_2px_10px_rgba(0,0,0,0.05)] transition-colors hover:shadow-[0_5px_16px_rgba(0,0,0,0.09)]">
+              <div className="relative hidden sm:block" ref={userMenuRef}>
+                <button
+                  onClick={() => setIsUserMenuOpen((v) => !v)}
+                  className="flex items-center justify-center gap-0 2xl:gap-2 rounded-full border border-border bg-white w-10 h-10 p-0 2xl:w-auto 2xl:h-auto 2xl:p-1.5 2xl:pr-3 shadow-[0_2px_10px_rgba(0,0,0,0.05)] transition-colors hover:shadow-[0_5px_16px_rgba(0,0,0,0.09)]"
+                  aria-expanded={isUserMenuOpen}
+                  aria-haspopup="true"
+                >
                   <div className="flex h-8 w-8 2xl:h-9 2xl:w-9 items-center justify-center overflow-hidden rounded-full bg-[#f7f7f7] text-on-surface shrink-0">
                     {user?.avatar ? (
                       // eslint-disable-next-line @next/next/no-img-element
@@ -263,24 +271,34 @@ const Header = () => {
                   </span>
                 </button>
 
-                <div className="invisible absolute right-0 mt-3 w-56 translate-y-2 overflow-hidden rounded-[24px] border border-border bg-white py-2 opacity-0 shadow-[0_18px_48px_rgba(0,0,0,0.16)] transition-all duration-200 group-hover/user:visible group-hover/user:translate-y-0 group-hover/user:opacity-100">
-                  <div className="border-b border-border px-4 py-3">
-                    <p className="text-xs text-on-surface-subtle">{t("auth.profile")}</p>
-                    <p className="truncate text-sm font-semibold text-on-surface">{user?.name || t("auth.profile")}</p>
+                {isUserMenuOpen && (
+                  <div className="absolute right-0 mt-3 w-56 overflow-hidden rounded-[24px] border border-border bg-white py-2 shadow-[0_18px_48px_rgba(0,0,0,0.16)] animate-in fade-in slide-in-from-top-2 duration-150">
+                    <div className="border-b border-border px-4 py-3">
+                      <p className="text-xs text-on-surface-subtle">{t("auth.profile")}</p>
+                      <p className="truncate text-sm font-semibold text-on-surface">{user?.name || t("auth.profile")}</p>
+                    </div>
+                    <Link
+                      href={ROUTES.PROFILE}
+                      onClick={() => setIsUserMenuOpen(false)}
+                      className="block px-4 py-2.5 text-sm text-on-surface hover:bg-[#f7f7f7] transition-colors"
+                    >
+                      {t("auth.profile")}
+                    </Link>
+                    <Link
+                      href={ROUTES.BOOKINGS}
+                      onClick={() => setIsUserMenuOpen(false)}
+                      className="block px-4 py-2.5 text-sm text-on-surface hover:bg-[#f7f7f7] transition-colors"
+                    >
+                      {tTour("history.header_link")}
+                    </Link>
+                    <button
+                      onClick={() => { setIsUserMenuOpen(false); logout(); }}
+                      className="w-full px-4 py-2.5 text-left text-sm text-red-500 hover:bg-red-50 transition-colors"
+                    >
+                      {t("auth.logout")}
+                    </button>
                   </div>
-                  <Link href={ROUTES.PROFILE} className="block px-4 py-2.5 text-sm text-on-surface hover:bg-[#f7f7f7]">
-                    {t("auth.profile")}
-                  </Link>
-                  <Link href={ROUTES.BOOKINGS} className="block px-4 py-2.5 text-sm text-on-surface hover:bg-[#f7f7f7]">
-                    {tTour("history.header_link")}
-                  </Link>
-                  <button
-                    onClick={logout}
-                    className="w-full px-4 py-2.5 text-left text-sm text-red-500 hover:bg-red-50"
-                  >
-                    {t("auth.logout")}
-                  </button>
-                </div>
+                )}
               </div>
             ) : (
               <div className="hidden items-center gap-2 sm:flex">

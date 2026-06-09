@@ -182,10 +182,83 @@
     "terms_agree": "Tôi đồng ý với <terms>Điều khoản sử dụng</terms> và <policy>Chính sách hủy tour</policy> của Đà Nẵng Trip.",
     "terms_link": "Điều khoản sử dụng",
     "policy_link": "Chính sách hủy tour",
+    "terms_modal": {
+      "eyebrow": "Đà Nẵng Trip • Thông tin chính thức",
+      "close_aria": "Đóng hộp thoại",
+      "confirm": "Tôi đã hiểu và đồng ý",
+      "terms": {
+        "title": "Điều khoản sử dụng",
+        "sections": [
+          {
+            "title": "1. Chấp thuận các điều khoản",
+            "body": "Bằng việc truy cập website và thực hiện đặt dịch vụ tại Đà Nẵng Trip, quý khách xác nhận đã đọc, hiểu và đồng ý tuân thủ các điều khoản sử dụng này. Nếu không đồng ý với bất kỳ điều khoản nào, vui lòng ngừng sử dụng dịch vụ."
+          },
+          {
+            "title": "2. Độ tuổi và trách nhiệm thông tin",
+            "body": "Khách hàng thực hiện giao dịch đặt tour trực tuyến phải từ 18 tuổi trở lên hoặc có sự giám sát của cha mẹ/người giám hộ hợp pháp. Quý khách chịu trách nhiệm về tính chính xác của họ tên, số điện thoại, email, địa chỉ và các thông tin đặt tour đã cung cấp."
+          },
+          {
+            "title": "3. Giá dịch vụ và thanh toán",
+            "body": "Mọi mức giá hiển thị trên website được tính bằng Việt Nam Đồng (VND). Đà Nẵng Trip hỗ trợ các phương thức thanh toán sau:",
+            "items": [
+              "SePay VietQR: quét mã QR chuyển khoản, hệ thống tự động xác nhận thanh toán 24/7 sau khi giao dịch thành công.",
+              "Chuyển khoản thủ công: chuyển khoản vào tài khoản ngân hàng chính thức của Đà Nẵng Trip, đơn hàng thường được admin kiểm tra và xác nhận trong giờ làm việc."
+            ],
+            "note": "Với SePay VietQR, hệ thống tự động cập nhật đơn và gửi email xác nhận sau khi nhận IPN thanh toán thành công. Với chuyển khoản thủ công, đơn sẽ được xác nhận sau khi admin đối soát giao dịch."
+          },
+          {
+            "title": "4. Quy chuẩn tham gia tour",
+            "items": [
+              "Đúng giờ: quý khách vui lòng có mặt tại điểm đón trước giờ xuất phát ít nhất 15 phút.",
+              "An toàn: quý khách cần tuân thủ hướng dẫn của hướng dẫn viên và quy định của đơn vị vận chuyển.",
+              "Tài sản cá nhân: quý khách tự bảo quản hành lý, giấy tờ và vật dụng có giá trị trong suốt hành trình."
+            ]
+          },
+          {
+            "title": "5. Bảo mật thông tin",
+            "body": "Thông tin cá nhân chỉ được sử dụng để xác nhận đặt chỗ, xử lý thanh toán, hỗ trợ khách hàng và nâng cao chất lượng dịch vụ. Đà Nẵng Trip không bán hoặc trao đổi dữ liệu cá nhân của khách hàng cho bên thứ ba vì mục đích thương mại."
+          }
+        ]
+      },
+      "policy": {
+        "title": "Chính sách hủy tour",
+        "sections": [
+          {
+            "title": "1. Phí hủy tour ngày thường",
+            "body": "Phí hủy được tính theo thời điểm quý khách thông báo hủy so với giờ khởi hành dự kiến.",
+            "table": {
+              "headers": ["Thời gian hủy", "Phí áp dụng", "Mức hoàn trả"],
+              "rows": [
+                ["Trên 72 giờ trước giờ khởi hành", "0%", "Đủ điều kiện hoàn tối đa 100%"],
+                ["Từ 24-48 giờ trước giờ khởi hành", "50%", "Đủ điều kiện hoàn tối đa 50%"],
+                ["Dưới 24 giờ hoặc vắng mặt", "100%", "Không đủ điều kiện hoàn tiền"]
+              ]
+            }
+          },
+          {
+            "title": "2. Tour dịp Lễ, Tết và DIFF",
+            "body": "Đối với tour diễn ra vào Tết Nguyên Đán, Tết Dương Lịch, Quốc khánh 2/9, 30/4-1/5 hoặc Lễ hội Pháo hoa Quốc tế Đà Nẵng (DIFF), yêu cầu hủy cần được thông báo trước ít nhất 7 ngày. Hủy sau thời hạn này có thể chịu phí 100% giá trị tour."
+          },
+          {
+            "title": "3. Thay đổi lịch trình",
+            "body": "Quý khách được hỗ trợ đổi ngày khởi hành miễn phí nếu thông báo trước ít nhất 48 giờ so với lịch cũ và tour còn chỗ trống ở ngày mới."
+          },
+          {
+            "title": "4. Bất khả kháng do thời tiết hoặc thiên tai",
+            "body": "Nếu cơ quan chức năng hoặc ban quản lý điểm đến yêu cầu ngừng tour do bão, thiên tai, biển động, cáp treo ngừng vận hành hoặc điều kiện an toàn không đảm bảo, Đà Nẵng Trip sẽ thông báo sớm cho khách hàng.",
+            "items": [
+              "Hỗ trợ dời ngày khởi hành sang thời gian phù hợp khác.",
+              "Được xử lý hoàn tối đa 100% sau khi Đà Nẵng Trip đối soát giao dịch nếu khách hàng không thể sắp xếp lịch mới."
+            ],
+            "variant": "callout"
+          }
+        ]
+      }
+    },
     "continue_payment": "Tiếp tục thanh toán",
     "order_summary": "Chi tiết đơn hàng",
     "cancellation_policy": "Chính sách hủy",
-    "cancellation_note": "Hủy miễn phí trước 24 giờ kể từ lúc khởi hành. Hủy trong vòng 24 giờ sẽ chịu phí 50% tổng đơn hàng."
+    "cancellation_note": "Phí hủy và mức hoàn tiền phụ thuộc thời điểm hủy so với giờ khởi hành. Khoản hoàn, nếu đủ điều kiện, sẽ được xử lý sau khi admin đối soát giao dịch."
   },
   "payment": {
     "title": "Thanh toán giao dịch",
@@ -215,7 +288,7 @@
       "zalopay": "ZaloPay",
       "bank_transfer": "Chuyển khoản ngân hàng",
       "bank_transfer_manual": "Chuyển khoản thủ công",
-      "payos": "Cổng thanh toán payOS",
+      "sepay": "SePay VietQR",
       "credit_card": "Thẻ tín dụng",
       "cash": "Tiền mặt",
       "paypal": "PayPal"
@@ -223,6 +296,19 @@
     "badges": {
       "automatic": "Tự động (VietQR)",
       "manual": "Thủ công"
+    },
+    "sepay": {
+      "title": "Quét QR chuyển khoản",
+      "description": "Sau khi chuyển khoản đúng số tiền và nội dung, hệ thống sẽ tự động xác nhận đơn hàng.",
+      "qr_alt": "Mã QR chuyển khoản SePay",
+      "bank": "Ngân hàng",
+      "account_no": "Số tài khoản",
+      "account_name": "Chủ tài khoản",
+      "amount": "Số tiền",
+      "transfer_content": "Nội dung CK",
+      "copy": "Copy",
+      "open_qr_link": "Không tải được ảnh QR. Bấm để mở mã QR trong tab mới.",
+      "auto_confirm_note": "Trang này tự kiểm tra trạng thái thanh toán vài giây một lần."
     },
     "errors": {
       "missing_context": "Trang thanh toán đang thiếu mã đơn hàng hoặc mã giao dịch để tiếp tục.",
@@ -260,7 +346,7 @@
     "cancel_confirm_question": "Bạn có chắc chắn muốn hủy đơn hàng này không?",
     "cancel_reason_label": "Lý do hủy đơn",
     "cancel_reason_placeholder": "Vui lòng nhập lý do hủy đơn (tối thiểu 10 ký tự)...",
-    "cancel_warning": "Lưu ý: Hủy đơn trước 24 giờ khởi hành được miễn phí. Hủy trong vòng 24 giờ sẽ chịu phí 50% tổng tiền thanh toán.",
+    "cancel_warning": "Lưu ý: việc hủy đơn sẽ giải phóng chỗ đã đặt. Khoản hoàn tiền, nếu đủ điều kiện theo chính sách, sẽ được admin đối soát và xử lý riêng.",
     "cancel_success": "Đơn hàng đã được yêu cầu hủy thành công.",
     "cancel_failed": "Hủy đơn hàng thất bại. Vui lòng thử lại.",
     "cancel_reason_min_error": "Lý do hủy tour phải có ít nhất 10 ký tự.",

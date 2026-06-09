@@ -86,7 +86,7 @@ export function BookingDetailClient({ id, bookingCode }: BookingDetailClientProp
   const { data: response, isLoading, error, refetch } = bookingCode ? detailByCodeQuery : detailQuery;
   const [isCancelOpen, setIsCancelOpen] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<Extract<PaymentMethod, "payos" | "vnpay" | "momo" | "zalopay"> | null>(null);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<Extract<PaymentMethod, "sepay" | "vnpay" | "momo" | "zalopay"> | null>(null);
 
   const booking = response;
   const item = booking?.booking_items?.[0] || booking?.items?.[0];
@@ -131,31 +131,33 @@ export function BookingDetailClient({ id, bookingCode }: BookingDetailClientProp
   }
 
   const canCancel = (booking.booking_status === "pending" || booking.booking_status === "confirmed") && !isPast;
-  const onlinePaymentMethods = ["payos", "vnpay", "momo", "zalopay"] as const;
+  const onlinePaymentMethods = ["sepay", "vnpay", "momo", "zalopay"] as const;
   const methodLabels: Record<(typeof onlinePaymentMethods)[number], string> = {
-    payos: "PayOS",
+    sepay: "SePay VietQR",
     vnpay: "VNPAY",
     momo: "MoMo",
     zalopay: "ZaloPay",
   };
-  const methodIcons: Record<(typeof onlinePaymentMethods)[number], string> = {
-    payos: "/images/payment/payOS.png",
+  const methodIcons: Record<(typeof onlinePaymentMethods)[number], string | null> = {
+    sepay: "/images/payment/logo-sepay-blue.svg",
     vnpay: "/images/payment/vnpay.png",
     momo: "/images/payment/momo.png",
     zalopay: "/images/payment/zalopay.png",
   };
+  const normalizedBookingPaymentMethod = booking.payment_method === "payos" ? "sepay" : booking.payment_method;
   const paymentOptions = onlinePaymentMethods
     .filter((method) => {
-      if (!appConfig?.payment) return method === booking.payment_method || method === "payos";
+      if (!appConfig?.payment) return method === normalizedBookingPaymentMethod || method === "sepay";
+      if (method === "sepay") return (appConfig.payment.sepay ?? appConfig.payment.payos) !== false;
       return appConfig.payment[method] !== false;
     });
   const activePaymentMethod =
     selectedPaymentMethod ||
-    (onlinePaymentMethods.includes(booking.payment_method as (typeof onlinePaymentMethods)[number])
-      ? (booking.payment_method as Extract<PaymentMethod, "payos" | "vnpay" | "momo" | "zalopay">)
-      : "payos");
+    (onlinePaymentMethods.includes(normalizedBookingPaymentMethod as (typeof onlinePaymentMethods)[number])
+      ? (normalizedBookingPaymentMethod as Extract<PaymentMethod, "sepay" | "vnpay" | "momo" | "zalopay">)
+      : "sepay");
   const canContinuePayment =
-    onlinePaymentMethods.includes(booking.payment_method as (typeof onlinePaymentMethods)[number]) &&
+    (onlinePaymentMethods.includes(normalizedBookingPaymentMethod as (typeof onlinePaymentMethods)[number])) &&
     ["pending", "failed", "unpaid", "partially_paid"].includes(booking.payment_status) &&
     booking.booking_status !== "cancelled";
 
@@ -355,13 +357,17 @@ export function BookingDetailClient({ id, bookingCode }: BookingDetailClientProp
                             : "border-border bg-white hover:border-[#cfcfcf] hover:bg-[#f7f7f7]"
                         }`}
                       >
-                        <Image
-                          src={methodIcons[method]}
-                          alt=""
-                          width={24}
-                          height={24}
-                          className="h-6 w-6 object-contain"
-                        />
+                        {methodIcons[method] ? (
+                          <Image
+                            src={methodIcons[method]}
+                            alt=""
+                            width={24}
+                            height={24}
+                            className="h-6 w-6 object-contain"
+                          />
+                        ) : (
+                          <span className="text-[10px] font-black uppercase text-primary">QR</span>
+                        )}
                       </button>
                       <span className="pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 w-max -translate-x-1/2 rounded-full bg-[#222222] px-3 py-1.5 text-[11px] font-medium text-white opacity-0 shadow-[0_8px_16px_rgba(0,0,0,0.16)] transition-opacity duration-150 group-hover:opacity-100">
                         {methodLabels[method]}

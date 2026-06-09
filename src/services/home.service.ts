@@ -16,6 +16,7 @@ export interface ApiConfigData {
     website?: string;
   };
   payment?: {
+    sepay?: boolean;
     payos?: boolean;
     cod?: boolean;
     vnpay?: boolean;

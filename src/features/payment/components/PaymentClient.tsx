@@ -6,6 +6,7 @@ import { PaymentStatusCard } from "./PaymentStatusCard";
 import { PaymentSummaryCard } from "./PaymentSummaryCard";
 import { PaymentRetryPanel } from "./PaymentRetryPanel";
 import { PaymentActions } from "./PaymentActions";
+import { SepayQrCard } from "./SepayQrCard";
 import { Loading } from "@/components/ui";
 import { usePayment, usePaymentStatus, useBookingForPayment } from "../hooks/usePayment";
 
@@ -61,6 +62,10 @@ export function PaymentClient() {
 
       {status !== "redirecting" && bookingData && (
         <PaymentSummaryCard booking={bookingData} />
+      )}
+
+      {status === "pending" && paymentData?.sepay_checkout && (
+        <SepayQrCard checkout={paymentData.sepay_checkout} />
       )}
 
       {status !== "redirecting" && (status === "failed" || status === "pending") && bookingData && (

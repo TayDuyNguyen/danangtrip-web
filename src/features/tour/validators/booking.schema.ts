@@ -8,10 +8,10 @@ export const bookingSchema = z.object({
   quantity_infant: z.number().min(0).default(0),
   customer_name: z.string().min(2, "validation.name_min"),
   customer_email: z.string().email("validation.email_invalid"),
-  customer_phone: z.string().regex(/^[0-9]{10,11}$/, "validation.phone_invalid"),
+  customer_phone: z.string().regex(/^\+?[0-9\s\-\.\(\)]{9,20}$/, "validation.phone_invalid"),
   customer_address: z.string().optional().nullable(),
   customer_note: z.string().optional().nullable(),
-  payment_method: z.enum(["momo", "vnpay", "zalopay", "bank_transfer", "payos"]),
+  payment_method: z.enum(["momo", "vnpay", "zalopay", "bank_transfer", "sepay"]),
   agree_terms: z.boolean().refine((val) => val === true, {
     message: "validation.terms_required",
   }),

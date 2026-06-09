@@ -35,11 +35,13 @@ const getGeolocationErrorState = (error: GeolocationPositionError) => {
 interface UseNearbyLocationsProps {
   initialRadius?: number;
   initialSortBy?: string;
+  autoRequestGPS?: boolean;
 }
 
 export function useNearbyLocations({
   initialRadius = 5,
   initialSortBy = "distance",
+  autoRequestGPS = false,
 }: UseNearbyLocationsProps = {}) {
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [gpsStatus, setGpsStatus] = useState<GPSStatusType>("idle");
@@ -79,13 +81,13 @@ export function useNearbyLocations({
     );
   }, []);
 
-  // Proactively auto-trigger GPS search on mount
   useEffect(() => {
-    const timer = setTimeout(() => {
+    if (!autoRequestGPS) return;
+    const timer = window.setTimeout(() => {
       requestGPS();
     }, 0);
-    return () => clearTimeout(timer);
-  }, [requestGPS]);
+    return () => window.clearTimeout(timer);
+  }, [autoRequestGPS, requestGPS]);
 
   // Manual coordinate override (e.g. fallbacks to districts center coordinate nodes)
   const setManualCoordinates = useCallback((lat: number, lng: number) => {

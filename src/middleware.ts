@@ -27,6 +27,13 @@ export function middleware(request: NextRequest) {
   };
 
   const cleanPath = pathname.replace(/^\/(en|vi)/, "") || "/";
+
+  if (cleanPath === "/nearby" || cleanPath.startsWith("/nearby/")) {
+    const localePrefix = pathname.startsWith("/en") ? "/en" : "";
+    const redirectUrl = new URL(`${localePrefix}/map?mode=nearby`, request.url);
+    return NextResponse.redirect(redirectUrl);
+  }
+
   const isBookingRoute = /^\/tours\/[^/]+\/book\/?$/.test(cleanPath);
 
   const isProtectedRoute = isMatch(protectedRoutes) || isBookingRoute;

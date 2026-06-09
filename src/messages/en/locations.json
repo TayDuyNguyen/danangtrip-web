@@ -141,6 +141,9 @@
     "gps_status": {
       "requesting": "Pinpointing your location...",
       "active": "Da Nang, Vietnam · Just updated",
+      "active_fallback": "Current location acquired",
+      "updated": "Just updated",
+      "resolving": "Resolving address...",
       "denied": "Location unavailable",
       "hint": "Please allow location access when requested by the browser.",
       "denied_hint": "Location permission denied. Please enable location access in browser settings to continue automatic scanning."
@@ -187,6 +190,55 @@
       "title": "Did you deny location access?",
       "subtitle": "No worries! You can select any Da Nang district below to explore exciting locations instantly.",
       "select_district": "Explore locations in:"
+    }
+  },
+  "explore": {
+    "meta_title": "Da Nang Places Map | DanangTrip",
+    "meta_description": "Explore hotels, restaurants, check-in spots and attractions across Da Nang on an interactive category-based map.",
+    "badge": "Explore map",
+    "title": "Da Nang Places Map",
+    "subtitle": "Explore all places or find nearby spots by GPS, with directions and category filters on one map.",
+    "mode_explore": "All places",
+    "mode_nearby": "Nearby",
+    "search_placeholder": "Search places, districts or addresses...",
+    "all_categories": "All",
+    "tab_map": "Map",
+    "tab_list": "List",
+    "results_count": "{count} places on map",
+    "loading": "Loading places...",
+    "empty": "No matching places found. Try another category or keyword.",
+    "popup_detail": "Details",
+    "popup_maps": "Google Maps",
+    "my_location": "My location",
+    "directions": "Directions",
+    "gps_requesting": "Getting GPS location...",
+    "gps_active": "Current location ready",
+    "gps_denied": "Location permission required",
+    "select_destination": "Select a place on the map",
+    "open_google_maps": "Open Google Maps",
+    "route_active": "Showing route from your location",
+    "sovereignty": {
+      "hoang_sa_title": "Paracel Islands (Hoang Sa)",
+      "hoang_sa_claim": "Sovereignty of Vietnam",
+      "truong_sa_title": "Spratly Islands (Truong Sa)",
+      "truong_sa_claim": "Sovereignty of Vietnam"
+    },
+    "categories": {
+      "khach-san-homestay": "Hotels & Homestays",
+      "tham-quan": "Sightseeing",
+      "diem-tham-quan": "Attractions",
+      "am-thuc": "Dining",
+      "ca-phe-tra-sua": "Coffee & Milk Tea",
+      "giai-tri": "Entertainment",
+      "mua-sam": "Shopping",
+      "van-hoa": "Culture",
+      "nha-hang": "Restaurants",
+      "bar-pub": "Bars & Pubs",
+      "spa-massage": "Spa & Massage",
+      "the-thao": "Sports",
+      "giao-duc": "Education",
+      "y-te": "Healthcare",
+      "mua-sam-thoi-trang": "Fashion Shopping"
     }
   },
   "sorting": {

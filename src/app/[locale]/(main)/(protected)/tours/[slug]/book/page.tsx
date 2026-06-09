@@ -1,16 +1,17 @@
 import { cache, Suspense } from "react";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
 import { BookingForm } from "@/features/tour/components/BookingForm";
 import { BookingProgressSteps } from "@/features/tour/components/BookingProgressSteps";
+import { BookingHeaderThumbnail } from "@/features/tour/components/BookingHeaderThumbnail";
 import { Link } from "@/i18n/navigation";
 import { ChevronLeft } from "@/components/icons/solar";
 import { Loading } from "@/components/ui";
 import type { Metadata } from "next";
 import type { Tour } from "@/types";
 import { serverApiGet } from "@/lib/server-api";
+import { tourMapper } from "@/features/tour/utils/tour-mapper";
 
 interface Props {
   params: Promise<{ locale: string; slug: string }>;
@@ -50,6 +51,9 @@ export default async function TourBookingPage({ params }: Props) {
 
     if (!tour) notFound();
 
+    // Normalize image URLs (thumbnail may be http:// from local backend)
+    tour = tourMapper.mapTour(tour);
+
     await queryClient.prefetchQuery({
       queryKey: ["tours", "detail", slug],
       queryFn: () => Promise.resolve(tour),
@@ -63,16 +67,11 @@ export default async function TourBookingPage({ params }: Props) {
       {/* Minimal Header */}
       <header className="sticky top-0 z-50 border-b border-border/50 bg-white/90 backdrop-blur-xl">
         <div className="design-container h-16 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-             <div className="rounded-2xl bg-primary p-2 shadow-[0_10px_26px_rgba(255,56,92,0.22)]">
-                <Image
-                  src="/icons/explore-white.svg"
-                  alt="Explore"
-                  width={20}
-                  height={20}
-                  className="w-5 h-5"
-                />
-             </div>
+          <div className="flex items-center gap-3">
+             <BookingHeaderThumbnail
+               src={tour!.thumbnail}
+               alt={tour!.name}
+             />
              <h1 className="text-sm font-black text-on-surface truncate max-w-[200px] md:max-w-md uppercase tracking-tight">
                {t("title", { name: tour!.name })}
              </h1>

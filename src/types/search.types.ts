@@ -14,11 +14,21 @@ export interface SearchRequestParams {
   session_id?: string;
 }
 
+export interface SearchSuggestionRequestParams {
+  type?: "all" | "tour" | "location";
+  category_id?: number;
+  tour_category_id?: number;
+  district?: string;
+  price_min?: number;
+  price_max?: number;
+  min_rating?: number;
+}
+
 import type { Location, Tour } from "./entities.types";
 
 export interface SearchSuggestionResponse {
   query: string;
-  suggestions: string[];
+  suggestions: Array<string | Record<string, unknown>>;
 }
 
 export interface RecommendationParams {
@@ -55,7 +65,7 @@ export interface SearchTrendingResponse {
 export interface SearchTrendInsightItem {
   query: string;
   count: number;
-  source: "keyword" | "location";
+  source: "keyword" | "location" | "tour";
   slug?: string;
   district?: string;
 }
