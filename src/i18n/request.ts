@@ -1,143 +1,137 @@
 import { getRequestConfig } from "next-intl/server";
 import { routing } from "./routing";
 
-const namespaceLoaders = {
+/** Top-level JSON imports are intentionally stable for Cloudflare/OpenNext.
+ * Dynamic JSON imports can make client navigation miss messages until reload.
+ */
+import viCommon from "../messages/vi/common.json";
+import viHome from "../messages/vi/home.json";
+import viLogin from "../messages/vi/login.json";
+import viRegister from "../messages/vi/register.json";
+import viTranslation from "../messages/vi/translation.json";
+import viSearch from "../messages/vi/search.json";
+import viLocations from "../messages/vi/locations.json";
+import viContact from "../messages/vi/contact.json";
+import viBlog from "../messages/vi/blog.json";
+import viSettings from "../messages/vi/settings.json";
+import viDashboardAdmin from "../messages/vi/dashboard-admin.json";
+import viTour from "../messages/vi/tour.json";
+import viFavorites from "../messages/vi/favorites.json";
+import viNotifications from "../messages/vi/notifications.json";
+import viVerifyEmail from "../messages/vi/verify-email.json";
+import viForgotPassword from "../messages/vi/forgot-password.json";
+import viResetPassword from "../messages/vi/reset-password.json";
+import viRecommendations from "../messages/vi/recommendations.json";
+import viRatings from "../messages/vi/ratings.json";
+import viCart from "../messages/vi/cart.json";
+import viTerms from "../messages/vi/terms.json";
+import viPrivacy from "../messages/vi/privacy.json";
+import viCopilot from "../messages/vi/copilot.json";
+
+import enCommon from "../messages/en/common.json";
+import enHome from "../messages/en/home.json";
+import enLogin from "../messages/en/login.json";
+import enRegister from "../messages/en/register.json";
+import enTranslation from "../messages/en/translation.json";
+import enSearch from "../messages/en/search.json";
+import enLocations from "../messages/en/locations.json";
+import enContact from "../messages/en/contact.json";
+import enBlog from "../messages/en/blog.json";
+import enSettings from "../messages/en/settings.json";
+import enDashboardAdmin from "../messages/en/dashboard-admin.json";
+import enTour from "../messages/en/tour.json";
+import enFavorites from "../messages/en/favorites.json";
+import enNotifications from "../messages/en/notifications.json";
+import enVerifyEmail from "../messages/en/verify-email.json";
+import enForgotPassword from "../messages/en/forgot-password.json";
+import enResetPassword from "../messages/en/reset-password.json";
+import enRecommendations from "../messages/en/recommendations.json";
+import enRatings from "../messages/en/ratings.json";
+import enCart from "../messages/en/cart.json";
+import enTerms from "../messages/en/terms.json";
+import enPrivacy from "../messages/en/privacy.json";
+import enCopilot from "../messages/en/copilot.json";
+
+const messagesByLocale = {
   vi: {
-    common: () => import("../messages/vi/common.json"),
-    home: () => import("../messages/vi/home.json"),
-    login: () => import("../messages/vi/login.json"),
-    register: () => import("../messages/vi/register.json"),
-    translation: () => import("../messages/vi/translation.json"),
-    search: () => import("../messages/vi/search.json"),
-    locations: () => import("../messages/vi/locations.json"),
-    contact: () => import("../messages/vi/contact.json"),
-    blog: () => import("../messages/vi/blog.json"),
-    settings: () => import("../messages/vi/settings.json"),
-    dashboardAdmin: () => import("../messages/vi/dashboard-admin.json"),
-    tour: () => import("../messages/vi/tour.json"),
-    favorites: () => import("../messages/vi/favorites.json"),
-    notifications: () => import("../messages/vi/notifications.json"),
-    verifyEmail: () => import("../messages/vi/verify-email.json"),
-    forgotPassword: () => import("../messages/vi/forgot-password.json"),
-    resetPassword: () => import("../messages/vi/reset-password.json"),
-    recommendations: () => import("../messages/vi/recommendations.json"),
-    ratings: () => import("../messages/vi/ratings.json"),
-    cart: () => import("../messages/vi/cart.json"),
-    terms: () => import("../messages/vi/terms.json"),
-    privacy: () => import("../messages/vi/privacy.json"),
-    copilot: () => import("../messages/vi/copilot.json"),
+    common: viCommon,
+    home: viHome,
+    login: viLogin,
+    register: viRegister,
+    translation: viTranslation,
+    search: viSearch,
+    locations: viLocations,
+    contact: viContact,
+    blog: viBlog,
+    settings: viSettings,
+    dashboardAdmin: viDashboardAdmin,
+    tour: viTour,
+    favorites: viFavorites,
+    notifications: viNotifications,
+    verifyEmail: viVerifyEmail,
+    forgotPassword: viForgotPassword,
+    resetPassword: viResetPassword,
+    recommendations: viRecommendations,
+    ratings: viRatings,
+    cart: viCart,
+    terms: viTerms,
+    privacy: viPrivacy,
+    copilot: viCopilot,
   },
   en: {
-    common: () => import("../messages/en/common.json"),
-    home: () => import("../messages/en/home.json"),
-    login: () => import("../messages/en/login.json"),
-    register: () => import("../messages/en/register.json"),
-    translation: () => import("../messages/en/translation.json"),
-    search: () => import("../messages/en/search.json"),
-    locations: () => import("../messages/en/locations.json"),
-    contact: () => import("../messages/en/contact.json"),
-    blog: () => import("../messages/en/blog.json"),
-    settings: () => import("../messages/en/settings.json"),
-    dashboardAdmin: () => import("../messages/en/dashboard-admin.json"),
-    tour: () => import("../messages/en/tour.json"),
-    favorites: () => import("../messages/en/favorites.json"),
-    notifications: () => import("../messages/en/notifications.json"),
-    verifyEmail: () => import("../messages/en/verify-email.json"),
-    forgotPassword: () => import("../messages/en/forgot-password.json"),
-    resetPassword: () => import("../messages/en/reset-password.json"),
-    recommendations: () => import("../messages/en/recommendations.json"),
-    ratings: () => import("../messages/en/ratings.json"),
-    cart: () => import("../messages/en/cart.json"),
-    terms: () => import("../messages/en/terms.json"),
-    privacy: () => import("../messages/en/privacy.json"),
-    copilot: () => import("../messages/en/copilot.json"),
+    common: enCommon,
+    home: enHome,
+    login: enLogin,
+    register: enRegister,
+    translation: enTranslation,
+    search: enSearch,
+    locations: enLocations,
+    contact: enContact,
+    blog: enBlog,
+    settings: enSettings,
+    dashboardAdmin: enDashboardAdmin,
+    tour: enTour,
+    favorites: enFavorites,
+    notifications: enNotifications,
+    verifyEmail: enVerifyEmail,
+    forgotPassword: enForgotPassword,
+    resetPassword: enResetPassword,
+    recommendations: enRecommendations,
+    ratings: enRatings,
+    cart: enCart,
+    terms: enTerms,
+    privacy: enPrivacy,
+    copilot: enCopilot,
   },
-} as const;
-
-import { headers } from "next/headers";
-
-type AppLocale = keyof typeof namespaceLoaders;
-type Namespace = keyof typeof namespaceLoaders.vi;
-type JsonModule = { default?: Record<string, unknown> } | Record<string, unknown>;
-
-const namespaces = Object.keys(namespaceLoaders.vi) as Namespace[];
-
-// Determine which namespaces to load based on pathname
-function getNamespacesForPath(pathname: string): Namespace[] {
-  // Always load common, translation, settings, copilot and cart for global layout and shell support
-  const core: Namespace[] = ["common", "translation", "settings", "copilot", "cart"];
-
-  // Normalize pathname: strip locale prefix (e.g. /vi/tours -> /tours, /en -> /)
-  const cleanPath = pathname.replace(/^\/(en|vi)(\/|$)/, "/") || "/";
-
-  if (cleanPath === "/" || cleanPath === "") {
-    return [...core, "home", "search", "locations", "tour", "blog"];
-  }
-  if (cleanPath.startsWith("/login")) {
-    return [...core, "login"];
-  }
-  if (cleanPath.startsWith("/register")) {
-    return [...core, "register"];
-  }
-  if (cleanPath.startsWith("/forgot-password")) {
-    return [...core, "forgotPassword"];
-  }
-  if (cleanPath.startsWith("/reset-password")) {
-    return [...core, "resetPassword"];
-  }
-  if (cleanPath.startsWith("/verify-email")) {
-    return [...core, "verifyEmail"];
-  }
-  if (cleanPath.startsWith("/search")) {
-    return [...core, "search", "locations", "tour"];
-  }
-  if (cleanPath.startsWith("/locations")) {
-    return [...core, "locations", "ratings"];
-  }
-  if (cleanPath.startsWith("/tours")) {
-    return [...core, "tour", "ratings"];
-  }
-  if (cleanPath.startsWith("/blog")) {
-    return [...core, "blog"];
-  }
-  if (cleanPath.startsWith("/contact")) {
-    return [...core, "contact"];
-  }
-  if (cleanPath.startsWith("/profile")) {
-    return [...core, "favorites", "notifications", "tour", "ratings", "recommendations"];
-  }
-  if (cleanPath.startsWith("/cart")) {
-    return [...core, "cart"];
-  }
-  if (cleanPath.startsWith("/payment")) {
-    return [...core, "cart", "tour"];
-  }
-  if (cleanPath.startsWith("/terms")) {
-    return [...core, "terms"];
-  }
-  if (cleanPath.startsWith("/privacy")) {
-    return [...core, "privacy"];
-  }
-
-  // Fallback to all namespaces in case path is not matched
-  return namespaces;
-}
-
-async function loadMessages(locale: AppLocale, pathname: string) {
-  // If no pathname (e.g. static generation at build time), fallback to loading all namespaces
-  const namespacesToLoad = pathname ? getNamespacesForPath(pathname) : namespaces;
-
-  const loadedNamespaces = await Promise.all(
-    namespacesToLoad.map(async (namespace) => {
-      const importedModule = (await namespaceLoaders[locale][namespace]()) as JsonModule;
-      const messages = "default" in importedModule && importedModule.default ? importedModule.default : importedModule;
-
-      return [namespace, messages] as const;
-    })
-  );
-
-  return Object.fromEntries(loadedNamespaces) as Record<Namespace, Record<string, unknown>>;
-}
+} as const satisfies Record<
+  "vi" | "en",
+  Record<
+    | "common"
+    | "home"
+    | "login"
+    | "register"
+    | "translation"
+    | "search"
+    | "locations"
+    | "contact"
+    | "blog"
+    | "settings"
+    | "dashboardAdmin"
+    | "tour"
+    | "favorites"
+    | "notifications"
+    | "verifyEmail"
+    | "forgotPassword"
+    | "resetPassword"
+    | "recommendations"
+    | "ratings"
+    | "cart"
+    | "terms"
+    | "privacy"
+    | "copilot",
+    Record<string, unknown>
+  >
+>;
 
 export default getRequestConfig(async ({ requestLocale }) => {
   let locale = await requestLocale;
@@ -146,18 +140,12 @@ export default getRequestConfig(async ({ requestLocale }) => {
     locale = routing.defaultLocale;
   }
 
-  const localeKey: AppLocale = locale === "en" ? "en" : "vi";
-
-  let pathname = "";
-  try {
-    const headersList = await headers();
-    pathname = headersList.get("x-pathname") || "";
-  } catch {
-    // Graceful fallback if headers() is called outside request context (e.g. static build)
-  }
+  const localeKey: "vi" | "en" = locale === "en" ? "en" : "vi";
 
   return {
     locale,
-    messages: await loadMessages(localeKey, pathname),
+    messages: {
+      ...messagesByLocale[localeKey],
+    },
   };
 });
