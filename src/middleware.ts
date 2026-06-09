@@ -17,6 +17,9 @@ const authRoutes = ["/login", "/register", "/forgot-password", "/reset-password"
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // Set x-pathname header so getRequestConfig can access the current URL path
+  request.headers.set("x-pathname", pathname);
+
   const response = i18nMiddleware(request);
 
   const token = request.cookies.get("token")?.value;

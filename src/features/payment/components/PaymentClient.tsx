@@ -1,7 +1,9 @@
 "use client";
-
+ 
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { useEffect } from "react";
+import { useRouter } from "@/i18n/navigation";
 import { PaymentStatusCard } from "./PaymentStatusCard";
 import { PaymentSummaryCard } from "./PaymentSummaryCard";
 import { PaymentRetryPanel } from "./PaymentRetryPanel";
@@ -9,32 +11,21 @@ import { PaymentActions } from "./PaymentActions";
 import { SepayQrCard } from "./SepayQrCard";
 import { Loading } from "@/components/ui";
 import { usePayment, usePaymentStatus, useBookingForPayment } from "../hooks/usePayment";
-
+ 
 export function PaymentClient() {
   const t = useTranslations("tour.payment");
   const searchParams = useSearchParams();
-
+  const router = useRouter();
+ 
   const transactionCode = searchParams.get("transaction_code");
   const bookingCode = searchParams.get("booking_code");
   const isMissingContext = !transactionCode && !bookingCode;
-
+ 
   const { data: paymentData, isLoading: isPaymentLoading } = usePaymentStatus(transactionCode);
   const { data: bookingData, isLoading: isBookingLoading } = useBookingForPayment(bookingCode);
   const { retryPayment, isRetrying } = usePayment();
 
-  if (isPaymentLoading || isBookingLoading) {
-    return <PaymentLoadingState />;
-  }
-
-  if (isMissingContext) {
-    return (
-      <div className="design-container max-w-4xl mx-auto py-12 md:py-20 flex flex-col items-center justify-center min-h-[60vh]">
-        <PaymentStatusCard status="failed" message={t("errors.missing_context")} />
-        <PaymentActions status="failed" isMissingContext />
-      </div>
-    );
-  }
-
+  // Determine status
   let status: "pending" | "success" | "failed" | "redirecting" = "pending";
   if (paymentData) {
     if (paymentData.payment_status === "success") status = "success";
@@ -49,6 +40,34 @@ export function PaymentClient() {
     status = "redirecting";
   }
 
+  // Auto redirect to booking details on successful payment
+  useEffect(() => {
+    if (status === "success") {
+      const targetUrl = bookingData
+        ? `/profile/bookings/code/${bookingData.booking_code}`
+        : "/profile/bookings";
+
+      const timer = setTimeout(() => {
+        router.push(targetUrl);
+      }, 2000); // 2-second delay so user can see success state
+
+      return () => clearTimeout(timer);
+    }
+  }, [status, bookingData, router]);
+ 
+  if (isPaymentLoading || isBookingLoading) {
+    return <PaymentLoadingState />;
+  }
+ 
+  if (isMissingContext) {
+    return (
+      <div className="design-container max-w-4xl mx-auto py-12 md:py-20 flex flex-col items-center justify-center min-h-[60vh]">
+        <PaymentStatusCard status="failed" message={t("errors.missing_context")} />
+        <PaymentActions status="failed" isMissingContext />
+      </div>
+    );
+  }
+ 
   const statusMessage =
     status === "success" && !bookingData
       ? t("success_without_booking")

@@ -54,12 +54,12 @@ const Header = () => {
   const locale = useLocale();
   const pathname = usePathname();
   const { isAuthenticated, user, logout } = useAuthStore();
-  const { unreadCount, notifications, markAllAsRead, markAsRead } = useNotificationsHeader();
 
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const { unreadCount, notifications, markAllAsRead, markAsRead } = useNotificationsHeader(isNotificationOpen);
   const notificationRef = useRef<HTMLDivElement>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
 
