@@ -90,10 +90,10 @@ export default function ExploreMapClient({
   }, []);
 
   useEffect(() => {
-    if (isHydrated) {
+    if (isHydrated && mapMode === "nearby" && gpsStatus === "idle") {
       requestGPS();
     }
-  }, [isHydrated, requestGPS]);
+  }, [gpsStatus, isHydrated, mapMode, requestGPS]);
 
   const { data: exploreLocations = [], isLoading: isExploreLoading } = useQuery({
     queryKey: ["explore-map", "locations"],

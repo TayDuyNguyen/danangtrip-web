@@ -214,6 +214,8 @@ export default function LeafletExploreMap({
       markerByIdRef.current.set(location.id, marker);
       locationByIdRef.current.set(location.id, location);
     });
+
+    hasFittedBoundsRef.current = false;
   }, [locale, locations, popupLabels.detail, popupLabels.maps]);
 
   useEffect(() => {
