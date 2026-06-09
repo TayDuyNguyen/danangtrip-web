@@ -9,7 +9,9 @@
     "contact": "Contact",
     "about_us": "About Us",
     "locations": "Locations",
-    "nearby": "Nearby"
+    "map": "Map",
+    "nearby": "Nearby",
+    "copilot": "AI Copilot"
   },
   "common": {
     "brand_name": "Da Nang Trip",

@@ -61,7 +61,7 @@ export function LoginForm({ onSuccess, redirectUrl }: LoginFormProps) {
 
   return (
     <div className="design-page flex min-h-screen justify-center items-center p-4 py-10 sm:p-8">
-      <div className="relative flex h-auto w-full max-w-md rounded-[28px] shadow-[0_18px_48px_rgba(0,0,0,0.08)] lg:h-[550px] lg:w-3/4 lg:max-w-4xl xl:w-2/3">
+      <div className="relative flex h-auto w-full max-w-md rounded-[28px] shadow-[0_18px_48px_rgba(0,0,0,0.08)] lg:min-h-[550px] lg:w-3/4 lg:max-w-4xl xl:w-2/3">
         
         {/* Animated Border Background */}
         <div className="pointer-events-none absolute inset-[-2px] z-0 overflow-hidden rounded-[30px]">
@@ -162,6 +162,7 @@ export function LoginForm({ onSuccess, redirectUrl }: LoginFormProps) {
               <button
                 type="submit"
                 disabled={isLoading}
+                suppressHydrationWarning
                 className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full border border-primary bg-primary px-5 py-3 font-semibold uppercase tracking-wider text-white transition-all duration-300 hover:border-primary-hover hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-70"
               >
                 {isLoading ? (
@@ -187,11 +188,11 @@ export function LoginForm({ onSuccess, redirectUrl }: LoginFormProps) {
 
             {/* Social login */}
             <div className="flex gap-3">
-              <button className="flex flex-1 items-center justify-center gap-2 rounded-2xl border border-border py-2.5 text-sm font-medium text-on-surface-subtle transition hover:bg-[#f7f7f7] hover:text-on-surface">
+              <button suppressHydrationWarning className="flex flex-1 items-center justify-center gap-2 rounded-2xl border border-border py-2.5 text-sm font-medium text-on-surface-subtle transition hover:bg-[#f7f7f7] hover:text-on-surface">
                 <GoogleIcon />
                 Google
               </button>
-              <button className="flex flex-1 items-center justify-center gap-2 rounded-2xl border border-border py-2.5 text-sm font-medium text-on-surface-subtle transition hover:bg-[#f7f7f7] hover:text-on-surface">
+              <button suppressHydrationWarning className="flex flex-1 items-center justify-center gap-2 rounded-2xl border border-border py-2.5 text-sm font-medium text-on-surface-subtle transition hover:bg-[#f7f7f7] hover:text-on-surface">
                 <FacebookIcon />
                 Facebook
               </button>

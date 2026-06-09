@@ -119,7 +119,7 @@ export default function LocationCardCompact({
       onMouseEnter={() => onHover?.(true)}
       onMouseLeave={() => onHover?.(false)}
       onClick={onClick}
-      className={`group relative flex cursor-pointer gap-4 rounded-2xl border p-3 transition-all duration-300 ${
+      className={`group relative flex cursor-pointer gap-4 rounded-2xl border p-3 pr-12 transition-all duration-300 ${
         isSelected
           ? "border-primary bg-primary/10 shadow-lg"
           : isHighlighted
@@ -128,11 +128,7 @@ export default function LocationCardCompact({
       }`}
     >
       <div className="flex min-w-0 flex-1 gap-4 text-inherit no-underline">
-        <Link
-          href={detailHref}
-          onClick={(e) => e.stopPropagation()}
-          className="relative block h-18 w-18 flex-shrink-0 overflow-hidden rounded-xl border border-border bg-white"
-        >
+        <div className="relative h-18 w-18 flex-shrink-0 overflow-hidden rounded-xl border border-border bg-white">
           <Image
             src={image}
             alt={location.name}
@@ -140,17 +136,13 @@ export default function LocationCardCompact({
             sizes="72px"
             className="object-cover transition-transform duration-700 group-hover:scale-105"
           />
-        </Link>
+        </div>
 
         <div className="flex min-w-0 flex-1 flex-col justify-between py-0.5">
           <div>
-            <Link
-              href={detailHref}
-              onClick={(e) => e.stopPropagation()}
-              className="block line-clamp-1 text-sm font-semibold leading-snug text-on-surface no-underline transition-colors hover:text-primary group-hover:text-primary"
-            >
+            <p className="line-clamp-1 text-sm font-semibold leading-snug text-on-surface transition-colors group-hover:text-primary">
               {location.name}
-            </Link>
+            </p>
 
             <div className="mt-1 flex flex-wrap items-center gap-2">
               {location.distance !== undefined && (
@@ -165,14 +157,24 @@ export default function LocationCardCompact({
             </div>
           </div>
 
-          <div className="mt-1 flex items-center gap-3 text-[11px] text-on-surface-subtle">
-            <div className="flex items-center gap-1">
-              <IoStar className="text-xs text-yellow-500 flex-shrink-0" />
-              <span className="font-bold text-on-surface">{rating.toFixed(1)}</span>
-              <span>({location.review_count})</span>
+          <div className="mt-1 flex items-center justify-between gap-2">
+            <div className="flex min-w-0 items-center gap-3 text-[11px] text-on-surface-subtle">
+              <div className="flex items-center gap-1">
+                <IoStar className="text-xs text-yellow-500 flex-shrink-0" />
+                <span className="font-bold text-on-surface">{rating.toFixed(1)}</span>
+                <span>({location.review_count})</span>
+              </div>
+              <span>.</span>
+              <span className="max-w-[100px] truncate">{formatPrice(location.price_min)}</span>
             </div>
-            <span>.</span>
-            <span className="max-w-[100px] truncate">{formatPrice(location.price_min)}</span>
+
+            <Link
+              href={detailHref}
+              onClick={(e) => e.stopPropagation()}
+              className="shrink-0 rounded-full border border-primary/30 bg-white px-2.5 py-1 text-[11px] font-bold text-primary no-underline transition-colors hover:border-primary hover:bg-primary hover:text-white"
+            >
+              {t("explore.popup_detail")}
+            </Link>
           </div>
         </div>
       </div>

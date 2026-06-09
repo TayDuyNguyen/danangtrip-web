@@ -1,0 +1,53 @@
+{
+  "title": "Terms of Service",
+  "subtitle": "Please read these terms carefully before using our service.",
+  "last_updated": "Last updated",
+  "last_updated_date": "June 09, 2025",
+  "back_home": "Back to Home",
+  "sections": {
+    "s1": {
+      "title": "1. Introduction & Acceptance",
+      "body": "Welcome to Đà Nẵng Trip — Da Nang's leading tour booking and travel discovery platform. By accessing or using any of our services (including the website, mobile application or API), you acknowledge that you have read, understood and agree to be bound by all the terms set forth in this document as well as our Privacy Policy. If you do not agree with any of these terms, please discontinue use of the service immediately."
+    },
+    "s2": {
+      "title": "2. Definitions",
+      "body": "In this document, \"Service\" means the entire Đà Nẵng Trip platform including the website, application and related features. \"User\" or \"You\" refers to any individual or entity that accesses and uses the Service. \"Partner\" refers to tour providers, tourist attractions and businesses that have signed agreements with us. \"Content\" includes text, images, videos, reviews and all information posted on the platform."
+    },
+    "s3": {
+      "title": "3. Account Eligibility",
+      "body": "You must be at least 16 years old to register an account. Each person may only create one account with truthful information. You are responsible for maintaining the security of your login credentials and are accountable for all activities performed from your account. Đà Nẵng Trip reserves the right to refuse, suspend, or delete accounts in cases of terms violations, fraud or harm to other users without prior notice."
+    },
+    "s4": {
+      "title": "4. Bookings & Payment Policy",
+      "body": "When you book a tour on Đà Nẵng Trip, you enter into a direct agreement with the Partner providing that service. We act as a technical intermediary and are not responsible for the actual service quality provided by Partners. Listed prices include all fees and taxes clearly stated at the time of booking. The platform currently supports 2 payment methods: (1) SePay VietQR — scan the QR code, and the system auto-confirms payment 24/7 after a successful payment IPN is received; (2) Manual Bank Transfer — transfer to our official bank account, usually reviewed and confirmed by an admin during business hours. With SePay VietQR, the confirmation email is sent automatically after successful payment; with manual bank transfer, the order is confirmed after admin transaction reconciliation."
+    },
+    "s5": {
+      "title": "5. Cancellation & Refunds",
+      "body": "Cancellation policy: Cancel more than 72 hours before departure — eligible for up to a 100% refund; Cancel 24–48 hours before — eligible for up to a 50% refund; Cancel within 24 hours or no-show — not eligible for refund. For tours during public holidays, Lunar New Year, and Da Nang International Fireworks Festival (DIFF), cancellations must be requested at least 7 days in advance; late cancellations may incur a 100% cancellation fee. Any eligible refund is processed after admin transaction reconciliation and depends on the payment method. Force majeure events caused by official tour suspension will be prioritized for rescheduling or refund handling after reconciliation."
+    },
+    "s6": {
+      "title": "6. Prohibited Conduct",
+      "body": "You agree not to engage in the following: (a) using the service to distribute illegal, pornographic or hateful content; (b) attempting to infiltrate, sabotage or disrupt technical systems; (c) unauthorized collection of other users' data; (d) posting fake reviews or misleading information; (e) using bots, scripts or automated tools to access the service; (f) impersonating any individual, organization or employee of Đà Nẵng Trip."
+    },
+    "s7": {
+      "title": "7. Intellectual Property",
+      "body": "All content created by Đà Nẵng Trip — including logos, interfaces, source code, databases, designs and documentation — is our exclusive property, protected by Vietnamese and international intellectual property law. You may not copy, distribute, modify or use for commercial purposes without our written permission. For content you post yourself (reviews, images), you retain ownership but grant us a non-exclusive, royalty-free license to use it."
+    },
+    "s8": {
+      "title": "8. Limitation of Liability",
+      "body": "Đà Nẵng Trip provides the platform on an \"as-is\" basis without any guarantees of continuity or perfection. We are not responsible for: indirect damages, loss of revenue or data; incidents from Partner's side; or any actions beyond our control (force majeure). Đà Nẵng Trip's total aggregate liability in all circumstances shall not exceed the value of the relevant transaction."
+    },
+    "s9": {
+      "title": "9. Changes to Terms",
+      "body": "We may update these terms at any time. In the case of significant changes, we will notify you via your registered email or through prominent notices on the platform at least 14 days before they take effect. Continued use of the service after changes take effect constitutes acceptance of the new terms."
+    },
+    "s10": {
+      "title": "10. Governing Law & Dispute Resolution",
+      "body": "These terms are governed by the laws of the Socialist Republic of Vietnam. All disputes shall be resolved preferably through good-faith negotiation within 30 days. If no agreement is reached, the dispute shall be submitted to the Vietnam International Arbitration Centre (VIAC) in Da Nang for arbitration."
+    },
+    "s11": {
+      "title": "11. Contact",
+      "body": "For any questions regarding these Terms of Service, please contact us: Email: legal@danangtrip.com | Hotline: 0123 456 789 | Address: 99 Pho Tiep, Thanh Khe District, Da Nang, Vietnam."
+    }
+  }
+}

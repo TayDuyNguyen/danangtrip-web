@@ -158,7 +158,7 @@ export interface Tour {
   tour_category_id: number;
   description: string;
   short_desc: string | null;
-  itinerary: Array<{time: string; activity: string}> | null;
+  itinerary: Array<string | { time?: string; activity?: string; task?: string; day?: number | string; title?: string; content?: string }> | null;
   inclusions: string | null;
   exclusions: string | null;
   price_adult: string;    // parse: parseFloat(price_adult)
@@ -242,6 +242,7 @@ export interface Config {
     website?: string;
   };
   payment?: {
+    sepay?: boolean;
     payos?: boolean;
     cod?: boolean;
     vnpay?: boolean;

@@ -66,9 +66,15 @@ const Hero = () => {
 
   const handleSelectSuggestion = (item: SearchSuggestionItem) => {
     setIsDropdownOpen(false);
-    router.push(
-      `${ROUTES.SEARCH}?q=${encodeURIComponent(item.title)}&type=${item.type === "keyword" ? "all" : item.type}`
-    );
+    if (item.type === "tour") {
+      router.push(ROUTES.TOUR_DETAIL(item.slug));
+    } else if (item.type === "location") {
+      router.push(ROUTES.LOCATION_DETAIL(item.slug));
+    } else {
+      router.push(
+        `${ROUTES.SEARCH}?q=${encodeURIComponent(item.title)}&type=all`
+      );
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -155,6 +161,7 @@ const Hero = () => {
                         onKeyDown={handleKeyDown}
                         placeholder={t("home.search_placeholder")}
                         className="mt-1 w-full bg-transparent text-[15px] font-medium text-on-surface outline-none placeholder:text-on-surface-subtle"
+                        suppressHydrationWarning
                       />
                     </div>
                   </div>
@@ -179,6 +186,7 @@ const Hero = () => {
                   <button
                     type="submit"
                     className="flex min-h-[62px] items-center justify-center gap-2 rounded-[26px] bg-[#ff385c] px-6 text-[15px] font-semibold text-white shadow-[0_14px_30px_rgba(255,56,92,0.28)] transition-all hover:bg-[#e31c5f] active:scale-[0.99] lg:min-h-[72px] lg:rounded-full lg:px-8"
+                    suppressHydrationWarning
                   >
                     <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/16 lg:h-11 lg:w-11">
                       <IoSearchOutline className="text-[18px]" />
@@ -238,6 +246,7 @@ const Hero = () => {
                     activeScene === sceneNum ? "w-8 bg-white" : "w-2.5 bg-white/45"
                   }`}
                   aria-label={`Slide ${sceneNum}`}
+                  suppressHydrationWarning
                 />
               );
             })}

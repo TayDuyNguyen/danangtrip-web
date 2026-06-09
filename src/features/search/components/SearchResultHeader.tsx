@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import {
   IoCloseOutline,
   IoFlashOutline,
@@ -13,8 +13,9 @@ import {
 import { ROUTES } from "@/config";
 import { cn } from "@/utils/string";
 import { formatPriceVND } from "@/utils/format";
-import { SearchFilters } from "../types/search.types";
+import { SearchFilters, SearchResultType } from "../types/search.types";
 import { useSearchDiscovery } from "../hooks/use-search-discovery";
+import { useSearchFilterCategories } from "../hooks/use-search-filter-categories";
 import { SearchSuggestionsDropdown } from "@/components/common/SearchSuggestionsDropdown";
 import SearchInput from "@/components/ui/SearchInput";
 import { useSearchSuggestions } from "@/hooks/use-search-suggestions";
@@ -25,6 +26,7 @@ import { getOrCreateSessionId } from "@/utils/session";
 
 interface SearchResultHeaderProps {
   query: string;
+  type: "all" | SearchResultType;
   count: number;
   onSearch: (value: string) => void;
   onOpenFilters: () => void;
@@ -36,6 +38,7 @@ interface SearchResultHeaderProps {
 
 export const SearchResultHeader = ({
   query,
+  type,
   count,
   onSearch,
   onOpenFilters,
@@ -44,6 +47,7 @@ export const SearchResultHeader = ({
   onClearFilters,
   isLoading,
 }: SearchResultHeaderProps) => {
+  const router = useRouter();
   const tSearch = useTranslations("search");
   const locale = useLocale();
   const priceLocale = locale === "vi" ? "vi-VN" : "en-US";
@@ -53,9 +57,18 @@ export const SearchResultHeader = ({
   const [selectedIndex, setSelectedIndex] = useState(-1);
 
   const { history, addHistory, removeHistory, clearHistory } = useSearchHistory();
+  const hasCategoryFilters = activeFilters.category !== undefined
+    || activeFilters.locationCategory !== undefined
+    || activeFilters.tourCategory !== undefined;
+  const { data: categoryData } = useSearchFilterCategories(type, hasCategoryFilters);
   const { suggestions, isLoading: isSuggestionsLoading, isError: isSuggestionsError } =
-    useSearchSuggestions(inputValue, "all");
+    useSearchSuggestions(inputValue, type, activeFilters);
   const { insights, trending, popular, topLocations, isLoading: isDiscoveryLoading } = useSearchDiscovery();
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   useEffect(() => {
     setInputValue(query);
@@ -87,6 +100,14 @@ export const SearchResultHeader = ({
   const showDiscoveryPanel = isFocused && inputValue.trim().length === 0;
   const showSuggestionsPanel = isFocused && inputValue.trim().length >= 2;
   const hasActiveFilters = Object.values(activeFilters).some((value) => value !== undefined && value !== null);
+  const locationCategories = categoryData?.locationCategories ?? [];
+  const tourCategories = categoryData?.tourCategories ?? [];
+  const activeLocationCategory = type === "location" ? activeFilters.category : activeFilters.locationCategory;
+  const activeTourCategory = type === "tour" ? activeFilters.category : activeFilters.tourCategory;
+  const resolveCategoryName = (
+    categories: Array<{ id: number; name: string }>,
+    id: number | undefined
+  ) => categories.find((category) => category.id === id)?.name ?? (id !== undefined ? `#${id}` : "");
 
   const commitSearch = (rawValue: string) => {
     const normalizedValue = rawValue.trim();
@@ -111,14 +132,36 @@ export const SearchResultHeader = ({
       source: "search_dropdown",
       session_id: getOrCreateSessionId(),
     });
-    commitSearch(item.title);
+    
+    if (item.type === "tour") {
+      router.push(ROUTES.TOUR_DETAIL(item.slug));
+    } else if (item.type === "location") {
+      router.push(ROUTES.LOCATION_DETAIL(item.slug));
+    } else {
+      commitSearch(item.title);
+    }
   };
 
   const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (event) => {
-    if (!showSuggestionsPanel) {
-      if (event.key === "Escape") {
-        setIsFocused(false);
+    if (event.key === "Enter") {
+      event.preventDefault();
+
+      const totalItems = flatSuggestions.length;
+      if (showSuggestionsPanel && selectedIndex >= 0 && selectedIndex < totalItems) {
+        handleSelectSuggestion(flatSuggestions[selectedIndex]);
+      } else {
+        commitSearch(inputValue);
       }
+      return;
+    }
+
+    if (event.key === "Escape") {
+      setIsFocused(false);
+      setSelectedIndex(-1);
+      return;
+    }
+
+    if (!showSuggestionsPanel) {
       return;
     }
 
@@ -134,23 +177,6 @@ export const SearchResultHeader = ({
       event.preventDefault();
       setSelectedIndex((prev) => (prev > 0 ? prev - 1 : totalItems));
       return;
-    }
-
-    if (event.key === "Enter") {
-      event.preventDefault();
-
-      if (selectedIndex >= 0 && selectedIndex < totalItems) {
-        handleSelectSuggestion(flatSuggestions[selectedIndex]);
-        return;
-      }
-
-      commitSearch(inputValue);
-      return;
-    }
-
-    if (event.key === "Escape") {
-      setIsFocused(false);
-      setSelectedIndex(-1);
     }
   };
 
@@ -204,7 +230,7 @@ export const SearchResultHeader = ({
             <span>{tSearch("trending.title")}</span>
           </div>
 
-          {isDiscoveryLoading ? (
+          {isMounted && isDiscoveryLoading ? (
             <div className="space-y-2">
               {Array.from({ length: 4 }).map((_, index) => (
                 <div key={index} className="h-9 rounded-full bg-surface-container-low animate-pulse" />
@@ -212,26 +238,36 @@ export const SearchResultHeader = ({
             </div>
           ) : (
             <div className="flex flex-wrap gap-2">
-              {trendKeywords.slice(0, 6).map((item, index) => (
-                <button
-                  key={`${item.query}-${index}`}
-                  onClick={() => {
-                    void searchService.trackInteraction({
-                      event: "trending_click",
-                      query: item.query,
-                      type: "all",
-                      clicked_title: item.query,
-                      clicked_type: "keyword",
-                      source: "search_discovery_panel",
-                      session_id: getOrCreateSessionId(),
-                    });
-                    commitSearch(item.query);
-                  }}
-                  className="rounded-full border border-border bg-white px-3 py-2 text-sm font-medium text-on-surface transition-all hover:border-primary hover:bg-[#fff4f6]"
-                >
-                  {item.query}
-                </button>
-              ))}
+              {trendKeywords.slice(0, 6).map((item, index) => {
+                const source = "source" in item ? item.source : "keyword";
+                const clickedSlug = "slug" in item && typeof item.slug === "string" ? item.slug : undefined;
+                return (
+                  <button
+                    key={`${item.query}-${index}`}
+                    onClick={() => {
+                      void searchService.trackInteraction({
+                        event: "trending_click",
+                        query: item.query,
+                        type: "all",
+                        clicked_title: item.query,
+                        clicked_slug: clickedSlug,
+                        clicked_type: source === "tour" || source === "location" ? source : "keyword",
+                        source: "search_discovery_panel",
+                        session_id: getOrCreateSessionId(),
+                      });
+                      
+                      if ((source === "tour" || source === "location") && clickedSlug) {
+                        router.push(source === "tour" ? ROUTES.TOUR_DETAIL(clickedSlug) : ROUTES.LOCATION_DETAIL(clickedSlug));
+                      } else {
+                        commitSearch(item.query);
+                      }
+                    }}
+                    className="rounded-full border border-border bg-white px-3 py-2 text-sm font-medium text-on-surface transition-all hover:border-primary hover:bg-[#fff4f6]"
+                  >
+                    {item.query}
+                  </button>
+                );
+              })}
             </div>
           )}
         </div>
@@ -258,7 +294,11 @@ export const SearchResultHeader = ({
                     source: "search_top_locations",
                     session_id: getOrCreateSessionId(),
                   });
-                  commitSearch(item.query);
+                  if (item.slug) {
+                    router.push(ROUTES.LOCATION_DETAIL(item.slug));
+                  } else {
+                    commitSearch(item.query);
+                  }
                 }}
                 className="rounded-xl border border-border bg-white px-3 py-2 text-left text-sm text-on-surface transition-all hover:border-primary/70 hover:bg-[#fff4f6]"
               >
@@ -340,10 +380,28 @@ export const SearchResultHeader = ({
               onRemove={() => onRemoveFilter("rating")}
             />
           )}
-          {activeFilters.category !== undefined && (
+          {type === "location" && activeLocationCategory !== undefined && (
             <FilterTag
-              label={`${tSearch("filters.category")}: ${activeFilters.category}`}
+              label={`${tSearch("filters.category")}: ${resolveCategoryName(locationCategories, activeLocationCategory)}`}
               onRemove={() => onRemoveFilter("category")}
+            />
+          )}
+          {type === "tour" && activeTourCategory !== undefined && (
+            <FilterTag
+              label={`${tSearch("filters.category")}: ${resolveCategoryName(tourCategories, activeTourCategory)}`}
+              onRemove={() => onRemoveFilter("category")}
+            />
+          )}
+          {type === "all" && activeFilters.locationCategory !== undefined && (
+            <FilterTag
+              label={`${tSearch("filters.location_category")}: ${resolveCategoryName(locationCategories, activeFilters.locationCategory)}`}
+              onRemove={() => onRemoveFilter("locationCategory")}
+            />
+          )}
+          {type === "all" && activeFilters.tourCategory !== undefined && (
+            <FilterTag
+              label={`${tSearch("filters.tour_category")}: ${resolveCategoryName(tourCategories, activeFilters.tourCategory)}`}
+              onRemove={() => onRemoveFilter("tourCategory")}
             />
           )}
           {activeFilters.district !== undefined && (
@@ -368,7 +426,8 @@ export const SearchResultHeader = ({
             {tSearch("trending.title")}:
           </span>
 
-          {isDiscoveryLoading ? (
+          {/* Only render loading skeletons after client mount to avoid hydration mismatch */}
+          {isMounted && isDiscoveryLoading ? (
             Array(4)
               .fill(0)
               .map((_, index) => (
@@ -377,18 +436,25 @@ export const SearchResultHeader = ({
           ) : (
             trendKeywords.slice(0, 8).map((item, index) => {
               const isSelected = query.trim().toLowerCase() === item.query.trim().toLowerCase();
+              const source = "source" in item ? item.source : "keyword";
+              const clickedSlug = "slug" in item && typeof item.slug === "string" ? item.slug : undefined;
+              const href = (source === "tour" || source === "location") && clickedSlug
+                ? (source === "tour" ? ROUTES.TOUR_DETAIL(clickedSlug) : ROUTES.LOCATION_DETAIL(clickedSlug))
+                : `${ROUTES.SEARCH}?q=${encodeURIComponent(item.query)}`;
 
               return (
                 <Link
                   key={`${item.query}-${index}`}
-                  href={`${ROUTES.SEARCH}?q=${encodeURIComponent(item.query)}`}
+                  href={href as string & {}}
                   onClick={() => {
+                    const clickedType = source === "tour" || source === "location" ? source : "keyword";
                     void searchService.trackInteraction({
                       event: "trending_click",
                       query: item.query,
                       type: "all",
                       clicked_title: item.query,
-                      clicked_type: "keyword",
+                      clicked_slug: clickedSlug,
+                      clicked_type: clickedType,
                       source: "search_trending_chips",
                       session_id: getOrCreateSessionId(),
                     });

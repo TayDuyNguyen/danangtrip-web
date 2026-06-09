@@ -84,7 +84,7 @@ export type TourType = (typeof TOUR_TYPES)[keyof typeof TOUR_TYPES];
 // Regex Patterns
 export const REGEX = {
   EMAIL: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-  PHONE: /^(\+84|0)\d{9,10}$/,
+  PHONE: /^\+?[0-9\s\-\.\(\)]{9,20}$/,
   PASSWORD: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
   URL: /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/,
 } as const;

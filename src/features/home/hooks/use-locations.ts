@@ -59,7 +59,6 @@ export const useFeaturedLocations = (categoryId?: number, enabled: boolean = tru
     enabled,
     staleTime: 5 * 60 * 1000,
     retry: shouldRetryQuery,
-    placeholderData: keepPreviousData,
   });
 
   return {

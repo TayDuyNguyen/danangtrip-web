@@ -90,6 +90,7 @@ export const API_ENDPOINTS = {
     TRENDING_INSIGHTS: "/search/trending-insights",
     INTERACTIONS: "/search/interactions",
   },
+  CHAT: "/chat",
   CONTACTS: "/contacts",
   LANDING_PAGES: {
     DETAIL: (slug: string) => `/landing-pages/${slug}`,

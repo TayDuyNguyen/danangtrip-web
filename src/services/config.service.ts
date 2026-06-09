@@ -18,6 +18,7 @@ export interface ApiConfigData {
     website?: string;
   };
   payment?: {
+    sepay?: boolean;
     payos?: boolean;
     cod?: boolean;
     vnpay?: boolean;
@@ -52,7 +53,8 @@ export const mapApiConfig = (apiData: ApiConfigData): Config => {
       website: apiData.social?.website || apiData.social?.facebook || "",
     },
     payment: {
-      payos: apiData.payment?.payos !== false, // default true
+      sepay: (apiData.payment?.sepay ?? apiData.payment?.payos) !== false, // default true
+      payos: (apiData.payment?.sepay ?? apiData.payment?.payos) !== false, // legacy alias
       cod: apiData.payment?.cod !== false,     // default true
       vnpay: !!apiData.payment?.vnpay,
       momo: !!apiData.payment?.momo,

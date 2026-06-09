@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { formatPriceVND } from "@/utils/format";
@@ -7,6 +8,7 @@ import { cn } from "@/utils/string";
 import { InfoCircle, Calendar, MapPin } from "@/components/icons/solar";
 import type { Tour, BookingCalculation, TourSchedule } from "@/types";
 import { format } from "date-fns";
+import { normalizeImageUrl } from "@/features/tour/utils/tour-mapper";
 
 interface OrderSummaryCardProps {
   tour: Tour;
@@ -29,6 +31,9 @@ export function OrderSummaryCard({
 }: OrderSummaryCardProps) {
   const t = useTranslations("tour.booking");
   const td = useTranslations("tour.detail");
+  const [imageSrc, setImageSrc] = useState(
+    normalizeImageUrl(tour.thumbnail) || "/images/placeholder.png"
+  );
 
   return (
     <aside className="w-full lg:w-[380px]">
@@ -36,13 +41,14 @@ export function OrderSummaryCard({
         <div className="space-y-6 p-6">
           {/* Tour Brief */}
           <div className="flex gap-4 pb-5 border-b border-border/50">
-            <div className="w-20 h-20 rounded-xl overflow-hidden shrink-0 border border-border/30">
+            <div className="w-20 h-20 rounded-xl overflow-hidden shrink-0 border border-border/30 bg-[#f7f7f7]">
                 <Image
-                  src={tour.thumbnail || "/images/placeholder-tour.jpg"}
+                  src={imageSrc}
                   alt={tour.name}
                   width={80}
                   height={80}
                   className="w-full h-full object-cover"
+                  onError={() => setImageSrc("/images/placeholder.png")}
                 />
             </div>
             <div className="flex flex-col justify-center min-w-0">

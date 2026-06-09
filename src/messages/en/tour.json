@@ -179,13 +179,86 @@
       "phone_invalid": "Invalid phone number.",
       "terms_required": "You must agree to the terms."
     },
-    "terms_agree": "I agree to the <terms>Terms of Use</terms> and <policy>Cancellation Policy</policy> of Danang Trip.",
+    "terms_agree": "I agree to the <terms>Terms of Use</terms> and <policy>Tour Cancellation Policy</policy> of Danang Trip.",
     "terms_link": "Terms of Use",
     "policy_link": "Cancellation Policy",
+    "terms_modal": {
+      "eyebrow": "Danang Trip • Official Information",
+      "close_aria": "Close dialog",
+      "confirm": "I understand and agree",
+      "terms": {
+        "title": "Terms of Use",
+        "sections": [
+          {
+            "title": "1. Acceptance of Terms",
+            "body": "By accessing the website and booking services with Danang Trip, you confirm that you have read, understood and agreed to follow these terms of use. If you do not agree with any term, please stop using the service."
+          },
+          {
+            "title": "2. Eligibility and Information Responsibility",
+            "body": "Customers making online tour bookings must be at least 18 years old or under the supervision of a parent or legal guardian. You are responsible for the accuracy of your name, phone number, email, address and booking details."
+          },
+          {
+            "title": "3. Pricing and Payment",
+            "body": "All prices displayed on the website are in Vietnamese Dong (VND). Danang Trip supports the following payment methods:",
+            "items": [
+              "SePay VietQR: scan the transfer QR code, and the system automatically confirms payment 24/7 after a successful transaction.",
+              "Manual bank transfer: transfer to Danang Trip's official bank account, and the order is usually reviewed and confirmed by an admin during business hours."
+            ],
+            "note": "With SePay VietQR, the system automatically updates the order and sends a confirmation email after a successful payment IPN is received. With manual bank transfer, the order is confirmed after an admin reconciles the transaction."
+          },
+          {
+            "title": "4. Tour Participation Rules",
+            "items": [
+              "Punctuality: please arrive at the pickup point at least 15 minutes before departure.",
+              "Safety: please follow instructions from the tour guide and transportation provider.",
+              "Personal belongings: you are responsible for your luggage, documents and valuables throughout the trip."
+            ]
+          },
+          {
+            "title": "5. Information Privacy",
+            "body": "Personal information is used only to confirm bookings, process payments, support customers and improve service quality. Danang Trip does not sell or trade customer personal data to third parties for commercial purposes."
+          }
+        ]
+      },
+      "policy": {
+        "title": "Tour Cancellation Policy",
+        "sections": [
+          {
+            "title": "1. Standard Cancellation Fees",
+            "body": "Cancellation fees are calculated based on when you notify us compared with the scheduled departure time.",
+            "table": {
+              "headers": ["Cancellation time", "Applied fee", "Refund amount"],
+              "rows": [
+                ["More than 72 hours before departure", "0%", "Eligible for up to 100% refund"],
+                ["24-48 hours before departure", "50%", "Eligible for up to 50% refund"],
+                ["Less than 24 hours or no-show", "100%", "Not eligible for refund"]
+              ]
+            }
+          },
+          {
+            "title": "2. Holiday, Tet and DIFF Tours",
+            "body": "For tours during Lunar New Year, New Year, Vietnam National Day, April 30-May 1 or the Da Nang International Fireworks Festival (DIFF), cancellation requests must be made at least 7 days in advance. Late cancellations may incur a 100% tour fee."
+          },
+          {
+            "title": "3. Rescheduling",
+            "body": "You may request a free departure date change if you notify us at least 48 hours before the original schedule and seats are still available on the new date."
+          },
+          {
+            "title": "4. Force Majeure Due to Weather or Natural Disasters",
+            "body": "If authorities or destination management boards require a tour to stop due to storms, natural disasters, rough seas, cable car suspension or unsafe conditions, Danang Trip will notify customers as early as possible.",
+            "items": [
+              "Support rescheduling to another suitable departure date.",
+              "Process up to a 100% refund after Danang Trip reconciles the transaction if the customer cannot arrange a new schedule."
+            ],
+            "variant": "callout"
+          }
+        ]
+      }
+    },
     "continue_payment": "Continue to payment",
     "order_summary": "Order Summary",
     "cancellation_policy": "Cancellation Policy",
-    "cancellation_note": "Free cancellation 24 hours before departure. Cancellation within 24 hours will incur a 50% fee."
+    "cancellation_note": "Cancellation fees and refund eligibility depend on the cancellation time compared with departure. Any eligible refund is processed after admin transaction reconciliation."
   },
   "payment": {
     "title": "Payment Transaction",
@@ -215,7 +288,7 @@
       "zalopay": "ZaloPay",
       "bank_transfer": "Bank Transfer",
       "bank_transfer_manual": "Manual Bank Transfer",
-      "payos": "payOS Payment Gateway",
+      "sepay": "SePay VietQR",
       "credit_card": "Credit Card",
       "cash": "Cash",
       "paypal": "PayPal"
@@ -223,6 +296,19 @@
     "badges": {
       "automatic": "Automatic (VietQR)",
       "manual": "Manual"
+    },
+    "sepay": {
+      "title": "Scan QR to transfer",
+      "description": "After the exact amount and transfer content are received, the system will confirm your booking automatically.",
+      "qr_alt": "SePay bank transfer QR code",
+      "bank": "Bank",
+      "account_no": "Account no.",
+      "account_name": "Account name",
+      "amount": "Amount",
+      "transfer_content": "Transfer note",
+      "copy": "Copy",
+      "open_qr_link": "Could not load the QR image. Click to open it in a new tab.",
+      "auto_confirm_note": "This page checks payment status automatically every few seconds."
     },
     "errors": {
       "missing_context": "This payment page is missing the booking or transaction information needed to continue.",
@@ -260,7 +346,7 @@
     "cancel_confirm_question": "Are you sure you want to cancel this booking?",
     "cancel_reason_label": "Cancellation Reason",
     "cancel_reason_placeholder": "Please enter cancellation reason (minimum 10 characters)...",
-    "cancel_warning": "Note: Free cancellation before 24 hours of departure. Cancellation within 24 hours incurs a 50% charge of the total amount.",
+    "cancel_warning": "Note: cancelling a booking releases the reserved seats. Any eligible refund under the policy will be reconciled and processed separately by an admin.",
     "cancel_success": "Booking cancellation requested successfully.",
     "cancel_failed": "Failed to cancel booking. Please try again.",
     "cancel_reason_min_error": "Cancellation reason must be at least 10 characters.",

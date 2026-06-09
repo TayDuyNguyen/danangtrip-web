@@ -66,7 +66,7 @@ export function RegisterForm({ onSuccess, redirectUrl }: RegisterFormProps) {
 
   return (
     <div className="design-page flex min-h-screen justify-center items-center p-4 py-10 sm:p-8">
-      <div className="relative flex h-auto w-full max-w-md rounded-[28px] shadow-[0_18px_48px_rgba(0,0,0,0.08)] lg:h-[700px] lg:w-3/4 lg:max-w-4xl xl:w-2/3">
+      <div className="relative flex h-auto w-full max-w-md rounded-[28px] shadow-[0_18px_48px_rgba(0,0,0,0.08)] lg:min-h-[700px] lg:w-3/4 lg:max-w-4xl xl:w-2/3">
         
         {/* Animated Border Background */}
         <div className="pointer-events-none absolute inset-[-2px] z-0 overflow-hidden rounded-[30px]">

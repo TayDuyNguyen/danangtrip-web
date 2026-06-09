@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { cn } from "@/utils/string";
 import { useAppConfig } from "@/hooks/use-app-config";
@@ -15,40 +14,16 @@ export function PaymentMethodSelector({ value, onChange }: PaymentMethodSelector
   const t = useTranslations("tour");
   const { data: config } = useAppConfig();
 
-  const isPayosEnabled = config?.payment?.payos !== false;
+  const isSepayEnabled = (config?.payment?.sepay ?? config?.payment?.payos) !== false;
   const isCodEnabled = config?.payment?.cod !== false;
-  const isVnpayEnabled = !!config?.payment?.vnpay;
-  const isMomoEnabled = !!config?.payment?.momo;
-  const isZalopayEnabled = !!config?.payment?.zalopay;
 
   const methods = [
     {
-      id: "payos",
-      name: t("payment.methods.payos"),
-      icon: "/images/payment/payOS.png",
+      id: "sepay",
+      name: t("payment.methods.sepay"),
+      icon: "/images/payment/logo-sepay-blue.svg",
       badge: t("payment.badges.automatic"),
-      enabled: isPayosEnabled,
-    },
-    {
-      id: "vnpay",
-      name: t("payment.methods.vnpay"),
-      icon: "/images/payment/vnpay.png",
-      badge: t("payment.badges.automatic"),
-      enabled: isVnpayEnabled,
-    },
-    {
-      id: "momo",
-      name: t("payment.methods.momo"),
-      icon: "/images/payment/momo.png",
-      badge: t("payment.badges.automatic"),
-      enabled: isMomoEnabled,
-    },
-    {
-      id: "zalopay",
-      name: t("payment.methods.zalopay"),
-      icon: "/images/payment/zalopay.png",
-      badge: t("payment.badges.automatic"),
-      enabled: isZalopayEnabled,
+      enabled: isSepayEnabled,
     },
     {
       id: "bank_transfer",
@@ -87,14 +62,19 @@ export function PaymentMethodSelector({ value, onChange }: PaymentMethodSelector
               className="w-4 h-4 text-primary focus:ring-primary bg-transparent border-border"
             />
             <div className="flex items-center gap-3">
-              {method.icon && (
-                <Image
+              {method.icon ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
                   src={method.icon}
-                  alt={method.name}
+                  alt=""
                   width={32}
                   height={32}
-                  className="w-8 h-8 rounded-lg object-contain bg-white p-0.5"
+                  className="h-8 w-8 rounded-lg bg-white object-contain p-0.5"
                 />
+              ) : (
+                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-[10px] font-black uppercase text-primary">
+                  QR
+                </span>
               )}
               <span className={cn(
                 "text-sm font-bold",

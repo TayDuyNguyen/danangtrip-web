@@ -3,7 +3,7 @@ import { ERROR_MESSAGES } from "@/utils/constants";
 
 // Regex patterns
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-const PHONE_REGEX = /^(0[3|5|7|8|9])+([0-9]{8})$/;
+const PHONE_REGEX = /^\+?[0-9\s\-\.\(\)]{9,20}$/;
 const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
 // Login schema

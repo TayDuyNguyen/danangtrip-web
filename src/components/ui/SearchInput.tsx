@@ -64,6 +64,11 @@ export default function SearchInput({
     }
   };
 
+  const handleActionClick = () => {
+    debouncedOnChange?.cancel();
+    onChange(localValue);
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       debouncedOnChange?.cancel();
@@ -102,9 +107,13 @@ export default function SearchInput({
           />
         </div>
 
-        <div className="hidden shrink-0 rounded-full bg-[#ff385c] px-4 py-2 text-[13px] font-semibold text-white shadow-[0_8px_20px_rgba(255,56,92,0.24)] sm:block">
+        <button
+          type="button"
+          onClick={handleActionClick}
+          className="hidden shrink-0 rounded-full bg-[#ff385c] px-4 py-2 text-[13px] font-semibold text-white shadow-[0_8px_20px_rgba(255,56,92,0.24)] transition-all hover:bg-opacity-90 active:scale-95 cursor-pointer sm:block"
+        >
           {actionText}
-        </div>
+        </button>
       </div>
     </div>
   );

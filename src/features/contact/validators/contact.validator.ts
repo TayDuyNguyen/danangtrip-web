@@ -17,7 +17,7 @@ export const contactSchema = z.object({
     .trim(),
   phone: z
     .string()
-    .regex(/^(0|\+84)(3|5|7|8|9)[0-9]{8}$/, "phone_invalid")
+    .regex(/^\+?[0-9\s\-\.\(\)]{9,20}$/, "phone_invalid")
     .optional()
     .or(z.literal("")),
   subject: z

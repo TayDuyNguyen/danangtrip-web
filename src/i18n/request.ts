@@ -22,6 +22,9 @@ import viResetPassword from "../messages/vi/reset-password.json";
 import viRecommendations from "../messages/vi/recommendations.json";
 import viRatings from "../messages/vi/ratings.json";
 import viCart from "../messages/vi/cart.json";
+import viTerms from "../messages/vi/terms.json";
+import viPrivacy from "../messages/vi/privacy.json";
+import viCopilot from "../messages/vi/copilot.json";
 
 import enCommon from "../messages/en/common.json";
 import enHome from "../messages/en/home.json";
@@ -43,6 +46,9 @@ import enResetPassword from "../messages/en/reset-password.json";
 import enRecommendations from "../messages/en/recommendations.json";
 import enRatings from "../messages/en/ratings.json";
 import enCart from "../messages/en/cart.json";
+import enTerms from "../messages/en/terms.json";
+import enPrivacy from "../messages/en/privacy.json";
+import enCopilot from "../messages/en/copilot.json";
 
 const messagesByLocale = {
   vi: {
@@ -66,6 +72,9 @@ const messagesByLocale = {
     recommendations: viRecommendations,
     ratings: viRatings,
     cart: viCart,
+    terms: viTerms,
+    privacy: viPrivacy,
+    copilot: viCopilot,
   },
   en: {
     common: enCommon,
@@ -88,6 +97,9 @@ const messagesByLocale = {
     recommendations: enRecommendations,
     ratings: enRatings,
     cart: enCart,
+    terms: enTerms,
+    privacy: enPrivacy,
+    copilot: enCopilot,
   },
 } as const satisfies Record<
   "vi" | "en",
@@ -111,7 +123,10 @@ const messagesByLocale = {
     | "resetPassword"
     | "recommendations"
     | "ratings"
-    | "cart",
+    | "cart"
+    | "terms"
+    | "privacy"
+    | "copilot",
     Record<string, unknown>
   >
 >;
