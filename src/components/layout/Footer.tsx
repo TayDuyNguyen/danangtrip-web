@@ -124,36 +124,20 @@ const Footer = () => {
               <li><Link href={ROUTES.CONTACT} className="text-on-surface-subtle hover:text-primary transition-all duration-300 text-sm">{t("footer.contact")}</Link></li>
               <li><Link href={ROUTES.CONTACT} className="text-on-surface-subtle hover:text-primary transition-all duration-300 text-sm">{t("footer.support")}</Link></li>
               <li>
-                {siteConfig?.policy?.terms ? (
-                  <a
-                    href={siteConfig.policy.terms}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-on-surface-subtle hover:text-primary transition-all duration-300 text-sm block"
-                  >
-                    {t("footer.terms")}
-                  </a>
-                ) : (
-                  <span className="text-on-surface-variant text-sm block">
-                    {t("footer.terms")} — {t("footer.coming_soon")}
-                  </span>
-                )}
+                <Link
+                  href={ROUTES.TERMS}
+                  className="text-on-surface-subtle hover:text-primary transition-all duration-300 text-sm block"
+                >
+                  {t("footer.terms")}
+                </Link>
               </li>
               <li>
-                {siteConfig?.policy?.privacy ? (
-                  <a
-                    href={siteConfig.policy.privacy}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-on-surface-subtle hover:text-primary transition-all duration-300 text-sm block"
-                  >
-                    {t("footer.privacy")}
-                  </a>
-                ) : (
-                  <span className="text-on-surface-variant text-sm block">
-                    {t("footer.privacy")} — {t("footer.coming_soon")}
-                  </span>
-                )}
+                <Link
+                  href={ROUTES.PRIVACY}
+                  className="text-on-surface-subtle hover:text-primary transition-all duration-300 text-sm block"
+                >
+                  {t("footer.privacy")}
+                </Link>
               </li>
             </ul>
           </div>

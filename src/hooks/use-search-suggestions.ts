@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDebounce } from "@/hooks/useDebounce";
 import { searchService } from "@/services/search.service";
+import type { SearchFilters } from "@/features/search/types/search.types";
 import { 
   SearchSuggestionItem, 
   SearchSuggestionsData, 
@@ -9,17 +10,48 @@ import {
 import { useLocale } from "next-intl";
 import { extractItems } from "@/utils";
 
-export const useSearchSuggestions = (query: string, type: string) => {
+type SuggestionSearchType = "all" | "location" | "tour";
+
+const buildSuggestionFilters = (type: SuggestionSearchType, filters?: SearchFilters) => ({
+  type,
+  category_id:
+    type === "location"
+      ? (filters?.category ?? filters?.locationCategory)
+      : type === "all"
+        ? filters?.locationCategory
+        : undefined,
+  tour_category_id:
+    type === "tour"
+      ? (filters?.category ?? filters?.tourCategory)
+      : type === "all"
+        ? filters?.tourCategory
+        : undefined,
+  district: type !== "tour" ? filters?.district : undefined,
+  price_min: filters?.minPrice,
+  price_max: filters?.maxPrice,
+  min_rating: filters?.rating,
+});
+
+const normalizeSuggestionType = (type: string): SuggestionSearchType => {
+  if (type === "location" || type === "tour") {
+    return type;
+  }
+
+  return "all";
+};
+
+export const useSearchSuggestions = (query: string, type: string = "all", filters?: SearchFilters) => {
   const locale = useLocale();
   const debouncedQuery = useDebounce(query, 300);
   const isEnabled = debouncedQuery.trim().length >= 2;
+  const suggestionFilters = buildSuggestionFilters(normalizeSuggestionType(type), filters);
 
   const { data, isLoading, isError, error } = useQuery<SearchSuggestionsData>({
-    queryKey: ["search", "suggestions", debouncedQuery.trim(), type],
+    queryKey: ["search", "suggestions", debouncedQuery.trim(), suggestionFilters],
     queryFn: async () => {
       const q = debouncedQuery.trim();
       
-      const res = await searchService.getSuggestions(q, 5);
+      const res = await searchService.getSuggestions(q, 5, suggestionFilters);
       const rawData = res.data;
       const suggestionsPayload = (rawData && typeof rawData === "object" && "suggestions" in rawData)
         ? (rawData as { suggestions: unknown }).suggestions

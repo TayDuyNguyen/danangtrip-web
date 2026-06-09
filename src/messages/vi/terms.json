@@ -1,0 +1,53 @@
+{
+  "title": "Điều khoản dịch vụ",
+  "subtitle": "Vui lòng đọc kỹ các điều khoản trước khi sử dụng dịch vụ.",
+  "last_updated": "Cập nhật lần cuối",
+  "last_updated_date": "09 tháng 6, 2025",
+  "back_home": "Về trang chủ",
+  "sections": {
+    "s1": {
+      "title": "1. Giới thiệu & Chấp nhận điều khoản",
+      "body": "Chào mừng bạn đến với Đà Nẵng Trip — nền tảng đặt tour và khám phá du lịch hàng đầu tại Đà Nẵng. Bằng việc truy cập hoặc sử dụng bất kỳ dịch vụ nào của chúng tôi (bao gồm website, ứng dụng di động hoặc API), bạn xác nhận rằng bạn đã đọc, hiểu và đồng ý bị ràng buộc bởi toàn bộ các điều khoản được nêu trong tài liệu này cũng như Chính sách bảo mật của chúng tôi. Nếu bạn không đồng ý với bất kỳ điều khoản nào, vui lòng ngừng sử dụng dịch vụ ngay lập tức."
+    },
+    "s2": {
+      "title": "2. Định nghĩa",
+      "body": "Trong tài liệu này, \"Dịch vụ\" có nghĩa là toàn bộ nền tảng Đà Nẵng Trip bao gồm website, ứng dụng và các tính năng liên quan. \"Người dùng\" hoặc \"Bạn\" chỉ bất kỳ cá nhân hoặc tổ chức nào truy cập và sử dụng Dịch vụ. \"Đối tác\" là các nhà cung cấp tour, địa điểm du lịch và doanh nghiệp đã ký kết thỏa thuận với chúng tôi. \"Nội dung\" bao gồm văn bản, hình ảnh, video, đánh giá và tất cả thông tin được đăng tải trên nền tảng."
+    },
+    "s3": {
+      "title": "3. Điều kiện sử dụng tài khoản",
+      "body": "Bạn phải từ 16 tuổi trở lên để đăng ký tài khoản. Mỗi người chỉ được tạo một tài khoản duy nhất với thông tin trung thực. Bạn có trách nhiệm bảo mật thông tin đăng nhập và chịu trách nhiệm cho mọi hoạt động thực hiện từ tài khoản của mình. Đà Nẵng Trip có quyền từ chối, tạm khóa hoặc xóa tài khoản trong trường hợp vi phạm điều khoản, gian lận hoặc gây hại cho người dùng khác mà không cần thông báo trước."
+    },
+    "s4": {
+      "title": "4. Đặt tour & Chính sách thanh toán",
+      "body": "Khi bạn đặt tour trên Đà Nẵng Trip, bạn ký kết thỏa thuận trực tiếp với Đối tác cung cấp dịch vụ đó. Chúng tôi đóng vai trò trung gian kỹ thuật và không chịu trách nhiệm về chất lượng dịch vụ thực tế của Đối tác. Giá niêm yết đã bao gồm các loại phí và thuế được liệt kê rõ ràng tại thời điểm đặt. Hiện tại nền tảng hỗ trợ 2 phương thức thanh toán: (1) SePay VietQR — quét mã QR, hệ thống tự xác nhận 24/7 sau khi nhận IPN thanh toán thành công; (2) Chuyển khoản thủ công — chuyển khoản vào tài khoản ngân hàng chính thức và thường được admin kiểm tra, xác nhận trong giờ làm việc. Với SePay VietQR, email xác nhận được gửi tự động sau khi thanh toán thành công; với chuyển khoản thủ công, đơn được xác nhận sau khi admin đối soát giao dịch."
+    },
+    "s5": {
+      "title": "5. Hủy tour & Hoàn tiền",
+      "body": "Chính sách hủy tour: Hủy trước 72 giờ — đủ điều kiện hoàn tối đa 100% giá trị đặt; Hủy trong 24–48 giờ — đủ điều kiện hoàn tối đa 50%; Hủy dưới 24 giờ hoặc vắng mặt (no-show) — không đủ điều kiện hoàn tiền. Đối với các tour diễn ra vào dịp Lễ, Tết và Lễ hội Pháo hoa Quốc tế Đà Nẵng (DIFF): yêu cầu hủy phải thông báo trước ít nhất 7 ngày, quá thời hạn có thể chịu phí hủy 100%. Khoản hoàn, nếu đủ điều kiện, sẽ được xử lý sau khi admin đối soát giao dịch và tùy thuộc phương thức thanh toán. Trường hợp bất khả kháng do cơ quan chức năng yêu cầu ngừng tour sẽ được ưu tiên đổi lịch hoặc xử lý hoàn tiền theo kết quả đối soát."
+    },
+    "s6": {
+      "title": "6. Hành vi bị cấm",
+      "body": "Bạn cam kết không thực hiện các hành vi sau: (a) sử dụng dịch vụ để truyền bá nội dung bất hợp pháp, khiêu dâm hoặc thù địch; (b) cố gắng xâm nhập, phá hoại hoặc làm gián đoạn hệ thống kỹ thuật; (c) thu thập dữ liệu người dùng khác trái phép; (d) đăng đánh giá giả mạo hoặc thông tin gây hiểu nhầm; (e) sử dụng bot, script hoặc công cụ tự động để truy cập dịch vụ; (f) mạo danh bất kỳ cá nhân, tổ chức hoặc nhân viên của Đà Nẵng Trip."
+    },
+    "s7": {
+      "title": "7. Quyền sở hữu trí tuệ",
+      "body": "Toàn bộ nội dung do Đà Nẵng Trip tạo ra — bao gồm logo, giao diện, mã nguồn, cơ sở dữ liệu, thiết kế và tài liệu — là tài sản độc quyền của chúng tôi, được bảo hộ bởi luật sở hữu trí tuệ của Việt Nam và quốc tế. Bạn không được sao chép, phân phối, chỉnh sửa hoặc sử dụng vì mục đích thương mại mà không có sự cho phép bằng văn bản của chúng tôi. Đối với nội dung bạn tự đăng tải (đánh giá, hình ảnh), bạn vẫn giữ quyền sở hữu nhưng cấp cho chúng tôi giấy phép sử dụng không độc quyền, miễn phí bản quyền."
+    },
+    "s8": {
+      "title": "8. Giới hạn trách nhiệm",
+      "body": "Đà Nẵng Trip cung cấp nền tảng theo nguyên tắc \"như hiện tại\" (as-is) mà không có bảo đảm nào về tính liên tục hay hoàn hảo. Chúng tôi không chịu trách nhiệm đối với: thiệt hại gián tiếp, mất doanh thu hoặc dữ liệu; sự cố từ bên Đối tác; hay bất kỳ hành động nào ngoài tầm kiểm soát của chúng tôi (bất khả kháng). Trách nhiệm tổng hợp tối đa của Đà Nẵng Trip trong mọi trường hợp không vượt quá giá trị giao dịch liên quan."
+    },
+    "s9": {
+      "title": "9. Sửa đổi điều khoản",
+      "body": "Chúng tôi có thể cập nhật các điều khoản này bất kỳ lúc nào. Trong trường hợp thay đổi quan trọng, chúng tôi sẽ thông báo cho bạn qua email đã đăng ký hoặc qua thông báo nổi bật trên nền tảng tối thiểu 14 ngày trước khi áp dụng. Việc tiếp tục sử dụng dịch vụ sau ngày thay đổi có hiệu lực được coi là chấp nhận điều khoản mới."
+    },
+    "s10": {
+      "title": "10. Luật áp dụng & Giải quyết tranh chấp",
+      "body": "Các điều khoản này chịu sự điều chỉnh của pháp luật nước Cộng hòa Xã hội Chủ nghĩa Việt Nam. Mọi tranh chấp sẽ được giải quyết ưu tiên qua thương lượng thiện chí trong vòng 30 ngày. Nếu không đạt được thỏa thuận, tranh chấp sẽ được đưa ra Trung tâm Trọng tài Quốc tế Việt Nam (VIAC) tại Đà Nẵng để phân xử."
+    },
+    "s11": {
+      "title": "11. Liên hệ",
+      "body": "Mọi thắc mắc về Điều khoản dịch vụ, vui lòng liên hệ: Email: legal@danangtrip.com | Hotline: 0123 456 789 | Địa chỉ: 99 Phố Tiếp, Quận Thanh Khê, Đà Nẵng, Việt Nam."
+    }
+  }
+}

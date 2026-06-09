@@ -3,7 +3,7 @@ import type { Tour, TourSchedule } from "./entities.types";
 
 export type BookingStatus = "pending" | "confirmed" | "cancelled" | "completed";
 export type PaymentStatus = "pending" | "success" | "failed" | "refunded" | "unpaid" | "partially_paid";
-export type PaymentMethod = "bank_transfer" | "credit_card" | "paypal" | "cash" | "momo" | "vnpay" | "zalopay" | "payos";
+export type PaymentMethod = "bank_transfer" | "credit_card" | "paypal" | "cash" | "momo" | "vnpay" | "zalopay" | "sepay" | "payos";
 
 export interface BookingQuantityPayload {
   tour_id: number;

@@ -14,6 +14,7 @@ import { useSearchDiscoveryGrid } from "../hooks/use-search-discovery-grid";
 import { SearchFiltersSheet } from "./SearchFiltersSheet";
 import { Loading } from "@/components/ui";
 import { Select, type SelectOption } from "@/components/ui/Select";
+import { ROUTES } from "@/config";
 import { cn } from "@/utils/string";
 import StandardPagination from "@/components/ui/pagination/StandardPagination";
 import { searchService } from "@/services/search.service";
@@ -175,6 +176,7 @@ export const SearchResultsClient = ({ initialQuery }: SearchResultsClientProps) 
     <div className="reveal-up space-y-8">
       <SearchResultHeader
         query={q}
+        type={type}
         count={counts.all}
         onSearch={handleSearch}
         onOpenFilters={() => {
@@ -233,26 +235,36 @@ export const SearchResultsClient = ({ initialQuery }: SearchResultsClientProps) 
               <p className="mx-auto max-w-md text-sm text-on-surface-subtle">{tSearch("empty.subtitle")}</p>
               {trendKeywords.length > 0 && (
                 <div className="mt-6 flex max-w-2xl flex-wrap justify-center gap-2">
-                  {trendKeywords.slice(0, 5).map((item, index) => (
-                    <button
-                      key={`${item.query}-${index}`}
-                      onClick={() => {
-                        void searchService.trackInteraction({
-                          event: "trending_click",
-                          query: item.query,
-                          type: "all",
-                          clicked_title: item.query,
-                          clicked_type: "keyword",
-                          source: "search_empty_state",
-                          session_id: getOrCreateSessionId(),
-                        });
-                        updateUrl({ q: item.query, page: 1 });
-                      }}
-                      className="rounded-full border border-border bg-[#fafafa] px-3 py-2 text-sm font-medium text-on-surface transition-all hover:border-primary/40 hover:bg-[#fff4f6] hover:text-primary"
-                    >
-                      {item.query}
-                    </button>
-                  ))}
+                  {trendKeywords.slice(0, 5).map((item, index) => {
+                    const source = "source" in item ? item.source : "keyword";
+                    const clickedType = source === "tour" || source === "location" ? source : "keyword";
+                    const clickedSlug = "slug" in item && typeof item.slug === "string" ? item.slug : undefined;
+                    return (
+                      <button
+                        key={`${item.query}-${index}`}
+                        onClick={() => {
+                          void searchService.trackInteraction({
+                            event: "trending_click",
+                            query: item.query,
+                            type: "all",
+                            clicked_title: item.query,
+                            clicked_slug: clickedSlug,
+                            clicked_type: clickedType,
+                            source: "search_empty_state",
+                            session_id: getOrCreateSessionId(),
+                          });
+                          if ((source === "tour" || source === "location") && clickedSlug) {
+                            router.push(source === "tour" ? ROUTES.TOUR_DETAIL(clickedSlug) : ROUTES.LOCATION_DETAIL(clickedSlug));
+                          } else {
+                            updateUrl({ q: item.query, page: 1 });
+                          }
+                        }}
+                        className="rounded-full border border-border bg-[#fafafa] px-3 py-2 text-sm font-medium text-on-surface transition-all hover:border-primary/40 hover:bg-[#fff4f6] hover:text-primary"
+                      >
+                        {item.query}
+                      </button>
+                    );
+                  })}
                 </div>
               )}
             </div>

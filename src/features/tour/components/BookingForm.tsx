@@ -12,6 +12,7 @@ import { BookingProgressSteps } from "./BookingProgressSteps";
 import { QuantityCounter } from "./QuantityCounter";
 import { PaymentMethodSelector } from "./PaymentMethodSelector";
 import { OrderSummaryCard } from "./OrderSummaryCard";
+import { TermsAndPoliciesModal } from "./TermsAndPoliciesModal";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useFieldFocus } from "@/hooks/use-field-focus";
 import { toast } from "sonner";
@@ -52,7 +53,7 @@ export function BookingForm({ tour }: BookingFormProps) {
     quantity_adult: initialAdults,
     quantity_child: initialChildren,
     quantity_infant: initialInfants,
-    payment_method: "payos",
+    payment_method: "sepay",
     customer_name: user?.name || "",
     customer_email: user?.email || "",
     customer_phone: user?.phone || "",
@@ -65,6 +66,13 @@ export function BookingForm({ tour }: BookingFormProps) {
   const [forceSchedulePicker, setForceSchedulePicker] = useState(false);
   const [selectPortalTarget, setSelectPortalTarget] = useState<HTMLElement | null>(null);
   const autoAdjustedKeyRef = useRef("");
+  const [isTermsOpen, setIsTermsOpen] = useState(false);
+  const [termsType, setTermsType] = useState<"terms" | "policy" | null>(null);
+
+  const openTermsModal = (type: "terms" | "policy") => {
+    setTermsType(type);
+    setIsTermsOpen(true);
+  };
   const { isFocused, getFocusProps } = useFieldFocus<keyof BookingFormValues>();
 
   const { data: schedules = [] } = useTourSchedules(tour.id);
@@ -78,7 +86,7 @@ export function BookingForm({ tour }: BookingFormProps) {
   } = useCheckTourAvailability(tour.id);
   const { createPayment, isCreating: isCreatingPayment } = usePayment();
 
-  const onlinePaymentMethods = ["payos", "vnpay", "momo", "zalopay"] as const;
+  const onlinePaymentMethods = ["sepay"] as const;
 
   const availableSchedules = useMemo(
     () => schedules.filter(
@@ -152,15 +160,14 @@ export function BookingForm({ tour }: BookingFormProps) {
   // Dynamically default/switch payment method if selected gateway gets toggled off in settings
   useEffect(() => {
     if (config?.payment) {
-      const activeMethods: ("payos" | "vnpay" | "momo" | "zalopay" | "bank_transfer")[] = [];
-      if (config.payment.payos !== false) activeMethods.push("payos");
-      if (config.payment.vnpay) activeMethods.push("vnpay");
-      if (config.payment.momo) activeMethods.push("momo");
-      if (config.payment.zalopay) activeMethods.push("zalopay");
-      if (config.payment.cod !== false) activeMethods.push("bank_transfer");
+      const isSepayOn = (config.payment.sepay ?? config.payment.payos) !== false;
+      const isCodOn = config.payment.cod !== false;
 
-      if (activeMethods.length > 0 && !activeMethods.includes(formData.payment_method)) {
-        setFormData(prev => ({ ...prev, payment_method: activeMethods[0] }));
+      // If currently selected method is disabled, fall back
+      if (formData.payment_method === "sepay" && !isSepayOn) {
+        setFormData(prev => ({ ...prev, payment_method: "bank_transfer" }));
+      } else if (formData.payment_method === "bank_transfer" && !isCodOn) {
+        setFormData(prev => ({ ...prev, payment_method: "sepay" }));
       }
     }
   }, [config, formData.payment_method]);
@@ -530,8 +537,30 @@ export function BookingForm({ tour }: BookingFormProps) {
                 />
                 <span className="text-sm text-on-surface-subtle font-medium leading-relaxed select-none">
                   {t.rich("terms_agree", {
-                    terms: (chunks) => <span className="text-primary font-bold hover:underline">{chunks}</span>,
-                    policy: (chunks) => <span className="text-primary font-bold hover:underline">{chunks}</span>
+                    terms: (chunks) => (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          openTermsModal("terms");
+                        }}
+                        className="text-primary font-bold hover:underline cursor-pointer focus:outline-hidden inline"
+                      >
+                        {chunks}
+                      </button>
+                    ),
+                    policy: (chunks) => (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          openTermsModal("policy");
+                        }}
+                        className="text-primary font-bold hover:underline cursor-pointer focus:outline-hidden inline"
+                      >
+                        {chunks}
+                      </button>
+                    ),
                   })}
                 </span>
              </label>
@@ -559,6 +588,12 @@ export function BookingForm({ tour }: BookingFormProps) {
         infants={formData.quantity_infant}
         calculation={priceData}
         isLoading={isCalculating}
+      />
+
+      <TermsAndPoliciesModal 
+        isOpen={isTermsOpen}
+        onClose={() => setIsTermsOpen(false)}
+        type={termsType}
       />
     </div>
   );

@@ -141,6 +141,9 @@
     "gps_status": {
       "requesting": "Đang xác định vị trí của bạn...",
       "active": "Đà Nẵng, Việt Nam · Cập nhật vừa xong",
+      "active_fallback": "Đã lấy vị trí hiện tại",
+      "updated": "Cập nhật vừa xong",
+      "resolving": "Đang xác định địa chỉ...",
       "denied": "Không thể lấy vị trí",
       "hint": "Vui lòng cho phép truy cập vị trí khi được trình duyệt yêu cầu.",
       "denied_hint": "Quyền truy cập vị trí bị từ chối. Vui lòng bật lại vị trí trong cài đặt trình duyệt để tiếp tục tìm kiếm tự động."
@@ -187,6 +190,55 @@
       "title": "Bạn đã từ chối chia sẻ vị trí?",
       "subtitle": "Đừng lo lắng! Bạn có thể chọn nhanh bất kỳ quận nào của Đà Nẵng ở dưới để khám phá địa điểm ngay.",
       "select_district": "Khám phá địa điểm tại:"
+    }
+  },
+  "explore": {
+    "meta_title": "Bản đồ địa điểm Đà Nẵng | DanangTrip",
+    "meta_description": "Khám phá khách sạn, quán ăn, điểm check-in và địa điểm du lịch Đà Nẵng trên bản đồ tương tác với icon theo từng danh mục.",
+    "badge": "Bản đồ khám phá",
+    "title": "Bản đồ địa điểm Đà Nẵng",
+    "subtitle": "Khám phá toàn bộ địa điểm hoặc tìm quán gần bạn theo GPS, chỉ đường và lọc danh mục trên cùng một bản đồ.",
+    "mode_explore": "Tất cả",
+    "mode_nearby": "Gần bạn",
+    "search_placeholder": "Tìm địa điểm, quận hoặc địa chỉ...",
+    "all_categories": "Tất cả",
+    "tab_map": "Bản đồ",
+    "tab_list": "Danh sách",
+    "results_count": "{count} địa điểm trên bản đồ",
+    "loading": "Đang tải địa điểm...",
+    "empty": "Không tìm thấy địa điểm phù hợp. Hãy thử đổi danh mục hoặc từ khóa.",
+    "popup_detail": "Chi tiết",
+    "popup_maps": "Google Maps",
+    "my_location": "Vị trí của tôi",
+    "directions": "Chỉ đường",
+    "gps_requesting": "Đang lấy vị trí GPS...",
+    "gps_active": "Đã lấy vị trí hiện tại",
+    "gps_denied": "Chưa có quyền vị trí",
+    "select_destination": "Chọn một địa điểm trên bản đồ",
+    "open_google_maps": "Mở Google Maps",
+    "route_active": "Đang hiển thị đường đi từ vị trí của bạn",
+    "sovereignty": {
+      "hoang_sa_title": "Quần đảo Hoàng Sa",
+      "hoang_sa_claim": "Thuộc chủ quyền Việt Nam",
+      "truong_sa_title": "Quần đảo Trường Sa",
+      "truong_sa_claim": "Thuộc chủ quyền Việt Nam"
+    },
+    "categories": {
+      "khach-san-homestay": "Khách sạn & Homestay",
+      "tham-quan": "Tham quan",
+      "diem-tham-quan": "Điểm tham quan",
+      "am-thuc": "Ẩm thực",
+      "ca-phe-tra-sua": "Cà phê & Trà sữa",
+      "giai-tri": "Giải trí",
+      "mua-sam": "Mua sắm",
+      "van-hoa": "Văn hóa",
+      "nha-hang": "Nhà hàng",
+      "bar-pub": "Bar & Pub",
+      "spa-massage": "Spa & Massage",
+      "the-thao": "Thể thao",
+      "giao-duc": "Giáo dục",
+      "y-te": "Y tế",
+      "mua-sam-thoi-trang": "Mua sắm thời trang"
     }
   },
   "sorting": {

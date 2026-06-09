@@ -66,9 +66,15 @@ const Hero = () => {
 
   const handleSelectSuggestion = (item: SearchSuggestionItem) => {
     setIsDropdownOpen(false);
-    router.push(
-      `${ROUTES.SEARCH}?q=${encodeURIComponent(item.title)}&type=${item.type === "keyword" ? "all" : item.type}`
-    );
+    if (item.type === "tour") {
+      router.push(ROUTES.TOUR_DETAIL(item.slug));
+    } else if (item.type === "location") {
+      router.push(ROUTES.LOCATION_DETAIL(item.slug));
+    } else {
+      router.push(
+        `${ROUTES.SEARCH}?q=${encodeURIComponent(item.title)}&type=all`
+      );
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {

@@ -8,7 +8,7 @@ export const PUBLIC_ROUTES = {
   LOCATIONS: "/locations",
   LOCATION_DETAIL: (slug: string) => `/locations/${slug}`,
   CATEGORY_LOCATIONS: (slug: string) => `/categories/${slug}/locations`,
-  NEARBY: "/nearby",
+  MAP: "/map",
   TOURS: "/tours",
   CATEGORY_TOURS: (slug: string) => `/tour-categories/${slug}/tours`,
   TOUR_DETAIL: (slug: string) => `/tours/${slug}`,
@@ -19,13 +19,13 @@ export const PUBLIC_ROUTES = {
   ABOUT: "/about",
   SEARCH: "/search",
   CART: "/cart",
+  TERMS: "/terms",
+  PRIVACY: "/privacy",
   DESTINATION_DA_NANG: "/du-lich-da-nang",
 } as const;
 
 // Planned / future pages only — do not merge into ROUTES (see PROJECT_RULES §8).
 export const PLANNED_ROUTES = {
-  TERMS: "/terms",
-  PRIVACY: "/privacy",
   DESTINATIONS: "/destinations",
   DINING: "/dining",
   HOTELS: "/hotels",
@@ -98,7 +98,7 @@ export const ROUTES = {
 export const NAV_LINKS = [
   { name: "nav.home", path: PUBLIC_ROUTES.HOME },
   { name: "nav.locations", path: PUBLIC_ROUTES.LOCATIONS },
-  { name: "nav.nearby", path: PUBLIC_ROUTES.NEARBY },
+  { name: "nav.map", path: PUBLIC_ROUTES.MAP },
   { name: "nav.travel", path: PUBLIC_ROUTES.TOURS },
   { name: "nav.blog", path: PUBLIC_ROUTES.BLOG },
   { name: "nav.contact", path: PUBLIC_ROUTES.CONTACT },

@@ -1,0 +1,25 @@
+{
+  "title": "AI Travel Assistant",
+  "subtitle": "Discover Da Nang with your smart travel companion",
+  "placeholder": "Type your question or request here...",
+  "suggestions": {
+    "itinerary": "3-day Da Nang itinerary",
+    "bana": "Best Ba Na Hills tour",
+    "food": "What to eat in Da Nang?",
+    "hotel": "Hotels near My Khe beach"
+  },
+  "chat": {
+    "welcome": "Hello! I am your DanangTrip AI Travel Assistant. Ask me about itineraries, tours, restaurants, hotels, or attractions in Da Nang. I can search info and pin locations directly on the map for you!",
+    "searching": "Searching for relevant information...",
+    "error": "An error occurred, please try again.",
+    "book_now": "Book Now",
+    "view_detail": "Details",
+    "rating": "Rating",
+    "price_from": "From"
+  },
+  "tabs": {
+    "chat": "Chat",
+    "map": "Map",
+    "recommendations": "Recommendations"
+  }
+}

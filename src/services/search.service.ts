@@ -2,7 +2,7 @@ import { API_ENDPOINTS } from "@/config";
 import axiosInstance from "@/lib/axios";
 import { ApiResponse, PaginatedResponse } from "@/types";
 import type { Location, Tour, RecommendedLocation, RecommendedTour } from "@/types";
-import type { SearchInteractionPayload, SearchRequestParams, SearchSuggestionResponse, SearchPopularResponse, SearchTrendingResponse, SearchTrendInsightsResponse } from "@/types/search.types";
+import type { SearchInteractionPayload, SearchRequestParams, SearchSuggestionRequestParams, SearchSuggestionResponse, SearchPopularResponse, SearchTrendingResponse, SearchTrendInsightsResponse } from "@/types/search.types";
 
 export const searchService = {
   /**
@@ -14,8 +14,14 @@ export const searchService = {
   /**
    * Autocomplete suggestions
    */
-  getSuggestions: (q: string, limit: number = 5): Promise<ApiResponse<SearchSuggestionResponse>> =>
-    axiosInstance.get(API_ENDPOINTS.SEARCH.SUGGESTIONS, { params: { q, limit: Math.min(Math.max(limit, 1), 20) } }),
+  getSuggestions: (
+    q: string,
+    limit: number = 5,
+    params: SearchSuggestionRequestParams = {}
+  ): Promise<ApiResponse<SearchSuggestionResponse>> =>
+    axiosInstance.get(API_ENDPOINTS.SEARCH.SUGGESTIONS, {
+      params: { ...params, q, limit: Math.min(Math.max(limit, 1), 20) },
+    }),
 
   /**
    * Popular searches (30 days by default)

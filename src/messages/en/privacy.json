@@ -1,0 +1,57 @@
+{
+  "title": "Privacy Policy",
+  "subtitle": "We respect your privacy and are committed to protecting your personal data.",
+  "last_updated": "Last updated",
+  "last_updated_date": "June 09, 2025",
+  "back_home": "Back to Home",
+  "sections": {
+    "s1": {
+      "title": "1. Introduction & Commitment",
+      "body": "Đà Nẵng Trip (\"we\", \"our\") is committed to protecting your privacy and data security. This privacy policy describes how we collect, use, store and protect personal information when you use the platform. We comply with Decree 13/2023/ND-CP on personal data protection of Vietnam and equivalent international standards."
+    },
+    "s2": {
+      "title": "2. Information We Collect",
+      "body": "We collect the following types of data: (a) Information you provide directly: full name, email, phone number, address, avatar, payment information (encrypted); (b) Automatically generated data: IP address, device type, browser, pages viewed, access time, cookies; (c) Content you post: reviews, images, comments; (d) Transaction information: tour booking history, payment methods, invoices."
+    },
+    "s3": {
+      "title": "3. How We Use Your Data",
+      "body": "We use your data to: provide and improve the Service; process tour bookings and payments; send booking confirmations and transaction-related notifications; personalize experience and suggest relevant content; analyze usage trends to improve platform quality; prevent fraud and ensure system security; comply with legal obligations."
+    },
+    "s4": {
+      "title": "4. Cookies & Tracking Technologies",
+      "body": "We use cookies and similar technologies to maintain login sessions, remember preferences and analyze usage behavior. There are three types: (a) Essential cookies — required for the website to function; (b) Analytics cookies — help us understand how users interact (e.g., Google Analytics); (c) Personalization cookies — remember your settings and preferences. You can disable non-essential cookies in your browser settings, but this may affect some features."
+    },
+    "s5": {
+      "title": "5. Sharing & Disclosure",
+      "body": "We do not sell, rent or trade your personal information to third parties for commercial purposes. We only share data in these cases: (a) With tour Partners when you complete a booking (only information necessary for the service); (b) With technical service providers (payment gateways, hosting, email) that have signed confidentiality agreements; (c) When legally required by competent authorities; (d) To protect our legal rights or those of other users."
+    },
+    "s6": {
+      "title": "6. Data Security",
+      "body": "We implement appropriate technical and organizational measures to protect your data: SSL/TLS encryption for all connections; encryption of sensitive data (passwords, payment information) in the database; internal access control based on the principle of least privilege; regular security monitoring and audits; frequent data backups. However, no system can guarantee 100% safety — we commit to notifying you within 72 hours if a security incident affecting you occurs."
+    },
+    "s7": {
+      "title": "7. Your Rights",
+      "body": "Under Vietnamese law and international standards, you have the following rights over your personal data: (a) Right of access — request a copy of the information we hold about you; (b) Right of rectification — update inaccurate or outdated information; (c) Right of erasure — request deletion of your account and related data; (d) Right to object — refuse data processing for marketing purposes; (e) Right to restriction — request suspension of processing while a complaint is under review. To exercise these rights, contact: privacy@danangtrip.com."
+    },
+    "s8": {
+      "title": "8. Data Retention",
+      "body": "We store your data for as long as necessary to provide the service and comply with legal obligations: account data is kept for the entire active period plus 3 years after deletion; transaction data is stored for 10 years per accounting requirements; system logs are deleted after 90 days; analytics data is anonymized after 24 months."
+    },
+    "s9": {
+      "title": "9. International Data Transfers",
+      "body": "Đà Nẵng Trip's systems primarily operate in Vietnam. Some technical service providers (such as cloud infrastructure) may process data abroad. In such cases, we ensure data transfers comply with appropriate safeguards through data processing agreements with providers."
+    },
+    "s10": {
+      "title": "10. Children",
+      "body": "Đà Nẵng Trip's service is not intended for children under 16. We do not intentionally collect personal information from children. If a parent or guardian discovers their child has provided us with personal information, please contact us immediately so we can delete that information."
+    },
+    "s11": {
+      "title": "11. Policy Updates",
+      "body": "This privacy policy may be updated periodically. Any significant changes will be communicated via email or prominent notices on the platform at least 14 days in advance. The current policy is always accessible at this address."
+    },
+    "s12": {
+      "title": "12. Privacy Contact",
+      "body": "If you have questions, complaints or requests about our privacy policy, please contact our Data Protection team: Email: privacy@danangtrip.com | Hotline: 0123 456 789 | Address: 99 Pho Tiep, Thanh Khe District, Da Nang, Vietnam. We commit to responding within 5 business days."
+    }
+  }
+}

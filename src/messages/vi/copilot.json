@@ -1,0 +1,25 @@
+{
+  "title": "Trợ lý Du lịch AI",
+  "subtitle": "Khám phá Đà Nẵng cùng người đồng hành thông minh của bạn",
+  "placeholder": "Nhập câu hỏi hoặc yêu cầu của bạn ở đây...",
+  "suggestions": {
+    "itinerary": "Lịch trình du lịch 3 ngày",
+    "bana": "Tour Bà Nà Hills tốt nhất",
+    "food": "Ăn gì ở Đà Nẵng ngon bổ rẻ?",
+    "hotel": "Khách sạn gần biển Mỹ Khê"
+  },
+  "chat": {
+    "welcome": "Xin chào! Tôi là Trợ lý Du lịch ảo DanangTrip AI. Hãy hỏi tôi về lịch trình, tour du lịch, nhà hàng, khách sạn hoặc các điểm tham quan tại Đà Nẵng. Tôi có thể tìm kiếm thông tin và ghim trực tiếp lên bản đồ cho bạn!",
+    "searching": "Đang tìm kiếm thông tin phù hợp...",
+    "error": "Có lỗi xảy ra, vui lòng thử lại.",
+    "book_now": "Đặt ngay",
+    "view_detail": "Xem chi tiết",
+    "rating": "Đánh giá",
+    "price_from": "Từ"
+  },
+  "tabs": {
+    "chat": "Trò chuyện",
+    "map": "Bản đồ",
+    "recommendations": "Gợi ý"
+  }
+}
