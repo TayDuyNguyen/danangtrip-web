@@ -31,7 +31,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="relative mx-auto mb-6 w-[calc(100%-3rem)] select-none overflow-hidden rounded-[28px] border border-border bg-white px-6 pb-10 pt-16 text-on-surface shadow-[0_24px_80px_rgba(15,23,42,0.08)] md:w-[calc(100%-4rem)] md:px-16 lg:w-[calc(100%-5rem)]">
+    <footer className="relative mx-auto mb-6 w-[calc(100%-3rem)] select-none overflow-hidden rounded-[28px] border border-border bg-white px-6 pb-10 pt-16 text-on-surface shadow-[0_24px_80px_rgba(15,23,42,0.08)] md:w-[calc(100%-4rem)] md:px-16 lg:w-[calc(100%-5rem)] print:hidden">
       <div className="relative z-10 w-full">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {/* Brand & Social */}

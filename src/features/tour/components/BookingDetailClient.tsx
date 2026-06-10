@@ -17,7 +17,8 @@ import { ChevronLeft, InfoCircle } from "@/components/icons/solar";
 import { Button } from "@/components/ui";
 import { toast } from "sonner";
 import { CreditCard, Download, Printer, XCircle } from "lucide-react";
-import type { PaymentMethod } from "@/types";
+import { formatDate, formatDateTime, formatPriceVND } from "@/utils/format";
+import type { Booking, BookingItem, PaymentMethod } from "@/types";
 
 interface BookingDetailClientProps {
   id?: string;
@@ -32,6 +33,63 @@ interface ActionIconButtonProps {
   isLoading?: boolean;
   tone?: "default" | "primary" | "danger";
 }
+
+const translateInvoiceBookingStatus = (status: Booking["booking_status"]) => {
+  switch (status) {
+    case "pending":
+      return "Chờ xác nhận";
+    case "confirmed":
+      return "Đã xác nhận";
+    case "completed":
+      return "Hoàn thành";
+    case "cancelled":
+      return "Đã hủy";
+    default:
+      return status;
+  }
+};
+
+const translateInvoicePaymentStatus = (status: Booking["payment_status"]) => {
+  switch (status) {
+    case "pending":
+    case "unpaid":
+      return "Chờ thanh toán";
+    case "success":
+      return "Thanh toán thành công";
+    case "failed":
+      return "Thanh toán thất bại";
+    case "refunded":
+      return "Đã hoàn tiền";
+    case "partially_paid":
+      return "Thanh toán một phần";
+    default:
+      return status;
+  }
+};
+
+const translateInvoicePaymentMethod = (method: Booking["payment_method"]) => {
+  switch (method) {
+    case "sepay":
+    case "payos":
+      return "SePay VietQR";
+    case "vnpay":
+      return "VNPAY";
+    case "momo":
+      return "MoMo";
+    case "zalopay":
+      return "ZaloPay";
+    case "bank_transfer":
+      return "Chuyển khoản ngân hàng";
+    case "cash":
+      return "Tiền mặt";
+    case "credit_card":
+      return "Thẻ tín dụng";
+    case "paypal":
+      return "PayPal";
+    default:
+      return method;
+  }
+};
 
 function ActionIconButton({
   label,
@@ -255,7 +313,8 @@ export function BookingDetailClient({ id, bookingCode }: BookingDetailClientProp
   };
 
   return (
-    <div className="space-y-6 md:space-y-8 print:p-0">
+    <>
+    <div className="space-y-6 md:space-y-8 print:hidden">
       {/* Header Panel */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-6 print:hidden">
         <div className="flex items-center gap-4">
@@ -316,11 +375,13 @@ export function BookingDetailClient({ id, bookingCode }: BookingDetailClientProp
       </div>
 
       {/* Primary Layout Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 print:flex print:flex-col print:gap-6">
         {/* Left Column: Details */}
-        <div className="lg:col-span-2 space-y-6 md:space-y-8">
+        <div className="lg:col-span-2 space-y-6 md:space-y-8 print:space-y-6 print:w-full">
           {/* Status Timeline */}
-          <BookingStatusTimeline booking={booking} />
+          <div className="print:hidden">
+            <BookingStatusTimeline booking={booking} />
+          </div>
 
           {/* Tour Card */}
           <BookingTourInfoCard item={item} />
@@ -330,7 +391,7 @@ export function BookingDetailClient({ id, bookingCode }: BookingDetailClientProp
         </div>
 
         {/* Right Column: Pricing & Cancel warnings */}
-        <div className="space-y-6 md:space-y-8 print:col-span-3">
+        <div className="space-y-6 md:space-y-8 print:w-full">
           {/* Price Summary */}
           <BookingPriceSummaryCard booking={booking} />
 
@@ -429,6 +490,171 @@ export function BookingDetailClient({ id, bookingCode }: BookingDetailClientProp
         bookingId={booking.id}
         onSubmitSuccess={() => refetch()}
       />
+    </div>
+    <PrintableBookingInvoice booking={booking} item={item} />
+    </>
+  );
+}
+
+function PrintableBookingInvoice({ booking, item }: { booking: Booking; item: BookingItem }) {
+  const quantityAdult = item.quantity_adult || 0;
+  const quantityChild = item.quantity_child || 0;
+  const quantityInfant = item.quantity_infant || 0;
+  const quantityTotal = quantityAdult + quantityChild + quantityInfant;
+  const totalAmount = Number(booking.total_amount || 0);
+  const discountAmount = Number(booking.discount_amount || 0);
+  const depositAmount = Number(booking.deposit_amount || 0);
+  const finalAmount = Number(booking.final_amount || booking.total_amount || 0);
+  const remainingAmount = Math.max(0, finalAmount - depositAmount);
+  const unitPriceAdult = Number(item.unit_price_adult || 0);
+  const tourName = item.item_name || item.tour?.name || "Tour du lịch";
+  const travelDate = item.travel_date ? formatDate(item.travel_date, "vi-VN") : "Chưa cập nhật";
+  const bookedAt = booking.booked_at ? formatDateTime(booking.booked_at, "vi-VN") : "Chưa cập nhật";
+  const confirmedAt = booking.confirmed_at ? formatDateTime(booking.confirmed_at, "vi-VN") : "Chưa xác nhận";
+
+  return (
+    <section className="hidden print:block print:bg-white print:p-0 print:text-[#111827]">
+      <div className="mx-auto w-full max-w-[780px] overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white text-[12px] leading-relaxed text-[#111827] print:max-w-none print:rounded-none print:border-0">
+        <div className="flex items-start justify-between bg-primary px-8 py-7 text-white print:bg-[#ff385c]">
+          <div>
+            <div className="flex items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-lg font-black text-primary print:text-[#ff385c]">
+                D
+              </div>
+              <div>
+                <div className="text-2xl font-black">DaNangTrip</div>
+                <div className="text-xs font-medium text-white/80">Khám phá Đà Nẵng như người bản địa</div>
+              </div>
+            </div>
+          </div>
+          <div className="text-right">
+            <h1 className="text-2xl font-black uppercase">Hóa đơn đặt tour</h1>
+            <p className="mt-2 text-xs text-white/85">
+              Mã đơn: <strong>{booking.booking_code}</strong>
+            </p>
+            <p className="text-xs text-white/85">
+              Ngày xuất: <strong>{formatDateTime(new Date(), "vi-VN")}</strong>
+            </p>
+          </div>
+        </div>
+
+        <div className="space-y-6 px-8 py-7">
+          <div className="grid grid-cols-2 gap-4">
+            <InvoicePrintCard title="Thông tin khách hàng">
+              <InvoicePrintLine label="Họ và tên" value={booking.customer_name} />
+              <InvoicePrintLine label="Email" value={booking.customer_email} />
+              <InvoicePrintLine label="Số điện thoại" value={booking.customer_phone} />
+              <InvoicePrintLine label="Địa chỉ" value={booking.customer_address || "Chưa cập nhật"} />
+            </InvoicePrintCard>
+
+            <InvoicePrintCard title="Thông tin đơn hàng">
+              <InvoicePrintLine label="Ngày đặt" value={bookedAt} />
+              <InvoicePrintLine label="Ngày xác nhận" value={confirmedAt} />
+              <InvoicePrintLine label="Trạng thái đơn" value={translateInvoiceBookingStatus(booking.booking_status)} strong />
+              <InvoicePrintLine label="Thanh toán" value={translateInvoicePaymentStatus(booking.payment_status)} strong />
+              <InvoicePrintLine label="Phương thức" value={translateInvoicePaymentMethod(booking.payment_method)} />
+            </InvoicePrintCard>
+          </div>
+
+          <div>
+            <h2 className="mb-3 text-xs font-black uppercase text-primary print:text-[#ff385c]">Chi tiết dịch vụ</h2>
+            <table className="w-full border-collapse text-xs">
+              <thead>
+                <tr className="bg-[#111827] text-white">
+                  <th className="border border-[#111827] px-3 py-2 text-center">STT</th>
+                  <th className="border border-[#111827] px-3 py-2 text-left">Tour / dịch vụ</th>
+                  <th className="border border-[#111827] px-3 py-2 text-center">Ngày đi</th>
+                  <th className="border border-[#111827] px-3 py-2 text-center">Số khách</th>
+                  <th className="border border-[#111827] px-3 py-2 text-right">Đơn giá</th>
+                  <th className="border border-[#111827] px-3 py-2 text-right">Thành tiền</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="border border-[#e5e7eb] px-3 py-3 text-center">1</td>
+                  <td className="border border-[#e5e7eb] px-3 py-3">
+                    <strong>{tourName}</strong>
+                    <div className="mt-1 text-[11px] text-[#6b7280]">
+                      Người lớn: {quantityAdult}
+                      {quantityChild > 0 ? ` | Trẻ em: ${quantityChild}` : ""}
+                      {quantityInfant > 0 ? ` | Em bé: ${quantityInfant}` : ""}
+                    </div>
+                  </td>
+                  <td className="border border-[#e5e7eb] px-3 py-3 text-center">{travelDate}</td>
+                  <td className="border border-[#e5e7eb] px-3 py-3 text-center">{quantityTotal} khách</td>
+                  <td className="border border-[#e5e7eb] px-3 py-3 text-right">{formatPriceVND(unitPriceAdult)}</td>
+                  <td className="border border-[#e5e7eb] px-3 py-3 text-right font-bold">{formatPriceVND(Number(item.subtotal || 0))}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div className="grid grid-cols-2 gap-5">
+            <div className="rounded-2xl border border-dashed border-primary/40 bg-[#fff4f6] p-4 print:border-[#fda4af]">
+              <h2 className="mb-2 text-xs font-black uppercase text-primary print:text-[#ff385c]">Ghi chú</h2>
+              <p>{booking.customer_note || "Không có ghi chú."}</p>
+              <p className="mt-3 text-[11px] text-[#6b7280]">
+                Hóa đơn được tạo tự động từ hệ thống DaNangTrip. Vui lòng giữ mã đơn để đối chiếu khi cần hỗ trợ.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-[#e5e7eb] p-4">
+              <InvoicePrintMoney label="Tạm tính" value={totalAmount} />
+              <InvoicePrintMoney label="Giảm giá" value={discountAmount} prefix="- " />
+              <InvoicePrintMoney label="Đã thanh toán / đặt cọc" value={depositAmount} />
+              <InvoicePrintMoney label="Còn lại" value={remainingAmount} />
+              <div className="mt-3 flex items-end justify-between border-t border-[#e5e7eb] pt-3">
+                <span className="font-black uppercase">Tổng thanh toán</span>
+                <span className="text-xl font-black text-primary print:text-[#ff385c]">{formatPriceVND(finalAmount)}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-8 pt-4 text-center">
+            <div>
+              <div className="font-black">Khách hàng</div>
+              <div className="mt-1 text-[11px] text-[#9ca3af]">Ký và ghi rõ họ tên nếu cần đối chiếu</div>
+            </div>
+            <div>
+              <div className="font-black">DaNangTrip</div>
+              <div className="mt-1 text-[11px] text-[#9ca3af]">Hóa đơn điện tử tạo tự động</div>
+            </div>
+          </div>
+
+          <div className="border-t border-[#e5e7eb] pt-4 text-center text-[11px] text-[#6b7280]">
+            <strong className="text-primary print:text-[#ff385c]">Cảm ơn quý khách đã sử dụng DaNangTrip.</strong>
+            <br />
+            Hỗ trợ: info@danangtrip.com | Hotline: 1900 1800 | Đà Nẵng, Việt Nam
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function InvoicePrintCard({ title, children }: { title: string; children: ReactNode }) {
+  return (
+    <div className="rounded-2xl border border-[#edf2f7] bg-[#f9fafb] p-4">
+      <h2 className="mb-3 text-xs font-black uppercase text-primary print:text-[#ff385c]">{title}</h2>
+      <div className="space-y-1.5">{children}</div>
+    </div>
+  );
+}
+
+function InvoicePrintLine({ label, value, strong }: { label: string; value: ReactNode; strong?: boolean }) {
+  return (
+    <div className="grid grid-cols-[110px_1fr] gap-2">
+      <span className="text-[#6b7280]">{label}:</span>
+      <span className={strong ? "font-black" : "font-bold"}>{value}</span>
+    </div>
+  );
+}
+
+function InvoicePrintMoney({ label, value, prefix = "" }: { label: string; value: number; prefix?: string }) {
+  return (
+    <div className="flex justify-between border-b border-[#edf2f7] py-2 last:border-b-0">
+      <span className="text-[#6b7280]">{label}</span>
+      <span className="font-black">{prefix}{formatPriceVND(value)}</span>
     </div>
   );
 }

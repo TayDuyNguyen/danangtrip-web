@@ -58,18 +58,14 @@ export function PaymentClient() {
     status = "redirecting";
   }
 
-  // Auto redirect to booking details on successful payment
+  // Auto redirect to booking details as soon as the backend confirms payment.
   useEffect(() => {
     if (status === "success") {
       const targetUrl = bookingData
         ? `/profile/bookings/code/${bookingData.booking_code}`
         : "/profile/bookings";
 
-      const timer = setTimeout(() => {
-        router.push(targetUrl);
-      }, 2000); // 2-second delay so user can see success state
-
-      return () => clearTimeout(timer);
+      router.replace(targetUrl);
     }
   }, [status, bookingData, router]);
  

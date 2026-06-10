@@ -68,6 +68,8 @@ export function BookingPriceSummaryCard({ booking }: BookingPriceSummaryCardProp
   // Map payment method key to translated name
   const getPaymentMethodName = (method: Booking["payment_method"]) => {
     const keys = {
+      sepay: "methods.sepay",
+      payos: "methods.sepay",
       momo: "methods.momo",
       vnpay: "methods.vnpay",
       zalopay: "methods.zalopay",
