@@ -2,12 +2,19 @@ import createMiddleware from "next-intl/middleware";
 import { routing } from "./i18n/routing";
 import { NextRequest, NextResponse } from "next/server";
 
+/**
+ * Cloudflare/OpenNext requires Edge Middleware.
+ * Next.js 16 warns that middleware is deprecated in favor of proxy, but proxy
+ * currently runs on Node.js runtime and is not supported by Workers.
+ */
+export const runtime = "experimental-edge";
+
 const i18nMiddleware = createMiddleware(routing);
 
 const protectedRoutes = ["/profile", "/settings", "/dashboard", "/payment", "/profile/bookings", "/profile/favorites", "/profile/notifications", "/profile/recommendations"];
 const authRoutes = ["/login", "/register", "/forgot-password", "/reset-password"];
 
-export function proxy(request: NextRequest) {
+export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Set x-pathname header so getRequestConfig can access the current URL path
@@ -53,7 +60,7 @@ export function proxy(request: NextRequest) {
   return response;
 }
 
-export default proxy;
+export default middleware;
 
 // next-intl + localePrefix "as-needed": unprefixed routes must hit middleware
 export const config = {
