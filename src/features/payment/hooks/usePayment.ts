@@ -98,7 +98,7 @@ export const usePaymentStatus = (transactionCode?: string | null) => {
         (data?.payment_status === "pending" || data?.payment_status === "partially_paid") &&
         !isPaymentSessionExpired(data)
       ) {
-        return 3000;
+        return 1000;
       }
       return false;
     },
@@ -125,7 +125,7 @@ export const useBookingForPayment = (bookingCode?: string | null, shouldPoll = t
           data?.payment_status === "partially_paid"
         )
       ) {
-        return 3000;
+        return 1000;
       }
 
       return false;

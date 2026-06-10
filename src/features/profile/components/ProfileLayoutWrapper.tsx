@@ -29,7 +29,7 @@ export function ProfileLayoutWrapper({
       {/* Breadcrumbs */}
       <nav
         aria-label="Breadcrumb"
-        className="mb-8 flex items-center gap-1.5 text-xs text-on-surface-subtle reveal-up"
+        className="mb-8 flex items-center gap-1.5 text-xs text-on-surface-subtle reveal-up print:hidden"
       >
         <Link
           href="/"
@@ -60,14 +60,14 @@ export function ProfileLayoutWrapper({
       </nav>
 
       {/* Mobile: Horizontal tab strip */}
-      <div className="lg:hidden w-full max-w-full overflow-x-auto pb-2 mb-6 reveal-up no-scrollbar">
+      <div className="lg:hidden w-full max-w-full overflow-x-auto pb-2 mb-6 reveal-up no-scrollbar print:hidden">
         <ProfileMobileNav />
       </div>
 
       {/* Desktop: Two-column layout */}
       <div className="flex w-full max-w-full flex-col items-start gap-8 lg:flex-row">
         {/* Sidebar – visible only on lg+ */}
-        <div className="hidden lg:block shrink-0 reveal-up reveal-delay-100">
+        <div className="hidden lg:block shrink-0 reveal-up reveal-delay-100 print:hidden">
           <ProfileSidebar />
         </div>
 

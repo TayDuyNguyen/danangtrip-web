@@ -111,7 +111,7 @@ const Header = () => {
   };
 
   return (
-    <header className="fixed inset-x-0 top-0 z-[100] pt-3">
+    <header className="fixed inset-x-0 top-0 z-[100] pt-3 print:hidden">
       <div className="container">
         <div
           className={`mx-auto flex h-[76px] items-center justify-between rounded-[30px] border px-4 backdrop-blur-xl transition-all duration-300 sm:px-6 ${
