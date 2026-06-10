@@ -21,6 +21,8 @@ export interface Payment {
   payment_gateway: string | null;
   gateway_response?: Record<string, unknown> | null;
   paid_at: string | null;
+  created_at?: string | null;
+  expires_at?: string | null;
   refunded_at: string | null;
   refund_reason: string | null;
   payment_url?: string;

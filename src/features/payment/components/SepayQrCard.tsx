@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import type { SepayCheckout } from "@/types";
 import { formatCurrency } from "@/utils/format";
@@ -32,9 +33,12 @@ export function SepayQrCard({ checkout }: Props) {
             {t("open_qr_link")}
           </a>
         ) : (
-          <img
+          <Image
             src={checkout.qr_image_url}
             alt={t("qr_alt")}
+            width={256}
+            height={256}
+            unoptimized
             onError={() => setQrLoadFailed(true)}
             className="h-64 w-64 rounded-3xl border border-border bg-white object-contain p-3"
           />

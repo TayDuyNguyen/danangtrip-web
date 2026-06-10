@@ -54,6 +54,17 @@ export interface BookingItem {
   tour_schedule?: TourSchedule;
 }
 
+export interface BookingPaymentSession {
+  id: number;
+  transaction_code: string;
+  amount: string | number;
+  payment_method: PaymentMethod;
+  payment_status: PaymentStatus;
+  payment_gateway: string | null;
+  created_at: string | null;
+  expires_at: string | null;
+}
+
 export interface Booking {
   id: number;
   booking_code: string;
@@ -75,6 +86,7 @@ export interface Booking {
   confirmed_at: string | null;
   cancelled_at: string | null;
   completed_at: string | null;
+  latest_pending_payment?: BookingPaymentSession | null;
   items?: BookingItem[];
   booking_items?: BookingItem[];
 }

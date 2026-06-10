@@ -532,9 +532,15 @@
     animation: none !important;
   }
 
-  /* Giữ hiệu ứng sóng cho indicator đang trả lời */
-  .copilot-thinking-dot {
+  /* Giữ hiệu ứng sóng cho indicator đang trả lời và spinner xoay */
+  .copilot-thinking-dot,
+  .animate-spin {
     animation-duration: 1s !important;
+    animation-iteration-count: infinite !important;
+  }
+
+  .animate-spin-slow {
+    animation-duration: 3s !important;
     animation-iteration-count: infinite !important;
   }
 }

@@ -3,9 +3,9 @@ import { routing } from "./i18n/routing";
 import { NextRequest, NextResponse } from "next/server";
 
 /**
- * Edge Middleware (not Proxy) — required for @opennextjs/cloudflare:
- * Node.js Proxy is not supported on Workers; see OpenNext build error
- * "Node.js middleware is not currently supported".
+ * Cloudflare/OpenNext requires Edge Middleware.
+ * Next.js 16 warns that middleware is deprecated in favor of proxy, but proxy
+ * currently runs on Node.js runtime and is not supported by Workers.
  */
 export const runtime = "experimental-edge";
 
