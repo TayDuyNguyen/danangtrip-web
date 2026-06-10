@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Star, StarHalf } from "@/components/icons/solar";
+import { Star, StarHalf } from "lucide-react";
 import { cn } from '@/lib/utils';
 
 interface RatingStarsProps {
@@ -52,7 +52,7 @@ const RatingStars = ({
       stars.push(
         <Star
           key={i}
-          className={cn('text-[#404040]', sizes[size])}
+          className={cn('text-gray-300 fill-transparent', sizes[size])}
         />
       );
     }

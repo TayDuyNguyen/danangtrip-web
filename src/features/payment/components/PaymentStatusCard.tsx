@@ -5,7 +5,7 @@ import { CheckCircle2, IoCloseOutline, IoRefreshOutline } from "@/components/ico
 import { PaymentStatus } from "@/types";
 
 interface Props {
-  status: PaymentStatus | "redirecting";
+  status: PaymentStatus | "redirecting" | "expired";
   message?: string;
 }
 
@@ -33,6 +33,13 @@ export function PaymentStatusCard({ status, message }: Props) {
       color: "text-red-500",
       bg: "bg-red-500/10",
       border: "border-red-500/20",
+    },
+    expired: {
+      icon: <IoCloseOutline className="w-16 h-16 text-orange-500" />,
+      title: t("expired_title"),
+      color: "text-orange-500",
+      bg: "bg-orange-500/10",
+      border: "border-orange-500/20",
     },
     redirecting: {
       icon: <IoRefreshOutline className="w-16 h-16 text-primary animate-spin" />,

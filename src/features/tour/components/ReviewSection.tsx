@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { Button } from "@/components/ui";
@@ -20,7 +21,7 @@ export default function ReviewSection({ tourId, rating, count }: ReviewSectionPr
   const locale = useLocale();
   const { isAuthenticated } = useAuthStore();
   const reviewDateFormatter = new Intl.DateTimeFormat(locale === "vi" ? "vi-VN" : "en-US");
-  const safeRating = Number.isFinite(rating) ? rating : 0;
+  const parsedRating = parseFloat(String(rating)) || 0;
   const safeCount = Number.isFinite(count) ? count : 0;
 
   const { data: apiReviews, isLoading: loadingReviews } = useTourRatings(tourId, { per_page: 5 });
@@ -30,6 +31,16 @@ export default function ReviewSection({ tourId, rating, count }: ReviewSectionPr
   const displayReviews = apiReviews ?? [];
   const totalReviews = stats ? Object.values(stats).reduce((sum, value) => sum + value, 0) : safeCount;
   const hasRated = !!checkRating;
+
+  // Calculate dynamic average rating from client-side stats to avoid SSR cache issues
+  const dynamicRating = useMemo(() => {
+    if (!stats) return parsedRating;
+    const totalScore = Object.entries(stats).reduce(
+      (sum, [star, count]) => sum + Number(star) * count,
+      0
+    );
+    return totalReviews > 0 ? totalScore / totalReviews : parsedRating;
+  }, [stats, totalReviews, parsedRating]);
 
   const distribution = [5, 4, 3, 2, 1].map((star) => {
     const starCount = stats ? (stats[String(star)] || 0) : 0;
@@ -53,8 +64,8 @@ export default function ReviewSection({ tourId, rating, count }: ReviewSectionPr
 
       <div className="grid grid-cols-1 gap-8 md:grid-cols-12 md:gap-4">
         <div className="flex flex-col items-center justify-center space-y-4 rounded-[24px] border border-border bg-[#f7f7f7] p-8 text-center md:col-span-4">
-          <div className="text-6xl font-black text-primary">{safeRating.toFixed(1)}</div>
-          <RatingStars rating={safeRating} size="lg" />
+          <div className="text-6xl font-black text-primary">{dynamicRating.toFixed(1)}</div>
+          <RatingStars rating={dynamicRating} size="lg" />
           <p className="text-sm font-medium text-on-surface-subtle">{td("reviews_based_on", { count: totalReviews })}</p>
 
           <div className="w-full space-y-2 pt-4">
@@ -110,7 +121,7 @@ export default function ReviewSection({ tourId, rating, count }: ReviewSectionPr
                         </div>
                       </div>
                     </div>
-                    <RatingStars rating={Number.isFinite(review.score) ? review.score : 0} size="sm" />
+                    <RatingStars rating={parseFloat(String(review.score)) || 0} size="sm" />
                   </div>
                   <p className="text-sm leading-relaxed text-on-surface-subtle">{review.comment}</p>
                 </div>

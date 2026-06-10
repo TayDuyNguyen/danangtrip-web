@@ -92,7 +92,7 @@ export const Select = ({
       border: "none",
       borderBottom: isGlass || isMinimal
         ? "none"
-        : `1px solid ${error ? "#ef4444" : isFocused ? "#FF385C" : persistentLabel ? "#525252" : "#262626"}`,
+        : `1px solid ${error ? "#ef4444" : isFocused ? "#FF385C" : "#e5e7eb"}`,
       borderRadius: isMinimal ? "8px" : "0",
       boxShadow: "none",
       padding: "0",
@@ -157,10 +157,10 @@ export const Select = ({
     }),
     menu: (provided) => ({
       ...provided,
-      backgroundColor: isMinimal ? "#ffffff" : "#080808",
+      backgroundColor: isGlass ? "#080808" : "#ffffff",
       borderRadius: "18px",
-      border: isMinimal ? "1px solid #ebebeb" : "1px solid #262626",
-      boxShadow: isMinimal ? "0 20px 50px rgba(0, 0, 0, 0.14)" : "0 12px 30px rgba(0, 0, 0, 0.4)",
+      border: isGlass ? "1px solid #262626" : "1px solid #ebebeb",
+      boxShadow: isGlass ? "0 12px 30px rgba(0, 0, 0, 0.4)" : "0 12px 30px rgba(0, 0, 0, 0.08)",
       overflow: "hidden",
       zIndex: 50,
       marginTop: "8px",
@@ -178,9 +178,9 @@ export const Select = ({
       backgroundColor: state.isSelected
         ? "#FF385C"
         : state.isFocused
-          ? (isMinimal ? "#f7f7f7" : "#171717")
+          ? (isGlass ? "#171717" : "#f7f7f7")
           : "transparent",
-      color: state.isSelected ? "#ffffff" : (isMinimal ? "#222222" : "#d4d4d4"),
+      color: state.isSelected ? "#ffffff" : (isGlass ? "#d4d4d4" : "#222222"),
       fontSize: "14px",
       fontWeight: state.isSelected ? "700" : "500",
       padding: "10px 12px",
@@ -188,7 +188,7 @@ export const Select = ({
       marginBottom: "2px",
       cursor: "pointer",
       "&:active": {
-        backgroundColor: state.isSelected ? "#FF385C" : (isMinimal ? "#f7f7f7" : "#171717"),
+        backgroundColor: state.isSelected ? "#FF385C" : (isGlass ? "#171717" : "#f7f7f7"),
       },
       transition: "all 0.15s ease",
     }),
@@ -208,7 +208,7 @@ export const Select = ({
             persistentLabel
               ? cn(
                   "translate-y-0 opacity-100",
-                  isFocused || value ? "text-primary" : error ? "text-red-500" : "text-[#d4d4d4]"
+                  isFocused || value ? "text-primary" : error ? "text-red-500" : "text-on-surface-subtle"
                 )
               : cn(
                   "transform",

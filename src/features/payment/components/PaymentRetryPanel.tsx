@@ -5,20 +5,22 @@ import { useTranslations } from "next-intl";
 import { IoTimeOutline } from "@/components/icons/solar";
 
 interface Props {
-  bookedAt: string;
+  expiresAt?: string | null;
+  fallbackStartedAt: string;
   onRetry: () => void;
   isRetrying: boolean;
   disabled?: boolean;
 }
 
-export function PaymentRetryPanel({ bookedAt, onRetry, isRetrying, disabled }: Props) {
+export function PaymentRetryPanel({ expiresAt, fallbackStartedAt, onRetry, isRetrying, disabled }: Props) {
   const t = useTranslations("tour.payment");
   const [timeLeft, setTimeLeft] = useState<number>(0);
 
   useEffect(() => {
     const calculateTimeLeft = () => {
-      const bookedTime = new Date(bookedAt).getTime();
-      const expireTime = bookedTime + 15 * 60 * 1000;
+      const fallbackExpireTime = new Date(fallbackStartedAt).getTime() + 15 * 60 * 1000;
+      const configuredExpireTime = expiresAt ? new Date(expiresAt).getTime() : NaN;
+      const expireTime = Number.isNaN(configuredExpireTime) ? fallbackExpireTime : configuredExpireTime;
       const now = new Date().getTime();
       const diff = Math.max(0, expireTime - now);
 
@@ -29,7 +31,7 @@ export function PaymentRetryPanel({ bookedAt, onRetry, isRetrying, disabled }: P
     const interval = setInterval(calculateTimeLeft, 1000);
 
     return () => clearInterval(interval);
-  }, [bookedAt]);
+  }, [expiresAt, fallbackStartedAt]);
 
   const formatTime = (ms: number) => {
     const totalSeconds = Math.floor(ms / 1000);
@@ -37,6 +39,8 @@ export function PaymentRetryPanel({ bookedAt, onRetry, isRetrying, disabled }: P
     const seconds = totalSeconds % 60;
     return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
   };
+
+  const isExpired = timeLeft <= 0;
 
   return (
     <div className="mx-auto mt-6 w-full max-w-md rounded-[28px] border border-border bg-white p-6 text-center shadow-[0_24px_80px_rgba(15,23,42,0.08)]">
@@ -54,7 +58,7 @@ export function PaymentRetryPanel({ bookedAt, onRetry, isRetrying, disabled }: P
       <div className="mt-6">
         <button
           onClick={onRetry}
-          disabled={isRetrying || disabled}
+          disabled={isRetrying || disabled || !isExpired}
           className="flex w-full items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 font-semibold text-white transition-all duration-300 hover:bg-primary-hover active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50"
         >
           {isRetrying ? (

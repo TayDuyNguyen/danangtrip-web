@@ -1,6 +1,6 @@
 "use client";
 
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { homeService } from "@/services/home.service";
 import { locationService } from "@/services/location.service";
 import type { Location, Category } from "@/types";

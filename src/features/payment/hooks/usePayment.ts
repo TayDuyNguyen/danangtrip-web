@@ -3,8 +3,25 @@ import { useLocale } from "next-intl";
 import { useTranslations } from "next-intl";
 import { paymentService } from "@/services/payment.service";
 import { bookingService } from "@/services/booking.service";
-import type { CreatePaymentPayload, RetryPaymentPayload } from "@/types";
+import type { CreatePaymentPayload, Payment, RetryPaymentPayload } from "@/types";
 import { toast } from "sonner";
+
+const PAYMENT_SESSION_MINUTES = 15;
+
+export const isPaymentSessionExpired = (
+  payment?: Pick<Payment, "created_at" | "expires_at"> | null,
+  nowMs = Date.now(),
+) => {
+  if (!payment) return false;
+
+  const expiresAt = payment.expires_at
+    ? new Date(payment.expires_at).getTime()
+    : payment.created_at
+      ? new Date(payment.created_at).getTime() + PAYMENT_SESSION_MINUTES * 60 * 1000
+      : NaN;
+
+  return Number.isFinite(expiresAt) && nowMs >= expiresAt;
+};
 
 export const usePayment = () => {
   const locale = useLocale();
@@ -77,7 +94,10 @@ export const usePaymentStatus = (transactionCode?: string | null) => {
     enabled: !!transactionCode,
     refetchInterval: (query) => {
       const data = query.state.data;
-      if (data?.payment_status === "pending" || data?.payment_status === "partially_paid") {
+      if (
+        (data?.payment_status === "pending" || data?.payment_status === "partially_paid") &&
+        !isPaymentSessionExpired(data)
+      ) {
         return 3000;
       }
       return false;
@@ -86,7 +106,7 @@ export const usePaymentStatus = (transactionCode?: string | null) => {
   });
 };
 
-export const useBookingForPayment = (bookingCode?: string | null) => {
+export const useBookingForPayment = (bookingCode?: string | null, shouldPoll = true) => {
   return useQuery({
     queryKey: ["bookings", "detail", bookingCode],
     queryFn: async () => {
@@ -98,9 +118,12 @@ export const useBookingForPayment = (bookingCode?: string | null) => {
     refetchInterval: (query) => {
       const data = query.state.data;
       if (
-        data?.payment_status === "pending" ||
-        data?.payment_status === "unpaid" ||
-        data?.payment_status === "partially_paid"
+        shouldPoll &&
+        (
+          data?.payment_status === "pending" ||
+          data?.payment_status === "unpaid" ||
+          data?.payment_status === "partially_paid"
+        )
       ) {
         return 3000;
       }

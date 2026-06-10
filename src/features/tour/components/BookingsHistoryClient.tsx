@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 import { useUserBookings } from "../hooks/useBookingQueries";
 import { BookingHistoryCard } from "./BookingHistoryCard";
 import { CancelBookingDialog } from "./CancelBookingDialog";
-import { SearchInput, Button } from "@/components/ui";
+import { SearchInput, Button, Loading } from "@/components/ui";
 import { EmptyState } from "@/components/feedback/empty-state";
 import { StandardPagination } from "@/components/ui/pagination";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -116,7 +116,7 @@ export function BookingsHistoryClient() {
     [activeTab, page, searchQuery]
   );
 
-  const { data: bookingsResponse, isLoading, isError, refetch } = useUserBookings(queryParams);
+  const { data: bookingsResponse, isLoading, isFetching, isError, refetch } = useUserBookings(queryParams);
 
   const bookings = bookingsResponse?.data || [];
   const totalPages = bookingsResponse?.last_page || 1;
@@ -154,7 +154,7 @@ export function BookingsHistoryClient() {
               placeholder={t("search_placeholder")}
               label={t("search_label")}
               actionText={t("search_action")}
-              isLoading={isLoading}
+              isLoading={isLoading || isFetching}
             />
           </div>
 
@@ -247,28 +247,36 @@ export function BookingsHistoryClient() {
         </div>
       ) : (
         // Bookings Cards List
-        <div className="space-y-6">
-          {bookings.map((booking, idx) => (
-            <BookingHistoryCard
-              key={booking.id}
-              booking={booking}
-              index={idx}
-              onCancelClick={(b) => setSelectedCancelBooking(b)}
-            />
-          ))}
-
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="pt-4 flex justify-center reveal-up">
-              <StandardPagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={(p) =>
-                  updateQueryParams({ page: String(p) }, { scroll: true })
-                }
-              />
+        <div className="relative min-h-[200px]">
+          {isFetching && !isLoading && (
+            <div className="absolute inset-0 z-10 flex items-center justify-center rounded-[20px] bg-white/60 backdrop-blur-[1px] transition-all duration-300">
+              <Loading type="spin" color="#FF385C" height={45} width={45} />
             </div>
           )}
+
+          <div className="space-y-6">
+            {bookings.map((booking, idx) => (
+              <BookingHistoryCard
+                key={booking.id}
+                booking={booking}
+                index={idx}
+                onCancelClick={(b) => setSelectedCancelBooking(b)}
+              />
+            ))}
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="pt-4 flex justify-center reveal-up">
+                <StandardPagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={(p) =>
+                    updateQueryParams({ page: String(p) }, { scroll: true })
+                  }
+                />
+              </div>
+            )}
+          </div>
         </div>
       )}
 

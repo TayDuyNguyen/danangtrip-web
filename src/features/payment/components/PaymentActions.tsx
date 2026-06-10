@@ -5,7 +5,7 @@ import { Link } from "@/i18n/navigation";
 import type { Booking } from "@/types";
 
 interface Props {
-  status: "pending" | "success" | "failed" | "redirecting";
+  status: "pending" | "success" | "failed" | "redirecting" | "expired";
   booking?: Booking | null;
   isMissingContext?: boolean;
 }

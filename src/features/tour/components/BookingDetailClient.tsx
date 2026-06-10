@@ -5,7 +5,7 @@ import { useState, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { useBookingDetail, useBookingDetailByCode } from "../hooks/useBookingQueries";
-import { usePayment } from "@/features/payment/hooks/usePayment";
+import { isPaymentSessionExpired, usePayment } from "@/features/payment/hooks/usePayment";
 import { useAppConfig } from "@/hooks/use-app-config";
 import { BookingStatusTimeline } from "./BookingStatusTimeline";
 import { BookingTourInfoCard } from "./BookingTourInfoCard";
@@ -160,6 +160,26 @@ export function BookingDetailClient({ id, bookingCode }: BookingDetailClientProp
     (onlinePaymentMethods.includes(normalizedBookingPaymentMethod as (typeof onlinePaymentMethods)[number])) &&
     ["pending", "failed", "unpaid", "partially_paid"].includes(booking.payment_status) &&
     booking.booking_status !== "cancelled";
+
+  const handleContinuePayment = () => {
+    const latestPayment = booking.latest_pending_payment;
+    const latestPaymentMethod = latestPayment?.payment_method === "payos" ? "sepay" : latestPayment?.payment_method;
+
+    if (
+      latestPayment?.transaction_code &&
+      latestPayment.payment_status === "pending" &&
+      latestPaymentMethod === activePaymentMethod &&
+      !isPaymentSessionExpired(latestPayment)
+    ) {
+      router.push(`/payment/result?transaction_code=${latestPayment.transaction_code}&booking_code=${booking.booking_code}`);
+      return;
+    }
+
+    retryPayment({
+      bookingCode: booking.booking_code,
+      payment_method: activePaymentMethod,
+    });
+  };
 
   const handleDownloadInvoice = async () => {
     // Pre-flight check: Trạng thái thanh toán phải là "success"
@@ -327,12 +347,7 @@ export function BookingDetailClient({ id, bookingCode }: BookingDetailClientProp
                 </div>
                 <ActionIconButton
                   label={tBooking("continue_payment")}
-                  onClick={() =>
-                    retryPayment({
-                      bookingCode: booking.booking_code,
-                      payment_method: activePaymentMethod,
-                    })
-                  }
+                  onClick={handleContinuePayment}
                   isLoading={isRetrying}
                   disabled={isRetrying}
                   tone="primary"

@@ -2,7 +2,7 @@
  
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "@/i18n/navigation";
 import { PaymentStatusCard } from "./PaymentStatusCard";
 import { PaymentSummaryCard } from "./PaymentSummaryCard";
@@ -10,7 +10,7 @@ import { PaymentRetryPanel } from "./PaymentRetryPanel";
 import { PaymentActions } from "./PaymentActions";
 import { SepayQrCard } from "./SepayQrCard";
 import { Loading } from "@/components/ui";
-import { usePayment, usePaymentStatus, useBookingForPayment } from "../hooks/usePayment";
+import { isPaymentSessionExpired, usePayment, usePaymentStatus, useBookingForPayment } from "../hooks/usePayment";
  
 export function PaymentClient() {
   const t = useTranslations("tour.payment");
@@ -22,15 +22,33 @@ export function PaymentClient() {
   const isMissingContext = !transactionCode && !bookingCode;
  
   const { data: paymentData, isLoading: isPaymentLoading } = usePaymentStatus(transactionCode);
-  const { data: bookingData, isLoading: isBookingLoading } = useBookingForPayment(bookingCode);
+  const [nowMs, setNowMs] = useState(() => Date.now());
+  const isSessionExpired = paymentData ? isPaymentSessionExpired(paymentData, nowMs) : false;
+  const shouldPollBooking = !paymentData || !isSessionExpired;
+  const { data: bookingData, isLoading: isBookingLoading } = useBookingForPayment(bookingCode, shouldPollBooking);
   const { retryPayment, isRetrying } = usePayment();
 
+  useEffect(() => {
+    if (
+      !paymentData ||
+      paymentData.payment_status === "success" ||
+      paymentData.payment_status === "failed" ||
+      paymentData.payment_status === "refunded" ||
+      isSessionExpired
+    ) {
+      return;
+    }
+
+    const interval = setInterval(() => setNowMs(Date.now()), 1000);
+    return () => clearInterval(interval);
+  }, [paymentData, isSessionExpired]);
+
   // Determine status
-  let status: "pending" | "success" | "failed" | "redirecting" = "pending";
+  let status: "pending" | "success" | "failed" | "redirecting" | "expired" = "pending";
   if (paymentData) {
     if (paymentData.payment_status === "success") status = "success";
     else if (paymentData.payment_status === "failed" || paymentData.payment_status === "refunded") status = "failed";
-    else status = "pending";
+    else status = isSessionExpired ? "expired" : "pending";
   } else if (bookingData) {
     if (bookingData.payment_status === "success") status = "success";
     else if (bookingData.payment_status === "failed") status = "failed";
@@ -71,6 +89,8 @@ export function PaymentClient() {
   const statusMessage =
     status === "success" && !bookingData
       ? t("success_without_booking")
+      : status === "expired"
+        ? t("expired_message")
       : status === "failed" && !bookingData && !paymentData
         ? t("errors.payment_not_found")
         : undefined;
@@ -83,13 +103,14 @@ export function PaymentClient() {
         <PaymentSummaryCard booking={bookingData} />
       )}
 
-      {status === "pending" && paymentData?.sepay_checkout && (
+      {status === "pending" && paymentData?.sepay_checkout && !isSessionExpired && (
         <SepayQrCard checkout={paymentData.sepay_checkout} />
       )}
 
-      {status !== "redirecting" && (status === "failed" || status === "pending") && bookingData && (
+      {status !== "redirecting" && (status === "failed" || status === "pending" || status === "expired") && bookingData && (
         <PaymentRetryPanel
-          bookedAt={bookingData.booked_at}
+          expiresAt={paymentData?.expires_at}
+          fallbackStartedAt={paymentData?.created_at ?? bookingData.booked_at}
           onRetry={() => retryPayment(bookingData.booking_code)}
           isRetrying={isRetrying}
         />

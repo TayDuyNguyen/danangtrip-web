@@ -110,6 +110,8 @@ export default function LeafletExploreMap({
     markersLayerRef.current = L.layerGroup().addTo(map);
     sovereigntyLayerRef.current = L.layerGroup().addTo(map);
     mapRef.current = map;
+    const markerById = markerByIdRef.current;
+    const locationById = locationByIdRef.current;
 
     const resizeTimer = window.setTimeout(() => {
       map.invalidateSize();
@@ -117,8 +119,8 @@ export default function LeafletExploreMap({
 
     return () => {
       window.clearTimeout(resizeTimer);
-      markerByIdRef.current.clear();
-      locationByIdRef.current.clear();
+      markerById.clear();
+      locationById.clear();
       userMarkerRef.current = null;
       map.remove();
       mapRef.current = null;
