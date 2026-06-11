@@ -3,10 +3,16 @@
 import { memo, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { useLocale, useTranslations } from "next-intl";
-import { Link, usePathname } from "@/i18n/navigation";
+import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import { ROUTES, NAV_LINKS } from "@/config";
 import { useAuthStore } from "@/store/auth.store";
 import { useNotificationsHeader } from "@/features/home/hooks/use-notifications-header";
+import {
+  getNotificationCategory,
+  getNotificationContent,
+  getNotificationTargetUrl,
+  isNotificationUnread,
+} from "@/features/notifications/utils/notification-ui";
 import { useClickOutside } from "@/hooks/use-click-outside";
 import { formatRelativeTime } from "@/utils/format";
 import type { Notification } from "@/types";
@@ -53,6 +59,7 @@ const Header = () => {
   const tNotif = useTranslations("notifications");
   const locale = useLocale();
   const pathname = usePathname();
+  const router = useRouter();
   const { isAuthenticated, user, logout } = useAuthStore();
 
   const [isScrolled, setIsScrolled] = useState(false);
@@ -100,7 +107,7 @@ const Header = () => {
   };
 
   const handleNotificationClick = async (notif: Notification) => {
-    if (!notif.read_at) {
+    if (isNotificationUnread(notif)) {
       try {
         await markAsRead(notif.id);
       } catch {
@@ -108,6 +115,16 @@ const Header = () => {
       }
     }
     setIsNotificationOpen(false);
+
+    const targetUrl = getNotificationTargetUrl(notif);
+    if (targetUrl) {
+      if (/^https?:\/\//i.test(targetUrl)) {
+        window.location.assign(targetUrl);
+        return;
+      }
+
+      router.push(targetUrl);
+    }
   };
 
   return (
@@ -203,28 +220,38 @@ const Header = () => {
                             key={notif.id}
                             onClick={() => handleNotificationClick(notif)}
                             className={`flex cursor-pointer gap-3 border-b border-border px-4 py-3 transition-colors last:border-b-0 hover:bg-[#fafafa] ${
-                              !notif.read_at ? "bg-[#fff8f9]" : ""
+                              isNotificationUnread(notif) ? "bg-[#fff8f9]" : ""
                             }`}
                           >
                             <div
                               className={`mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${
-                                notif.type.includes("booking")
+                                getNotificationCategory(notif.type) === "booking"
                                   ? "bg-emerald-50 text-emerald-600"
+                                  : getNotificationCategory(notif.type) === "point"
+                                    ? "bg-orange-50 text-orange-600"
+                                    : getNotificationCategory(notif.type) === "contact"
+                                      ? "bg-cyan-50 text-cyan-600"
                                   : "bg-rose-50 text-primary"
                               }`}
                             >
-                              {notif.type.includes("booking") ? "T" : "N"}
+                              {getNotificationCategory(notif.type) === "booking"
+                                ? "T"
+                                : getNotificationCategory(notif.type) === "point"
+                                  ? "P"
+                                  : getNotificationCategory(notif.type) === "contact"
+                                    ? "L"
+                                    : "N"}
                             </div>
                             <div className="min-w-0 flex-1">
                               <p className="truncate text-[13px] font-semibold text-on-surface">{notif.title}</p>
                               <p className="mt-1 line-clamp-2 text-[12px] leading-5 text-on-surface-subtle">
-                                {notif.message}
+                                {getNotificationContent(notif)}
                               </p>
                               <span className="mt-2 block text-[11px] text-on-surface-variant">
                                 {formatRelativeTime(notif.created_at, locale === "vi" ? "vi-VN" : "en-US")}
                               </span>
                             </div>
-                            {!notif.read_at && <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-primary" />}
+                            {isNotificationUnread(notif) && <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-primary" />}
                           </div>
                         ))
                       ) : (

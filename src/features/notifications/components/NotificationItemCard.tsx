@@ -8,11 +8,18 @@ import {
   Star,
   Info,
   Gift,
+  Mail,
   Bell,
   Trash2,
   ChevronRight,
 } from "lucide-react";
 import type { Notification } from "@/types";
+import {
+  getNotificationCategory,
+  getNotificationContent,
+  getNotificationTargetUrl,
+  isNotificationUnread,
+} from "../utils/notification-ui";
 
 interface Props {
   item: Notification;
@@ -31,8 +38,9 @@ export function NotificationItemCard({
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
-  const isUnread = !item.read_at;
-  const targetUrl = item.data?.url as string | undefined;
+  const isUnread = isNotificationUnread(item);
+  const targetUrl = getNotificationTargetUrl(item);
+  const content = getNotificationContent(item);
 
   // Format time ago helper
   const formatTimeAgo = (dateStr: string) => {
@@ -63,7 +71,7 @@ export function NotificationItemCard({
   // Semantic icon selector
   const getCategoryIcon = (type: string) => {
     const baseClass = "w-5 h-5";
-    switch (type.toLowerCase()) {
+    switch (getNotificationCategory(type.toLowerCase())) {
       case "booking":
         return {
           icon: <ShoppingBag className={`${baseClass} text-blue-500`} />,
@@ -80,9 +88,15 @@ export function NotificationItemCard({
           bg: "bg-neutral-500/10 border border-neutral-500/20",
         };
       case "promotion":
+      case "point":
         return {
           icon: <Gift className={`${baseClass} text-orange-500`} />,
           bg: "bg-orange-500/10 border border-orange-500/20",
+        };
+      case "contact":
+        return {
+          icon: <Mail className={`${baseClass} text-cyan-600`} />,
+          bg: "bg-cyan-500/10 border border-cyan-500/20",
         };
       default:
         return {
@@ -159,7 +173,7 @@ export function NotificationItemCard({
             isUnread ? "text-on-surface-subtle" : "text-on-surface-subtle group-hover:text-on-surface"
           }`}
         >
-          {item.message}
+          {content}
         </p>
 
         <span className="mt-2 block text-[11px] text-on-surface-subtle transition-colors duration-300 group-hover:text-on-surface">

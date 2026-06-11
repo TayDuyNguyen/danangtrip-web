@@ -48,7 +48,7 @@ export function LoginForm({ onSuccess, redirectUrl }: LoginFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const result = await login({ email, password });
+    const result = await login({ email, password, remember: rememberMe });
     if (result.success) {
       onSuccess?.();
       if (redirectUrl) {
@@ -179,14 +179,17 @@ export function LoginForm({ onSuccess, redirectUrl }: LoginFormProps) {
               </button>
             </form>
 
-            {/* Divider */}
+            {/* Divider (Hidden temporarily for later implementation) */}
+            {/* 
             <div className="flex items-center gap-3 my-6">
               <div className="h-px flex-1 bg-border" />
               <span className="text-sm text-on-surface-subtle">{t("or_login_with")}</span>
               <div className="h-px flex-1 bg-border" />
             </div>
+            */}
 
-            {/* Social login */}
+            {/* Social login (Hidden temporarily for later implementation) */}
+            {/* 
             <div className="flex gap-3">
               <button suppressHydrationWarning className="flex flex-1 items-center justify-center gap-2 rounded-2xl border border-border py-2.5 text-sm font-medium text-on-surface-subtle transition hover:bg-[#f7f7f7] hover:text-on-surface">
                 <GoogleIcon />
@@ -197,6 +200,7 @@ export function LoginForm({ onSuccess, redirectUrl }: LoginFormProps) {
                 Facebook
               </button>
             </div>
+            */}
 
             {/* Register link */}
             <p className="mt-6 text-center text-sm text-on-surface-subtle">

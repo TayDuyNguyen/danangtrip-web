@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { IoCompassOutline, IoAlertCircleOutline } from "@/components/icons/solar";
 import { Link } from "@/i18n/navigation";
-import { Button } from "@/components/ui";
+import { Button, Loading } from "@/components/ui";
 import { useRecommendationsQuery } from "../hooks/useRecommendationsQuery";
 import LocationCard from "@/features/locations/components/LocationCard";
 import TourCard from "@/features/tour/components/TourCard";
@@ -14,8 +14,9 @@ import { ROUTES } from "@/config";
 export default function RecommendationGrid() {
   const t = useTranslations("recommendations");
   const [activeTab, setActiveTab] = useState<"all" | "location" | "tour">("all");
+  const [isClientTransitioning, setIsClientTransitioning] = useState(false);
 
-  const { data, isLoading, isError, refetch } = useRecommendationsQuery();
+  const { data, isLoading, isError, refetch, isFetching } = useRecommendationsQuery();
 
   const locations = data?.locations || [];
   const tours = data?.tours || [];
@@ -31,9 +32,11 @@ export default function RecommendationGrid() {
     !hasData;
 
   const handleTabChange = (tab: "all" | "location" | "tour") => {
+    setIsClientTransitioning(true);
     setActiveTab(tab);
+    setTimeout(() => setIsClientTransitioning(false), 300);
   };
-
+  
   // Render Skeletons
   if (isLoading) {
     return (
@@ -125,12 +128,19 @@ export default function RecommendationGrid() {
       </div>
 
       {/* Grid Results */}
-      {isFilteredEmpty ? (
-        <div className="mx-auto my-12 max-w-md rounded-[20px] border border-border bg-white p-16 text-center shadow-[0_1px_3px_rgba(0,0,0,0.08)]">
-          <IoCompassOutline className="w-12 h-12 text-on-surface-subtle/40 mx-auto mb-4" />
-          <p className="text-on-surface-subtle font-medium text-sm">{t("empty.title")}</p>
-        </div>
-      ) : (
+      <div className="relative min-h-[200px]">
+        {(isFetching || isClientTransitioning) && !isLoading && (
+          <div className="absolute inset-0 z-10 flex items-center justify-center rounded-xl bg-white/60 backdrop-blur-[1px] transition-all duration-300">
+            <Loading type="spin" color="#FF385C" height={45} width={45} />
+          </div>
+        )}
+
+        {isFilteredEmpty ? (
+          <div className="mx-auto my-12 max-w-md rounded-[20px] border border-border bg-white p-16 text-center shadow-[0_1px_3px_rgba(0,0,0,0.08)]">
+            <IoCompassOutline className="w-12 h-12 text-on-surface-subtle/40 mx-auto mb-4" />
+            <p className="text-on-surface-subtle font-medium text-sm">{t("empty.title")}</p>
+          </div>
+        ) : (
         <div className="space-y-8">
           {/* Recommended Locations Grid Section */}
           {showLocations && locations.length > 0 && (
@@ -185,6 +195,7 @@ export default function RecommendationGrid() {
           )}
         </div>
       )}
+      </div>
     </div>
   );
 }

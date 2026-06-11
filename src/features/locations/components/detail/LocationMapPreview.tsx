@@ -3,9 +3,9 @@
 import { useEffect, useMemo, useRef } from "react";
 import L from "leaflet";
 import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { Map as MapIcon } from "@/components/icons/solar";
 import type { Location } from "@/types";
-import { getLocationMapsUrl } from "@/features/locations/utils/map-url";
 import "leaflet/dist/leaflet.css";
 
 interface LocationMapPreviewProps {
@@ -27,7 +27,10 @@ const createLocationIcon = () =>
     iconAnchor: [18, 36],
   });
 
-export default function LocationMapPreview({ location, showMapLink = true }: LocationMapPreviewProps) {
+export default function LocationMapPreview({
+  location,
+  showMapLink = true,
+}: LocationMapPreviewProps) {
   const t = useTranslations("locations");
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
@@ -43,8 +46,6 @@ export default function LocationMapPreview({ location, showMapLink = true }: Loc
 
     return { lat, lng };
   }, [location.latitude, location.longitude]);
-
-  const mapsUrl = useMemo(() => getLocationMapsUrl(location), [location]);
 
   useEffect(() => {
     if (!coords || !mapContainerRef.current || mapRef.current) return;
@@ -99,15 +100,13 @@ export default function LocationMapPreview({ location, showMapLink = true }: Loc
         <MapIcon className="h-12 w-12 text-on-surface-variant/50" />
         <div className="absolute inset-0 bg-gradient-to-t from-white/20 to-transparent" />
         {showMapLink && (
-          <a
-            href={mapsUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href={`/map?location_id=${location.id}`}
             className="absolute bottom-4 left-1/2 inline-flex -translate-x-1/2 items-center gap-2 rounded-full border border-border bg-white px-4 py-2 text-xs font-semibold text-on-surface-subtle shadow-[0_12px_24px_rgba(15,23,42,0.08)] transition hover:border-primary hover:text-primary"
           >
             <MapIcon className="h-4 w-4 text-primary" />
             {t("detail.view_on_map")}
-          </a>
+          </Link>
         )}
       </div>
     );
@@ -118,15 +117,13 @@ export default function LocationMapPreview({ location, showMapLink = true }: Loc
       <div ref={mapContainerRef} className="h-full w-full" />
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-white/15 via-transparent to-transparent" />
       {showMapLink && (
-        <a
-          href={mapsUrl}
-          target="_blank"
-          rel="noopener noreferrer"
+        <Link
+          href={`/map?location_id=${location.id}`}
           className="absolute bottom-4 left-4 inline-flex items-center gap-2 rounded-full border border-border bg-white/95 px-4 py-2 text-xs font-semibold text-on-surface-subtle shadow-[0_12px_24px_rgba(15,23,42,0.08)] backdrop-blur transition hover:border-primary hover:text-primary"
         >
           <MapIcon className="h-4 w-4 text-primary" />
           {t("detail.view_on_map")}
-        </a>
+        </Link>
       )}
 
       <style jsx global>{`

@@ -12,7 +12,7 @@ interface AuthState {
   error: string | null;
 
   // Actions
-  login: (user: User, token: string) => void;
+  login: (user: User, token: string, remember?: boolean) => void;
   logout: () => void;
   setUser: (user: User) => void;
   setLoading: (isLoading: boolean) => void;
@@ -30,8 +30,8 @@ export const useAuthStore = create<AuthState>()(
       isLoading: false,
       error: null,
 
-      login: (user, token) => {
-        setAccessToken(token);
+      login: (user, token, remember) => {
+        setAccessToken(token, remember);
         set({
           user,
           token,

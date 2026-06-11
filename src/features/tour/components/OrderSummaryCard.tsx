@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { formatPriceVND } from "@/utils/format";
@@ -9,6 +9,14 @@ import { InfoCircle, Calendar, MapPin } from "@/components/icons/solar";
 import type { Tour, BookingCalculation, TourSchedule } from "@/types";
 import { format } from "date-fns";
 import { normalizeImageUrl } from "@/features/tour/utils/tour-mapper";
+import { Select, type SelectOption } from "@/components/ui";
+
+type PromotionChoice = {
+  code: string;
+  name: string;
+  discountAmount: number;
+  isBest?: boolean;
+};
 
 interface OrderSummaryCardProps {
   tour: Tour;
@@ -18,6 +26,12 @@ interface OrderSummaryCardProps {
   infants: number;
   calculation?: BookingCalculation;
   isLoading?: boolean;
+  promoCode?: string;
+  promotionChoices?: PromotionChoice[];
+  onPromoCodeChange?: (code: string) => void;
+  voucherCode?: string;
+  voucherChoices?: PromotionChoice[];
+  onVoucherCodeChange?: (code: string) => void;
 }
 
 export function OrderSummaryCard({
@@ -27,13 +41,61 @@ export function OrderSummaryCard({
   childrenCount,
   infants,
   calculation,
-  isLoading
+  isLoading,
+  promoCode = "",
+  promotionChoices = [],
+  onPromoCodeChange,
+  voucherCode = "",
+  voucherChoices = [],
+  onVoucherCodeChange,
 }: OrderSummaryCardProps) {
   const t = useTranslations("tour.booking");
   const td = useTranslations("tour.detail");
   const [imageSrc, setImageSrc] = useState(
     normalizeImageUrl(tour.thumbnail) || "/images/placeholder.png"
   );
+  const [tempCode, setTempCode] = useState(promoCode);
+  const [tempVoucherCode, setTempVoucherCode] = useState(voucherCode);
+
+  useEffect(() => {
+    setTempCode(promoCode);
+  }, [promoCode]);
+
+  useEffect(() => {
+    setTempVoucherCode(voucherCode);
+  }, [voucherCode]);
+
+  const promotionOptions: SelectOption[] = [
+    { value: "", label: t("no_system_promotion") },
+    ...promotionChoices.map((promotion) => ({
+      value: promotion.code,
+      label: `${promotion.code}${promotion.isBest ? ` - ${t("best_discount")}` : ""} (-${formatPriceVND(promotion.discountAmount)})`,
+    })),
+  ];
+  const selectedPromotionOption =
+    promotionOptions.find((option) => option.value === tempCode) || promotionOptions[0];
+
+  const handlePromotionChange = (option: SelectOption | null) => {
+    const nextCode = option?.value ? String(option.value) : "";
+    setTempCode(nextCode);
+    onPromoCodeChange?.(nextCode);
+  };
+
+  const voucherOptions: SelectOption[] = [
+    { value: "", label: t("no_personal_voucher") },
+    ...voucherChoices.map((voucher) => ({
+      value: voucher.code,
+      label: `${voucher.code} (-${formatPriceVND(voucher.discountAmount)})`,
+    })),
+  ];
+  const selectedVoucherOption =
+    voucherOptions.find((option) => option.value === tempVoucherCode) || voucherOptions[0];
+
+  const handleVoucherChange = (option: SelectOption | null) => {
+    const nextCode = option?.value ? String(option.value) : "";
+    setTempVoucherCode(nextCode);
+    onVoucherCodeChange?.(nextCode);
+  };
 
   return (
     <aside className="w-full lg:w-[380px]">
@@ -118,6 +180,42 @@ export function OrderSummaryCard({
             </div>
           </div>
 
+          {onPromoCodeChange && (
+            <div className="space-y-2 border-t border-border/50 pt-3">
+              <p className="text-[11px] font-black uppercase tracking-widest text-on-surface-subtle">
+                {t("system_promotion")}
+              </p>
+              <Select
+                options={promotionOptions}
+                value={selectedPromotionOption}
+                onChange={handlePromotionChange}
+                isDisabled={isLoading || promotionOptions.length <= 1}
+                placeholder={t("select_system_promotion")}
+                variant="minimal"
+                containerClassName="rounded-2xl border border-border bg-[#f7f7f7] px-3 py-1"
+                className="bg-transparent text-sm font-medium text-on-surface"
+              />
+            </div>
+          )}
+
+          {onVoucherCodeChange && (
+            <div className="space-y-2 border-t border-border/50 pt-3">
+              <p className="text-[11px] font-black uppercase tracking-widest text-on-surface-subtle">
+                {t("personal_voucher")}
+              </p>
+              <Select
+                options={voucherOptions}
+                value={selectedVoucherOption}
+                onChange={handleVoucherChange}
+                isDisabled={isLoading || voucherOptions.length <= 1}
+                placeholder={t("select_personal_voucher")}
+                variant="minimal"
+                containerClassName="rounded-2xl border border-border bg-[#f7f7f7] px-3 py-1"
+                className="bg-transparent text-sm font-medium text-on-surface"
+              />
+            </div>
+          )}
+
           {/* Pricing */}
           <div className={cn(
               "rounded-2xl border border-border bg-[#f7f7f7] p-4 space-y-3 transition-opacity duration-300",
@@ -129,6 +227,40 @@ export function OrderSummaryCard({
               </span>
               {isLoading && (
                   <div className="w-3 h-3 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+              )}
+            </div>
+
+            {/* Price details */}
+            <div className="space-y-1.5 text-xs border-t border-border/30 pt-2 text-on-surface-subtle">
+              <div className="flex justify-between">
+                <span>Tạm tính</span>
+                <span className="font-bold tabular-nums">
+                  {calculation ? formatPriceVND(calculation.total_amount) : "---"}
+                </span>
+              </div>
+              {Number(calculation?.tour_discount || 0) > 0 && (
+                <div className="flex justify-between text-red-500">
+                  <span>Khuyến mãi tour</span>
+                  <span className="font-bold tabular-nums">
+                    -{formatPriceVND(Number(calculation?.tour_discount))}
+                  </span>
+                </div>
+              )}
+              {Number(calculation?.promotion_discount || 0) > 0 && (
+                <div className="flex justify-between text-green-500">
+                  <span>{t("system_promotion_discount")}</span>
+                  <span className="font-bold tabular-nums">
+                    -{formatPriceVND(Number(calculation?.promotion_discount))}
+                  </span>
+                </div>
+              )}
+              {Number(calculation?.voucher_discount || 0) > 0 && (
+                <div className="flex justify-between text-sky-600">
+                  <span>{t("personal_voucher_discount")}</span>
+                  <span className="font-bold tabular-nums">
+                    -{formatPriceVND(Number(calculation?.voucher_discount))}
+                  </span>
+                </div>
               )}
             </div>
             

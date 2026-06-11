@@ -13,12 +13,15 @@ export interface LocationRatingListItem {
     username: string;
     full_name: string | null;
     avatar: string | null;
+    avatar_url?: string | null;
   };
   images?: Array<{ image_url: string }>;
 }
 
 export interface LocationRatingCheckData {
   has_rated: boolean;
+  can_rate?: boolean;
+  message?: string | null;
   rating: LocationRatingListItem | Record<string, unknown> | null;
 }
 

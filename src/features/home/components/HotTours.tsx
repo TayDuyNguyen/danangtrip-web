@@ -16,12 +16,14 @@ import { useHotTours } from "../hooks/use-tours";
 import { formatPriceVND } from "@/utils/format";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 import { getHomeTourImage } from "../utils/home-image-fallbacks";
+import { useActivePromotions } from "@/features/tour/hooks/usePromotions";
 
 const HotTours = () => {
   const t = useTranslations();
   const locale = useLocale();
   const { elementRef, isVisible } = useScrollReveal();
   const { tours } = useHotTours();
+  const { data: promotions } = useActivePromotions();
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
@@ -102,13 +104,23 @@ const HotTours = () => {
             onScroll={checkScroll}
             className="flex gap-[24px] overflow-x-auto no-scrollbar scroll-smooth py-4 snap-x snap-mandatory px-4"
           >
-            {tours.map((tour, index) => (
-              <div
-                key={tour.id}
-                className={`group relative flex min-w-[280px] shrink-0 snap-start flex-col overflow-hidden rounded-[28px] border border-border bg-white shadow-[0_16px_48px_rgba(15,23,42,0.08)] transition-all duration-700 hover:-translate-y-1 hover:shadow-[0_24px_60px_rgba(15,23,42,0.12)] md:min-w-[340px]`}
-                style={{ transitionDelay: `${(index + 3) * 150}ms`, opacity: isVisible ? 1 : 0, transform: isVisible ? "translateY(0)" : "translateY(30px)" }}
-              >
-                {/* Thumbnail Area */}
+            {tours.map((tour, index) => {
+              const discountPercent = tour.discount_percent || 0;
+              const originalPrice = parseFloat(tour.price_adult);
+              const discountedPrice = originalPrice * (1 - discountPercent / 100);
+
+              const applicablePromotions = promotions?.filter((promo) => {
+                const minOrder = promo.min_order_amount ? parseFloat(promo.min_order_amount.toString()) : 0;
+                return discountedPrice >= minOrder && promo.status === "active";
+              }) || [];
+
+              return (
+                <div
+                  key={tour.id}
+                  className={`group relative flex min-w-[280px] shrink-0 snap-start flex-col overflow-hidden rounded-[28px] border border-border bg-white shadow-[0_16px_48px_rgba(15,23,42,0.08)] transition-all duration-700 hover:-translate-y-1 hover:shadow-[0_24px_60px_rgba(15,23,42,0.12)] md:min-w-[340px]`}
+                  style={{ transitionDelay: `${(index + 3) * 150}ms`, opacity: isVisible ? 1 : 0, transform: isVisible ? "translateY(0)" : "translateY(30px)" }}
+                >
+                  {/* Thumbnail Area */}
                 <Link href={ROUTES.TOUR_DETAIL(tour.slug)} className="w-full h-[240px] relative overflow-hidden block cursor-pointer z-10">
                   <Image
                     src={getHomeTourImage(tour.thumbnail, tour.id)}
@@ -141,14 +153,43 @@ const HotTours = () => {
                     </div>
                   </div>
 
+                  {applicablePromotions.length > 0 && (
+                    <div className="mb-4 flex flex-wrap gap-1.5">
+                      {applicablePromotions.slice(0, 2).map((promo) => (
+                        <div
+                          key={promo.id}
+                          className="inline-flex items-center gap-1 rounded-md bg-primary/5 px-2 py-0.5 text-[10px] md:text-[11px] font-semibold text-primary border border-primary/10"
+                          title={promo.description || promo.name}
+                        >
+                          <span>🎫 {promo.code}</span>
+                          <span className="text-on-surface-subtle font-normal">
+                            ({promo.discount_type === "percent" ? `-${promo.discount_value}%` : `-${formatPriceVND(parseFloat(promo.discount_value.toString()), locale === 'vi' ? 'vi-VN' : 'en-US')}`})
+                          </span>
+                        </div>
+                      ))}
+                      {applicablePromotions.length > 2 && (
+                        <span className="text-[10px] md:text-[11px] text-on-surface-subtle self-center font-medium">
+                          +{applicablePromotions.length - 2}
+                        </span>
+                      )}
+                    </div>
+                  )}
+
                   <div className="mt-auto flex justify-between items-center pt-6 relative">
-                    <div className="absolute top-0 left-0 right-0 h-px bg-[#262626]" />
+                    <div className="absolute top-0 left-0 right-0 h-px bg-border/60" />
 
                     <div className="flex flex-col">
                       <span className="mb-1 text-xs font-semibold uppercase tracking-normal text-on-surface-subtle">{t("common.tour.price_from")}</span>
-                      <span className="text-[20px] font-black text-primary">
-                        {formatPriceVND(tour.price_adult, locale === 'vi' ? 'vi-VN' : 'en-US')}
-                      </span>
+                      <div className="flex flex-col items-start">
+                        {discountPercent > 0 && (
+                          <span className="text-[11px] text-on-surface-subtle line-through">
+                            {formatPriceVND(originalPrice, locale === 'vi' ? 'vi-VN' : 'en-US')}
+                          </span>
+                        )}
+                        <span className="text-[20px] font-black text-primary">
+                          {formatPriceVND(discountedPrice, locale === 'vi' ? 'vi-VN' : 'en-US')}
+                        </span>
+                      </div>
                     </div>
                     <Link
                       href={ROUTES.TOUR_DETAIL(tour.slug)}
@@ -159,7 +200,8 @@ const HotTours = () => {
                   </div>
                 </div>
               </div>
-            ))}
+            );
+          })}
           </div>
         </div>
       </div>

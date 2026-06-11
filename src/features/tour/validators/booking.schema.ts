@@ -11,6 +11,8 @@ export const bookingSchema = z.object({
   customer_phone: z.string().regex(/^\+?[0-9\s\-\.\(\)]{9,20}$/, "validation.phone_invalid"),
   customer_address: z.string().optional().nullable(),
   customer_note: z.string().optional().nullable(),
+  promotion_code: z.string().optional().nullable(),
+  user_voucher_code: z.string().optional().nullable(),
   payment_method: z.enum(["momo", "vnpay", "zalopay", "bank_transfer", "sepay"]),
   agree_terms: z.boolean().refine((val) => val === true, {
     message: "validation.terms_required",

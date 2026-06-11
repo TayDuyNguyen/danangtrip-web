@@ -13,10 +13,11 @@ import { getApiErrorMessage } from "@/utils";
 type Props = {
   open: boolean;
   onClose: () => void;
-  locationId: number;
+  locationId?: number;
+  tourId?: number;
 };
 
-export default function WriteReviewModal({ open, onClose, locationId }: Props) {
+export default function WriteReviewModal({ open, onClose, locationId, tourId }: Props) {
   const t = useTranslations("locations");
   const queryClient = useQueryClient();
   const [score, setScore] = useState(5);
@@ -30,19 +31,35 @@ export default function WriteReviewModal({ open, onClose, locationId }: Props) {
   };
 
   const submit = useMutation({
-    mutationFn: () =>
-      ratingService.createForLocation({
-        locationId,
+    mutationFn: () => {
+      const payload = {
         score,
         comment: comment.trim() || undefined,
         files,
-      }),
+      };
+
+      if (tourId) {
+        return ratingService.createForTour({ ...payload, tourId });
+      }
+
+      if (locationId) {
+        return ratingService.createForLocation({ ...payload, locationId });
+      }
+
+      throw new Error("Review target is required.");
+    },
     onSuccess: (res) => {
       if (res.success) {
         toast.success(t("detail.review_submit_success"));
-        void queryClient.invalidateQueries({ queryKey: ["locations", locationId, "ratings"] });
-        void queryClient.invalidateQueries({ queryKey: ["locations", locationId, "rating-stats"] });
-        void queryClient.invalidateQueries({ queryKey: ["locations", locationId, "rating-check"] });
+        if (tourId) {
+          void queryClient.invalidateQueries({ queryKey: ["tours", "ratings", tourId] });
+          void queryClient.invalidateQueries({ queryKey: ["tours", "ratingStats", tourId] });
+          void queryClient.invalidateQueries({ queryKey: ["tours", "checkRating", tourId] });
+        } else if (locationId) {
+          void queryClient.invalidateQueries({ queryKey: ["locations", locationId, "ratings"] });
+          void queryClient.invalidateQueries({ queryKey: ["locations", locationId, "rating-stats"] });
+          void queryClient.invalidateQueries({ queryKey: ["locations", locationId, "rating-check"] });
+        }
         reset();
         onClose();
       } else {

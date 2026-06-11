@@ -6,7 +6,10 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { IoSearchOutline, IoStar } from "@/components/icons/solar";
 import { cn } from "@/utils/string";
-import type { SearchSuggestionsData, SearchSuggestionItem } from "@/types/search-suggestion.types";
+import type {
+  SearchSuggestionsData,
+  SearchSuggestionItem,
+} from "@/types/search-suggestion.types";
 
 interface SearchSuggestionsDropdownProps {
   isOpen: boolean;
@@ -34,7 +37,11 @@ export const SearchSuggestionsDropdown = ({
   anchorRef,
 }: SearchSuggestionsDropdownProps) => {
   const t = useTranslations("search");
-  const [floatingRect, setFloatingRect] = useState<{ left: number; top: number; width: number } | null>(null);
+  const [floatingRect, setFloatingRect] = useState<{
+    left: number;
+    top: number;
+    width: number;
+  } | null>(null);
 
   useEffect(() => {
     if (!isOpen || !floating || !anchorRef?.current) {
@@ -47,8 +54,14 @@ export const SearchSuggestionsDropdown = ({
       if (!rect) return;
 
       const viewportPadding = 16;
-      const width = Math.min(rect.width, window.innerWidth - viewportPadding * 2);
-      const left = Math.min(Math.max(rect.left, viewportPadding), window.innerWidth - width - viewportPadding);
+      const width = Math.min(
+        rect.width,
+        window.innerWidth - viewportPadding * 2,
+      );
+      const left = Math.min(
+        Math.max(rect.left, viewportPadding),
+        window.innerWidth - width - viewportPadding,
+      );
 
       setFloatingRect({
         left,
@@ -71,7 +84,11 @@ export const SearchSuggestionsDropdown = ({
 
   const totalItems = suggestions?.total || 0;
 
-  const renderSection = (titleKey: string, sectionItems: SearchSuggestionItem[], startIndex: number) => {
+  const renderSection = (
+    titleKey: string,
+    sectionItems: SearchSuggestionItem[],
+    startIndex: number,
+  ) => {
     if (sectionItems.length === 0) return null;
 
     return (
@@ -91,7 +108,7 @@ export const SearchSuggestionsDropdown = ({
                 "mx-2 flex cursor-pointer items-center gap-4 rounded-2xl px-4 py-3 transition-all duration-200",
                 isSelected
                   ? "scale-[1.01] border border-primary/20 bg-[#fff4f6] shadow-sm"
-                  : "hover:bg-[#f7f7f7]"
+                  : "hover:bg-[#f7f7f7]",
               )}
             >
               {item.type === "keyword" ? (
@@ -111,26 +128,32 @@ export const SearchSuggestionsDropdown = ({
 
               <div className="min-w-0 flex-1">
                 <div className="mb-0.5 flex items-center justify-between gap-2">
-                  <h4 className="truncate text-[15px] font-semibold text-on-surface">{item.title}</h4>
+                  <h4 className="truncate text-[15px] font-semibold text-on-surface">
+                    {item.title}
+                  </h4>
                   {item.rating > 0 && (
                     <div className="flex shrink-0 items-center gap-1 rounded-full bg-[#f7f7f7] px-2 py-0.5 text-xs text-amber-500">
                       <IoStar />
-                      <span className="font-semibold text-on-surface">{item.rating}</span>
+                      <span className="font-semibold text-on-surface">
+                        {item.rating}
+                      </span>
                     </div>
                   )}
                 </div>
                 <p className="truncate text-sm text-on-surface-subtle">
-                  {item.type === "keyword"
-                    ? item.subtitle
-                    : (
-                      <>
-                        {item.type === "location"
-                          ? t("suggestions.views", { count: item.viewCount })
-                          : t("suggestions.bookings", { count: item.bookingCount || 0 })}
-                        <span className="mx-2 opacity-30">•</span>
-                        {item.subtitle}
-                      </>
-                    )}
+                  {item.type === "keyword" ? (
+                    item.subtitle
+                  ) : (
+                    <>
+                      {item.type === "location"
+                        ? t("suggestions.views", { count: item.viewCount })
+                        : t("suggestions.bookings", {
+                            count: item.bookingCount || 0,
+                          })}
+                      <span className="mx-2 opacity-30">•</span>
+                      {item.subtitle}
+                    </>
+                  )}
                 </p>
               </div>
             </div>
@@ -166,7 +189,9 @@ export const SearchSuggestionsDropdown = ({
           <div className="flex h-16 w-16 items-center justify-center rounded-full border border-border bg-[#f7f7f7] text-primary">
             <IoSearchOutline className="text-[22px]" />
           </div>
-          <p className="text-lg font-semibold text-on-surface">{t("suggestions.error")}</p>
+          <p className="text-lg font-semibold text-on-surface">
+            {t("suggestions.error")}
+          </p>
         </div>
       );
     }
@@ -177,33 +202,42 @@ export const SearchSuggestionsDropdown = ({
           <div className="flex h-16 w-16 items-center justify-center rounded-full border border-border bg-[#f7f7f7]">
             <IoSearchOutline className="text-[22px] opacity-50" />
           </div>
-          <p className="text-lg font-semibold text-on-surface">{t("suggestions.no_results")}</p>
+          <p className="text-lg font-semibold text-on-surface">
+            {t("suggestions.no_results")}
+          </p>
         </div>
       );
     }
 
     return (
       <div className="max-h-[320px] overflow-y-auto custom-scrollbar">
-        {renderSection("suggestions.keywords_title", suggestions?.keywords || [], 0)}
-        {renderSection("suggestions.locations_title", suggestions?.locations || [], suggestions?.keywords?.length || 0)}
+        {renderSection(
+          "suggestions.locations_title",
+          suggestions?.locations || [],
+          0,
+        )}
         {renderSection(
           "suggestions.tours_title",
           suggestions?.tours || [],
-          (suggestions?.keywords?.length || 0) + (suggestions?.locations?.length || 0)
+          suggestions?.locations?.length || 0,
         )}
       </div>
     );
   };
 
   const isViewAllSelected = selectedIndex === totalItems;
-  const viewAllSelectedStyles = "border-primary bg-[#ff385c] text-white shadow-[0_10px_24px_rgba(255,56,92,0.22)]";
-  const viewAllDefaultStyles = "border-border text-on-surface hover:border-primary/30 hover:bg-[#fff4f6]";
+  const viewAllSelectedStyles =
+    "border-primary bg-[#ff385c] text-white shadow-[0_10px_24px_rgba(255,56,92,0.22)]";
+  const viewAllDefaultStyles =
+    "border-border text-on-surface hover:border-primary/30 hover:bg-[#fff4f6]";
 
   const dropdown = (
     <div
       className={cn(
         "overflow-hidden rounded-[28px] border border-border bg-white shadow-[0_24px_60px_rgba(0,0,0,0.16)]",
-        floating ? "fixed z-[9999]" : "absolute left-0 right-0 top-[calc(100%+14px)] z-50"
+        floating
+          ? "fixed z-[9999]"
+          : "absolute left-0 right-0 top-[calc(100%+14px)] z-50",
       )}
       style={
         floating && floatingRect
@@ -224,18 +258,20 @@ export const SearchSuggestionsDropdown = ({
           onClick={onViewAll}
           className={cn(
             "mx-4 mb-4 mt-2 flex cursor-pointer items-center gap-3 rounded-2xl border border-dashed p-4 transition-all duration-200",
-            isViewAllSelected ? viewAllSelectedStyles : viewAllDefaultStyles
+            isViewAllSelected ? viewAllSelectedStyles : viewAllDefaultStyles,
           )}
         >
           <div
             className={cn(
               "flex h-10 w-10 items-center justify-center rounded-full transition-colors",
-              isViewAllSelected ? "bg-white/20" : "bg-[#f7f7f7]"
+              isViewAllSelected ? "bg-white/20" : "bg-[#f7f7f7]",
             )}
           >
             <IoSearchOutline className="text-[18px]" />
           </div>
-          <span className="font-semibold">{t("suggestions.view_all", { query })}</span>
+          <span className="font-semibold">
+            {t("suggestions.view_all", { query })}
+          </span>
         </div>
       </div>
     </div>

@@ -8,18 +8,26 @@ import { formatCurrency } from "@/utils/format";
 
 interface Props {
   checkout: SepayCheckout;
+  isBankTransfer?: boolean;
 }
 
-export function SepayQrCard({ checkout }: Props) {
+export function SepayQrCard({ checkout, isBankTransfer = false }: Props) {
   const t = useTranslations("tour.payment.sepay");
   const locale = useLocale();
   const [qrLoadFailed, setQrLoadFailed] = useState(false);
+  const safeAmount = Math.max(0, Number(checkout.amount || 0));
+
+  if (safeAmount <= 0) {
+    return null;
+  }
 
   return (
     <div className="mx-auto mt-8 w-full max-w-md rounded-[28px] border border-border bg-white p-6 text-left shadow-[0_24px_80px_rgba(15,23,42,0.08)]">
       <div className="text-center">
         <h3 className="text-lg font-bold text-on-surface">{t("title")}</h3>
-        <p className="mt-1 text-sm leading-6 text-on-surface-subtle">{t("description")}</p>
+        <p className="mt-1 text-sm leading-6 text-on-surface-subtle">
+          {isBankTransfer ? t("description_manual") : t("description")}
+        </p>
       </div>
 
       <div className="mt-5 flex justify-center">
@@ -51,8 +59,8 @@ export function SepayQrCard({ checkout }: Props) {
         <InfoRow label={t("account_name")} value={checkout.bank.account_name} />
         <InfoRow
           label={t("amount")}
-          value={formatCurrency(checkout.amount, "VND", locale === "vi" ? "vi-VN" : "en-US")}
-          copyValue={String(checkout.amount)}
+          value={formatCurrency(safeAmount, "VND", locale === "vi" ? "vi-VN" : "en-US")}
+          copyValue={String(safeAmount)}
           copyable
         />
         <InfoRow label={t("transfer_content")} value={checkout.transfer_content} copyable important />

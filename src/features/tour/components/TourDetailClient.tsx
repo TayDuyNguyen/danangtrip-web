@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { ROUTES } from "@/config";
@@ -15,6 +16,8 @@ import TourImageGallery from "./TourImageGallery";
 import BookingSidebar from "./BookingSidebar";
 import ItineraryTimeline from "./ItineraryTimeline";
 import ReviewSection from "./ReviewSection";
+import { CouponCard } from "./CouponCard";
+import { useActivePromotions } from "../hooks/usePromotions";
 
 function FavoriteButton({ tourId }: { tourId: number }) {
   const td = useTranslations("tour.detail");
@@ -43,8 +46,13 @@ interface Props {
 export default function TourDetailClient({ tour }: Props) {
   const t = useTranslations("tour");
   const td = useTranslations("tour.detail");
+  const { data: promotions = [] } = useActivePromotions();
+  const [selectedPromotionCode, setSelectedPromotionCode] = useState<string | null>(null);
   const safeRating = Number.isFinite(Number(tour.avg_rating)) ? Number(tour.avg_rating) : 0;
   const safeReviewCount = Number.isFinite(Number(tour.review_count)) ? Number(tour.review_count) : 0;
+  const originalPrice = Number.parseFloat(String(tour.price_adult ?? 0));
+  const discountPercent = Number(tour.discount_percent || 0);
+  const discountedPrice = Math.max(0, originalPrice * (1 - discountPercent / 100));
 
   const gallery = [tour.thumbnail, ...(tour.images ?? [])].filter(
     (u): u is string => Boolean(u)
@@ -54,6 +62,25 @@ export default function TourDetailClient({ tour }: Props) {
   const inclusions = normalizeText(tour.inclusions);
   const exclusions = normalizeText(tour.exclusions);
   const meetingPoint = normalizeText(tour.meeting_point);
+  const visiblePromotions = promotions
+    .map((promo) => {
+      const rawDiscountValue = Number(promo.discount_value || 0);
+      const maxDiscountAmount = promo.max_discount_amount ? Number(promo.max_discount_amount) : null;
+      const discountAmount =
+        promo.discount_type === "percent"
+          ? Math.min((discountedPrice * rawDiscountValue) / 100, maxDiscountAmount ?? Number.POSITIVE_INFINITY)
+          : rawDiscountValue;
+
+      return { promo, discountAmount };
+    })
+    .filter(({ promo, discountAmount }) => {
+      const minOrder = Number(promo.min_order_amount || 0);
+      return promo.status === "active" && discountedPrice >= minOrder && discountAmount > 0;
+    })
+    .sort((a, b) => b.discountAmount - a.discountAmount)
+    .slice(0, 4)
+    .map(({ promo }) => promo);
+  const appliedPromotionCode = selectedPromotionCode || visiblePromotions[0]?.code || null;
 
   return (
     <div className="design-page layout-main-shell min-h-screen pb-20">
@@ -152,6 +179,26 @@ export default function TourDetailClient({ tour }: Props) {
                     </section>
                   ) : null}
 
+                  {/* Active Promotions Section */}
+                  {visiblePromotions.length > 0 && (
+                    <section className="reveal-up space-y-6" style={{ animationDelay: "350ms" }}>
+                      <div className="flex items-center gap-3">
+                        <div className="w-1.5 h-6 bg-primary rounded-full" />
+                        <h2 className="text-xl font-black text-on-surface tracking-tight uppercase">Mã giảm giá dành cho bạn</h2>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {visiblePromotions.map((promo) => (
+                          <CouponCard
+                            key={promo.id}
+                            coupon={promo}
+                            isApplied={appliedPromotionCode === promo.code}
+                            onApply={setSelectedPromotionCode}
+                          />
+                        ))}
+                      </div>
+                    </section>
+                  )}
+
                   {/* Itinerary Section */}
                   <ItineraryTimeline itinerary={tour.itinerary || []} />
 
@@ -201,7 +248,7 @@ export default function TourDetailClient({ tour }: Props) {
 
           {/* Sidebar Section */}
           <aside className="lg:col-span-4">
-            <BookingSidebar tour={tour} />
+            <BookingSidebar tour={tour} selectedPromotionCode={appliedPromotionCode} />
           </aside>
         </div>
       </div>

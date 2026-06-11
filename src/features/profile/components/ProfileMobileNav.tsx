@@ -4,12 +4,14 @@ import { usePathname } from "next/navigation";
 import { useTranslations, useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { PROTECTED_ROUTES } from "@/config/routes";
+import { useAppStore } from "@/store/app.store";
 import {
   User,
   Lock,
   BookOpen,
   Heart,
   Bell,
+  Coins,
   Sparkles,
   Star,
   Trash2,
@@ -22,6 +24,7 @@ const MOBILE_TABS = [
   { key: "ratings", labelKey: "sidebar.ratings", href: PROTECTED_ROUTES.RATINGS, Icon: Star },
   { key: "recommendations", labelKey: "sidebar.recommendations", href: PROTECTED_ROUTES.RECOMMENDATIONS, Icon: Sparkles },
   { key: "bookings", labelKey: "sidebar.bookings", href: PROTECTED_ROUTES.BOOKINGS, Icon: BookOpen },
+  { key: "points", labelKey: "sidebar.points", href: PROTECTED_ROUTES.POINTS, Icon: Coins },
   { key: "favorites", labelKey: "sidebar.favorites", href: PROTECTED_ROUTES.FAVORITES, Icon: Heart },
   { key: "notifications", labelKey: "sidebar.notifications", href: PROTECTED_ROUTES.NOTIFICATIONS, Icon: Bell },
   { key: "delete_account", labelKey: "sidebar.delete_account", href: PROTECTED_ROUTES.DELETE_ACCOUNT, Icon: Trash2 },
@@ -32,6 +35,7 @@ export function ProfileMobileNav() {
   const pathname = usePathname();
   const locale = useLocale();
   const t = useTranslations("settings");
+  const { setLoading } = useAppStore();
 
   const basePath = pathname.replace(new RegExp(`^\\/${locale}`), "") || "/";
   const isActive = (href: string) =>
@@ -51,6 +55,11 @@ export function ProfileMobileNav() {
           <Link
             key={key}
             href={href}
+            onClick={() => {
+              if (!active) {
+                setLoading(true);
+              }
+            }}
             aria-current={active ? "page" : undefined}
             className={cn(
               "flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all duration-200",

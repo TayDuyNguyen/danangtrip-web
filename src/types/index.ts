@@ -10,3 +10,4 @@ export * from "./payment.types";
 export * from "./notification.types";
 export * from "./favorite.types";
 export * from "./cart.types";
+export * from "./point.types";

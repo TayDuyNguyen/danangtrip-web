@@ -35,6 +35,7 @@ export interface PaymentCreateResult {
   transaction_code?: string;
   booking_code?: string;
   sepay_checkout?: SepayCheckout | null;
+  is_free_booking?: boolean;
   [key: string]: unknown;
 }
 

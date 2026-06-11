@@ -5,8 +5,10 @@ export interface Notification {
   user_id: number;
   type: string;
   title: string;
-  message: string;
+  content?: string;
+  message?: string;
   data?: Record<string, unknown> | null;
+  is_read?: boolean;
   read_at: string | null;
   created_at: string;
   updated_at: string;
@@ -17,6 +19,7 @@ export interface NotificationListParams {
   per_page?: number;
   type?: string;
   read?: boolean;
+  is_read?: boolean;
 }
 
 export interface NotificationUnreadCount {

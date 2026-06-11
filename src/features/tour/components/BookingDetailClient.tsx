@@ -144,7 +144,7 @@ export function BookingDetailClient({ id, bookingCode }: BookingDetailClientProp
   const { data: response, isLoading, error, refetch } = bookingCode ? detailByCodeQuery : detailQuery;
   const [isCancelOpen, setIsCancelOpen] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<Extract<PaymentMethod, "sepay" | "vnpay" | "momo" | "zalopay"> | null>(null);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<Extract<PaymentMethod, "sepay" | "vnpay" | "momo" | "zalopay" | "bank_transfer"> | null>(null);
 
   const booking = response;
   const item = booking?.booking_items?.[0] || booking?.items?.[0];
@@ -189,30 +189,33 @@ export function BookingDetailClient({ id, bookingCode }: BookingDetailClientProp
   }
 
   const canCancel = (booking.booking_status === "pending" || booking.booking_status === "confirmed") && !isPast;
-  const onlinePaymentMethods = ["sepay", "vnpay", "momo", "zalopay"] as const;
+  const onlinePaymentMethods = ["sepay", "vnpay", "momo", "zalopay", "bank_transfer"] as const;
   const methodLabels: Record<(typeof onlinePaymentMethods)[number], string> = {
     sepay: "SePay VietQR",
     vnpay: "VNPAY",
     momo: "MoMo",
     zalopay: "ZaloPay",
+    bank_transfer: "Chuyển khoản thủ công",
   };
   const methodIcons: Record<(typeof onlinePaymentMethods)[number], string | null> = {
     sepay: "/images/payment/logo-sepay-blue.svg",
     vnpay: "/images/payment/vnpay.png",
     momo: "/images/payment/momo.png",
     zalopay: "/images/payment/zalopay.png",
+    bank_transfer: null,
   };
   const normalizedBookingPaymentMethod = booking.payment_method === "payos" ? "sepay" : booking.payment_method;
   const paymentOptions = onlinePaymentMethods
     .filter((method) => {
       if (!appConfig?.payment) return method === normalizedBookingPaymentMethod || method === "sepay";
       if (method === "sepay") return (appConfig.payment.sepay ?? appConfig.payment.payos) !== false;
+      if (method === "bank_transfer") return appConfig.payment.cod !== false;
       return appConfig.payment[method] !== false;
     });
   const activePaymentMethod =
     selectedPaymentMethod ||
     (onlinePaymentMethods.includes(normalizedBookingPaymentMethod as (typeof onlinePaymentMethods)[number])
-      ? (normalizedBookingPaymentMethod as Extract<PaymentMethod, "sepay" | "vnpay" | "momo" | "zalopay">)
+      ? (normalizedBookingPaymentMethod as Extract<PaymentMethod, "sepay" | "vnpay" | "momo" | "zalopay" | "bank_transfer">)
       : "sepay");
   const canContinuePayment =
     (onlinePaymentMethods.includes(normalizedBookingPaymentMethod as (typeof onlinePaymentMethods)[number])) &&

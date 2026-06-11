@@ -60,7 +60,7 @@ export const useAuth = () => {
           const { user: userData, token: userToken } = response.data;
 
           if (userToken && userData) {
-            storeLogin(normalizeAuthUser(userData), userToken);
+            storeLogin(normalizeAuthUser(userData), userToken, credentials.remember);
             await mergeLocalFavoritesToAccount();
             return { success: true };
           }
@@ -154,6 +154,13 @@ export const useAuth = () => {
   useEffect(() => {
     // Re-verify session on mount if a token exists and we are not already authenticated
     const token = getAccessToken();
+    if (!token) {
+      if (isAuthenticated) {
+        storeLogout();
+      }
+      return;
+    }
+
     if (token && !isAuthenticated && !isLoading) {
       checkAuth();
     }

@@ -23,6 +23,8 @@ export const useNotificationsHeader = (isNotificationOpen: boolean = false) => {
     },
     enabled: isAuthenticated,
     staleTime: 60 * 1000, // 1 minute
+    refetchInterval: 30 * 1000,
+    refetchIntervalInBackground: false,
     retry: shouldRetryQuery,
   });
 
@@ -35,6 +37,7 @@ export const useNotificationsHeader = (isNotificationOpen: boolean = false) => {
     },
     enabled: isAuthenticated && isNotificationOpen,
     staleTime: 60 * 1000,
+    refetchOnMount: "always",
     retry: shouldRetryQuery,
   });
 

@@ -34,6 +34,7 @@ export const API_ENDPOINTS = {
   },
   BOOKINGS: {
     CALCULATE: "/bookings/calculate",
+    USER_CALCULATE: "/user/bookings/calculate",
     STORE: "/bookings",
     USER_LIST: "/user/bookings",
     DETAIL: (id: number | string) => `/user/bookings/${id}`,
@@ -94,6 +95,17 @@ export const API_ENDPOINTS = {
   CONTACTS: "/contacts",
   LANDING_PAGES: {
     DETAIL: (slug: string) => `/landing-pages/${slug}`,
+  },
+  PROMOTIONS: {
+    LIST: "/promotions",
+    VALIDATE: "/promotions/validate",
+  },
+  POINTS: {
+    OVERVIEW: "/user/points",
+    HISTORY: "/user/points/history",
+    REWARDS: "/user/point-rewards",
+    REDEEM: (id: number | string) => `/user/point-rewards/${id}/redeem`,
+    VOUCHERS: "/user/vouchers",
   },
   RECOMMENDATIONS: "/recommendations",
   CART: {
