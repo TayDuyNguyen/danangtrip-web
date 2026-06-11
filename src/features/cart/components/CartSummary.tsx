@@ -7,6 +7,8 @@ import { Button, Input } from "@/components/ui";
 import type { CartItem } from "@/types";
 import { toast } from "sonner";
 import { formatPriceVND } from "@/utils/format";
+import { useValidatePromotion } from "../../tour/hooks/usePromotions";
+import { getApiErrorMessage } from "@/utils/api-error";
 
 interface CartSummaryProps {
   items: CartItem[];
@@ -19,8 +21,9 @@ export function CartSummary({ items }: CartSummaryProps) {
   const priceLocale = locale === "vi" ? "vi-VN" : "en-US";
 
   const [promoCode, setPromoCode] = useState("");
-  const [discountPercent, setDiscountPercent] = useState(0);
-  const [appliedCode, setAppliedCode] = useState("");
+  const [appliedPromo, setAppliedPromo] = useState<{ code: string; discountAmount: number } | null>(null);
+  const appliedCode = appliedPromo?.code || "";
+  const validatePromoMutation = useValidatePromotion();
 
   // Only calculate pricing for items that are not expired or sold out
   const activeItems = items.filter((item) => {
@@ -50,7 +53,7 @@ export function CartSummary({ items }: CartSummaryProps) {
     );
   }, 0);
 
-  const discountAmount = (subtotal * discountPercent) / 100;
+  const discountAmount = appliedPromo ? appliedPromo.discountAmount : 0;
   const finalTotal = subtotal - discountAmount;
 
   const handleApplyPromo = (e: React.FormEvent) => {
@@ -58,13 +61,29 @@ export function CartSummary({ items }: CartSummaryProps) {
     const cleanCode = promoCode.trim().toUpperCase();
     if (!cleanCode) return;
 
-    if (cleanCode === "DANANGTRIP" || cleanCode === "DATN2026") {
-      setDiscountPercent(10);
-      setAppliedCode(cleanCode);
-      toast.success(t("promo_apply_success", { discount: 10 }));
-    } else {
-      toast.error(t("promo_invalid"));
-    }
+    validatePromoMutation.mutate(
+      { code: cleanCode, orderTotal: subtotal },
+      {
+        onSuccess: (data) => {
+          if (!data) {
+            toast.error(t("promo_invalid"));
+            return;
+          }
+
+          setAppliedPromo({
+            code: cleanCode,
+            discountAmount: data.discount_amount,
+          });
+          const discountStr = data.promotion.discount_type === "percent"
+            ? `${data.promotion.discount_value}%`
+            : formatPriceVND(Number(data.promotion.discount_value));
+          toast.success(t("promo_apply_success", { discount: discountStr }));
+        },
+        onError: (error) => {
+          toast.error(getApiErrorMessage(error, t("promo_invalid")));
+        },
+      }
+    );
   };
 
   const handleCheckout = () => {
@@ -100,8 +119,10 @@ export function CartSummary({ items }: CartSummaryProps) {
       );
     }
 
+    const promoParam = appliedPromo ? `&promo_code=${appliedPromo.code}` : "";
+
     router.push(
-      `/tours/${tour.slug}/book?schedule_id=${firstItem.tour_schedule_id}&adults=${firstItem.quantity_adult}&children=${firstItem.quantity_child}&infants=${firstItem.quantity_infant}`
+      `/tours/${tour.slug}/book?schedule_id=${firstItem.tour_schedule_id}&adults=${firstItem.quantity_adult}&children=${firstItem.quantity_child}&infants=${firstItem.quantity_infant}${promoParam}`
     );
   };
 
@@ -165,7 +186,7 @@ export function CartSummary({ items }: CartSummaryProps) {
         </div>
 
         {/* Discount */}
-        {discountPercent > 0 && (
+        {discountAmount > 0 && (
           <div className="flex justify-between items-center text-sm text-green-400">
             <span className="font-medium">
               {t("discount")} ({appliedCode})
@@ -182,13 +203,14 @@ export function CartSummary({ items }: CartSummaryProps) {
               value={promoCode}
               onChange={(e) => setPromoCode(e.target.value)}
               className="h-10 text-xs py-0"
-              disabled={discountPercent > 0}
+              disabled={discountAmount > 0 || validatePromoMutation.isPending}
             />
           </div>
           <Button
             type="submit"
             className="h-10 shrink-0 px-4 text-xs font-semibold uppercase tracking-normal"
-            disabled={discountPercent > 0 || !promoCode.trim()}
+            disabled={discountAmount > 0 || !promoCode.trim() || validatePromoMutation.isPending}
+            isLoading={validatePromoMutation.isPending}
           >
             {t("promo_apply")}
           </Button>

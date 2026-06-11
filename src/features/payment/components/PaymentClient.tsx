@@ -10,6 +10,7 @@ import { PaymentRetryPanel } from "./PaymentRetryPanel";
 import { PaymentActions } from "./PaymentActions";
 import { SepayQrCard } from "./SepayQrCard";
 import { Loading } from "@/components/ui";
+import { BookingProgressSteps } from "@/features/tour/components/BookingProgressSteps";
 import { isPaymentSessionExpired, usePayment, usePaymentStatus, useBookingForPayment } from "../hooks/usePayment";
  
 export function PaymentClient() {
@@ -23,9 +24,12 @@ export function PaymentClient() {
  
   const { data: paymentData, isLoading: isPaymentLoading } = usePaymentStatus(transactionCode);
   const [nowMs, setNowMs] = useState(() => Date.now());
-  const isSessionExpired = paymentData ? isPaymentSessionExpired(paymentData, nowMs) : false;
+  const isSessionExpired = paymentData && paymentData.payment_method !== "bank_transfer"
+    ? isPaymentSessionExpired(paymentData, nowMs)
+    : false;
   const shouldPollBooking = !paymentData || !isSessionExpired;
   const { data: bookingData, isLoading: isBookingLoading } = useBookingForPayment(bookingCode, shouldPollBooking);
+  const isBankTransfer = paymentData?.payment_method === "bank_transfer" || bookingData?.payment_method === "bank_transfer";
   const { retryPayment, isRetrying } = usePayment();
 
   useEffect(() => {
@@ -43,6 +47,28 @@ export function PaymentClient() {
     return () => clearInterval(interval);
   }, [paymentData, isSessionExpired]);
 
+  // Redirect to correct URL format if transactionCode is missing but booking has a pending payment
+  useEffect(() => {
+    if (bookingData && !transactionCode && bookingData.latest_pending_payment?.transaction_code) {
+      router.replace(`/payment/result?transaction_code=${bookingData.latest_pending_payment.transaction_code}&booking_code=${bookingData.booking_code}`);
+    }
+  }, [bookingData, transactionCode, router]);
+
+  // Create payment record automatically if there is no payment record for a pending booking
+  useEffect(() => {
+    if (
+      bookingData &&
+      !isBookingLoading &&
+      !transactionCode &&
+      !bookingData.latest_pending_payment &&
+      ["pending", "unpaid", "partially_paid"].includes(bookingData.payment_status) &&
+      bookingData.booking_status !== "cancelled" &&
+      !isRetrying
+    ) {
+      retryPayment(bookingData.booking_code);
+    }
+  }, [bookingData, isBookingLoading, transactionCode, retryPayment, isRetrying]);
+
   // Determine status
   let status: "pending" | "success" | "failed" | "redirecting" | "expired" = "pending";
   if (paymentData) {
@@ -58,16 +84,7 @@ export function PaymentClient() {
     status = "redirecting";
   }
 
-  // Auto redirect to booking details as soon as the backend confirms payment.
-  useEffect(() => {
-    if (status === "success") {
-      const targetUrl = bookingData
-        ? `/profile/bookings/code/${bookingData.booking_code}`
-        : "/profile/bookings";
-
-      router.replace(targetUrl);
-    }
-  }, [status, bookingData, router]);
+  // Auto redirect on success removed to allow user to see Step 3 (Confirmation) and manually click 'Xem chi tiết' button.
  
   if (isPaymentLoading || isBookingLoading) {
     return <PaymentLoadingState />;
@@ -75,9 +92,14 @@ export function PaymentClient() {
  
   if (isMissingContext) {
     return (
-      <div className="design-container max-w-4xl mx-auto py-12 md:py-20 flex flex-col items-center justify-center min-h-[60vh]">
-        <PaymentStatusCard status="failed" message={t("errors.missing_context")} />
-        <PaymentActions status="failed" isMissingContext />
+      <div className="w-full">
+        <div className="border-b border-border/30 bg-white">
+          <BookingProgressSteps currentStep={2} />
+        </div>
+        <div className="design-container max-w-4xl mx-auto py-12 md:py-20 flex flex-col items-center justify-center min-h-[60vh]">
+          <PaymentStatusCard status="failed" message={t("errors.missing_context")} />
+          <PaymentActions status="failed" isMissingContext />
+        </div>
       </div>
     );
   }
@@ -91,30 +113,37 @@ export function PaymentClient() {
         ? t("errors.payment_not_found")
         : undefined;
 
+  const currentStep = status === "success" ? 3 : 2;
+
   return (
-    <div className="design-container mx-auto flex min-h-[60vh] max-w-4xl flex-col items-center justify-center py-12 md:py-20">
-      <PaymentStatusCard status={status} message={statusMessage} />
+    <div className="w-full">
+      <div className="border-b border-border/30 bg-white">
+        <BookingProgressSteps currentStep={currentStep} />
+      </div>
+      <div className="design-container mx-auto flex min-h-[60vh] max-w-4xl flex-col items-center justify-center py-12 md:py-20">
+        <PaymentStatusCard status={status} message={statusMessage} />
 
-      {status !== "redirecting" && bookingData && (
-        <PaymentSummaryCard booking={bookingData} />
-      )}
+        {status !== "redirecting" && bookingData && (
+          <PaymentSummaryCard booking={bookingData} />
+        )}
 
-      {status === "pending" && paymentData?.sepay_checkout && !isSessionExpired && (
-        <SepayQrCard checkout={paymentData.sepay_checkout} />
-      )}
+        {status === "pending" && paymentData?.sepay_checkout && !isSessionExpired && (
+          <SepayQrCard checkout={paymentData.sepay_checkout} isBankTransfer={isBankTransfer} />
+        )}
 
-      {status !== "redirecting" && (status === "failed" || status === "pending" || status === "expired") && bookingData && (
-        <PaymentRetryPanel
-          expiresAt={paymentData?.expires_at}
-          fallbackStartedAt={paymentData?.created_at ?? bookingData.booked_at}
-          onRetry={() => retryPayment(bookingData.booking_code)}
-          isRetrying={isRetrying}
-        />
-      )}
+        {status !== "redirecting" && (status === "failed" || status === "pending" || status === "expired") && bookingData && !isBankTransfer && (
+          <PaymentRetryPanel
+            expiresAt={paymentData?.expires_at}
+            fallbackStartedAt={paymentData?.created_at ?? bookingData.booked_at}
+            onRetry={() => retryPayment(bookingData.booking_code)}
+            isRetrying={isRetrying}
+          />
+        )}
 
-      {status !== "redirecting" && (
-        <PaymentActions status={status} booking={bookingData} />
-      )}
+        {status !== "redirecting" && (
+          <PaymentActions status={status} booking={bookingData} />
+        )}
+      </div>
     </div>
   );
 }

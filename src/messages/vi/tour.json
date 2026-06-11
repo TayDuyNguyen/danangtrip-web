@@ -136,6 +136,10 @@
     "reviews_loading": "Đang tải đánh giá...",
     "reviews_based_on": "Dựa trên {count} lượt đánh giá",
     "reviews_write": "Viết đánh giá",
+    "helpful": "Hữu ích",
+    "helpful_login": "Đăng nhập để đánh dấu đánh giá hữu ích.",
+    "helpful_success": "Đã ghi nhận đánh giá hữu ích.",
+    "helpful_error": "Không thể đánh dấu hữu ích. Có thể bạn đã chọn trước đó hoặc đây là đánh giá của bạn.",
     "user_anonymous": "Người dùng ẩn danh",
     "gallery_more": "+ {count} ảnh khác",
     "gallery_more_aria": "Xem thêm {count} ảnh trong bộ sưu tập tour",
@@ -150,6 +154,15 @@
   },
   "booking": {
     "title": "Đặt tour: {name}",
+    "system_promotion": "Khuyến mãi hệ thống",
+    "personal_voucher": "Voucher đổi từ điểm",
+    "no_system_promotion": "Không dùng khuyến mãi hệ thống",
+    "no_personal_voucher": "Không dùng voucher cá nhân",
+    "select_system_promotion": "Chọn khuyến mãi hệ thống",
+    "select_personal_voucher": "Chọn voucher cá nhân",
+    "best_discount": "tốt nhất",
+    "system_promotion_discount": "Giảm khuyến mãi hệ thống",
+    "personal_voucher_discount": "Giảm voucher điểm thưởng",
     "step_info": "Thông tin đặt tour",
     "step_payment": "Thanh toán",
     "step_confirm": "Xác nhận",
@@ -300,6 +313,7 @@
     "sepay": {
       "title": "Quét QR chuyển khoản",
       "description": "Sau khi chuyển khoản đúng số tiền và nội dung, hệ thống sẽ tự động xác nhận đơn hàng.",
+      "description_manual": "Sau khi chuyển khoản đúng số tiền và nội dung chuyển khoản dưới đây, vui lòng chờ Ban quản trị đối soát và xác nhận đơn hàng.",
       "qr_alt": "Mã QR chuyển khoản SePay",
       "bank": "Ngân hàng",
       "account_no": "Số tài khoản",
@@ -330,7 +344,7 @@
       "all": "Tất cả",
       "pending": "Chờ xác nhận",
       "confirmed": "Đã xác nhận",
-      "completed": "Hoàn tất",
+      "completed": "Hoàn thành",
       "cancelled": "Đã hủy"
     },
     "booking_code": "Mã đơn hàng",
@@ -384,7 +398,7 @@
     "booking_states": {
       "pending": "Chờ xác nhận",
       "confirmed": "Đã xác nhận",
-      "completed": "Hoàn tất",
+      "completed": "Hoàn thành",
       "cancelled": "Đã hủy"
     },
     "payment_states": {

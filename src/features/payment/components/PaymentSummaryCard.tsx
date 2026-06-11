@@ -11,6 +11,7 @@ interface Props {
 export function PaymentSummaryCard({ booking }: Props) {
   const t = useTranslations("tour.payment");
   const locale = useLocale();
+  const payableAmount = Math.max(0, Number(booking.final_amount ?? booking.total_amount ?? 0));
 
   const getMethodName = (method: string) => {
     const map: Record<string, string> = {
@@ -45,7 +46,7 @@ export function PaymentSummaryCard({ booking }: Props) {
         <div className="flex justify-between items-center pt-2 mt-2 border-t border-border border-dashed">
           <span className="text-on-surface-subtle font-medium">{t("amount")}</span>
           <span className="font-black text-xl text-primary">
-            {formatCurrency(booking.total_amount, "VND", locale === "vi" ? "vi-VN" : "en-US")}
+            {formatCurrency(payableAmount, "VND", locale === "vi" ? "vi-VN" : "en-US")}
           </span>
         </div>
       </div>

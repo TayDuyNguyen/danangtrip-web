@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Info, RefreshCw } from "lucide-react";
-import { Button } from "@/components/ui";
+import { Button, Loading } from "@/components/ui";
 import { StandardPagination } from "@/components/ui/pagination";
 
 import { NotificationsHeader } from "./NotificationsHeader";
@@ -35,7 +35,7 @@ export function NotificationsPageClient() {
   const queryParams = {
     page,
     per_page: perPage,
-    read: activeTab === "unread" ? false : undefined,
+    is_read: activeTab === "unread" ? false : undefined,
   };
 
   const {
@@ -141,40 +141,50 @@ export function NotificationsPageClient() {
         </div>
       ) : isLoading ? (
         <NotificationsSkeleton />
-      ) : notifications.length === 0 ? (
-        <NotificationsEmptyState activeTab={activeTab} />
       ) : (
-        <div className="space-y-6">
-          {/* Notifications Card List */}
-          <div className="space-y-4">
-            {notifications.map((item, index) => (
-              <div
-                key={item.id}
-                className="reveal-up"
-                style={{
-                  animationDelay: `${index * 100}ms`,
-                  animationFillMode: "both",
-                }}
-              >
-                <NotificationItemCard
-                  item={item}
-                  onMarkRead={handleMarkRead}
-                  onRemove={handleRemove}
-                  isRemoving={removingIds.includes(item.id)}
-                />
-              </div>
-            ))}
-          </div>
-
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="pt-6 flex justify-center">
-              <StandardPagination
-                currentPage={page}
-                totalPages={totalPages}
-                onPageChange={handlePageChange}
-              />
+        <div className="relative min-h-[250px] space-y-6">
+          {isFetching && !isLoading && (
+            <div className="absolute inset-0 z-10 flex items-center justify-center rounded-xl bg-white/60 backdrop-blur-[1px] transition-all duration-300">
+              <Loading type="spin" color="#FF385C" height={45} width={45} />
             </div>
+          )}
+
+          {notifications.length === 0 ? (
+            <NotificationsEmptyState activeTab={activeTab} />
+          ) : (
+            <>
+              {/* Notifications Card List */}
+              <div className="space-y-4">
+                {notifications.map((item, index) => (
+                  <div
+                    key={item.id}
+                    className="reveal-up"
+                    style={{
+                      animationDelay: `${index * 100}ms`,
+                      animationFillMode: "both",
+                    }}
+                  >
+                    <NotificationItemCard
+                      item={item}
+                      onMarkRead={handleMarkRead}
+                      onRemove={handleRemove}
+                      isRemoving={removingIds.includes(item.id)}
+                    />
+                  </div>
+                ))}
+              </div>
+
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <div className="pt-6 flex justify-center">
+                  <StandardPagination
+                    currentPage={page}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                  />
+                </div>
+              )}
+            </>
           )}
         </div>
       )}

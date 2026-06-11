@@ -56,14 +56,28 @@ export const SearchResultHeader = ({
   const [isFocused, setIsFocused] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
 
-  const { history, addHistory, removeHistory, clearHistory } = useSearchHistory();
-  const hasCategoryFilters = activeFilters.category !== undefined
-    || activeFilters.locationCategory !== undefined
-    || activeFilters.tourCategory !== undefined;
-  const { data: categoryData } = useSearchFilterCategories(type, hasCategoryFilters);
-  const { suggestions, isLoading: isSuggestionsLoading, isError: isSuggestionsError } =
-    useSearchSuggestions(inputValue, type, activeFilters);
-  const { insights, trending, popular, topLocations, isLoading: isDiscoveryLoading } = useSearchDiscovery();
+  const { history, addHistory, removeHistory, clearHistory } =
+    useSearchHistory();
+  const hasCategoryFilters =
+    activeFilters.category !== undefined ||
+    activeFilters.locationCategory !== undefined ||
+    activeFilters.tourCategory !== undefined;
+  const { data: categoryData } = useSearchFilterCategories(
+    type,
+    hasCategoryFilters,
+  );
+  const {
+    suggestions,
+    isLoading: isSuggestionsLoading,
+    isError: isSuggestionsError,
+  } = useSearchSuggestions(inputValue, type, activeFilters);
+  const {
+    insights,
+    trending,
+    popular,
+    topLocations,
+    isLoading: isDiscoveryLoading,
+  } = useSearchDiscovery();
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -76,7 +90,10 @@ export const SearchResultHeader = ({
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
         setIsFocused(false);
         setSelectedIndex(-1);
       }
@@ -96,18 +113,27 @@ export const SearchResultHeader = ({
     return [...keywordItems, ...locationItems, ...tourItems];
   }, [suggestions]);
 
-  const trendKeywords = insights.length > 0 ? insights : trending.length > 0 ? trending : popular;
+  const trendKeywords =
+    insights.length > 0 ? insights : trending.length > 0 ? trending : popular;
   const showDiscoveryPanel = isFocused && inputValue.trim().length === 0;
   const showSuggestionsPanel = isFocused && inputValue.trim().length >= 2;
-  const hasActiveFilters = Object.values(activeFilters).some((value) => value !== undefined && value !== null);
+  const hasActiveFilters = Object.values(activeFilters).some(
+    (value) => value !== undefined && value !== null,
+  );
   const locationCategories = categoryData?.locationCategories ?? [];
   const tourCategories = categoryData?.tourCategories ?? [];
-  const activeLocationCategory = type === "location" ? activeFilters.category : activeFilters.locationCategory;
-  const activeTourCategory = type === "tour" ? activeFilters.category : activeFilters.tourCategory;
+  const activeLocationCategory =
+    type === "location"
+      ? activeFilters.category
+      : activeFilters.locationCategory;
+  const activeTourCategory =
+    type === "tour" ? activeFilters.category : activeFilters.tourCategory;
   const resolveCategoryName = (
     categories: Array<{ id: number; name: string }>,
-    id: number | undefined
-  ) => categories.find((category) => category.id === id)?.name ?? (id !== undefined ? `#${id}` : "");
+    id: number | undefined,
+  ) =>
+    categories.find((category) => category.id === id)?.name ??
+    (id !== undefined ? `#${id}` : "");
 
   const commitSearch = (rawValue: string) => {
     const normalizedValue = rawValue.trim();
@@ -132,22 +158,24 @@ export const SearchResultHeader = ({
       source: "search_dropdown",
       session_id: getOrCreateSessionId(),
     });
-    
-    if (item.type === "tour") {
-      router.push(ROUTES.TOUR_DETAIL(item.slug));
-    } else if (item.type === "location") {
-      router.push(ROUTES.LOCATION_DETAIL(item.slug));
-    } else {
-      commitSearch(item.title);
-    }
+
+    router.push(
+      `${ROUTES.SEARCH}?q=${encodeURIComponent(item.title)}&type=${item.type}`,
+    );
   };
 
-  const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (event) => {
+  const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (
+    event,
+  ) => {
     if (event.key === "Enter") {
       event.preventDefault();
 
       const totalItems = flatSuggestions.length;
-      if (showSuggestionsPanel && selectedIndex >= 0 && selectedIndex < totalItems) {
+      if (
+        showSuggestionsPanel &&
+        selectedIndex >= 0 &&
+        selectedIndex < totalItems
+      ) {
         handleSelectSuggestion(flatSuggestions[selectedIndex]);
       } else {
         commitSearch(inputValue);
@@ -206,7 +234,10 @@ export const SearchResultHeader = ({
                   key={item}
                   className="flex items-center gap-1 rounded-full border border-border bg-white pl-3 pr-2 py-2 text-sm text-on-surface shadow-sm"
                 >
-                  <button onClick={() => commitSearch(item)} className="transition-colors hover:text-primary">
+                  <button
+                    onClick={() => commitSearch(item)}
+                    className="transition-colors hover:text-primary"
+                  >
                     {item}
                   </button>
                   <button
@@ -220,7 +251,9 @@ export const SearchResultHeader = ({
               ))}
             </div>
           ) : (
-            <p className="text-sm text-on-surface-subtle">{tSearch("suggestions.loading_trending")}</p>
+            <p className="text-sm text-on-surface-subtle">
+              {tSearch("suggestions.loading_trending")}
+            </p>
           )}
         </div>
 
@@ -233,14 +266,20 @@ export const SearchResultHeader = ({
           {isMounted && isDiscoveryLoading ? (
             <div className="space-y-2">
               {Array.from({ length: 4 }).map((_, index) => (
-                <div key={index} className="h-9 rounded-full bg-surface-container-low animate-pulse" />
+                <div
+                  key={index}
+                  className="h-9 rounded-full bg-surface-container-low animate-pulse"
+                />
               ))}
             </div>
           ) : (
             <div className="flex flex-wrap gap-2">
               {trendKeywords.slice(0, 6).map((item, index) => {
                 const source = "source" in item ? item.source : "keyword";
-                const clickedSlug = "slug" in item && typeof item.slug === "string" ? item.slug : undefined;
+                const clickedSlug =
+                  "slug" in item && typeof item.slug === "string"
+                    ? item.slug
+                    : undefined;
                 return (
                   <button
                     key={`${item.query}-${index}`}
@@ -251,13 +290,23 @@ export const SearchResultHeader = ({
                         type: "all",
                         clicked_title: item.query,
                         clicked_slug: clickedSlug,
-                        clicked_type: source === "tour" || source === "location" ? source : "keyword",
+                        clicked_type:
+                          source === "tour" || source === "location"
+                            ? source
+                            : "keyword",
                         source: "search_discovery_panel",
                         session_id: getOrCreateSessionId(),
                       });
-                      
-                      if ((source === "tour" || source === "location") && clickedSlug) {
-                        router.push(source === "tour" ? ROUTES.TOUR_DETAIL(clickedSlug) : ROUTES.LOCATION_DETAIL(clickedSlug));
+
+                      if (
+                        (source === "tour" || source === "location") &&
+                        clickedSlug
+                      ) {
+                        router.push(
+                          source === "tour"
+                            ? ROUTES.TOUR_DETAIL(clickedSlug)
+                            : ROUTES.LOCATION_DETAIL(clickedSlug),
+                        );
                       } else {
                         commitSearch(item.query);
                       }
@@ -303,7 +352,9 @@ export const SearchResultHeader = ({
                 className="rounded-xl border border-border bg-white px-3 py-2 text-left text-sm text-on-surface transition-all hover:border-primary/70 hover:bg-[#fff4f6]"
               >
                 <div className="font-semibold">{item.query}</div>
-                <div className="text-xs text-on-surface-subtle">{item.district || tSearch("tabs.location")}</div>
+                <div className="text-xs text-on-surface-subtle">
+                  {item.district || tSearch("tabs.location")}
+                </div>
               </button>
             ))}
           </div>
@@ -427,59 +478,73 @@ export const SearchResultHeader = ({
           </span>
 
           {/* Only render loading skeletons after client mount to avoid hydration mismatch */}
-          {isMounted && isDiscoveryLoading ? (
-            Array(4)
-              .fill(0)
-              .map((_, index) => (
-                <div key={index} className="h-10 w-24 bg-surface-container-low rounded-xl animate-pulse" />
-              ))
-          ) : (
-            trendKeywords.slice(0, 8).map((item, index) => {
-              const isSelected = query.trim().toLowerCase() === item.query.trim().toLowerCase();
-              const source = "source" in item ? item.source : "keyword";
-              const clickedSlug = "slug" in item && typeof item.slug === "string" ? item.slug : undefined;
-              const href = (source === "tour" || source === "location") && clickedSlug
-                ? (source === "tour" ? ROUTES.TOUR_DETAIL(clickedSlug) : ROUTES.LOCATION_DETAIL(clickedSlug))
-                : `${ROUTES.SEARCH}?q=${encodeURIComponent(item.query)}`;
+          {isMounted && isDiscoveryLoading
+            ? Array(4)
+                .fill(0)
+                .map((_, index) => (
+                  <div
+                    key={index}
+                    className="h-10 w-24 bg-surface-container-low rounded-xl animate-pulse"
+                  />
+                ))
+            : trendKeywords.slice(0, 8).map((item, index) => {
+                const isSelected =
+                  query.trim().toLowerCase() ===
+                  item.query.trim().toLowerCase();
+                const source = "source" in item ? item.source : "keyword";
+                const clickedSlug =
+                  "slug" in item && typeof item.slug === "string"
+                    ? item.slug
+                    : undefined;
+                const href =
+                  (source === "tour" || source === "location") && clickedSlug
+                    ? source === "tour"
+                      ? ROUTES.TOUR_DETAIL(clickedSlug)
+                      : ROUTES.LOCATION_DETAIL(clickedSlug)
+                    : `${ROUTES.SEARCH}?q=${encodeURIComponent(item.query)}`;
 
-              return (
-                <Link
-                  key={`${item.query}-${index}`}
-                  href={href as string & {}}
-                  onClick={() => {
-                    const clickedType = source === "tour" || source === "location" ? source : "keyword";
-                    void searchService.trackInteraction({
-                      event: "trending_click",
-                      query: item.query,
-                      type: "all",
-                      clicked_title: item.query,
-                      clicked_slug: clickedSlug,
-                      clicked_type: clickedType,
-                      source: "search_trending_chips",
-                      session_id: getOrCreateSessionId(),
-                    });
-                  }}
-                  className={cn(
-                    "flex scale-100 items-center gap-2 rounded-xl border px-5 py-2 text-sm font-black transition-all duration-300 hover:scale-105",
-                    isSelected
-                      ? "border-primary/20 bg-[#fff1f3] text-primary shadow-[0_10px_28px_rgba(255,56,92,0.12)]"
-                      : "border-border bg-[#fafafa] text-on-surface-subtle hover:border-primary/25 hover:bg-white hover:text-on-surface"
-                  )}
-                >
-                  {index < 2 && <IoFlashOutline className="text-amber-500" />}
-                  <span>{item.query}</span>
-                  <span
+                return (
+                  <Link
+                    key={`${item.query}-${index}`}
+                    href={href as string & {}}
+                    onClick={() => {
+                      const clickedType =
+                        source === "tour" || source === "location"
+                          ? source
+                          : "keyword";
+                      void searchService.trackInteraction({
+                        event: "trending_click",
+                        query: item.query,
+                        type: "all",
+                        clicked_title: item.query,
+                        clicked_slug: clickedSlug,
+                        clicked_type: clickedType,
+                        source: "search_trending_chips",
+                        session_id: getOrCreateSessionId(),
+                      });
+                    }}
                     className={cn(
-                      "rounded-full px-2 py-0.5 text-[10px]",
-                      isSelected ? "bg-primary/10 text-primary" : "bg-white text-on-surface-subtle"
+                      "flex scale-100 items-center gap-2 rounded-xl border px-5 py-2 text-sm font-black transition-all duration-300 hover:scale-105",
+                      isSelected
+                        ? "border-primary/20 bg-[#fff1f3] text-primary shadow-[0_10px_28px_rgba(255,56,92,0.12)]"
+                        : "border-border bg-[#fafafa] text-on-surface-subtle hover:border-primary/25 hover:bg-white hover:text-on-surface",
                     )}
                   >
-                    {item.count}
-                  </span>
-                </Link>
-              );
-            })
-          )}
+                    {index < 2 && <IoFlashOutline className="text-amber-500" />}
+                    <span>{item.query}</span>
+                    <span
+                      className={cn(
+                        "rounded-full px-2 py-0.5 text-[10px]",
+                        isSelected
+                          ? "bg-primary/10 text-primary"
+                          : "bg-white text-on-surface-subtle",
+                      )}
+                    >
+                      {item.count}
+                    </span>
+                  </Link>
+                );
+              })}
         </div>
       </div>
 
@@ -491,7 +556,9 @@ export const SearchResultHeader = ({
                   count,
                   query,
                   strong: (chunks: React.ReactNode) => (
-                    <strong className="text-on-surface font-semibold">{chunks}</strong>
+                    <strong className="text-on-surface font-semibold">
+                      {chunks}
+                    </strong>
                   ),
                 })
               : tSearch("discovery.subtitle")}

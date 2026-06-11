@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/utils/string";
 import Image from "next/image";
+import { Loading } from "@/components/ui";
 
 export function MyRatingsClient() {
   const t = useTranslations("ratings");
@@ -93,6 +94,7 @@ export function MyRatingsClient() {
 
   const isLoading = ratingsQuery.isLoading;
   const isError = ratingsQuery.isError;
+  const isFetching = ratingsQuery.isFetching;
 
   return (
     <div className="space-y-6">
@@ -103,7 +105,7 @@ export function MyRatingsClient() {
             {t("title")}
           </h1>
           <p className="text-sm font-medium text-on-surface-subtle">
-            {isLoading
+            {isLoading || isFetching
               ? "..."
               : t("header.count_single", { count: pagination.total })}
           </p>
@@ -125,7 +127,7 @@ export function MyRatingsClient() {
                   : "text-on-surface-subtle hover:text-on-surface"
               )}
             >
-              {t(`tabs.${tab}`, { count: active ? pagination.total : "..." })}
+              {t(`tabs.${tab}`, { count: active ? (isLoading || isFetching ? "..." : pagination.total) : "..." })}
             </button>
           );
         })}
@@ -184,7 +186,13 @@ export function MyRatingsClient() {
         </div>
       ) : (
         // Active Rating Card List
-        <div className="space-y-4">
+        <div className="relative min-h-[200px] space-y-4 animate-in fade-in duration-300">
+          {isFetching && !isLoading && (
+            <div className="absolute inset-0 z-10 flex items-center justify-center rounded-xl bg-white/60 backdrop-blur-[1px] transition-all duration-300">
+              <Loading type="spin" color="#FF385C" height={45} width={45} />
+            </div>
+          )}
+
           <div className="space-y-4">
             {listItems.map((rating) => (
               <RatingCard

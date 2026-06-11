@@ -6,6 +6,8 @@ import { useRouter } from "@/i18n/navigation";
 import { bookingSchema, type BookingFormValues } from "../validators/booking.schema";
 import { useBookingCalculate, useCreateBooking } from "../hooks/useBookingQueries";
 import { useCheckTourAvailability, useTourSchedules } from "../hooks/useTourDetail";
+import { useActivePromotions } from "../hooks/usePromotions";
+import { useUserVouchers } from "@/features/profile/hooks/usePointQueries";
 import { useAuthStore } from "@/store/auth.store";
 import { Input, Button, Textarea, Select } from "@/components/ui";
 import { BookingProgressSteps } from "./BookingProgressSteps";
@@ -22,6 +24,7 @@ import { usePayment } from "@/features/payment/hooks/usePayment";
 import { useAppConfig } from "@/hooks/use-app-config";
 import { formatPriceVND } from "@/utils/format";
 import { ROUTES } from "@/config";
+import { calculateTourPricing, getApplicablePromotionMatches } from "../utils/promotion-pricing";
 
 interface BookingFormProps {
   tour: Tour;
@@ -46,6 +49,7 @@ export function BookingForm({ tour }: BookingFormProps) {
   const initialAdults = searchParams.get("adults") ? Number(searchParams.get("adults")) : 1;
   const initialChildren = searchParams.get("children") ? Number(searchParams.get("children")) : 0;
   const initialInfants = searchParams.get("infants") ? Number(searchParams.get("infants")) : 0;
+  const initialPromoCode = searchParams.get("promo_code") || "";
   
   const [formData, setFormData] = useState<BookingFormValues>({
     tour_id: tour.id,
@@ -59,10 +63,13 @@ export function BookingForm({ tour }: BookingFormProps) {
     customer_phone: user?.phone || "",
     customer_address: user?.city || "",
     customer_note: "",
+    promotion_code: initialPromoCode,
+    user_voucher_code: "",
     agree_terms: false,
   });
 
   const [errors, setErrors] = useState<Partial<Record<keyof BookingFormValues, string>>>({});
+  const [isPromotionManuallyEdited, setIsPromotionManuallyEdited] = useState(Boolean(initialPromoCode));
   const [forceSchedulePicker, setForceSchedulePicker] = useState(false);
   const [selectPortalTarget, setSelectPortalTarget] = useState<HTMLElement | null>(null);
   const autoAdjustedKeyRef = useRef("");
@@ -76,6 +83,8 @@ export function BookingForm({ tour }: BookingFormProps) {
   const { isFocused, getFocusProps } = useFieldFocus<keyof BookingFormValues>();
 
   const { data: schedules = [] } = useTourSchedules(tour.id);
+  const { data: promotions = [] } = useActivePromotions();
+  const { data: userVouchers = [] } = useUserVouchers();
   const { mutate: calculate, data: priceData, isPending: isCalculating } = useBookingCalculate();
   const { mutate: createBooking, isPending: isCreating } = useCreateBooking();
   const {
@@ -86,7 +95,7 @@ export function BookingForm({ tour }: BookingFormProps) {
   } = useCheckTourAvailability(tour.id);
   const { createPayment, isCreating: isCreatingPayment } = usePayment();
 
-  const onlinePaymentMethods = ["sepay"] as const;
+  const onlinePaymentMethods = ["sepay", "bank_transfer"] as const;
 
   const availableSchedules = useMemo(
     () => schedules.filter(
@@ -123,11 +132,99 @@ export function BookingForm({ tour }: BookingFormProps) {
     }),
     [effectiveScheduleId, formData]
   );
+  const selectedSchedule = useMemo(
+    () => schedules.find(s => s.id === effectiveScheduleId),
+    [effectiveScheduleId, schedules]
+  );
+  const bookingPricing = useMemo(() => {
+    return calculateTourPricing({
+      adultPrice: Number(selectedSchedule?.price_adult ?? tour.price_adult ?? 0),
+      childPrice: Number(selectedSchedule?.price_child ?? tour.price_child ?? 0),
+      infantPrice: Number(selectedSchedule?.price_infant ?? tour.price_infant ?? 0),
+      discountPercent: Number(tour.discount_percent || 0),
+      adults: formData.quantity_adult,
+      children: formData.quantity_child,
+      infants: formData.quantity_infant,
+    });
+  }, [
+    formData.quantity_adult,
+    formData.quantity_child,
+    formData.quantity_infant,
+    selectedSchedule?.price_adult,
+    selectedSchedule?.price_child,
+    selectedSchedule?.price_infant,
+    tour.discount_percent,
+    tour.price_adult,
+    tour.price_child,
+    tour.price_infant,
+  ]);
+
+  const applicablePromotionMatches = useMemo(() => {
+    return getApplicablePromotionMatches(promotions, bookingPricing.subtotalAfterTourDiscount);
+  }, [
+    bookingPricing.subtotalAfterTourDiscount,
+    promotions,
+  ]);
+  const autoPromotionMatch = applicablePromotionMatches[0] ?? null;
+  const selectedPromotionDiscount =
+    applicablePromotionMatches.find(
+      (match) => match.promotion.code === formData.promotion_code
+    )?.discountAmount ?? 0;
+  const voucherDiscountBase = Math.max(
+    0,
+    bookingPricing.subtotalAfterTourDiscount - selectedPromotionDiscount
+  );
+  const applicableVoucherMatches = useMemo(() => {
+    return userVouchers
+      .filter(
+        (voucher) =>
+          voucher.status === "active" &&
+          bookingPricing.subtotalAfterTourDiscount >= Number(voucher.min_order_amount || 0)
+      )
+      .map((voucher) => {
+        const rawDiscount =
+          voucher.discount_type === "percent"
+            ? (voucherDiscountBase * Number(voucher.discount_value || 0)) / 100
+            : Number(voucher.discount_value || 0);
+        const cappedDiscount =
+          voucher.max_discount_amount !== null &&
+          voucher.max_discount_amount !== undefined
+            ? Math.min(rawDiscount, Number(voucher.max_discount_amount))
+            : rawDiscount;
+
+        return {
+          voucher,
+          discountAmount: Math.min(voucherDiscountBase, Math.max(0, cappedDiscount)),
+        };
+      })
+      .filter((match) => match.discountAmount > 0)
+      .sort((a, b) => b.discountAmount - a.discountAmount);
+  }, [
+    bookingPricing.subtotalAfterTourDiscount,
+    userVouchers,
+    voucherDiscountBase,
+  ]);
   const debouncedFormData = useDebounce(effectiveFormData, 400);
 
   useEffect(() => {
     setSelectPortalTarget(document.body);
   }, []);
+
+  useEffect(() => {
+    if (isPromotionManuallyEdited) {
+      return;
+    }
+
+    const nextPromotionCode = autoPromotionMatch?.promotion.code ?? "";
+    setFormData((prev) =>
+      prev.promotion_code === nextPromotionCode
+        ? prev
+        : {
+            ...prev,
+            promotion_code: nextPromotionCode,
+          }
+    );
+  }, [autoPromotionMatch?.promotion.code, isPromotionManuallyEdited]);
 
   useEffect(() => {
     if (debouncedFormData.tour_schedule_id) {
@@ -145,6 +242,8 @@ export function BookingForm({ tour }: BookingFormProps) {
         quantity_adult: debouncedFormData.quantity_adult,
         quantity_child: debouncedFormData.quantity_child,
         quantity_infant: debouncedFormData.quantity_infant,
+        promotion_code: debouncedFormData.promotion_code || undefined,
+        user_voucher_code: debouncedFormData.user_voucher_code || undefined,
       });
     }
   }, [
@@ -152,6 +251,8 @@ export function BookingForm({ tour }: BookingFormProps) {
     debouncedFormData.quantity_adult,
     debouncedFormData.quantity_child,
     debouncedFormData.quantity_infant,
+    debouncedFormData.promotion_code,
+    debouncedFormData.user_voucher_code,
     checkAvailability,
     calculate,
     tour.id
@@ -224,7 +325,23 @@ export function BookingForm({ tour }: BookingFormProps) {
       return;
     }
 
-    createBooking(effectiveFormData, {
+    const createBookingPayload = {
+      tour_id: effectiveFormData.tour_id,
+      tour_schedule_id: effectiveFormData.tour_schedule_id,
+      quantity_adult: effectiveFormData.quantity_adult,
+      quantity_child: effectiveFormData.quantity_child,
+      quantity_infant: effectiveFormData.quantity_infant,
+      customer_name: effectiveFormData.customer_name,
+      customer_email: effectiveFormData.customer_email,
+      customer_phone: effectiveFormData.customer_phone,
+      customer_address: effectiveFormData.customer_address || undefined,
+      customer_note: effectiveFormData.customer_note || undefined,
+      payment_method: effectiveFormData.payment_method,
+      promotion_code: effectiveFormData.promotion_code || undefined,
+      user_voucher_code: effectiveFormData.user_voucher_code || undefined,
+    };
+
+    createBooking(createBookingPayload, {
       onSuccess: (booking) => {
         const bookingCode = booking?.booking_code;
         const paymentResultUrl = bookingCode
@@ -251,7 +368,6 @@ export function BookingForm({ tour }: BookingFormProps) {
     });
   };
 
-  const selectedSchedule = schedules.find(s => s.id === effectiveScheduleId);
   const hasInvalidInitialSchedule = initialScheduleId > 0 && schedules.length > 0 && !selectedSchedule;
   const shouldShowSchedulePicker = forceSchedulePicker || !effectiveScheduleId || hasInvalidInitialSchedule;
   const selectedAvailableSeats = selectedSchedule
@@ -588,6 +704,24 @@ export function BookingForm({ tour }: BookingFormProps) {
         infants={formData.quantity_infant}
         calculation={priceData}
         isLoading={isCalculating}
+        promoCode={formData.promotion_code || ""}
+        promotionChoices={applicablePromotionMatches.map((match, index) => ({
+          code: match.promotion.code,
+          name: match.promotion.name,
+          discountAmount: match.discountAmount,
+          isBest: index === 0,
+        }))}
+        onPromoCodeChange={(code) => {
+          setIsPromotionManuallyEdited(true);
+          handleChange("promotion_code", code);
+        }}
+        voucherCode={formData.user_voucher_code || ""}
+        voucherChoices={applicableVoucherMatches.map((match) => ({
+          code: match.voucher.code,
+          name: match.voucher.name,
+          discountAmount: match.discountAmount,
+        }))}
+        onVoucherCodeChange={(code) => handleChange("user_voucher_code", code)}
       />
 
       <TermsAndPoliciesModal 

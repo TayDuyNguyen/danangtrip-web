@@ -9,13 +9,16 @@ import { Calendar, Users, InfoCircle } from "@/components/icons/solar";
 import { Button, Select, type SelectOption } from "@/components/ui";
 import { useTourSchedules, useCheckTourAvailability } from "@/features/tour/hooks/useTourDetail";
 import { useAddToCart } from "@/features/cart/hooks/useCartQueries";
+import { useActivePromotions } from "@/features/tour/hooks/usePromotions";
+import { calculateTourPricing, getApplicablePromotionMatches } from "@/features/tour/utils/promotion-pricing";
 import type { Tour } from "@/types";
 
 interface BookingSidebarProps {
   tour: Tour;
+  selectedPromotionCode?: string | null;
 }
 
-export default function BookingSidebar({ tour }: BookingSidebarProps) {
+export default function BookingSidebar({ tour, selectedPromotionCode }: BookingSidebarProps) {
   const t = useTranslations("tour");
   const td = useTranslations("tour.detail");
   const tb = useTranslations("tour.booking");
@@ -38,6 +41,7 @@ export default function BookingSidebar({ tour }: BookingSidebarProps) {
   );
 
   const { data: schedules = [], isLoading: loadingSchedules } = useTourSchedules(tour.id);
+  const { data: promotions = [] } = useActivePromotions();
   const { mutate: checkAvailability, data: availability, isPending: checking } = useCheckTourAvailability(tour.id);
   const { mutate: addToCart, isPending: addingToCart } = useAddToCart();
 
@@ -95,7 +99,30 @@ export default function BookingSidebar({ tour }: BookingSidebarProps) {
     );
   };
 
-  const totalAmount = adults * adultDiscounted + children * parseFloat(tour.price_child);
+  const pricing = calculateTourPricing({
+    adultPrice,
+    childPrice: parseFloat(tour.price_child),
+    infantPrice: parseFloat(tour.price_infant),
+    discountPercent,
+    adults,
+    children,
+    infants: 0,
+  });
+  const applicablePromotions = getApplicablePromotionMatches(promotions, pricing.subtotalAfterTourDiscount);
+  const selectedPromotion =
+    applicablePromotions.find((match) => match.promotion.code === selectedPromotionCode) ?? applicablePromotions[0];
+  const couponDiscount = selectedPromotion?.discountAmount ?? 0;
+  const totalAmount = Math.max(0, pricing.subtotalAfterTourDiscount - couponDiscount);
+  const bookingUrlParams = new URLSearchParams();
+  if (selectedScheduleId) {
+    bookingUrlParams.set("tour_schedule_id", String(selectedScheduleId));
+    bookingUrlParams.set("adults", String(adults));
+    bookingUrlParams.set("children", String(children));
+    if (selectedPromotion?.promotion.code) {
+      bookingUrlParams.set("promo_code", selectedPromotion.promotion.code);
+    }
+  }
+  const bookingHref = `/tours/${tour.slug}/book${bookingUrlParams.toString() ? `?${bookingUrlParams.toString()}` : ""}`;
 
   return (
     <div id="booking-cta" className="sticky top-28 space-y-6 reveal-up" style={{ animationDelay: "150ms" }}>
@@ -195,7 +222,7 @@ export default function BookingSidebar({ tour }: BookingSidebarProps) {
               <span className="flex items-center gap-1.5">
                 {adults} x {td("price_adult")}
               </span>
-              <span className="font-medium tabular-nums text-on-surface">{formatPriceVND(adults * adultDiscounted, priceLocale)}</span>
+              <span className="font-medium tabular-nums text-on-surface">{formatPriceVND(adults * adultPrice, priceLocale)}</span>
             </div>
 
             {children > 0 && (
@@ -206,6 +233,20 @@ export default function BookingSidebar({ tour }: BookingSidebarProps) {
                 <span className="font-medium tabular-nums text-on-surface">
                   {formatPriceVND(children * parseFloat(tour.price_child), priceLocale)}
                 </span>
+              </div>
+            )}
+
+            {pricing.tourDiscount > 0 && (
+              <div className="flex justify-between gap-4 text-red-500">
+                <span>Khuyến mãi tour</span>
+                <span className="font-medium tabular-nums">-{formatPriceVND(pricing.tourDiscount, priceLocale)}</span>
+              </div>
+            )}
+
+            {selectedPromotion && (
+              <div className="flex justify-between gap-4 text-green-600">
+                <span>Mã {selectedPromotion.promotion.code}</span>
+                <span className="font-medium tabular-nums">-{formatPriceVND(couponDiscount, priceLocale)}</span>
               </div>
             )}
 
@@ -232,7 +273,7 @@ export default function BookingSidebar({ tour }: BookingSidebarProps) {
             )}
 
             <Link
-              href={`/tours/${tour.slug}/book${selectedScheduleId ? `?tour_schedule_id=${selectedScheduleId}&adults=${adults}&children=${children}` : ""}`}
+              href={bookingHref}
               className="block"
               onClick={(event) => {
                 if (selectedScheduleId === "") {

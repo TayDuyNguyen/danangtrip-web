@@ -40,12 +40,12 @@ const Hero = () => {
 
   const { suggestions, isLoading, isError, isEnabled } = useSearchSuggestions(
     searchQuery,
-    String(searchType.value)
+    String(searchType.value),
   );
 
   const flatSuggestions: SearchSuggestionItem[] = [];
   if (suggestions) {
-    flatSuggestions.push(...suggestions.keywords, ...suggestions.locations, ...suggestions.tours);
+    flatSuggestions.push(...suggestions.locations, ...suggestions.tours);
   }
   const totalItems = flatSuggestions.length;
 
@@ -56,7 +56,9 @@ const Hero = () => {
   const handleSearch = () => {
     const normalizedQuery = searchQuery.trim();
     setIsDropdownOpen(false);
-    router.push(`${ROUTES.SEARCH}?q=${encodeURIComponent(normalizedQuery)}&type=${searchType.value}`);
+    router.push(
+      `${ROUTES.SEARCH}?q=${encodeURIComponent(normalizedQuery)}&type=${searchType.value}`,
+    );
   };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -66,21 +68,20 @@ const Hero = () => {
 
   const handleSelectSuggestion = (item: SearchSuggestionItem) => {
     setIsDropdownOpen(false);
-    if (item.type === "tour") {
-      router.push(ROUTES.TOUR_DETAIL(item.slug));
-    } else if (item.type === "location") {
-      router.push(ROUTES.LOCATION_DETAIL(item.slug));
-    } else {
-      router.push(
-        `${ROUTES.SEARCH}?q=${encodeURIComponent(item.title)}&type=all`
-      );
-    }
+    router.push(
+      `${ROUTES.SEARCH}?q=${encodeURIComponent(item.title)}&type=${item.type}`,
+    );
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      if (isDropdownOpen && isEnabled && selectedIndex >= 0 && selectedIndex < totalItems) {
+      if (
+        isDropdownOpen &&
+        isEnabled &&
+        selectedIndex >= 0 &&
+        selectedIndex < totalItems
+      ) {
         handleSelectSuggestion(flatSuggestions[selectedIndex]);
         return;
       }
@@ -122,7 +123,7 @@ const Hero = () => {
             <div className="max-w-3xl">
               <div className="inline-flex items-center gap-2 rounded-full border border-white/22 bg-white/12 px-4 py-2 text-[12px] font-semibold text-white/92 backdrop-blur-md">
                 <IoFlashOutline className="text-[14px]" />
-                {t("home.hero_airbnb_badge")}
+                {t("home.hero_badge")}
               </div>
 
               <h1 className="mt-6 max-w-2xl text-[38px] font-semibold leading-[1.05] tracking-normal text-white sm:text-[52px] lg:text-[66px]">
@@ -145,7 +146,9 @@ const Hero = () => {
                       <IoLocationOutline className="text-[18px]" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="text-[12px] font-semibold text-on-surface">{t("home.hero_where_label")}</p>
+                      <p className="text-[12px] font-semibold text-on-surface">
+                        {t("home.hero_where_label")}
+                      </p>
                       <input
                         type="text"
                         value={searchQuery}
@@ -156,7 +159,8 @@ const Hero = () => {
                           setIsDropdownOpen(value.trim().length >= 2);
                         }}
                         onFocus={() => {
-                          if (searchQuery.trim().length >= 2) setIsDropdownOpen(true);
+                          if (searchQuery.trim().length >= 2)
+                            setIsDropdownOpen(true);
                         }}
                         onKeyDown={handleKeyDown}
                         placeholder={t("home.search_placeholder")}
@@ -167,7 +171,9 @@ const Hero = () => {
                   </div>
 
                   <div className="rounded-[26px] border border-[#ebebeb] px-5 py-3 transition-colors hover:bg-[#f7f7f7] lg:min-h-[72px] lg:rounded-full lg:border-l lg:border-y-0 lg:border-r-0">
-                    <p className="mb-1 text-[12px] font-semibold text-on-surface">{t("home.hero_type_label")}</p>
+                    <p className="mb-1 text-[12px] font-semibold text-on-surface">
+                      {t("home.hero_type_label")}
+                    </p>
                     <Select
                       variant="minimal"
                       options={searchOptions}
@@ -226,7 +232,8 @@ const Hero = () => {
                   <div className="flex items-center gap-3 rounded-full border border-white/16 bg-white/10 px-4 py-2 text-[13px] backdrop-blur-md">
                     <span className="text-lg">{weather.icon || "☀️"}</span>
                     <span>
-                      {weather.temp}°C · {t(`home.weather.${weather.condition}`)}
+                      {weather.temp}°C ·{" "}
+                      {t(`home.weather.${weather.condition}`)}
                     </span>
                   </div>
                 )}
@@ -243,7 +250,9 @@ const Hero = () => {
                 <button
                   key={sceneNum}
                   className={`h-2.5 rounded-full transition-all duration-300 ${
-                    activeScene === sceneNum ? "w-8 bg-white" : "w-2.5 bg-white/45"
+                    activeScene === sceneNum
+                      ? "w-8 bg-white"
+                      : "w-2.5 bg-white/45"
                   }`}
                   aria-label={`Slide ${sceneNum}`}
                   suppressHydrationWarning

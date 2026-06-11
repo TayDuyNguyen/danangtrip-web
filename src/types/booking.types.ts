@@ -11,6 +11,8 @@ export interface BookingQuantityPayload {
   quantity_adult: number;
   quantity_child?: number | null;
   quantity_infant?: number | null;
+  promotion_code?: string;
+  user_voucher_code?: string;
 }
 
 export interface CreateBookingPayload extends BookingQuantityPayload {
@@ -98,10 +100,30 @@ export interface BookingCalculation {
     infant: { quantity: number; unit_price: number | string; subtotal: number | string };
   };
   total_amount: number | string;
+  tour_discount?: number | string;
+  promotion_discount?: number | string;
+  voucher_discount?: number | string;
+  coupon_discount?: number | string;
   discount_amount?: number | string;
   final_amount: number | string;
   deposit_amount?: number | string;
   available_seats?: number;
+  applied_promotion?: {
+    id: number;
+    code: string;
+    name: string;
+    discount_type: "percent" | "fixed";
+    discount_value: string | number;
+    coupon_discount_amount: number;
+  } | null;
+  applied_user_voucher?: {
+    id: number;
+    code: string;
+    name: string;
+    discount_type: "percent" | "fixed";
+    discount_value: string | number;
+    voucher_discount_amount: number;
+  } | null;
 }
 
 export interface CancelBookingPayload {

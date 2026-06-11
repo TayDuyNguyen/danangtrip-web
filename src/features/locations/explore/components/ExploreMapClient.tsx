@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
@@ -61,6 +62,9 @@ export default function ExploreMapClient({
 }) {
   const t = useTranslations("locations");
   const tExploreCategories = useTranslations("locations.explore.categories");
+  const searchParams = useSearchParams();
+  const focusId = searchParams.get("location_id") ? Number(searchParams.get("location_id")) : null;
+
   const [search, setSearch] = useState("");
   const [mapMode, setMapMode] = useState<MapMode>(initialMode);
   const [selectedCategorySlug, setSelectedCategorySlug] = useState("all");
@@ -89,6 +93,8 @@ export default function ExploreMapClient({
     setIsHydrated(true);
   }, []);
 
+
+
   useEffect(() => {
     if (isHydrated && mapMode === "nearby" && gpsStatus === "idle") {
       requestGPS();
@@ -115,6 +121,17 @@ export default function ExploreMapClient({
   });
 
   const baseLocations = mapMode === "nearby" ? nearbyLocations : exploreLocations;
+
+  useEffect(() => {
+    if (focusId && baseLocations.length > 0) {
+      const target = baseLocations.find((loc) => loc.id === focusId);
+      if (target) {
+        setSelectedLocation(target);
+        setMapFocusNonce((current) => current + 1);
+      }
+    }
+  }, [focusId, baseLocations]);
+
   const showListLoading =
     !isHydrated ||
     (mapMode === "explore" ? isExploreLoading : isNearbyLoading || gpsStatus === "requesting");

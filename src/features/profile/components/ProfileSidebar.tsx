@@ -6,12 +6,14 @@ import { useTranslations, useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { useAuthStore } from "@/features/auth";
 import { PROTECTED_ROUTES } from "@/config/routes";
+import { useAppStore } from "@/store/app.store";
 import {
   User,
   Lock,
   BookOpen,
   Heart,
   Bell,
+  Coins,
   Sparkles,
   Star,
   Trash2,
@@ -58,6 +60,12 @@ const SIDEBAR_ITEMS: SidebarItem[] = [
     icon: BookOpen,
   },
   {
+    key: "points",
+    labelKey: "sidebar.points",
+    href: PROTECTED_ROUTES.POINTS,
+    icon: Coins,
+  },
+  {
     key: "favorites",
     labelKey: "sidebar.favorites",
     href: PROTECTED_ROUTES.FAVORITES,
@@ -82,6 +90,7 @@ export function ProfileSidebar() {
   const pathname = usePathname();
   const locale = useLocale();
   const t = useTranslations("settings");
+  const { setLoading } = useAppStore();
 
   /**
    * Strip locale prefix to get the base path for matching
@@ -141,6 +150,11 @@ export function ProfileSidebar() {
             <Link
               key={item.key}
               href={item.href}
+              onClick={() => {
+                if (!active) {
+                  setLoading(true);
+                }
+              }}
               aria-current={active ? "page" : undefined}
               className={cn(
                 "flex items-center gap-3 px-5 py-3.5 text-sm font-medium transition-all duration-200 relative group",

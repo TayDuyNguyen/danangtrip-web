@@ -13,6 +13,9 @@ import type {
 
 export const bookingService = {
   calculate: (data: BookingQuantityPayload): Promise<ApiResponse<BookingCalculation>> =>
+    axiosInstance.post(API_ENDPOINTS.BOOKINGS.USER_CALCULATE, data),
+
+  calculatePublic: (data: BookingQuantityPayload): Promise<ApiResponse<BookingCalculation>> =>
     axiosInstance.post(API_ENDPOINTS.BOOKINGS.CALCULATE, data),
 
   create: (data: CreateBookingPayload): Promise<ApiResponse<Booking>> =>

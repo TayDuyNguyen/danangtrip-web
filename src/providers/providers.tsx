@@ -9,8 +9,9 @@ import { shouldRetryQuery } from "@/lib/react-query";
 import { LocaleHtmlLang } from "@/components/providers/LocaleHtmlLang";
 
 const CartSync = dynamic(
-  () => import("@/features/cart/components/CartSync").then((mod) => mod.CartSync),
-  { ssr: false }
+  () =>
+    import("@/features/cart/components/CartSync").then((mod) => mod.CartSync),
+  { ssr: false },
 );
 
 interface ProvidersProps {
@@ -20,13 +21,11 @@ interface ProvidersProps {
 }
 
 export function Providers({ children, locale, messages }: ProvidersProps) {
-  const isBrowser = typeof window !== "undefined";
   const [queryClient] = useState(
     () =>
       new QueryClient({
         defaultOptions: {
           queries: {
-            enabled: isBrowser,
             staleTime: 60 * 1000,
             retry: shouldRetryQuery,
             refetchOnWindowFocus: false,
@@ -34,12 +33,16 @@ export function Providers({ children, locale, messages }: ProvidersProps) {
             refetchOnReconnect: false,
           },
         },
-      })
+      }),
   );
 
   return (
     <QueryClientProvider client={queryClient}>
-      <NextIntlClientProvider locale={locale} messages={messages} timeZone="Asia/Ho_Chi_Minh">
+      <NextIntlClientProvider
+        locale={locale}
+        messages={messages}
+        timeZone="Asia/Ho_Chi_Minh"
+      >
         <LocaleHtmlLang />
         <CartSync />
         {children}

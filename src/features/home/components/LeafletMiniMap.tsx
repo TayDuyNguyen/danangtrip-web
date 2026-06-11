@@ -2,6 +2,12 @@
 
 import { useEffect, useRef } from "react";
 import L from "leaflet";
+import { useTranslations } from "next-intl";
+import { SOVEREIGNTY_MARKERS } from "@/features/locations/explore/constants/sovereignty-markers";
+import {
+  createSovereigntyMarkerIcon,
+  buildSovereigntyPopupHtml,
+} from "@/features/locations/explore/utils/sovereignty-marker-icon";
 import "leaflet/dist/leaflet.css";
 
 const MAP_MARKERS = [
@@ -28,6 +34,7 @@ const createCustomIcon = (name: string) =>
   });
 
 export default function LeafletMiniMap() {
+  const t = useTranslations("locations");
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
 
@@ -43,8 +50,8 @@ export default function LeafletMiniMap() {
       dragging: true,
     }).setView([16.0544, 108.15], 10);
 
-    // CartoDB Dark Matter tile layer matches the premium dark UI perfectly!
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+    // OpenStreetMap tile layer matches the standard map page style
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       maxZoom: 18,
     }).addTo(map);
 
@@ -54,6 +61,27 @@ export default function LeafletMiniMap() {
       })
         .addTo(map)
         .bindPopup(marker.name);
+    });
+
+    SOVEREIGNTY_MARKERS.forEach((point) => {
+      const label = point.id === "hoangSa" ? {
+        title: t("explore.sovereignty.hoang_sa_title"),
+        claim: t("explore.sovereignty.hoang_sa_claim"),
+      } : {
+        title: t("explore.sovereignty.truong_sa_title"),
+        claim: t("explore.sovereignty.truong_sa_claim"),
+      };
+
+      L.marker([point.lat, point.lng], {
+        icon: createSovereigntyMarkerIcon(label.title, label.claim),
+        zIndexOffset: 1200,
+        interactive: true,
+      })
+        .bindPopup(
+          buildSovereigntyPopupHtml(label.title, label.claim),
+          { maxWidth: 260, className: "explore-sovereignty-popup-wrapper" }
+        )
+        .addTo(map);
     });
 
     mapRef.current = map;
@@ -73,7 +101,7 @@ export default function LeafletMiniMap() {
       map.remove();
       mapRef.current = null;
     };
-  }, []);
+  }, [t]);
 
   return (
     <div className="w-full h-full relative home-mini-map-leaflet">
@@ -83,15 +111,15 @@ export default function LeafletMiniMap() {
         .home-mini-map-leaflet .leaflet-container {
           height: 100%;
           width: 100%;
-          background: #080808 !important;
+          background: #f7f7f7 !important;
           border-radius: 12px;
         }
         
         .home-mini-map-leaflet .leaflet-bar {
-          border: 1px solid #262626 !important;
+          border: 1px solid #e7e7e7 !important;
           border-radius: 6px !important;
           overflow: hidden;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+          box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08) !important;
           margin-top: 8px !important;
           margin-left: 8px !important;
         }
@@ -100,17 +128,99 @@ export default function LeafletMiniMap() {
           width: 24px !important;
           height: 24px !important;
           line-height: 22px !important;
-          background: #111111 !important;
-          color: #d4d4d4 !important;
-          border-bottom: 1px solid #262626 !important;
+          background: rgba(255, 255, 255, 0.95) !important;
+          color: #1f2937 !important;
+          border-bottom: 1px solid #ececec !important;
           font-size: 14px !important;
           font-weight: 900 !important;
           transition: all 0.2s;
         }
 
         .home-mini-map-leaflet .leaflet-bar a:hover {
-          background: #ff385c !important;
-          color: #ffffff !important;
+          background: #fff1f3 !important;
+          color: #ff385c !important;
+        }
+
+        .explore-sovereignty-marker {
+          background: transparent !important;
+          border: none !important;
+        }
+        .explore-sovereignty-marker__wrap {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 6px;
+          width: 168px;
+        }
+        .explore-sovereignty-marker__flag {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 42px;
+          height: 42px;
+          border-radius: 9999px;
+          border: 2px solid #ffffff;
+          background: #ffffff;
+          box-shadow: 0 8px 24px rgba(15, 23, 42, 0.22);
+        }
+        .explore-sovereignty-marker__label {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 2px;
+          padding: 6px 10px;
+          border-radius: 12px;
+          border: 1px solid #fecdd3;
+          background: rgba(255, 255, 255, 0.96);
+          box-shadow: 0 10px 24px rgba(15, 23, 42, 0.14);
+          text-align: center;
+        }
+        .explore-sovereignty-marker__label strong {
+          font-size: 11px;
+          line-height: 1.3;
+          font-weight: 800;
+          color: #da251d;
+        }
+        .explore-sovereignty-marker__label span {
+          font-size: 10px;
+          line-height: 1.3;
+          font-weight: 700;
+          color: #334155;
+        }
+        .explore-sovereignty-popup-wrapper .leaflet-popup-content-wrapper {
+          border-radius: 14px;
+          border: 1px solid #fecdd3;
+          box-shadow: 0 12px 32px rgba(15, 23, 42, 0.16);
+        }
+        .explore-sovereignty-popup {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 8px;
+          padding: 4px 2px;
+          text-align: center;
+        }
+        .explore-sovereignty-popup__flag {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 48px;
+          height: 48px;
+          border-radius: 9999px;
+          border: 2px solid #fecdd3;
+          background: #fff7f8;
+        }
+        .explore-sovereignty-popup__title {
+          margin: 0;
+          font-size: 14px;
+          font-weight: 800;
+          color: #da251d;
+        }
+        .explore-sovereignty-popup__claim {
+          margin: 0;
+          font-size: 12px;
+          font-weight: 700;
+          color: #334155;
         }
       `}</style>
     </div>

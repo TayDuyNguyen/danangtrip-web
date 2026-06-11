@@ -5,6 +5,9 @@ import { Link } from "@/i18n/navigation";
 import { ChevronRight, Home } from "lucide-react";
 import { ProfileSidebar } from "./ProfileSidebar";
 import { ProfileMobileNav } from "./ProfileMobileNav";
+import { useAppStore } from "@/store/app.store";
+import { Loading } from "@/components/ui";
+import { useEffect } from "react";
 
 interface BreadcrumbItem {
   /** Translation key relative to 'settings.breadcrumb' namespace */
@@ -23,6 +26,12 @@ export function ProfileLayoutWrapper({
   breadcrumbs,
 }: ProfileLayoutWrapperProps) {
   const t = useTranslations("settings");
+  const { isLoading, setLoading } = useAppStore();
+
+  useEffect(() => {
+    // Navigation finished, turn off page loading
+    setLoading(false);
+  }, [breadcrumbs, setLoading]);
 
   return (
     <div className="mx-auto w-full max-w-6xl overflow-hidden px-0 py-8 sm:px-4 sm:py-10">
@@ -72,7 +81,12 @@ export function ProfileLayoutWrapper({
         </div>
 
         {/* Main content */}
-        <main className="w-full min-w-0 max-w-full flex-1 reveal-up reveal-delay-200">
+        <main className="relative w-full min-w-0 max-w-full flex-1 reveal-up reveal-delay-200 min-h-[300px]">
+          {isLoading && (
+            <div className="absolute inset-0 z-50 flex items-center justify-center rounded-xl bg-white/60 backdrop-blur-[1px] transition-all duration-300">
+              <Loading type="spin" color="#FF385C" height={45} width={45} />
+            </div>
+          )}
           {children}
         </main>
       </div>

@@ -7,6 +7,8 @@ export function useNotificationsQuery(params?: NotificationListParams) {
     queryKey: ["notifications", "list", params],
     queryFn: () => notificationService.list(params).then((res) => res.data),
     staleTime: 30 * 1000, // 30 seconds cache stability
+    refetchInterval: 30 * 1000,
+    refetchIntervalInBackground: false,
   });
 }
 
@@ -15,5 +17,7 @@ export function useUnreadCountQuery() {
     queryKey: ["notifications", "unread-count"],
     queryFn: () => notificationService.unreadCount().then((res) => res.data),
     staleTime: 10 * 1000, // 10 seconds cache stability
+    refetchInterval: 30 * 1000,
+    refetchIntervalInBackground: false,
   });
 }

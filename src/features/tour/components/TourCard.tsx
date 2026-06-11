@@ -10,6 +10,7 @@ import { ROUTES } from "@/config";
 import RatingStars from "@/components/ui/RatingStars";
 import { cn } from "@/lib/utils";
 import { formatPriceVND } from "@/utils/format";
+import { useActivePromotions } from "@/features/tour/hooks/usePromotions";
 
 interface TourCardProps {
   tour: Tour;
@@ -25,6 +26,12 @@ const TourCard = ({ tour, className, index = 0 }: TourCardProps) => {
   const discountPercent = tour.discount_percent;
   const originalPrice = parseFloat(tour.price_adult);
   const discountedPrice = originalPrice * (1 - discountPercent / 100);
+
+  const { data: promotions } = useActivePromotions();
+  const applicablePromotions = promotions?.filter((promo) => {
+    const minOrder = promo.min_order_amount ? parseFloat(promo.min_order_amount.toString()) : 0;
+    return discountedPrice >= minOrder && promo.status === "active";
+  }) || [];
 
   const isPlaceholder = (url?: string | null) => {
     if (!url) return true;
@@ -108,6 +115,28 @@ const TourCard = ({ tour, className, index = 0 }: TourCardProps) => {
           <div className="mt-auto flex items-center justify-between">
             <RatingStars rating={parseFloat(tour.avg_rating)} count={tour.review_count} size="sm" showText />
           </div>
+
+          {applicablePromotions.length > 0 && (
+            <div className="mt-3 flex flex-wrap gap-1.5">
+              {applicablePromotions.slice(0, 2).map((promo) => (
+                <div
+                  key={promo.id}
+                  className="inline-flex items-center gap-1 rounded-md bg-primary/5 px-2 py-0.5 text-[10px] md:text-[11px] font-semibold text-primary border border-primary/10"
+                  title={promo.description || promo.name}
+                >
+                  <span>🎫 {promo.code}</span>
+                  <span className="text-on-surface-subtle font-normal">
+                    ({promo.discount_type === "percent" ? `-${promo.discount_value}%` : `-${formatPriceVND(parseFloat(promo.discount_value.toString()), priceLocale)}`})
+                  </span>
+                </div>
+              ))}
+              {applicablePromotions.length > 2 && (
+                <span className="text-[10px] md:text-[11px] text-on-surface-subtle self-center font-medium">
+                  +{applicablePromotions.length - 2}
+                </span>
+              )}
+            </div>
+          )}
 
           <div className="my-4 h-px bg-border" />
 

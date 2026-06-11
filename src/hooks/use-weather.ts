@@ -3,7 +3,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { weatherService } from "@/services/weather.service";
 import type { Weather } from "@/types";
-import { shouldRetryQuery } from "@/lib/react-query";
 import { getApiErrorMessage } from "@/utils";
 
 /**
@@ -20,7 +19,7 @@ export const useWeather = () => {
       throw res;
     },
     staleTime: 5 * 60 * 1000,
-    retry: shouldRetryQuery,
+    retry: false,
   });
 
   const weather: Weather | null = query.data ?? null;
@@ -28,7 +27,9 @@ export const useWeather = () => {
   return {
     weather,
     isLoading: query.isLoading,
-    error: query.error ? getApiErrorMessage(query.error, "Weather load failed") : null,
+    error: query.error
+      ? getApiErrorMessage(query.error, "Weather load failed")
+      : null,
     refresh: () => query.refetch(),
   };
 };

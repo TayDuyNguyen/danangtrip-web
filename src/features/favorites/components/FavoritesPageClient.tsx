@@ -4,7 +4,7 @@ import React, { useState, useMemo } from "react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { InfoCircle } from "@/components/icons/solar";
-import { Button } from "@/components/ui";
+import { Button, Loading } from "@/components/ui";
 import { StandardPagination } from "@/components/ui/pagination";
 
 import { FavoritesPageHeader } from "./FavoritesPageHeader";
@@ -28,11 +28,14 @@ export function FavoritesPageClient() {
   const [page, setPage] = useState<number>(1);
   const perPage = 12;
 
+  // Track client-side transition loading
+  const [isClientTransitioning, setIsClientTransitioning] = useState(false);
+
   // Track optimistically removing location IDs
   const [removingIds, setRemovingIds] = useState<number[]>([]);
 
   // Fetch data (per_page: 100 for client-side sorting and paging)
-  const { data: favoritesResponse, isLoading, isError, refetch } = useFavoritesQuery({
+  const { data: favoritesResponse, isLoading, isFetching, isError, refetch } = useFavoritesQuery({
     per_page: 100,
   });
 
@@ -91,13 +94,23 @@ export function FavoritesPageClient() {
   }, [sortedItems, currentPage]);
 
   const handleSortChange = (newSort: "newest" | "oldest" | "name_asc" | "rating_desc") => {
+    setIsClientTransitioning(true);
     setSort(newSort);
     setPage(1);
+    setTimeout(() => setIsClientTransitioning(false), 300);
   };
 
   const handlePageChange = (newPage: number) => {
+    setIsClientTransitioning(true);
     setPage(newPage);
     window.scrollTo({ top: 0, behavior: "smooth" });
+    setTimeout(() => setIsClientTransitioning(false), 350);
+  };
+
+  const handleViewChange = (newView: "grid" | "list") => {
+    setIsClientTransitioning(true);
+    setView(newView);
+    setTimeout(() => setIsClientTransitioning(false), 250);
   };
 
   // Optimistic delete and undo handler
@@ -155,7 +168,7 @@ export function FavoritesPageClient() {
       {validItems.length > 0 && (
         <div className="flex flex-col items-center justify-between gap-4 rounded-[20px] border border-border bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.08)] md:flex-row">
           <FavoritesSortSelect value={sort} onChange={handleSortChange} />
-          <FavoritesViewToggle view={view} onChange={setView} />
+          <FavoritesViewToggle view={view} onChange={handleViewChange} />
         </div>
       )}
 
@@ -175,43 +188,53 @@ export function FavoritesPageClient() {
         </div>
       ) : isLoading ? (
         <FavoritesSkeleton view={view} />
-      ) : visibleItems.length === 0 ? (
-        <FavoritesEmptyState />
       ) : (
-        <div className="space-y-8">
-          {view === "grid" ? (
-            <FavoriteCardGrid>
-              {paginatedItems.map((item) => (
-                <FavoriteCardItem
-                  key={item.id}
-                  item={item}
-                  onRemove={handleRemove}
-                  isRemoving={removingIds.includes(item.location_id || 0)}
-                />
-              ))}
-            </FavoriteCardGrid>
-          ) : (
-            <div className="space-y-4">
-              {paginatedItems.map((item) => (
-                <FavoriteListItem
-                  key={item.id}
-                  item={item}
-                  onRemove={handleRemove}
-                  isRemoving={removingIds.includes(item.location_id || 0)}
-                />
-              ))}
+        <div className="relative min-h-[250px] space-y-8">
+          {(isFetching || isClientTransitioning) && !isLoading && (
+            <div className="absolute inset-0 z-10 flex items-center justify-center rounded-xl bg-white/60 backdrop-blur-[1px] transition-all duration-300">
+              <Loading type="spin" color="#FF385C" height={45} width={45} />
             </div>
           )}
 
-          {/* Pagination Controls */}
-          {totalPages > 1 && (
-            <div className="pt-4 flex justify-center">
-              <StandardPagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={handlePageChange}
-              />
-            </div>
+          {visibleItems.length === 0 ? (
+            <FavoritesEmptyState />
+          ) : (
+            <>
+              {view === "grid" ? (
+                <FavoriteCardGrid>
+                  {paginatedItems.map((item) => (
+                    <FavoriteCardItem
+                      key={item.id}
+                      item={item}
+                      onRemove={handleRemove}
+                      isRemoving={removingIds.includes(item.location_id || 0)}
+                    />
+                  ))}
+                </FavoriteCardGrid>
+              ) : (
+                <div className="space-y-4">
+                  {paginatedItems.map((item) => (
+                    <FavoriteListItem
+                      key={item.id}
+                      item={item}
+                      onRemove={handleRemove}
+                      isRemoving={removingIds.includes(item.location_id || 0)}
+                    />
+                  ))}
+                </div>
+              )}
+
+              {/* Pagination Controls */}
+              {totalPages > 1 && (
+                <div className="pt-4 flex justify-center">
+                  <StandardPagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                  />
+                </div>
+              )}
+            </>
           )}
         </div>
       )}
