@@ -7,6 +7,7 @@ import { IoStar, IoLocationOutline, IoTimeOutline } from "@/components/icons/sol
 import { cn } from "@/utils/string";
 import { ROUTES } from "@/config";
 import { SearchResult, TourSearchResult, LocationSearchResult } from "../types/search.types";
+import { formatLocationPriceRange } from "@/utils/format";
 
 interface SearchResultCardProps {
   item?: SearchResult;
@@ -21,6 +22,13 @@ export const SearchResultCard = ({ item, isLoading, featured, index, onClick }: 
   const locale = useLocale();
   const isTour = item?.type === "tour";
   const url = isTour ? ROUTES.TOUR_DETAIL(item?.slug || "") : ROUTES.LOCATION_DETAIL(item?.slug || "");
+
+  const { displayPrice, isFreeOrUnspecified } = !isTour && item ? formatLocationPriceRange(
+    (item as LocationSearchResult).originalData?.price_min,
+    (item as LocationSearchResult).originalData?.price_max,
+    (key) => t(`locations.${key}` as Parameters<typeof t>[0]),
+    locale === "vi" ? "vi-VN" : "en-US"
+  ) : { displayPrice: "", isFreeOrUnspecified: false };
 
   if (isLoading || !item) {
     return (
@@ -157,19 +165,14 @@ export const SearchResultCard = ({ item, isLoading, featured, index, onClick }: 
               </div>
             ) : (
               <div className="flex flex-col">
-                <span className="mb-1 block text-xs font-semibold uppercase tracking-normal text-on-surface-subtle">
-                  {t("search.card.price_level")}
+                {!isFreeOrUnspecified && (
+                  <span className="mb-1 block text-xs font-semibold uppercase tracking-normal text-on-surface-subtle">
+                    {t("locations.price.from")}
+                  </span>
+                )}
+                <span className={cn("font-semibold text-primary", featured ? "text-2xl" : "text-[18px]")}>
+                  {displayPrice}
                 </span>
-                <div className="flex gap-0.5 text-[18px] font-semibold tracking-normal text-primary">
-                  {Array.from({ length: 4 }).map((_, level) => (
-                    <span
-                      key={level}
-                      className={level < ((item as LocationSearchResult).priceLevel || 1) ? "text-primary" : "text-on-surface-subtle/30"}
-                    >
-                      $
-                    </span>
-                  ))}
-                </div>
               </div>
             )}
           </div>

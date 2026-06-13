@@ -62,6 +62,7 @@
   "price": {
     "from": "From",
     "free": "Free",
+    "unspecified": "Not updated",
     "budget": "Budget ($)",
     "mid_range": "Mid-range ($$)",
     "high_end": "High-end ($$$)"
@@ -80,7 +81,7 @@
     "share": "Share",
     "save": "Favorite",
     "book_now": "Book Now",
-    "contact_consultancy": "Contact Consultancy",
+    "contact_consultancy": "Ask ChatBot",
     "price_label": "Reference price",
     "price_per_person": "/ person",
     "free": "Free",

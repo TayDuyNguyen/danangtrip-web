@@ -12,6 +12,7 @@ import { useAddToCart } from "@/features/cart/hooks/useCartQueries";
 import { useActivePromotions } from "@/features/tour/hooks/usePromotions";
 import { calculateTourPricing, getApplicablePromotionMatches } from "@/features/tour/utils/promotion-pricing";
 import type { Tour } from "@/types";
+import { useAppConfig } from "@/hooks/use-app-config";
 
 interface BookingSidebarProps {
   tour: Tour;
@@ -29,6 +30,9 @@ export default function BookingSidebar({ tour, selectedPromotionCode }: BookingS
   const adultPrice = parseFloat(tour.price_adult);
   const adultDiscounted = adultPrice * (1 - discountPercent / 100);
   const suffix = td("per_person");
+
+  const { data: config } = useAppConfig();
+  const hotline = config?.hotline || "1900 1800";
 
   const [adults, setAdults] = useState(1);
   const [children, setChildren] = useState(0);
@@ -310,7 +314,13 @@ export default function BookingSidebar({ tour, selectedPromotionCode }: BookingS
         </div>
         <div>
           <p className="text-sm font-bold text-on-surface">{td("support_title")}</p>
-          <p className="text-xs text-on-surface-subtle">{td("support_desc")}</p>
+          <p className="text-xs text-on-surface-subtle">
+            {td("support_desc").split("1900 xxxx")[0]}
+            <a href={`tel:${hotline.replace(/\s/g, "")}`} className="font-bold text-primary hover:underline">
+              {hotline}
+            </a>
+            {td("support_desc").split("1900 xxxx")[1] || ""}
+          </p>
         </div>
       </div>
     </div>

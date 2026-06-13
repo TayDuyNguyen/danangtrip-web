@@ -6,7 +6,8 @@ import { Link } from "@/i18n/navigation";
 import { PUBLIC_ROUTES } from "@/config/routes";
 import { IoStar, IoHeart } from "@/components/icons/solar";
 import type { FavoriteItem } from "@/types";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
+import { formatLocationPriceRange } from "@/utils/format";
 
 interface FavoriteListItemProps {
   item: FavoriteItem;
@@ -17,19 +18,19 @@ interface FavoriteListItemProps {
 export function FavoriteListItem({ item, onRemove, isRemoving = false }: FavoriteListItemProps) {
   const t = useTranslations("favorites");
   const tLoc = useTranslations("locations");
+  const locale = useLocale();
 
   const location = item.location;
   if (!location) return null;
 
   const detailHref = PUBLIC_ROUTES.LOCATION_DETAIL(location.slug);
 
-  const formatPrice = (price: number | null) => {
-    if (!price || price === 0) return tLoc("price.free");
-    return new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
-    }).format(price);
-  };
+  const { displayPrice, isFreeOrUnspecified } = formatLocationPriceRange(
+    location.price_min,
+    location.price_max,
+    tLoc,
+    locale === "vi" ? "vi-VN" : "en-US"
+  );
 
   const rating = parseFloat(location.avg_rating) || 0;
   const image = location.thumbnail || (location.images && location.images[0]) || "/images/placeholder.jpg";
@@ -101,10 +102,12 @@ export function FavoriteListItem({ item, onRemove, isRemoving = false }: Favorit
         {/* Footer info (price and action button) */}
         <div className="mt-4 flex items-center justify-between border-t border-border pt-4 md:mt-0">
           <div className="flex flex-col">
-            <span className="text-xs font-semibold uppercase tracking-normal text-on-surface-subtle">
-              {tLoc("price.from")}
-            </span>
-            <span className="text-base font-black text-primary">{formatPrice(location.price_min)}</span>
+            {!isFreeOrUnspecified && (
+              <span className="text-xs font-semibold uppercase tracking-normal text-on-surface-subtle">
+                {tLoc("price.from")}
+              </span>
+            )}
+            <span className="text-base font-black text-primary">{displayPrice}</span>
           </div>
           <Link
             href={detailHref}

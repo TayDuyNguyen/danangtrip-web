@@ -8,7 +8,6 @@ import LocationGrid from "./LocationGrid";
 import LocationHeader from "./LocationHeader";
 import LocationFilters from "./LocationFilters";
 import { useLocations, useLocationCategories, useLocationFilterStats } from "../hooks/use-locations";
-import { debounce } from "@/utils/debounce";
 import { extractItems } from "@/utils";
 import { Category } from "@/types";
 import StandardPagination from "@/components/ui/pagination/StandardPagination";
@@ -85,9 +84,9 @@ export default function LocationListClient() {
     [pathname, router, searchParams]
   );
 
-  const handleSearch = debounce((value: string) => {
+  const handleSearch = (value: string) => {
     updateFilters({ q: value || null });
-  }, 500);
+  };
 
   const handlePageChange = (newPage: number) => {
     updateFilters({ page: String(newPage) });

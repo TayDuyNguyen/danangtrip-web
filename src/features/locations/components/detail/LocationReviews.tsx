@@ -8,6 +8,7 @@ import type { LocationReview } from '@/types';
 import { format } from 'date-fns';
 import { vi, enUS } from 'date-fns/locale';
 import { useTranslations, useLocale } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { locationService } from '@/services/location.service';
@@ -34,7 +35,14 @@ const LocationReviews: React.FC<LocationReviewsProps> = ({
   const queryClient = useQueryClient();
   const { isAuthenticated } = useAuthStore();
   const [modalOpen, setModalOpen] = useState(false);
+  const [showNudge, setShowNudge] = useState(false);
   const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      setShowNudge(false);
+    }
+  }, [isAuthenticated]);
 
   useEffect(() => {
     setMounted(true);
@@ -126,7 +134,7 @@ const LocationReviews: React.FC<LocationReviewsProps> = ({
 
   const openWriteModal = () => {
     if (!isAuthenticated) {
-      toast.error(t('detail.login_to_review'));
+      setShowNudge((prev) => !prev);
       return;
     }
     if (hasRated) return;
@@ -161,14 +169,66 @@ const LocationReviews: React.FC<LocationReviewsProps> = ({
             <p className="mb-1 text-4xl font-semibold leading-none text-primary">{safeAverage.toFixed(1)}</p>
             <RatingStars rating={safeAverage} size="sm" />
           </div>
-          <button
-            type="button"
-            className="rounded-full border border-border bg-white px-5 py-2.5 text-sm font-medium text-on-surface transition-all duration-300 hover:border-primary/25 hover:bg-[#fafafa] disabled:opacity-40"
-            disabled={hasRated}
-            onClick={openWriteModal}
-          >
-            {t('detail.write_review')}
-          </button>
+          <div className="relative">
+            <button
+              type="button"
+              className="rounded-full border border-border bg-white px-5 py-2.5 text-sm font-medium text-on-surface transition-all duration-300 hover:border-primary/25 hover:bg-[#fafafa] disabled:opacity-40"
+              disabled={hasRated}
+              onClick={openWriteModal}
+            >
+              {t('detail.write_review')}
+            </button>
+
+            {showNudge && (
+              <div className="absolute right-0 top-full mt-3 z-50 w-[300px] rounded-2xl border border-border bg-white p-4 shadow-[0_12px_36px_rgba(0,0,0,0.15)] animate-reveal-up text-xs text-slate-800">
+                <div className="absolute top-[-6px] right-8 h-3 w-3 rotate-45 border-l border-t border-border bg-white" />
+                <div className="relative space-y-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-center gap-2">
+                      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5a2 2 0 10-2 2h2zm0 0h4m-4 0H8m12 3v9a2 2 0 01-2 2H6a2 2 0 01-2-2v-9m16 0H4" />
+                        </svg>
+                      </div>
+                      <span className="font-bold text-slate-900 text-[13px] leading-snug">
+                        {locale === 'vi' ? 'Đăng ký nhận ưu đãi & tích điểm' : 'Register for offers & points'}
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setShowNudge(false)}
+                      className="rounded-full p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
+                    >
+                      <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+
+                  <p className="text-[11px] leading-relaxed text-slate-600">
+                    {locale === 'vi'
+                      ? 'Viết đánh giá hữu ích, tích lũy điểm thưởng và đổi lấy các voucher giảm giá tour hấp dẫn!'
+                      : 'Write helpful reviews, earn reward points, and redeem them for exciting tour vouchers!'}
+                  </p>
+
+                  <div className="flex items-center gap-3 pt-1">
+                    <Link
+                      href="/register"
+                      className="inline-flex rounded-full bg-primary px-4 py-1.5 text-[11px] font-bold text-white shadow-sm shadow-primary/20 hover:bg-primary/90 transition-colors"
+                    >
+                      {locale === 'vi' ? 'Đăng ký ngay' : 'Sign up'}
+                    </Link>
+                    <Link
+                      href="/login"
+                      className="text-[11px] font-bold text-slate-600 hover:text-primary transition-colors"
+                    >
+                      {locale === 'vi' ? 'Đăng nhập' : 'Log in'}
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

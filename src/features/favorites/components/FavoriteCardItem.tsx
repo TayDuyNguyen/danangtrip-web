@@ -6,7 +6,8 @@ import { Link } from "@/i18n/navigation";
 import { PUBLIC_ROUTES } from "@/config/routes";
 import { IoStar, IoLocationOutline, IoHeart } from "@/components/icons/solar";
 import type { FavoriteItem } from "@/types";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
+import { formatLocationPriceRange } from "@/utils/format";
 
 interface FavoriteCardItemProps {
   item: FavoriteItem;
@@ -17,19 +18,19 @@ interface FavoriteCardItemProps {
 export function FavoriteCardItem({ item, onRemove, isRemoving = false }: FavoriteCardItemProps) {
   const t = useTranslations("favorites");
   const tLoc = useTranslations("locations");
+  const locale = useLocale();
 
   const location = item.location;
   if (!location) return null;
 
   const detailHref = PUBLIC_ROUTES.LOCATION_DETAIL(location.slug);
 
-  const formatPrice = (price: number | null) => {
-    if (!price || price === 0) return tLoc("price.free");
-    return new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
-    }).format(price);
-  };
+  const { displayPrice, isFreeOrUnspecified } = formatLocationPriceRange(
+    location.price_min,
+    location.price_max,
+    tLoc,
+    locale === "vi" ? "vi-VN" : "en-US"
+  );
 
   const rating = parseFloat(location.avg_rating) || 0;
   const image = location.thumbnail || (location.images && location.images[0]) || "/images/placeholder.jpg";
@@ -97,10 +98,12 @@ export function FavoriteCardItem({ item, onRemove, isRemoving = false }: Favorit
                 </p>
                 <div className="flex items-center justify-between">
                   <div className="flex flex-col">
-                    <span className="text-xs font-semibold uppercase tracking-normal text-white/70">
-                      {tLoc("price.from")}
-                    </span>
-                    <span className="text-sm font-black text-primary">{formatPrice(location.price_min)}</span>
+                    {!isFreeOrUnspecified && (
+                      <span className="text-xs font-semibold uppercase tracking-normal text-white/70">
+                        {tLoc("price.from")}
+                      </span>
+                    )}
+                    <span className="text-sm font-black text-primary">{displayPrice}</span>
                   </div>
                   <span className="rounded-lg bg-white px-3.5 py-2 text-xs font-semibold uppercase tracking-normal text-black shadow-md transition-all duration-300 group-hover:bg-primary group-hover:text-white">
                     {t("detail")}

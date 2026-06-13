@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { toast } from "sonner";
 import { IoHeartOutline, IoLocationOutline, IoStar } from "@/components/icons/solar";
 import { PUBLIC_ROUTES } from "@/config/routes";
@@ -10,6 +10,7 @@ import { useFavoriteToggle } from "@/hooks/useFavorite";
 import { Link } from "@/i18n/navigation";
 import { useAuthStore } from "@/store/auth.store";
 import type { Location } from "@/types";
+import { formatLocationPriceRange } from "@/utils/format";
 
 interface LocationCardCompactProps {
   location: Location & { distance?: number };
@@ -30,6 +31,7 @@ export default function LocationCardCompact({
 }: LocationCardCompactProps) {
   const t = useTranslations("locations");
   const tCommon = useTranslations("common");
+  const locale = useLocale();
   const detailHref = PUBLIC_ROUTES.LOCATION_DETAIL(location.slug);
   const { isAuthenticated } = useAuthStore();
   const toggleMutation = useFavoriteToggle({ location_id: location.id });
@@ -64,14 +66,12 @@ export default function LocationCardCompact({
     }
   };
 
-  const formatPrice = (price: number | null) => {
-    if (!price || price === 0) return t("price.free");
-    return new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
-      maximumFractionDigits: 0,
-    }).format(price);
-  };
+  const { displayPrice } = formatLocationPriceRange(
+    location.price_min,
+    location.price_max,
+    t,
+    locale === "vi" ? "vi-VN" : "en-US"
+  );
 
   const formatDistance = (dist?: number | string) => {
     if (dist === undefined || dist === null) return "";
@@ -165,7 +165,7 @@ export default function LocationCardCompact({
                 <span>({location.review_count})</span>
               </div>
               <span>.</span>
-              <span className="max-w-[100px] truncate">{formatPrice(location.price_min)}</span>
+              <span className="max-w-[140px] truncate" title={displayPrice}>{displayPrice}</span>
             </div>
 
             <Link

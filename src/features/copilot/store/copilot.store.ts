@@ -21,6 +21,7 @@ interface CopilotState {
   mapCenter: [number, number];
   mapZoom: number;
   isLoading: boolean;
+  isOpen: boolean;
   
   // Actions
   addMessage: (message: Omit<ChatMessage, "id" | "timestamp">) => void;
@@ -28,6 +29,7 @@ interface CopilotState {
   setSelectedId: (id: string | number | null) => void;
   setMapCenter: (center: [number, number], zoom?: number) => void;
   setIsLoading: (isLoading: boolean) => void;
+  setIsOpen: (isOpen: boolean) => void;
   reset: () => void;
 }
 
@@ -41,6 +43,7 @@ export const useCopilotStore = create<CopilotState>((set) => ({
   mapCenter: DEFAULT_CENTER,
   mapZoom: DEFAULT_ZOOM,
   isLoading: false,
+  isOpen: false,
 
   addMessage: (msg) =>
     set((state) => ({
@@ -67,6 +70,8 @@ export const useCopilotStore = create<CopilotState>((set) => ({
 
   setIsLoading: (isLoading) => set({ isLoading }),
 
+  setIsOpen: (isOpen) => set({ isOpen }),
+
   reset: () =>
     set({
       messages: [],
@@ -75,5 +80,6 @@ export const useCopilotStore = create<CopilotState>((set) => ({
       mapCenter: DEFAULT_CENTER,
       mapZoom: DEFAULT_ZOOM,
       isLoading: false,
+      isOpen: false,
     }),
 }));
