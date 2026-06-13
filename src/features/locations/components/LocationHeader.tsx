@@ -43,7 +43,6 @@ export default function LocationHeader({
           onChange={onSearch}
           placeholder={t("discovery.search_placeholder")}
           isLoading={isLoading}
-          debounceMs={0}
           label={t("discovery.search_label")}
           actionText={t("discovery.search_action")}
         />

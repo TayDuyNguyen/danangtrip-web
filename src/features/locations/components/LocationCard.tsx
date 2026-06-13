@@ -4,13 +4,14 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { IoStar, IoLocationOutline, IoHeart, IoHeartOutline } from "@/components/icons/solar";
 import type { Location } from "@/types";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { toast } from "sonner";
 import { Link } from "@/i18n/navigation";
 import { PUBLIC_ROUTES } from "@/config/routes";
 import { useFavoriteToggle } from "@/hooks/useFavorite";
 import { useAuthStore } from "@/store/auth.store";
 import { localFavoriteLocations } from "@/utils/local-favorites";
+import { formatLocationPriceRange } from "@/utils/format";
 
 interface LocationCardProps {
   location: Location;
@@ -20,6 +21,7 @@ interface LocationCardProps {
 export default function LocationCard({ location, isFavorite = false }: LocationCardProps) {
   const t = useTranslations("locations");
   const tCommon = useTranslations("common");
+  const locale = useLocale();
   const detailHref = PUBLIC_ROUTES.LOCATION_DETAIL(location.slug);
   const { isAuthenticated } = useAuthStore();
   const toggleMutation = useFavoriteToggle({ location_id: location.id });
@@ -53,13 +55,12 @@ export default function LocationCard({ location, isFavorite = false }: LocationC
     });
   };
 
-  const formatPrice = (price: number | null) => {
-    if (!price || price === 0) return t("price.free");
-    return new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
-    }).format(price);
-  };
+  const { displayPrice, isFreeOrUnspecified } = formatLocationPriceRange(
+    location.price_min,
+    location.price_max,
+    t,
+    locale === "vi" ? "vi-VN" : "en-US"
+  );
 
   const rating = parseFloat(location.avg_rating) || 0;
   const isPlaceholder = (url?: string | null) => {
@@ -144,10 +145,12 @@ export default function LocationCard({ location, isFavorite = false }: LocationC
 
             <div className="flex items-end justify-between gap-3">
               <div className="flex flex-col">
-                <span className="text-xs font-semibold uppercase tracking-normal text-on-surface-subtle">
-                  {t("price.from")}
-                </span>
-                <span className="text-lg font-semibold text-primary">{formatPrice(location.price_min)}</span>
+                {!isFreeOrUnspecified && (
+                  <span className="text-xs font-semibold uppercase tracking-normal text-on-surface-subtle">
+                    {t("price.from")}
+                  </span>
+                )}
+                <span className="text-lg font-semibold text-primary">{displayPrice}</span>
               </div>
 
               <span className="rounded-full border border-border bg-[#fafafa] px-4 py-2 text-xs font-semibold uppercase tracking-normal text-on-surface transition-all group-hover:border-primary/25 group-hover:bg-[#fff1f3] group-hover:text-primary">

@@ -46,13 +46,16 @@ export async function serverApiGet<T>(
     revalidate?: number | false;
   } = {},
 ): Promise<T> {
+  const isDev = process.env.NODE_ENV === "development";
+  const revalidateOption = isDev ? false : options.revalidate;
+
   const response = await fetch(buildUrl(pathname, options.params), {
     headers: {
       Accept: "application/json",
       "Accept-Language": options.locale || "vi",
     },
-    cache: options.revalidate === false ? "no-store" : undefined,
-    next: typeof options.revalidate === "number" ? { revalidate: options.revalidate } : undefined,
+    cache: revalidateOption === false ? "no-store" : undefined,
+    next: typeof revalidateOption === "number" ? { revalidate: revalidateOption } : undefined,
     signal: AbortSignal.timeout(SERVER_FETCH_TIMEOUT_MS),
   });
 

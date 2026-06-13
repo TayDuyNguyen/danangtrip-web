@@ -285,7 +285,6 @@ export default function CopilotFloatingWidget() {
   const locale = useLocale();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
-  const [isOpen, setIsOpen] = useState(false);
   const [inputVal, setInputVal] = useState("");
   const [showTooltip, setShowTooltip] = useState(false);
   const [tooltipIndex, setTooltipIndex] = useState(0);
@@ -299,6 +298,8 @@ export default function CopilotFloatingWidget() {
     setRecommendations,
     setMapCenter,
     setIsLoading,
+    isOpen,
+    setIsOpen,
   } = useCopilotStore();
 
   // Show again after a short pause whenever the chat and nudge are both closed.
@@ -442,13 +443,15 @@ export default function CopilotFloatingWidget() {
     }
   }, [messages, isLoading, isOpen]);
 
-  const handleSend = async (textToSend: string) => {
+  const handleSend = async (textToSend: string, skipAddingUserMsg = false) => {
     if (!textToSend.trim() || isLoading) return;
 
-    addMessage({
-      role: "user",
-      content: textToSend,
-    });
+    if (!skipAddingUserMsg) {
+      addMessage({
+        role: "user",
+        content: textToSend,
+      });
+    }
     setInputVal("");
     setIsLoading(true);
 
@@ -477,6 +480,15 @@ export default function CopilotFloatingWidget() {
       setIsLoading(false);
     }
   };
+
+  // Watch for programmatically added user messages to trigger chatbot response
+  useEffect(() => {
+    if (messages.length === 0 || isLoading) return;
+    const lastMessage = messages[messages.length - 1];
+    if (lastMessage.role === "user") {
+      void handleSend(lastMessage.content, true);
+    }
+  }, [messages, isLoading]);
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {

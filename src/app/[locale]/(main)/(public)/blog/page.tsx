@@ -1,7 +1,9 @@
 "use client";
 
+import { Suspense } from "react";
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useRouter, usePathname } from "@/i18n/navigation";
 import { BlogHero } from "@/features/blog/components/BlogHero";
 
 const BlogContent = dynamic(
@@ -37,13 +39,28 @@ const BlogContent = dynamic(
   }
 );
 
-export default function BlogPage() {
-  const [search, setSearch] = useState("");
+function BlogPageContent() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const search = searchParams.get("search") || "";
+
+  const handleSearch = (value: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (value.trim()) {
+      params.set("search", value.trim());
+    } else {
+      params.delete("search");
+    }
+    params.delete("page"); // reset page when search changes
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  };
 
   return (
     <div className="design-page layout-main-shell">
       <BlogHero 
-        onSearch={setSearch} 
+        onSearch={handleSearch} 
         initialSearch={search} 
       />
       
@@ -53,3 +70,19 @@ export default function BlogPage() {
     </div>
   );
 }
+
+export default function BlogPage() {
+  return (
+    <Suspense fallback={
+      <div className="design-page layout-main-shell">
+        <div className="h-[280px] bg-surface-container-low" />
+        <main className="design-container py-24">
+          <div className="h-44 animate-pulse bg-[#f7f7f7] rounded-[28px]" />
+        </main>
+      </div>
+    }>
+      <BlogPageContent />
+    </Suspense>
+  );
+}
+

@@ -69,6 +69,61 @@ export const formatPriceVND = (price: string | number, locale: string = "vi-VN")
   }).format(value);
 };
 
+/**
+ * Format location price ranges
+ */
+export const formatLocationPriceRange = (
+  priceMin: number | string | null | undefined,
+  priceMax: number | string | null | undefined,
+  t: (key: string) => string,
+  locale: string = "vi-VN"
+): { displayPrice: string; isFreeOrUnspecified: boolean } => {
+  const minVal = priceMin !== null && priceMin !== undefined && priceMin !== "" ? Number(priceMin) : null;
+  const maxVal = priceMax !== null && priceMax !== undefined && priceMax !== "" ? Number(priceMax) : null;
+
+  const isMinUnspecified = minVal === null || isNaN(minVal);
+  const isMaxUnspecified = maxVal === null || isNaN(maxVal);
+
+  if (isMinUnspecified && isMaxUnspecified) {
+    return { displayPrice: t("price.unspecified"), isFreeOrUnspecified: true };
+  }
+
+  // If one of them is 0 and the other is either 0 or unspecified, it is free
+  const isMinFree = !isMinUnspecified && minVal === 0;
+  const isMaxFree = !isMaxUnspecified && maxVal === 0;
+
+  if ((isMinFree || isMinUnspecified) && (isMaxFree || isMaxUnspecified)) {
+    return { displayPrice: t("price.free"), isFreeOrUnspecified: true };
+  }
+
+  // If different, show range
+  if (!isMinUnspecified && !isMaxUnspecified && minVal !== maxVal) {
+    return {
+      displayPrice: `${formatPriceVND(minVal, locale)} - ${formatPriceVND(maxVal, locale)}`,
+      isFreeOrUnspecified: false,
+    };
+  }
+
+  // If only min is specified
+  if (!isMinUnspecified) {
+    if (minVal === 0) {
+      return { displayPrice: t("price.free"), isFreeOrUnspecified: true };
+    }
+    return { displayPrice: formatPriceVND(minVal, locale), isFreeOrUnspecified: false };
+  }
+
+  // If only max is specified
+  if (!isMaxUnspecified) {
+    if (maxVal === 0) {
+      return { displayPrice: t("price.free"), isFreeOrUnspecified: true };
+    }
+    return { displayPrice: formatPriceVND(maxVal, locale), isFreeOrUnspecified: false };
+  }
+
+  return { displayPrice: t("price.unspecified"), isFreeOrUnspecified: true };
+};
+
+
 // Number formatting
 export const formatNumber = (num: number, locale: string = "vi-VN"): string => {
   return new Intl.NumberFormat(locale).format(num);

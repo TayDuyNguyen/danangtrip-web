@@ -62,6 +62,7 @@
   "price": {
     "from": "Giá từ",
     "free": "Miễn phí",
+    "unspecified": "Chưa cập nhật",
     "budget": "Bình dân ($)",
     "mid_range": "Trung cấp ($$)",
     "high_end": "Sang trọng ($$$)"
@@ -80,7 +81,7 @@
     "share": "Chia sẻ",
     "save": "Yêu thích",
     "book_now": "Đặt ngay",
-    "contact_consultancy": "Liên hệ tư vấn",
+    "contact_consultancy": "Hỏi ChatBot",
     "price_label": "Giá tham khảo",
     "price_per_person": "/ người",
     "free": "Miễn phí",

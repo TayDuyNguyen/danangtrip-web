@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Button } from "@/components/ui";
@@ -28,6 +29,7 @@ export default function ReviewSection({ tourId, rating, count }: ReviewSectionPr
   const queryClient = useQueryClient();
   const { isAuthenticated } = useAuthStore();
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
+  const [showNudge, setShowNudge] = useState(false);
   const reviewDateFormatter = new Intl.DateTimeFormat(locale === "vi" ? "vi-VN" : "en-US");
   const parsedRating = parseFloat(String(rating)) || 0;
   const safeCount = Number.isFinite(count) ? count : 0;
@@ -64,7 +66,7 @@ export default function ReviewSection({ tourId, rating, count }: ReviewSectionPr
 
   const openReviewModal = () => {
     if (!isAuthenticated) {
-      toast.error(td("helpful_login"));
+      setShowNudge((prev) => !prev);
       return;
     }
 
@@ -102,15 +104,66 @@ export default function ReviewSection({ tourId, rating, count }: ReviewSectionPr
           <h2 className="text-2xl font-black tracking-tight text-on-surface">{td("reviews_title")}</h2>
         </div>
         {!hasRated && (
-          <Button
-            type="button"
-            variant="secondary"
-            size="sm"
-            className="hidden md:flex"
-            onClick={openReviewModal}
-          >
-            {td("reviews_write")}
-          </Button>
+          <div className="relative hidden md:block">
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              onClick={openReviewModal}
+            >
+              {td("reviews_write")}
+            </Button>
+
+            {showNudge && (
+              <div className="absolute right-0 top-full mt-3 z-50 w-[300px] rounded-2xl border border-border bg-white p-4 shadow-[0_12px_36px_rgba(0,0,0,0.15)] animate-reveal-up text-xs text-slate-800 normal-case font-normal text-left">
+                <div className="absolute top-[-6px] right-8 h-3 w-3 rotate-45 border-l border-t border-border bg-white" />
+                <div className="relative space-y-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-center gap-2">
+                      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5a2 2 0 10-2 2h2zm0 0h4m-4 0H8m12 3v9a2 2 0 01-2 2H6a2 2 0 01-2-2v-9m16 0H4" />
+                        </svg>
+                      </div>
+                      <span className="font-bold text-slate-900 text-[13px] leading-snug">
+                        {locale === 'vi' ? 'Đăng ký nhận ưu đãi & tích điểm' : 'Register for offers & points'}
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setShowNudge(false)}
+                      className="rounded-full p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
+                    >
+                      <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+
+                  <p className="text-[11px] leading-relaxed text-slate-600">
+                    {locale === 'vi'
+                      ? 'Viết đánh giá hữu ích, tích lũy điểm thưởng và đổi lấy các voucher giảm giá tour hấp dẫn!'
+                      : 'Write helpful reviews, earn reward points, and redeem them for exciting tour vouchers!'}
+                  </p>
+
+                  <div className="flex items-center gap-3 pt-1">
+                    <Link
+                      href="/register"
+                      className="inline-flex rounded-full bg-primary px-4 py-1.5 text-[11px] font-bold text-white shadow-sm shadow-primary/20 hover:bg-primary/90 transition-colors"
+                    >
+                      {locale === 'vi' ? 'Đăng ký ngay' : 'Sign up'}
+                    </Link>
+                    <Link
+                      href="/login"
+                      className="text-[11px] font-bold text-slate-600 hover:text-primary transition-colors"
+                    >
+                      {locale === 'vi' ? 'Đăng nhập' : 'Log in'}
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         )}
       </div>
 
@@ -138,14 +191,66 @@ export default function ReviewSection({ tourId, rating, count }: ReviewSectionPr
 
         <div className="space-y-6 md:col-span-8">
           {!hasRated && (
-            <Button
-              type="button"
-              variant="secondary"
-              className="w-full md:hidden"
-              onClick={openReviewModal}
-            >
-              {td("reviews_write")}
-            </Button>
+            <div className="relative w-full md:hidden">
+              <Button
+                type="button"
+                variant="secondary"
+                className="w-full"
+                onClick={openReviewModal}
+              >
+                {td("reviews_write")}
+              </Button>
+
+              {showNudge && (
+                <div className="absolute right-0 left-0 top-full mt-3 z-50 rounded-2xl border border-border bg-white p-4 shadow-[0_12px_36px_rgba(0,0,0,0.15)] animate-reveal-up text-xs text-slate-800 normal-case font-normal text-left">
+                  <div className="absolute top-[-6px] left-1/2 -translate-x-1/2 h-3 w-3 rotate-45 border-l border-t border-border bg-white" />
+                  <div className="relative space-y-3">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-center gap-2">
+                        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5a2 2 0 10-2 2h2zm0 0h4m-4 0H8m12 3v9a2 2 0 01-2 2H6a2 2 0 01-2-2v-9m16 0H4" />
+                          </svg>
+                        </div>
+                        <span className="font-bold text-slate-900 text-[13px] leading-snug">
+                          {locale === 'vi' ? 'Đăng ký nhận ưu đãi & tích điểm' : 'Register for offers & points'}
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setShowNudge(false)}
+                        className="rounded-full p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
+                      >
+                        <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </div>
+
+                    <p className="text-[11px] leading-relaxed text-slate-600">
+                      {locale === 'vi'
+                        ? 'Viết đánh giá hữu ích, tích lũy điểm thưởng và đổi lấy các voucher giảm giá tour hấp dẫn!'
+                        : 'Write helpful reviews, earn reward points, and redeem them for exciting tour vouchers!'}
+                    </p>
+
+                    <div className="flex items-center gap-3 pt-1">
+                      <Link
+                        href="/register"
+                        className="inline-flex rounded-full bg-primary px-4 py-1.5 text-[11px] font-bold text-white shadow-sm shadow-primary/20 hover:bg-primary/90 transition-colors"
+                      >
+                        {locale === 'vi' ? 'Đăng ký ngay' : 'Sign up'}
+                      </Link>
+                      <Link
+                        href="/login"
+                        className="text-[11px] font-bold text-slate-600 hover:text-primary transition-colors"
+                      >
+                        {locale === 'vi' ? 'Đăng nhập' : 'Log in'}
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
           )}
 
           {loadingReviews ? (

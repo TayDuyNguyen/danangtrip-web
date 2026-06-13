@@ -34,8 +34,9 @@ export const BlogContent = ({ searchQuery = "" }: BlogContentProps) => {
       category_id: searchParams.get("category_id")
         ? parseInt(searchParams.get("category_id")!, 10)
         : undefined,
+      search: searchQuery || undefined,
     }),
-    [searchParams],
+    [searchParams, searchQuery],
   );
 
   const { data, isLoading } = useBlogPosts(filters);
@@ -71,16 +72,7 @@ export const BlogContent = ({ searchQuery = "" }: BlogContentProps) => {
   };
 
   const paginator = data;
-  const postsRaw = paginator?.data ?? [];
-  const q = searchQuery.trim().toLowerCase();
-  const posts =
-    q.length > 0
-      ? postsRaw.filter(
-          (p) =>
-            p.title.toLowerCase().includes(q) ||
-            (p.excerpt ?? "").toLowerCase().includes(q),
-        )
-      : postsRaw;
+  const posts = paginator?.data ?? [];
 
   const featuredPost = posts[0];
   const gridPosts = posts.slice(1);
@@ -89,11 +81,11 @@ export const BlogContent = ({ searchQuery = "" }: BlogContentProps) => {
 
   const currentPage = paginator?.current_page ?? 1;
   const lastPage = paginator?.last_page ?? 1;
-  const totalResults = paginator?.total ?? postsRaw.length;
+  const totalResults = paginator?.total ?? posts.length;
   const selectedCategoryName = categories.find((cat) => cat.id === Number(filters.category_id))?.name;
   const resultText =
-    q.length > 0
-      ? t("result_count_search", { count: posts.length, query: searchQuery.trim() })
+    searchQuery.trim().length > 0
+      ? t("result_count_search", { count: totalResults, query: searchQuery.trim() })
       : selectedCategoryName
         ? t("result_count_in_category", {
             count: totalResults,
@@ -209,7 +201,7 @@ export const BlogContent = ({ searchQuery = "" }: BlogContentProps) => {
                 </div>
               )}
 
-              {posts.length > 0 && lastPage > 1 && q.length === 0 && (
+              {posts.length > 0 && lastPage > 1 && (
                 <div className="mt-4 flex justify-center reveal-up" style={{ animationDelay: "400ms" }}>
                   <StandardPagination
                     currentPage={currentPage}
