@@ -13,7 +13,6 @@ import LocationGallery from "@/features/locations/components/detail/LocationGall
 import LocationInfo from "@/features/locations/components/detail/LocationInfo";
 import LocationSidebar from "@/features/locations/components/detail/LocationSidebar";
 import LocationReviews from "@/features/locations/components/detail/LocationReviews";
-import { useCopilotStore } from "@/features/copilot/store/copilot.store";
 
 type Props = {
   location: Location;
@@ -62,16 +61,6 @@ export default function LocationDetailClient({ location, locale }: Props) {
       return;
     }
     toggleFavorite();
-  };
-
-  const hasPhone = !!(location.phone && location.phone.trim() !== "");
-
-  const handleBookNow = () => {
-    if (location.website) {
-      window.open(location.website, "_blank");
-    } else if (location.phone) {
-      window.location.href = `tel:${location.phone}`;
-    }
   };
 
   const apiImages = imagesQuery.data?.images?.filter(Boolean) ?? [];

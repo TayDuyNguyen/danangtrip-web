@@ -14,8 +14,20 @@
     "error": "An error occurred, please try again.",
     "book_now": "Book Now",
     "view_detail": "Details",
+    "map": "Map",
     "rating": "Rating",
-    "price_from": "From"
+    "price_from": "From",
+    "tours_title": "Tours",
+    "locations_title": "Attractions",
+    "blogs_title": "Articles",
+    "featured": "Featured",
+    "free": "Free",
+    "read_post": "Read",
+    "views": "views",
+    "suggested_questions": "Suggested questions:",
+    "helpful": "Helpful",
+    "not_helpful": "Incorrect",
+    "copy": "Copy"
   },
   "tabs": {
     "chat": "Chat",

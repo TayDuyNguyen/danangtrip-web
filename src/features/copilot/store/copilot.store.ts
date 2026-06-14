@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import type { BlogPost, Location, Tour } from "@/types";
+import type { ChatResponseMeta } from "../services/copilot.service";
 
 export interface ChatMessage {
   id: string;
@@ -7,12 +8,22 @@ export interface ChatMessage {
   content: string;
   timestamp: Date;
   recommendations?: RecommendedItem[];
+  suggestedQuestions?: string[];
+  meta?: ChatResponseMeta;
 }
 
 export interface RecommendedItem {
   type: "tour" | "location" | "blog";
   data: Tour | Location | BlogPost;
 }
+
+/** Các bước xử lý hiển thị cho user */
+export type ProcessingStep =
+  | "understanding"
+  | "searching"
+  | "ranking"
+  | "generating"
+  | null;
 
 interface CopilotState {
   messages: ChatMessage[];
@@ -22,7 +33,8 @@ interface CopilotState {
   mapZoom: number;
   isLoading: boolean;
   isOpen: boolean;
-  
+  processingStep: ProcessingStep;
+
   // Actions
   addMessage: (message: Omit<ChatMessage, "id" | "timestamp">) => void;
   setRecommendations: (recommendations: RecommendedItem[]) => void;
@@ -30,6 +42,7 @@ interface CopilotState {
   setMapCenter: (center: [number, number], zoom?: number) => void;
   setIsLoading: (isLoading: boolean) => void;
   setIsOpen: (isOpen: boolean) => void;
+  setProcessingStep: (step: ProcessingStep) => void;
   reset: () => void;
 }
 
@@ -44,6 +57,7 @@ export const useCopilotStore = create<CopilotState>((set) => ({
   mapZoom: DEFAULT_ZOOM,
   isLoading: false,
   isOpen: false,
+  processingStep: null,
 
   addMessage: (msg) =>
     set((state) => ({
@@ -72,6 +86,8 @@ export const useCopilotStore = create<CopilotState>((set) => ({
 
   setIsOpen: (isOpen) => set({ isOpen }),
 
+  setProcessingStep: (processingStep) => set({ processingStep }),
+
   reset: () =>
     set({
       messages: [],
@@ -81,5 +97,6 @@ export const useCopilotStore = create<CopilotState>((set) => ({
       mapZoom: DEFAULT_ZOOM,
       isLoading: false,
       isOpen: false,
+      processingStep: null,
     }),
 }));

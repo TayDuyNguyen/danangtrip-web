@@ -128,7 +128,7 @@ const Header = () => {
   };
 
   return (
-    <header className="fixed inset-x-0 top-0 z-[100] pt-3 print:hidden">
+    <header className="fixed inset-x-0 top-0 z-100 pt-3 print:hidden">
       <div className="container">
         <div
           className={`mx-auto flex h-[76px] items-center justify-between rounded-[30px] border px-4 backdrop-blur-xl transition-all duration-300 sm:px-6 ${
@@ -281,11 +281,11 @@ const Header = () => {
               <div className="relative hidden sm:block" ref={userMenuRef}>
                 <button
                   onClick={() => setIsUserMenuOpen((v) => !v)}
-                  className="flex items-center justify-center gap-0 2xl:gap-2 rounded-full border border-border bg-white w-10 h-10 p-0 2xl:w-auto 2xl:h-auto 2xl:p-1.5 2xl:pr-3 shadow-[0_2px_10px_rgba(0,0,0,0.05)] transition-colors hover:shadow-[0_5px_16px_rgba(0,0,0,0.09)]"
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-white p-0 shadow-[0_2px_10px_rgba(0,0,0,0.05)] transition-colors hover:shadow-[0_5px_16px_rgba(0,0,0,0.09)]"
                   aria-expanded={isUserMenuOpen}
                   aria-haspopup="true"
                 >
-                  <div className="flex h-8 w-8 2xl:h-9 2xl:w-9 items-center justify-center overflow-hidden rounded-full bg-[#f7f7f7] text-on-surface shrink-0">
+                  <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-[#f7f7f7] text-on-surface shrink-0">
                     {user?.avatar ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img src={user.avatar} alt={user.name || "User Avatar"} className="h-full w-full object-cover" />
@@ -293,7 +293,7 @@ const Header = () => {
                       <IoPersonOutline className="text-[18px]" />
                     )}
                   </div>
-                  <span className="hidden 2xl:inline-block max-w-[110px] truncate text-sm font-medium text-on-surface ml-0 2xl:ml-2">
+                  <span className="sr-only">
                     {user?.name || t("auth.profile")}
                   </span>
                 </button>
