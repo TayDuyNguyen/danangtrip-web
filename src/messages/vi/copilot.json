@@ -13,9 +13,21 @@
     "searching": "Đang tìm kiếm thông tin phù hợp...",
     "error": "Có lỗi xảy ra, vui lòng thử lại.",
     "book_now": "Đặt ngay",
-    "view_detail": "Xem chi tiết",
+    "view_detail": "Chi tiết",
+    "map": "Bản đồ",
     "rating": "Đánh giá",
-    "price_from": "Từ"
+    "price_from": "Từ",
+    "tours_title": "Tour du lịch",
+    "locations_title": "Địa điểm",
+    "blogs_title": "Bài viết",
+    "featured": "Nổi bật",
+    "free": "Miễn phí",
+    "read_post": "Đọc bài",
+    "views": "lượt xem",
+    "suggested_questions": "Gợi ý câu hỏi:",
+    "helpful": "Hữu ích",
+    "not_helpful": "Chưa đúng",
+    "copy": "Copy"
   },
   "tabs": {
     "chat": "Trò chuyện",

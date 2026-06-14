@@ -1,10 +1,16 @@
+/* eslint-disable @next/next/no-img-element */
+// cspell:disable
 "use client";
 
 import { useState, useRef, useEffect, useMemo } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { useAuthStore } from "@/store/auth.store";
-import { useCopilotStore, ChatMessage } from "../store/copilot.store";
+import {
+  useCopilotStore,
+  ChatMessage,
+  ProcessingStep,
+} from "../store/copilot.store";
 import { copilotService } from "../services/copilot.service";
 import {
   X,
@@ -18,6 +24,7 @@ import {
   Gift,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
@@ -26,33 +33,290 @@ import { ROUTES } from "@/config";
 import type { BlogPost, Location, Tour } from "@/types";
 import { CopilotThinkingDots } from "./CopilotThinkingDots";
 
+// ============================================================
+// Processing Steps Configuration
+// ============================================================
+const PROCESSING_STEPS: Record<
+  NonNullable<ProcessingStep>,
+  { icon: string; label: string; labelEn: string }
+> = {
+  understanding: {
+    icon: "🤖",
+    label: "Đang hiểu câu hỏi...",
+    labelEn: "Understanding your question...",
+  },
+  searching: {
+    icon: "🔍",
+    label: "Đang tìm kiếm dữ liệu...",
+    labelEn: "Searching for data...",
+  },
+  ranking: {
+    icon: "⭐",
+    label: "Đang chọn gợi ý phù hợp...",
+    labelEn: "Selecting best matches...",
+  },
+  generating: {
+    icon: "✍️",
+    label: "Đang tạo câu trả lời...",
+    labelEn: "Generating response...",
+  },
+};
+
+// ============================================================
+// Intent Badge Configuration
+// ============================================================
+const INTENT_BADGES: Record<
+  string,
+  { icon: string; label: string; labelEn: string; color: string }
+> = {
+  tour: {
+    icon: "🏖",
+    label: "Tour",
+    labelEn: "Tour",
+    color: "text-orange-600 bg-orange-50 border-orange-100",
+  },
+  food: {
+    icon: "🍜",
+    label: "Ẩm thực",
+    labelEn: "Food",
+    color: "text-green-600 bg-green-50 border-green-100",
+  },
+  hotel: {
+    icon: "🏨",
+    label: "Khách sạn",
+    labelEn: "Hotel",
+    color: "text-blue-600 bg-blue-50 border-blue-100",
+  },
+  location: {
+    icon: "📍",
+    label: "Địa điểm",
+    labelEn: "Places",
+    color: "text-purple-600 bg-purple-50 border-purple-100",
+  },
+  blog: {
+    icon: "📖",
+    label: "Bài viết",
+    labelEn: "Article",
+    color: "text-sky-600 bg-sky-50 border-sky-100",
+  },
+  schedule: {
+    icon: "📅",
+    label: "Lịch trình",
+    labelEn: "Itinerary",
+    color: "text-indigo-600 bg-indigo-50 border-indigo-100",
+  },
+  loyalty: {
+    icon: "🎁",
+    label: "Điểm thưởng",
+    labelEn: "Rewards",
+    color: "text-pink-600 bg-pink-50 border-pink-100",
+  },
+  payment: {
+    icon: "💳",
+    label: "Thanh toán",
+    labelEn: "Payment",
+    color: "text-emerald-600 bg-emerald-50 border-emerald-100",
+  },
+  booking: {
+    icon: "🎫",
+    label: "Đặt tour",
+    labelEn: "Booking",
+    color: "text-amber-600 bg-amber-50 border-amber-100",
+  },
+};
+
+// ============================================================
+// Quick Reply Chips (based on intent)
+// ============================================================
+
+// ============================================================
+// Location emoji helper — phân loại theo category
+// ============================================================
+function getLocationEmoji(loc: import("@/types").Location): string {
+  const catName =
+    typeof loc.category === "string"
+      ? loc.category.toLowerCase()
+      : typeof loc.category === "object" && loc.category !== null
+      ? (loc.category.name ?? "").toLowerCase()
+      : "";
+  const name = (loc.name ?? "").toLowerCase();
+
+  // Order matters — check most specific first
+  if (/(cafe|c\u00e0 ph\u00ea|coffee|tr\u00e0 s\u1eefa|milk tea)/i.test(catName + name))
+    return "\u2615";
+  if (/(restaurant|nh\u00e0 h\u00e0ng|h\u1ea3i s\u1ea3n|seafood|\u0103n|qu\u00e1n|b\u00fan|ph\u1edf|b\u00e1nh|food|\u1ea9m th\u1ef1c)/i.test(catName + name))
+    return "\ud83c\udf5c";
+  if (/(hotel|kh\u00e1ch s\u1ea1n|resort|homestay|villa|motel)/i.test(catName + name))
+    return "\ud83c\udfe8";
+  if (/(beach|bi\u1ec3n|b\u1ea3i)/i.test(catName + name)) return "\ud83c\udfd6";
+  if (/(mountain|n\u00fai|\u0111\u1ed3i)/i.test(catName + name)) return "\u26f0\ufe0f";
+  if (/(museum|b\u1ea3o t\u00e0ng)/i.test(catName + name)) return "\ud83c\udfdb\ufe0f";
+  if (/(temple|ch\u00f9a|church|nh\u00e0 th\u1edd|pagoda)/i.test(catName + name))
+    return "\ud83d\uded5";
+  if (/(park|c\u00f4ng vi\u00ean|garden|v\u01b0\u1eddn)/i.test(catName + name))
+    return "\ud83c\udfd5\ufe0f";
+  if (/(market|ch\u1ee3|shopping|shop)/i.test(catName + name)) return "\ud83d\udecd\ufe0f";
+  if (/(island|\u0111\u1ea3o)/i.test(catName + name)) return "\ud83c\udf0a";
+  if (/(entertainment|gi\u1ea3i tr\u00ed|bar|pub|club)/i.test(catName + name))
+    return "\ud83c\udf89";
+  return "\ud83d\udccd"; // default pin
+}
+
+// ============================================================
+// Format message content
+// ============================================================
 const formatMessageContent = (text: string) => {
   let html = text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
   html = html.replace(
     /• (.*?)(?=(\n|$))/g,
-    '<li class="ml-4 list-disc">$1</li>',
+    '<li class="ml-4 list-disc">$1</li>'
   );
   html = html.replace(/\n/g, "<br />");
   return html;
 };
 
-// Message bubble sub-component to handle word-by-word streaming for new responses
+// ============================================================
+// Message Bubble Component
+// ============================================================
 function MessageBubble({
   msg,
   isLast,
+  locale,
   onCopy,
   onFeedback,
+  onQuickReply,
+  onClarifySubmit,
 }: {
   msg: ChatMessage;
   isLast: boolean;
+  locale: string;
   onCopy: (text: string) => void;
   onFeedback: () => void;
+  onQuickReply: (query: string) => void;
+  onClarifySubmit?: (
+    selectedIntents: string[],
+    optionNotes: Record<string, string>,
+    step: string | undefined,
+    intent: string | undefined
+  ) => void;
 }) {
   const isUser = msg.role === "user";
+  const t = useTranslations("copilot");
   const [displayedContent, setDisplayedContent] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
   const wordsRef = useRef<string[]>([]);
   const indexRef = useRef(0);
+  const [selectedIntents, setSelectedIntents] = useState<string[]>([]);
+  const [optionNotes, setOptionNotes] = useState<Record<string, string>>({});
+
+  const options = useMemo(() => {
+    const step = msg.meta?.clarification_step;
+    const intent = msg.meta?.intent;
+
+    if (step === "people") {
+      return locale === "vi" ? [
+        { id: "1-2", label: "Đoàn 1 - 2 người" },
+        { id: "3-5", label: "Đoàn 3 - 5 người" },
+        { id: "6-10", label: "Đoàn 6 - 10 người" },
+        { id: "over10", label: "Đoàn trên 10 người" },
+        { id: "other", label: "Số lượng khác (chưa có trong danh sách)" },
+      ] : [
+        { id: "1-2", label: "Group of 1 - 2 people" },
+        { id: "3-5", label: "Group of 3 - 5 people" },
+        { id: "6-10", label: "Group of 6 - 10 people" },
+        { id: "over10", label: "Group of more than 10 people" },
+        { id: "other", label: "Other quantity (not listed)" },
+      ];
+    }
+
+    if (step === "destination") {
+      return locale === "vi" ? [
+        { id: "banahills", label: "Bà Nà Hills" },
+        { id: "hoian", label: "Phố cổ Hội An" },
+        { id: "sontra", label: "Bán đảo Sơn Trà" },
+        { id: "nha-trang", label: "Ngũ Hành Sơn / Chùa Linh Ứng" },
+        { id: "other", label: "Địa điểm khác (chưa có trong danh sách)" },
+      ] : [
+        { id: "banahills", label: "Ba Na Hills" },
+        { id: "hoian", label: "Hoi An Ancient Town" },
+        { id: "sontra", label: "Son Tra Peninsula" },
+        { id: "nha-trang", label: "Marble Mountains / Linh Ung Pagoda" },
+        { id: "other", label: "Other destination (not listed)" },
+      ];
+    }
+
+    if (intent === "unknown") {
+      return locale === "vi" ? [
+        { id: "tour", label: "Tìm tour du lịch Bà Nà Hills, Hội An..." },
+        { id: "food", label: "Khám phá địa điểm ăn uống, món ăn ngon" },
+        { id: "hotel", label: "Tìm khách sạn, phòng nghỉ, chỗ ở" },
+        { id: "blog", label: "Đọc cẩm nang du lịch, bài viết chia sẻ" },
+        { id: "other", label: "Yêu cầu khác (chưa có trong danh sách trên)" },
+      ] : [
+        { id: "tour", label: "Search travel tours (Ba Na Hills, Hoi An...)" },
+        { id: "food", label: "Explore dining spots & delicious food" },
+        { id: "hotel", label: "Find hotels & accommodations" },
+        { id: "blog", label: "Read travel blogs & guides" },
+        { id: "other", label: "Other request (not in the list above)" },
+      ];
+    }
+
+    return null;
+  }, [msg.meta?.clarification_step, msg.meta?.intent, locale]);
+
+  const getPromptLabel = () => {
+    const step = msg.meta?.clarification_step;
+    if (step === "people") {
+      return locale === "vi" ? "Vui lòng chọn số lượng người dự kiến:" : "Please select the expected number of people:";
+    }
+    if (step === "destination") {
+      return locale === "vi" ? "Vui lòng chọn địa điểm bạn muốn đi:" : "Please select the destination you want to visit:";
+    }
+    return locale === "vi" ? "Vui lòng tích chọn các mục bạn quan tâm:" : "Please select the options you are interested in:";
+  };
+
+  const handleSubmit = () => {
+    if (onClarifySubmit && options && selectedIntents.length > 0) {
+      onClarifySubmit(selectedIntents, optionNotes, msg.meta?.clarification_step, msg.meta?.intent);
+      setSelectedIntents([]);
+      setOptionNotes({});
+    }
+  };
+
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>(() => {
+    const firstType = msg.recommendations?.[0]?.type;
+    return {
+      tour: firstType === "tour" || !firstType,
+      location: firstType === "location",
+      blog: firstType === "blog",
+    };
+  });
+
+  const groupedRecs = useMemo(() => {
+    if (!msg.recommendations) return { tours: [], locations: [], blogs: [] };
+    return {
+      tours: msg.recommendations.filter((r) => r.type === "tour"),
+      locations: msg.recommendations.filter((r) => r.type === "location"),
+      blogs: msg.recommendations.filter((r) => r.type === "blog"),
+    };
+  }, [msg.recommendations]);
+
+  const groupOrder = useMemo(() => {
+    if (!msg.recommendations) return [];
+    const types: string[] = [];
+    msg.recommendations.forEach((r) => {
+      if (r.type && !types.includes(r.type)) {
+        types.push(r.type);
+      }
+    });
+    // Ensure all 3 types are included in case they exist
+    ["tour", "location", "blog"].forEach((t) => {
+      if (!types.includes(t)) {
+        types.push(t);
+      }
+    });
+    return types;
+  }, [msg.recommendations]);
 
   useEffect(() => {
     if (isUser) {
@@ -60,7 +324,6 @@ function MessageBubble({
       return;
     }
 
-    // Only stream if it's the last message and it was created very recently (within 5 seconds)
     const isRecent =
       new Date().getTime() - new Date(msg.timestamp).getTime() < 5000;
     if (isLast && isRecent) {
@@ -74,7 +337,7 @@ function MessageBubble({
         if (indexRef.current < wordsRef.current.length) {
           const nextWord = wordsRef.current[indexRef.current];
           setDisplayedContent((prev) =>
-            prev ? prev + " " + nextWord : nextWord,
+            prev ? prev + " " + nextWord : nextWord
           );
           indexRef.current++;
         } else {
@@ -89,18 +352,27 @@ function MessageBubble({
     }
   }, [msg.content, msg.timestamp, isLast, isUser]);
 
+  const intent = msg.meta?.intent;
+  const badge = intent ? INTENT_BADGES[intent] : null;
+  // Ưu tiên suggested questions từ API (chính xác theo ngữ cảnh),
+  // fallback về mảng rỗng nếu không có
+  const quickReplies =
+    msg.suggestedQuestions && msg.suggestedQuestions.length > 0
+      ? msg.suggestedQuestions
+      : null;
+
   return (
     <div
       className={cn(
         "flex items-start gap-2 max-w-[85%] animate-reveal-up",
-        isUser ? "ml-auto flex-row-reverse" : "mr-auto",
+        isUser ? "ml-auto flex-row-reverse" : "mr-auto"
       )}
     >
       {/* Avatar */}
       <div
         className={cn(
           "flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-[10px] font-bold shadow-xs",
-          isUser ? "bg-slate-200 text-slate-700" : "bg-primary text-white",
+          isUser ? "bg-slate-200 text-slate-700" : "bg-primary text-white"
         )}
       >
         {isUser ? (
@@ -117,7 +389,7 @@ function MessageBubble({
             "rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed shadow-xs min-w-0",
             isUser
               ? "bg-slate-800 text-white rounded-tr-none"
-              : "bg-white text-slate-800 rounded-tl-none border border-slate-200/60",
+              : "bg-white text-slate-800 rounded-tl-none border border-slate-200/60"
           )}
         >
           <div
@@ -126,136 +398,319 @@ function MessageBubble({
             }}
           />
 
-          {/* Render embedded recommendation cards */}
+          {/* Embedded recommendation cards */}
           {!isStreaming &&
             msg.recommendations &&
             msg.recommendations.length > 0 && (
-              <div className="mt-3 space-y-2 border-t border-slate-100 pt-3">
-                {msg.recommendations.map((item) => {
-                  const isTour = item.type === "tour";
-                  const isBlog = item.type === "blog";
-
-                  if (isTour) {
-                    const tour = item.data as Tour;
+              <div className="mt-3 space-y-2.5 border-t border-slate-100 pt-3">
+                {groupOrder.map((type) => {
+                  if (type === "tour" && groupedRecs.tours.length > 0) {
                     return (
-                      <div
-                        key={`bubble-tour-${tour.id}`}
-                        className="rounded-xl border border-slate-100 bg-slate-50/70 p-2.5 flex flex-col gap-1.5 shadow-2xs hover:border-primary/20 transition-all"
-                      >
-                        <div className="flex justify-between items-start gap-1">
-                          <span className="font-bold text-[11px] text-slate-800 line-clamp-1">
-                            🏖 {tour.name}
+                      <div className="flex flex-col" key="group-tours">
+                        <button
+                          onClick={() =>
+                            setExpandedGroups((prev) => ({
+                              ...prev,
+                              tour: !prev.tour,
+                            }))
+                          }
+                          className="w-full flex items-center justify-between px-3 py-2 rounded-xl border border-slate-100 bg-slate-50/70 hover:bg-slate-50 text-[11px] font-bold text-slate-700 transition-all shadow-3xs cursor-pointer"
+                        >
+                          <span className="flex items-center gap-1.5">
+                            🏕️ {t("chat.tours_title")} ({groupedRecs.tours.length})
                           </span>
-                          <span className="text-[10px] text-amber-500 font-bold shrink-0">
-                            ⭐ {parseFloat(tour.avg_rating || "5.0").toFixed(1)}
-                          </span>
-                        </div>
-                        <div className="flex justify-between items-center mt-1">
-                          <span className="text-xs font-black text-primary">
-                            {parseFloat(tour.price_adult).toLocaleString(
-                              "vi-VN",
-                            )}{" "}
-                            đ
-                          </span>
-                          <Link
-                            href={`${ROUTES.TOUR_DETAIL(tour.slug)}#booking-cta`}
-                            className="px-2 py-1 text-[9px] font-bold text-white bg-primary rounded-md hover:bg-primary-hover shadow-2xs"
-                          >
-                            Đặt ngay
-                          </Link>
-                        </div>
-                      </div>
-                    );
-                  } else if (isBlog) {
-                    const blog = item.data as BlogPost;
-                    return (
-                      <div
-                        key={`bubble-blog-${blog.id}`}
-                        className="rounded-xl border border-slate-100 bg-slate-50/70 p-2.5 flex flex-col gap-1.5 shadow-2xs hover:border-sky-500/20 transition-all"
-                      >
-                        <div className="flex justify-between items-start gap-1">
-                          <span className="font-bold text-[11px] text-slate-800 line-clamp-2">
-                            📖 {blog.title}
-                          </span>
-                          <span className="text-[10px] text-sky-600 font-bold shrink-0">
-                            Bài viết
-                          </span>
-                        </div>
-                        {blog.excerpt && (
-                          <p className="text-[9px] text-slate-500 line-clamp-2">
-                            {blog.excerpt}
-                          </p>
-                        )}
-                        <div className="flex justify-between items-center mt-1">
-                          <span className="text-[10px] font-bold text-slate-500">
-                            {blog.view_count?.toLocaleString("vi-VN") || 0} lượt
-                            xem
-                          </span>
-                          <Link
-                            href={ROUTES.BLOG_DETAIL(blog.slug)}
-                            className="px-2 py-1 text-[9px] font-bold text-sky-700 bg-sky-50 border border-sky-100 rounded-md hover:bg-sky-100"
-                          >
-                            Đọc bài
-                          </Link>
-                        </div>
-                      </div>
-                    );
-                  } else {
-                    const loc = item.data as Location;
-                    return (
-                      <div
-                        key={`bubble-loc-${loc.id}`}
-                        className="rounded-xl border border-slate-100 bg-slate-50/70 p-2.5 flex flex-col gap-1.5 shadow-2xs hover:border-emerald-500/20 transition-all"
-                      >
-                        <div className="flex justify-between items-start gap-1">
-                          <span className="font-bold text-[11px] text-slate-800 line-clamp-1">
-                            🍜 {loc.name}
-                          </span>
-                          <span className="text-[10px] text-amber-500 font-bold shrink-0">
-                            ⭐ {parseFloat(loc.avg_rating || "5.0").toFixed(1)}
-                          </span>
-                        </div>
-                        <p className="text-[9px] text-slate-500 line-clamp-1">
-                          📍 {loc.address}
-                        </p>
-                        <div className="flex justify-between items-center mt-1">
-                          <span className="text-[10px] font-bold text-emerald-600">
-                            {loc.price_min
-                              ? `${loc.price_min.toLocaleString("vi-VN")} đ`
-                              : "Địa điểm hot"}
-                          </span>
-                          <div className="flex gap-1">
-                            <Link
-                              href={`/map?location_id=${loc.id}`}
-                              className="px-2 py-1 text-[9px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-md hover:bg-emerald-100"
-                            >
-                              Bản đồ
-                            </Link>
-                            <Link
-                              href={ROUTES.LOCATION_DETAIL(loc.slug)}
-                              className="px-2 py-1 text-[9px] font-bold text-slate-600 bg-white border border-slate-200 rounded-md hover:bg-slate-50"
-                            >
-                              Chi tiết
-                            </Link>
+                          {expandedGroups.tour ? (
+                            <ChevronDown className="h-3.5 w-3.5 text-slate-400" />
+                          ) : (
+                            <ChevronRight className="h-3.5 w-3.5 text-slate-400" />
+                          )}
+                        </button>
+                        {expandedGroups.tour && (
+                          <div className="mt-2 space-y-2 pl-1.5">
+                            {groupedRecs.tours.map((item) => {
+                              const tour = item.data as Tour;
+                              return (
+                                <div
+                                  key={`bubble-tour-${tour.id}`}
+                                  className="rounded-xl border border-slate-100 bg-slate-50/70 overflow-hidden shadow-2xs hover:border-primary/20 transition-all"
+                                >
+                                  {/* Thumbnail */}
+                                  {tour.thumbnail && (
+                                    <img
+                                      src={tour.thumbnail}
+                                      alt={tour.name}
+                                      className="w-full h-20 object-cover"
+                                    />
+                                  )}
+                                  <div className="p-2.5 flex flex-col gap-1.5">
+                                    <div className="flex justify-between items-start gap-1">
+                                      <span className="font-bold text-[11px] text-slate-800 line-clamp-1">
+                                        🏖 {tour.name}
+                                      </span>
+                                      <span className="text-[10px] text-amber-500 font-bold shrink-0">
+                                        ⭐ {parseFloat(tour.avg_rating || "5.0").toFixed(1)}
+                                      </span>
+                                    </div>
+                                    <div className="flex justify-between items-center">
+                                      <span className="text-xs font-black text-primary">
+                                        {parseFloat(tour.price_adult).toLocaleString(
+                                          "vi-VN"
+                                        )}{" "}
+                                        đ
+                                      </span>
+                                      <Link
+                                        href={`${ROUTES.TOUR_DETAIL(tour.slug)}#booking-cta`}
+                                        className="px-2 py-1 text-[9px] font-bold text-white bg-primary rounded-md hover:bg-primary-hover shadow-2xs"
+                                      >
+                                        {t("chat.book_now")}
+                                      </Link>
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            })}
                           </div>
-                        </div>
+                        )}
                       </div>
                     );
                   }
+
+                  if (type === "location" && groupedRecs.locations.length > 0) {
+                    return (
+                      <div className="flex flex-col" key="group-locations">
+                        <button
+                          onClick={() =>
+                            setExpandedGroups((prev) => ({
+                              ...prev,
+                              location: !prev.location,
+                            }))
+                          }
+                          className="w-full flex items-center justify-between px-3 py-2 rounded-xl border border-slate-100 bg-slate-50/70 hover:bg-slate-50 text-[11px] font-bold text-slate-700 transition-all shadow-3xs cursor-pointer"
+                        >
+                          <span className="flex items-center gap-1.5">
+                            📍 {t("chat.locations_title")} ({groupedRecs.locations.length})
+                          </span>
+                          {expandedGroups.location ? (
+                            <ChevronDown className="h-3.5 w-3.5 text-slate-400" />
+                          ) : (
+                            <ChevronRight className="h-3.5 w-3.5 text-slate-400" />
+                          )}
+                        </button>
+                        {expandedGroups.location && (
+                          <div className="mt-2 space-y-2 pl-1.5">
+                            {groupedRecs.locations.map((item) => {
+                              const loc = item.data as Location;
+                              return (
+                                <div
+                                  key={`bubble-loc-${loc.id}`}
+                                  className="rounded-xl border border-slate-100 bg-slate-50/70 overflow-hidden shadow-2xs hover:border-emerald-500/20 transition-all"
+                                >
+                                  {/* Thumbnail */}
+                                  {loc.thumbnail && (
+                                    <img
+                                      src={loc.thumbnail}
+                                      alt={loc.name}
+                                      className="w-full h-16 object-cover"
+                                    />
+                                  )}
+                                  <div className="p-2.5 flex flex-col gap-1.5">
+                                    <div className="flex justify-between items-start gap-1">
+                                      <span className="font-bold text-[11px] text-slate-800 line-clamp-1">
+                                        {getLocationEmoji(loc)} {loc.name}
+                                      </span>
+                                      <span className="text-[10px] text-amber-500 font-bold shrink-0">
+                                        ⭐ {parseFloat(loc.avg_rating || "5.0").toFixed(1)}
+                                      </span>
+                                    </div>
+                                    <p className="text-[9px] text-slate-500 line-clamp-1">
+                                      📍 {loc.address}
+                                    </p>
+                                    <div className="flex justify-between items-center">
+                                      <span className="text-[10px] font-bold text-emerald-600">
+                                        {loc.price_min
+                                          ? `${t("chat.price_from")} ${loc.price_min.toLocaleString("vi-VN")} đ`
+                                          : loc.is_featured
+                                          ? `⭐ ${t("chat.featured")}`
+                                          : t("chat.free")}
+                                      </span>
+                                      <div className="flex gap-1">
+                                        <Link
+                                          href={`/map?location_id=${loc.id}`}
+                                          className="px-2 py-1 text-[9px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-md hover:bg-emerald-100"
+                                        >
+                                          {t("chat.map")}
+                                        </Link>
+                                        <Link
+                                          href={ROUTES.LOCATION_DETAIL(loc.slug)}
+                                          className="px-2 py-1 text-[9px] font-bold text-slate-600 bg-white border border-slate-200 rounded-md hover:bg-slate-50"
+                                        >
+                                          {t("chat.view_detail")}
+                                        </Link>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  }
+
+                  if (type === "blog" && groupedRecs.blogs.length > 0) {
+                    return (
+                      <div className="flex flex-col" key="group-blogs">
+                        <button
+                          onClick={() =>
+                            setExpandedGroups((prev) => ({
+                              ...prev,
+                              blog: !prev.blog,
+                            }))
+                          }
+                          className="w-full flex items-center justify-between px-3 py-2 rounded-xl border border-slate-100 bg-slate-50/70 hover:bg-slate-50 text-[11px] font-bold text-slate-700 transition-all shadow-3xs cursor-pointer"
+                        >
+                          <span className="flex items-center gap-1.5">
+                            📖 {t("chat.blogs_title")} ({groupedRecs.blogs.length})
+                          </span>
+                          {expandedGroups.blog ? (
+                            <ChevronDown className="h-3.5 w-3.5 text-slate-400" />
+                          ) : (
+                            <ChevronRight className="h-3.5 w-3.5 text-slate-400" />
+                          )}
+                        </button>
+                        {expandedGroups.blog && (
+                          <div className="mt-2 space-y-2 pl-1.5">
+                            {groupedRecs.blogs.map((item) => {
+                              const blog = item.data as BlogPost;
+                              return (
+                                <div
+                                  key={`bubble-blog-${blog.id}`}
+                                  className="rounded-xl border border-slate-100 bg-slate-50/70 overflow-hidden shadow-2xs hover:border-sky-500/20 transition-all"
+                                >
+                                  {/* Thumbnail */}
+                                  {(blog as unknown as { featured_image?: string }).featured_image && (
+                                    <img
+                                      src={(blog as unknown as { featured_image?: string }).featured_image}
+                                      alt={blog.title}
+                                      className="w-full h-16 object-cover"
+                                    />
+                                  )}
+                                  <div className="p-2.5 flex flex-col gap-1.5">
+                                    <div className="flex justify-between items-start gap-1">
+                                      <span className="font-bold text-[11px] text-slate-800 line-clamp-2">
+                                        📖 {blog.title}
+                                      </span>
+                                      <span className="text-[10px] text-sky-600 font-bold shrink-0">
+                                        {t("chat.blogs_title")}
+                                      </span>
+                                    </div>
+                                    {blog.excerpt && (
+                                      <p className="text-[9px] text-slate-500 line-clamp-2">
+                                        {blog.excerpt}
+                                      </p>
+                                    )}
+                                    <div className="flex justify-between items-center">
+                                      <span className="text-[10px] font-bold text-slate-500">
+                                        {blog.view_count?.toLocaleString("vi-VN") || 0}{" "}
+                                        {t("chat.views")}
+                                      </span>
+                                      <Link
+                                        href={ROUTES.BLOG_DETAIL(blog.slug)}
+                                        className="px-2 py-1 text-[9px] font-bold text-sky-700 bg-sky-50 border border-sky-100 rounded-md hover:bg-sky-100"
+                                      >
+                                        {t("chat.read_post")}
+                                      </Link>
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  }
+
+                  return null;
                 })}
               </div>
             )}
+
+
+          {!isStreaming && !isUser && isLast && options !== null && (
+            <div className="mt-3.5 pt-3.5 border-t border-slate-100 space-y-2.5">
+              <p className="font-bold text-[10px] text-primary">
+                {getPromptLabel()}
+              </p>
+              <div className="space-y-2">
+                {options.map((opt) => (
+                  <div key={opt.id} className="p-2.5 bg-slate-50 rounded-xl border border-slate-200/60 shadow-3xs flex flex-col gap-1.5 transition-all">
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        id={`opt-${msg.id}-${opt.id}`}
+                        checked={selectedIntents.includes(opt.id)}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedIntents(prev => [...prev, opt.id]);
+                          } else {
+                            setSelectedIntents(prev => prev.filter(x => x !== opt.id));
+                          }
+                        }}
+                        className="h-3.5 w-3.5 accent-primary cursor-pointer rounded border-slate-300 text-primary focus:ring-primary/20"
+                      />
+                      <label htmlFor={`opt-${msg.id}-${opt.id}`} className="text-[10px] font-bold text-slate-700 select-none cursor-pointer leading-normal flex-1">
+                        {opt.label}
+                      </label>
+                    </div>
+                    {selectedIntents.includes(opt.id) && (
+                      <div className="ml-5.5 animate-reveal-up">
+                        <input
+                          type="text"
+                          placeholder={locale === "vi" ? "Ghi chú thêm (không bắt buộc)..." : "Additional notes (optional)..."}
+                          value={optionNotes[opt.id] || ""}
+                          onChange={(e) => setOptionNotes(prev => ({ ...prev, [opt.id]: e.target.value }))}
+                          className="w-full text-[10px] px-2 py-1.5 rounded-lg border border-slate-200 focus:border-primary focus:ring-1 focus:ring-primary/10 outline-none bg-white font-medium transition-all"
+                        />
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <button
+                onClick={handleSubmit}
+                disabled={selectedIntents.length === 0}
+                className="w-full mt-1.5 py-2 px-3 bg-primary hover:bg-primary-hover text-white text-[10px] font-bold rounded-xl transition-all cursor-pointer shadow-sm hover:shadow active:scale-[0.98] disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed disabled:scale-100 disabled:shadow-none flex items-center justify-center gap-1"
+              >
+                <Send className="h-3 w-3" />
+                {locale === "vi" ? "Gửi phản hồi cho AI" : "Send Response to AI"}
+              </button>
+            </div>
+          )}
         </div>
 
-        {/* Action feedback bar (Shown only for assistant messages when not streaming) */}
+        {/* Action feedback bar (assistant messages only) */}
         {!isUser && !isStreaming && (
-          <div className="flex items-center gap-2 px-1 text-[10px] text-slate-400">
+          <div className="flex items-center gap-2 px-1 text-[10px] text-slate-400 flex-wrap">
+            {/* Intent Badge */}
+            {badge && (
+              <span
+                className={cn(
+                  "inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full border text-[9px] font-semibold",
+                  badge.color
+                )}
+              >
+                {badge.icon} {locale === "vi" ? badge.label : badge.labelEn}
+              </span>
+            )}
+
             <button
               onClick={() => onFeedback()}
               className="flex items-center gap-0.5 hover:text-slate-600 hover:underline transition-all cursor-pointer"
             >
               <ThumbsUp className="h-3 w-3" />
-              <span>Hữu ích</span>
+              <span>{t("chat.helpful")}</span>
             </button>
             <span className="text-slate-200">|</span>
             <button
@@ -263,7 +718,7 @@ function MessageBubble({
               className="flex items-center gap-0.5 hover:text-slate-600 hover:underline transition-all cursor-pointer"
             >
               <ThumbsDown className="h-3 w-3" />
-              <span>Chưa đúng</span>
+              <span>{t("chat.not_helpful")}</span>
             </button>
             <span className="text-slate-200">|</span>
             <button
@@ -271,15 +726,63 @@ function MessageBubble({
               className="flex items-center gap-0.5 hover:text-slate-600 hover:underline transition-all cursor-pointer"
             >
               <Copy className="h-3 w-3" />
-              <span>Copy</span>
+              <span>{t("chat.copy")}</span>
             </button>
           </div>
         )}
+
       </div>
     </div>
   );
 }
 
+// ============================================================
+// Processing Indicator Component
+// ============================================================
+function ProcessingIndicator({
+  step,
+  locale,
+}: {
+  step: ProcessingStep;
+  locale: string;
+}) {
+  if (!step) return null;
+
+  const config = PROCESSING_STEPS[step];
+  if (!config) return null;
+
+  const label = locale === "vi" ? config.label : config.labelEn;
+
+  return (
+    <div className="flex items-start gap-2 mr-auto max-w-[85%]">
+      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary text-white">
+        <Bot className="h-3.5 w-3.5" />
+      </div>
+      <div className="rounded-2xl rounded-tl-none bg-white border border-slate-200/60 px-3.5 py-2.5 text-xs text-slate-600 shadow-xs flex flex-col gap-1.5">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={step}
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.2 }}
+            className="flex items-center gap-1.5"
+          >
+            <span className="text-sm">{config.icon}</span>
+            <span className="font-semibold text-[10px] text-slate-500">
+              {label}
+            </span>
+          </motion.div>
+        </AnimatePresence>
+        <CopilotThinkingDots />
+      </div>
+    </div>
+  );
+}
+
+// ============================================================
+// Main CopilotFloatingWidget
+// ============================================================
 export default function CopilotFloatingWidget() {
   const t = useTranslations("copilot");
   const locale = useLocale();
@@ -300,18 +803,18 @@ export default function CopilotFloatingWidget() {
     setIsLoading,
     isOpen,
     setIsOpen,
+    processingStep,
+    setProcessingStep,
   } = useCopilotStore();
 
-  // Show again after a short pause whenever the chat and nudge are both closed.
+  // Show tooltip after pause
   useEffect(() => {
     if (isOpen || showTooltip) {
       return;
     }
-
     const timer = setTimeout(() => {
       setShowTooltip(true);
     }, 8000);
-
     return () => clearTimeout(timer);
   }, [isOpen, showTooltip]);
 
@@ -338,10 +841,10 @@ export default function CopilotFloatingWidget() {
               query: "Ở Đà Nẵng nên ăn món gì và ở đâu?",
             },
             {
-              title: "Tìm địa điểm gần bạn",
+              title: "Địa điểm tham quan nổi bật",
               description:
-                "Khám phá điểm tham quan, quán ăn và dịch vụ lân cận.",
-              query: "Gợi ý các địa điểm nổi bật gần tôi",
+                "Khám phá các điểm check-in, bãi biển và thắng cảnh đẹp ở Đà Nẵng.",
+              query: "Các địa điểm tham quan nổi tiếng ở Đà Nẵng là gì?",
             },
             {
               title: "Tìm hiểu điểm thưởng",
@@ -374,10 +877,10 @@ export default function CopilotFloatingWidget() {
               query: "What should I eat in Da Nang and where?",
             },
             {
-              title: "Find places near me",
+              title: "Top attractions in Da Nang",
               description:
-                "Explore nearby attractions, restaurants, and services.",
-              query: "Suggest popular places near me",
+                "Explore famous check-in spots, beaches, and landmarks.",
+              query: "What are the most famous attractions in Da Nang?",
             },
             {
               title: "Learn about reward points",
@@ -416,19 +919,12 @@ export default function CopilotFloatingWidget() {
   }, [isAuthenticated, locale]);
 
   useEffect(() => {
-    if (
-      !showTooltip ||
-      isOpen ||
-      isTooltipHovered ||
-      tooltipSuggestions.length < 2
-    ) {
+    if (!showTooltip || isOpen || isTooltipHovered || tooltipSuggestions.length < 2) {
       return;
     }
-
     const interval = window.setInterval(() => {
       setTooltipIndex((current) => (current + 1) % tooltipSuggestions.length);
     }, 9000);
-
     return () => window.clearInterval(interval);
   }, [isOpen, isTooltipHovered, showTooltip, tooltipSuggestions.length]);
 
@@ -441,7 +937,11 @@ export default function CopilotFloatingWidget() {
     if (isOpen) {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }
-  }, [messages, isLoading, isOpen]);
+  }, [messages, isLoading, isOpen, processingStep]);
+
+  // Helper delay
+  const delay = (ms: number) =>
+    new Promise((resolve) => setTimeout(resolve, ms));
 
   const handleSend = async (textToSend: string, skipAddingUserMsg = false) => {
     if (!textToSend.trim() || isLoading) return;
@@ -456,14 +956,42 @@ export default function CopilotFloatingWidget() {
     setIsLoading(true);
 
     try {
-      const res = await copilotService.processMessage(textToSend, locale);
+      // === Step-by-step processing indicator ===
+      setProcessingStep("understanding");
+      await delay(400);
+
+      setProcessingStep("searching");
+
+      const historyTurns = (
+        skipAddingUserMsg ? messages.slice(0, -1) : messages
+      ).map((m) => ({
+        role: m.role,
+        content: m.content,
+      }));
+
+      // Actual API call happens here
+      const resPromise = copilotService.processMessage(
+        textToSend,
+        locale,
+        historyTurns
+      );
+
+      await delay(700);
+      setProcessingStep("ranking");
+      await delay(400);
+      setProcessingStep("generating");
+
+      const res = await resPromise;
+
       addMessage({
         role: "assistant",
         content: res.text,
-        recommendations: res.recommendations, // Save matching cards inside this message!
+        recommendations: res.recommendations,
+        suggestedQuestions: res.suggested_questions,
+        meta: res.meta,
       });
 
-      if (res.recommendations) {
+      if (res.recommendations && res.recommendations.length > 0) {
         setRecommendations(res.recommendations);
       }
 
@@ -477,17 +1005,19 @@ export default function CopilotFloatingWidget() {
         content: t("chat.error"),
       });
     } finally {
+      setProcessingStep(null);
       setIsLoading(false);
     }
   };
 
-  // Watch for programmatically added user messages to trigger chatbot response
+  // Watch for programmatically added user messages
   useEffect(() => {
     if (messages.length === 0 || isLoading) return;
     const lastMessage = messages[messages.length - 1];
     if (lastMessage.role === "user") {
       void handleSend(lastMessage.content, true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages, isLoading]);
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -505,7 +1035,82 @@ export default function CopilotFloatingWidget() {
     toast.success("Cảm ơn bạn đã đóng góp ý kiến phản hồi!");
   };
 
-  // Quick suggestion chips
+  const handleQuickReply = (query: string) => {
+    handleSend(query);
+  };
+
+  const handleClarifySubmit = (
+    selectedIds: string[],
+    optionNotes: Record<string, string>,
+    step: string | undefined,
+    intent: string | undefined
+  ) => {
+    let optionsList: Array<{ id: string; label: string }> = [];
+
+    if (step === "people") {
+      optionsList = locale === "vi" ? [
+        { id: "1-2", label: "Đoàn 1 - 2 người" },
+        { id: "3-5", label: "Đoàn 3 - 5 người" },
+        { id: "6-10", label: "Đoàn 6 - 10 người" },
+        { id: "over10", label: "Đoàn trên 10 người" },
+        { id: "other", label: "Số lượng khác (chưa có trong danh sách)" },
+      ] : [
+        { id: "1-2", label: "Group of 1 - 2 people" },
+        { id: "3-5", label: "Group of 3 - 5 people" },
+        { id: "6-10", label: "Group of 6 - 10 people" },
+        { id: "over10", label: "Group of more than 10 people" },
+        { id: "other", label: "Other quantity (not listed)" },
+      ];
+    } else if (step === "destination") {
+      optionsList = locale === "vi" ? [
+        { id: "banahills", label: "Bà Nà Hills" },
+        { id: "hoian", label: "Phố cổ Hội An" },
+        { id: "sontra", label: "Bán đảo Sơn Trà" },
+        { id: "nha-trang", label: "Ngũ Hành Sơn / Chùa Linh Ứng" },
+        { id: "other", label: "Địa điểm khác (chưa có trong danh sách)" },
+      ] : [
+        { id: "banahills", label: "Ba Na Hills" },
+        { id: "hoian", label: "Hoi An Ancient Town" },
+        { id: "sontra", label: "Son Tra Peninsula" },
+        { id: "nha-trang", label: "Marble Mountains / Linh Ung Pagoda" },
+        { id: "other", label: "Other destination (not listed)" },
+      ];
+    } else if (intent === "unknown") {
+      optionsList = locale === "vi" ? [
+        { id: "tour", label: "Tìm tour du lịch Bà Nà Hills, Hội An..." },
+        { id: "food", label: "Khám phá địa điểm ăn uống, món ăn ngon" },
+        { id: "hotel", label: "Tìm khách sạn, phòng nghỉ, chỗ ở" },
+        { id: "blog", label: "Đọc cẩm nang du lịch, bài viết chia sẻ" },
+        { id: "other", label: "Yêu cầu khác (chưa có trong danh sách trên)" },
+      ] : [
+        { id: "tour", label: "Search travel tours (Ba Na Hills, Hoi An...)" },
+        { id: "food", label: "Explore dining spots & delicious food" },
+        { id: "hotel", label: "Find hotels & accommodations" },
+        { id: "blog", label: "Read travel blogs & guides" },
+        { id: "other", label: "Other request (not in the list above)" },
+      ];
+    }
+
+    const lines: string[] = [];
+    selectedIds.forEach(id => {
+      const opt = optionsList.find(o => o.id === id);
+      if (opt) {
+        const note = optionNotes[id]?.trim();
+        if (note) {
+          lines.push(`- ${opt.label} (${locale === "vi" ? "Ghi chú" : "Note"}: ${note})`);
+        } else {
+          lines.push(`- ${opt.label}`);
+        }
+      }
+    });
+
+    if (lines.length > 0) {
+      const textToSend = (locale === "vi" ? "Tôi muốn:\n" : "I want to:\n") + lines.join("\n");
+      handleSend(textToSend);
+    }
+  };
+
+  // Quick suggestion chips for welcome screen
   const chips = [
     {
       label: "🏖 Tour Bà Nà Hills",
@@ -532,10 +1137,8 @@ export default function CopilotFloatingWidget() {
     },
   ];
 
-  // Helper to determine if we are in welcome screen state (no user queries sent yet)
   const isWelcomeState = messages.filter((m) => m.role === "user").length === 0;
-  const activeTooltip =
-    tooltipSuggestions[tooltipIndex % tooltipSuggestions.length];
+  const activeTooltip = tooltipSuggestions[tooltipIndex % tooltipSuggestions.length];
   const dismissTooltip = () => {
     setTooltipIndex((current) => (current + 1) % tooltipSuggestions.length);
     setShowTooltip(false);
@@ -543,7 +1146,7 @@ export default function CopilotFloatingWidget() {
   const showPreviousTooltip = () => {
     setTooltipIndex(
       (current) =>
-        (current - 1 + tooltipSuggestions.length) % tooltipSuggestions.length,
+        (current - 1 + tooltipSuggestions.length) % tooltipSuggestions.length
     );
   };
   const showNextTooltip = () => {
@@ -551,8 +1154,8 @@ export default function CopilotFloatingWidget() {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-[9999] flex flex-col items-end">
-      {/* Loyalty and assistant nudge */}
+    <div className="fixed bottom-6 right-6 z-9999 flex flex-col items-end">
+      {/* Tooltip nudge */}
       <AnimatePresence>
         {showTooltip && !isOpen && (
           <motion.div
@@ -632,7 +1235,7 @@ export default function CopilotFloatingWidget() {
                             "h-1 rounded-full transition-all",
                             index === tooltipIndex
                               ? "w-4 bg-primary"
-                              : "w-1 bg-slate-200",
+                              : "w-1 bg-slate-200"
                           )}
                         />
                       ))}
@@ -640,11 +1243,7 @@ export default function CopilotFloatingWidget() {
                     <div className="flex items-center justify-end gap-1 border-t border-slate-100 pt-2">
                       <button
                         type="button"
-                        aria-label={
-                          locale === "vi"
-                            ? "Gợi ý trước"
-                            : "Previous suggestion"
-                        }
+                        aria-label={locale === "vi" ? "Gợi ý trước" : "Previous suggestion"}
                         onClick={showPreviousTooltip}
                         className="flex h-7 w-7 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition-colors hover:border-primary/30 hover:bg-primary/5 hover:text-primary"
                       >
@@ -652,11 +1251,7 @@ export default function CopilotFloatingWidget() {
                       </button>
                       <button
                         type="button"
-                        aria-label={
-                          locale === "vi"
-                            ? "Gợi ý tiếp theo"
-                            : "Next suggestion"
-                        }
+                        aria-label={locale === "vi" ? "Gợi ý tiếp theo" : "Next suggestion"}
                         onClick={showNextTooltip}
                         className="flex h-7 w-7 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition-colors hover:border-primary/30 hover:bg-primary/5 hover:text-primary"
                       >
@@ -692,10 +1287,10 @@ export default function CopilotFloatingWidget() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 30 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
-            className="mb-4 flex h-[520px] w-[350px] sm:w-[380px] flex-col rounded-2xl border border-border bg-white shadow-[0_12px_40px_rgba(0,0,0,0.15)] overflow-hidden"
+            className="mb-4 flex h-[540px] w-[350px] sm:w-[380px] flex-col rounded-2xl border border-border bg-white shadow-[0_12px_40px_rgba(0,0,0,0.15)] overflow-hidden"
           >
             {/* Header */}
-            <div className="flex items-center justify-between bg-gradient-to-r from-primary to-rose-500 p-4 text-white shrink-0 shadow-sm">
+            <div className="flex items-center justify-between bg-linear-to-r from-primary to-rose-500 p-4 text-white shrink-0 shadow-sm">
               <div className="flex items-center gap-2.5">
                 <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/20">
                   <Bot className="h-5 w-5" />
@@ -725,16 +1320,14 @@ export default function CopilotFloatingWidget() {
 
             {/* Chat Body */}
             {isWelcomeState ? (
-              /* Welcome Screen state - Clean AI Concierge Layout */
+              /* Welcome Screen */
               <div className="flex-1 overflow-y-auto p-5 flex flex-col justify-center space-y-5 bg-slate-50/50">
                 <div className="space-y-1 text-center animate-reveal-up">
                   <h3 className="text-lg font-extrabold text-slate-800">
                     Xin chào 👋
                   </h3>
                   <p className="text-xs text-slate-500">
-                    {locale === "vi"
-                      ? "Tôi có thể giúp bạn:"
-                      : "I can help you with:"}
+                    {locale === "vi" ? "Tôi có thể giúp bạn:" : "I can help you with:"}
                   </p>
                 </div>
 
@@ -742,37 +1335,27 @@ export default function CopilotFloatingWidget() {
                   <ul className="space-y-2 text-xs text-slate-600">
                     <li className="flex items-center gap-2">
                       🏖{" "}
-                      <span className="font-semibold text-slate-800">
-                        Tìm tour:
-                      </span>{" "}
+                      <span className="font-semibold text-slate-800">Tìm tour:</span>{" "}
                       Khám phá Bà Nà Hills, Hội An, Cù Lao Chàm...
                     </li>
                     <li className="flex items-center gap-2">
                       🍜{" "}
-                      <span className="font-semibold text-slate-800">
-                        Tìm quán ăn:
-                      </span>{" "}
+                      <span className="font-semibold text-slate-800">Tìm quán ăn:</span>{" "}
                       Các quán hải sản ngon, quán ăn đặc sản.
                     </li>
                     <li className="flex items-center gap-2">
                       ☕{" "}
-                      <span className="font-semibold text-slate-800">
-                        Tìm quán cafe:
-                      </span>{" "}
+                      <span className="font-semibold text-slate-800">Tìm quán cafe:</span>{" "}
                       View biển đẹp, check-in sang xịn.
                     </li>
                     <li className="flex items-center gap-2">
                       📅{" "}
-                      <span className="font-semibold text-slate-800">
-                        Lập lịch trình:
-                      </span>{" "}
+                      <span className="font-semibold text-slate-800">Lập lịch trình:</span>{" "}
                       Gợi ý lịch trình tham quan Đà Nẵng.
                     </li>
                     <li className="flex items-center gap-2">
                       🏨{" "}
-                      <span className="font-semibold text-slate-800">
-                        Tìm khách sạn:
-                      </span>{" "}
+                      <span className="font-semibold text-slate-800">Tìm khách sạn:</span>{" "}
                       Chỗ ở view biển, trung tâm tiện nghi.
                     </li>
                   </ul>
@@ -791,32 +1374,26 @@ export default function CopilotFloatingWidget() {
                 </div>
               </div>
             ) : (
-              /* Message logs rendering with streaming bubbles & feedback options */
+              /* Message list */
               <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50/50">
                 {messages.map((msg, idx) => (
                   <MessageBubble
                     key={msg.id}
                     msg={msg}
                     isLast={idx === messages.length - 1}
+                    locale={locale}
                     onCopy={handleCopy}
                     onFeedback={handleFeedback}
+                    onQuickReply={handleQuickReply}
+                    onClarifySubmit={handleClarifySubmit}
                   />
                 ))}
 
-                {/* AI Concierge Bouncing Dots Typing Indicator */}
+                {/* Processing Indicator (replaces simple dots) */}
                 {isLoading && (
-                  <div className="flex items-start gap-2 mr-auto max-w-[85%]">
-                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary text-white">
-                      <Bot className="h-3.5 w-3.5" />
-                    </div>
-                    <div className="rounded-2xl rounded-tl-none bg-white border border-slate-200/60 px-3.5 py-2.5 text-xs text-slate-600 shadow-xs flex flex-col gap-1.5">
-                      <span className="font-semibold text-[10px] text-slate-400">
-                        DanangTrip AI đang trả lời...
-                      </span>
-                      <CopilotThinkingDots />
-                    </div>
-                  </div>
+                  <ProcessingIndicator step={processingStep} locale={locale} />
                 )}
+
                 <div ref={messagesEndRef} />
               </div>
             )}
@@ -845,7 +1422,7 @@ export default function CopilotFloatingWidget() {
                     "flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary text-white shadow-xs transition-all active:scale-95 cursor-pointer",
                     !inputVal.trim() || isLoading
                       ? "bg-slate-200 text-slate-400 cursor-not-allowed shadow-none"
-                      : "hover:bg-primary-hover",
+                      : "hover:bg-primary-hover"
                   )}
                 >
                   <Send className="h-3.5 w-3.5" />
@@ -856,7 +1433,7 @@ export default function CopilotFloatingWidget() {
         )}
       </AnimatePresence>
 
-      {/* Toggle Button bubble */}
+      {/* Toggle Button */}
       <motion.button
         onClick={() => {
           setIsOpen(!isOpen);
@@ -864,10 +1441,10 @@ export default function CopilotFloatingWidget() {
         }}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-tr from-primary to-rose-500 text-white shadow-[0_8px_24px_rgba(255,56,92,0.4)] hover:shadow-[0_8px_30px_rgba(255,56,92,0.6)] cursor-pointer focus:outline-none transition-shadow relative isolate"
+        className="flex h-14 w-14 items-center justify-center rounded-full bg-linear-to-tr from-primary to-rose-500 text-white shadow-[0_8px_24px_rgba(255,56,92,0.4)] hover:shadow-[0_8px_30px_rgba(255,56,92,0.6)] cursor-pointer focus:outline-none transition-shadow relative isolate"
       >
         {!isOpen && (
-          <span className="absolute inset-0 rounded-full bg-gradient-to-tr from-primary to-rose-500 opacity-60 animate-ping z-[-1]" />
+          <span className="absolute inset-0 rounded-full bg-linear-to-tr from-primary to-rose-500 opacity-60 animate-ping z-[-1]" />
         )}
         <AnimatePresence mode="wait">
           {isOpen ? (
