@@ -690,6 +690,20 @@ function MessageBubble({
           )}
         </div>
 
+        {!isUser && !isStreaming && isLast && quickReplies && (
+          <div className="mt-1 flex flex-wrap gap-1.5 animate-reveal-up">
+            {quickReplies.map((q, idx) => (
+              <button
+                key={idx}
+                onClick={() => onQuickReply(q)}
+                className="rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[10px] text-slate-600 hover:border-primary hover:text-primary transition-all cursor-pointer shadow-3xs hover:bg-primary/5 font-semibold"
+              >
+                {q}
+              </button>
+            ))}
+          </div>
+        )}
+
         {/* Action feedback bar (assistant messages only) */}
         {!isUser && !isStreaming && (
           <div className="flex items-center gap-2 px-1 text-[10px] text-slate-400 flex-wrap">
@@ -1115,27 +1129,33 @@ export default function CopilotFloatingWidget() {
     {
       label: "🏖 Tour Bà Nà Hills",
       query:
-        locale === "vi" ? "Tour Bà Nà Hills tốt nhất" : "Best Ba Na Hills tour",
+        locale === "vi"
+          ? "Tour Bà Nà Hills giá rẻ nhất"
+          : "Cheapest Ba Na Hills tour",
     },
     {
       label: "🍜 Ăn gì ở Đà Nẵng?",
       query:
         locale === "vi"
-          ? "Ăn gì ở Đà Nẵng ngon bổ rẻ?"
-          : "What to eat in Da Nang?",
+          ? "Quán ăn ngon ở Đà Nẵng món đặc sản hải sản"
+          : "Best local food restaurants in Da Nang",
     },
     {
       label: "📅 Lịch trình 3 ngày",
       query:
         locale === "vi"
-          ? "Lịch trình du lịch 3 ngày"
-          : "3-day Da Nang itinerary",
+          ? "Lịch trình du lịch Đà Nẵng 3 ngày 2 đêm"
+          : "3-day 2-night Da Nang travel itinerary",
     },
     {
       label: "☕ Cafe view biển",
-      query: locale === "vi" ? "cà phê view biển đẹp" : "seaview coffee shop",
+      query:
+        locale === "vi"
+          ? "quán cà phê view biển đẹp ở Đà Nẵng"
+          : "seaview cafe coffee shop Da Nang",
     },
   ];
+
 
   const isWelcomeState = messages.filter((m) => m.role === "user").length === 0;
   const activeTooltip = tooltipSuggestions[tooltipIndex % tooltipSuggestions.length];
