@@ -11,7 +11,7 @@ import { getApiErrorMessage } from "@/utils/api-error";
  */
 const axiosInstance = axios.create({
   baseURL: config.api.url,
-  timeout: 30_000,
+  timeout: 60_000,
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
@@ -225,7 +225,7 @@ axiosInstance.interceptors.response.use(
         const response = await axios.post<RefreshTokenData>(
           `${activeBaseUrl}/auth/refresh`,
           {},
-          { withCredentials: true, timeout: 30_000 }
+          { withCredentials: true, timeout: 60_000 }
         );
 
         const newToken = response.data?.data?.token || response.data?.token;
