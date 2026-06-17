@@ -87,7 +87,13 @@ export async function generateMetadata({ params }: BlogDetailPageProps): Promise
 export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
   const { locale, slug } = await params;
 
-  const post = await getBlogPost(slug);
+  let post;
+  try {
+    post = await getBlogPost(slug);
+  } catch {
+    notFound();
+  }
+
   if (!post) {
     notFound();
   }
