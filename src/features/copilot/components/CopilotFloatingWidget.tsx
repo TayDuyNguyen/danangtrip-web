@@ -1148,11 +1148,11 @@ export default function CopilotFloatingWidget() {
           : "3-day 2-night Da Nang travel itinerary",
     },
     {
-      label: "☕ Cafe view biển",
+      label: "👨\u200d💼 Gặp tư vấn viên",
       query:
         locale === "vi"
-          ? "quán cà phê view biển đẹp ở Đà Nẵng"
-          : "seaview cafe coffee shop Da Nang",
+          ? "Cho tôi gặp nhân viên tư vấn"
+          : "I want to speak with a travel consultant",
     },
   ];
 

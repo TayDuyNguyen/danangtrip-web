@@ -716,11 +716,11 @@ export default function CopilotChat() {
           : "3-day 2-night Da Nang travel itinerary",
     },
     {
-      label: "☕ Cafe view biển",
+      label: "👨\u200d💼 Gặp tư vấn viên",
       query:
         locale === "vi"
-          ? "quán cà phê view biển đẹp ở Đà Nẵng"
-          : "seaview cafe coffee shop Da Nang",
+          ? "Cho tôi gặp nhân viên tư vấn"
+          : "I want to speak with a travel consultant",
     },
   ];
 
@@ -784,11 +784,11 @@ export default function CopilotChat() {
                 Điểm check-in view biển ngắm hoàng hôn.
               </li>
               <li className="flex items-center gap-2">
-                📅{" "}
+                📖{" "}
                 <span className="font-semibold text-slate-800">
-                  Lập lịch trình:
+                  Bài viết hay:
                 </span>{" "}
-                Lên kế hoạch vi vu Đà Nẵng 3 ngày 2 đêm.
+                Cẩm nang du lịch, kinh nghiệm khám phá Đà Nẵng.
               </li>
               <li className="flex items-center gap-2">
                 🏨{" "}

@@ -145,7 +145,7 @@ const Header = () => {
               <p className="text-[15px] font-semibold tracking-[-0.02em] text-on-surface leading-tight">
                 {t("common.brand_name")}
               </p>
-              <p className="text-[12px] text-on-surface-subtle">
+              <p className="hidden min-[1680px]:block text-[12px] text-on-surface-subtle">
                 {t("common.brand_subtitle")}
               </p>
             </div>
