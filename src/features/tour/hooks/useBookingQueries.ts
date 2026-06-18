@@ -78,3 +78,12 @@ export function useCancelBooking() {
   });
 }
 
+export function useRefundPreview(id: number | string, enabled: boolean) {
+  return useQuery({
+    queryKey: ["bookings", "refund-preview", id],
+    queryFn: () => bookingService.refundPreview(id).then((res) => res.data),
+    enabled: enabled && Boolean(id),
+    staleTime: 15 * 1000,
+  });
+}
+

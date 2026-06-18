@@ -16,6 +16,10 @@ export interface Payment {
   booking_id: number;
   transaction_code: string;
   amount: string | number;
+  received_amount?: string | number;
+  short_amount?: string | number;
+  excess_amount?: string | number;
+  reconciliation_status?: "partial" | "matched" | "excess" | "superseded" | null;
   payment_method: PaymentMethod;
   payment_status: PaymentStatus;
   payment_gateway: string | null;

@@ -67,6 +67,19 @@ export interface BookingPaymentSession {
   expires_at: string | null;
 }
 
+export interface BookingRefundRequest {
+  id: number;
+  refund_code: string;
+  reason_type: "cancellation" | "overpayment" | "admin_adjustment" | "legacy_refund";
+  requested_amount: string | number;
+  approved_amount?: string | number | null;
+  refund_percent: string | number;
+  status: "pending" | "processing" | "completed" | "failed" | "rejected";
+  transfer_reference?: string | null;
+  requested_at?: string | null;
+  completed_at?: string | null;
+}
+
 export interface Booking {
   id: number;
   booking_code: string;
@@ -89,6 +102,7 @@ export interface Booking {
   cancelled_at: string | null;
   completed_at: string | null;
   latest_pending_payment?: BookingPaymentSession | null;
+  refund_requests?: BookingRefundRequest[];
   items?: BookingItem[];
   booking_items?: BookingItem[];
 }
@@ -128,6 +142,23 @@ export interface BookingCalculation {
 
 export interface CancelBookingPayload {
   cancellation_reason: string;
+  refund_bank_code?: string;
+  refund_account_no?: string;
+  refund_account_name?: string;
+}
+
+export interface RefundPreview {
+  booking_id: number;
+  booking_code: string;
+  departure_at: string;
+  hours_before_departure: number;
+  paid_amount: number;
+  refund_percent: number;
+  refund_amount: number;
+  cancellation_fee: number;
+  policy_code: string;
+  grace_period_applied: boolean;
+  requires_bank_details: boolean;
 }
 
 export type BookingListResponse = PaginatedResponse<Booking>;

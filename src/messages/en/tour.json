@@ -242,14 +242,18 @@
             "table": {
               "headers": ["Cancellation time", "Applied fee", "Refund amount"],
               "rows": [
-                ["More than 72 hours before departure", "0%", "Eligible for up to 100% refund"],
-                ["24-48 hours before departure", "50%", "Eligible for up to 50% refund"],
-                ["Less than 24 hours or no-show", "100%", "Not eligible for refund"]
+                ["At least 7 days before departure", "0%", "Refund 100% of the amount paid"],
+                ["From 3 to under 7 days", "50%", "Refund 50% of the amount paid"],
+                ["Under 3 days or no-show", "100%", "No refund"]
               ]
             }
           },
           {
-            "title": "2. Holiday, Tet and DIFF Tours",
+            "title": "2. Accidental booking grace period",
+            "body": "A 100% refund applies when cancellation is requested within 30 minutes after payment and departure is at least 12 hours away. This does not apply to holiday, Tet or peak-season tours."
+          },
+          {
+            "title": "3. Holiday, Tet and DIFF Tours",
             "body": "For tours during Lunar New Year, New Year, Vietnam National Day, April 30-May 1 or the Da Nang International Fireworks Festival (DIFF), cancellation requests must be made at least 7 days in advance. Late cancellations may incur a 100% tour fee."
           },
           {
@@ -364,6 +368,17 @@
     "cancel_success": "Booking cancellation requested successfully.",
     "cancel_failed": "Failed to cancel booking. Please try again.",
     "cancel_reason_min_error": "Cancellation reason must be at least 10 characters.",
+    "refund_preview_loading": "Calculating your refund under the policy...",
+    "refund_preview_error": "Unable to calculate the refund. Please try again.",
+    "refund_paid_amount": "Amount paid",
+    "refund_rate": "Refund rate",
+    "refund_amount": "Estimated refund",
+    "refund_grace_applied": "The 30-minute grace period is applied.",
+    "refund_bank_title": "Refund bank account",
+    "refund_bank_select": "Select bank",
+    "refund_account_no": "Account number",
+    "refund_account_name": "Account holder name",
+    "refund_bank_required": "Please provide complete refund bank details.",
     "button_close": "Close",
     "button_submitting": "Submitting request...",
     "button_submit": "Confirm Cancellation",
@@ -394,6 +409,10 @@
     "coupon_discount": "Coupon Discount",
     "payment_method_label": "Payment Method",
     "payment_status_label": "Payment Status",
+    "partial_payment_title": "Partial payment received",
+    "partial_received": "Received",
+    "partial_remaining": "Remaining",
+    "partial_payment_hint": "Please scan the current QR code to transfer the exact remaining amount.",
     "booking_status_label": "Booking Status",
     "booking_states": {
       "pending": "Pending",

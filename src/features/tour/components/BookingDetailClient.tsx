@@ -189,6 +189,9 @@ export function BookingDetailClient({ id, bookingCode }: BookingDetailClientProp
   }
 
   const canCancel = (booking.booking_status === "pending" || booking.booking_status === "confirmed") && !isPast;
+  const latestRefundRequest = booking.refund_requests
+    ?.slice()
+    .sort((a, b) => b.id - a.id)[0];
   const onlinePaymentMethods = ["sepay", "vnpay", "momo", "zalopay", "bank_transfer"] as const;
   const methodLabels: Record<(typeof onlinePaymentMethods)[number], string> = {
     sepay: "SePay VietQR",
@@ -468,6 +471,46 @@ export function BookingDetailClient({ id, bookingCode }: BookingDetailClientProp
               <p className="rounded-xl border border-red-100 bg-white p-3">
                 {booking.cancellation_reason}
               </p>
+            </div>
+          )}
+
+          {latestRefundRequest && (
+            <div className="space-y-3 rounded-[20px] border border-amber-200 bg-amber-50 p-5 text-sm print:hidden">
+              <div className="flex items-center justify-between gap-3">
+                <span className="font-bold text-amber-900">Yêu cầu hoàn tiền</span>
+                <span className="rounded-full border border-amber-200 bg-white px-3 py-1 text-xs font-bold text-amber-700">
+                  {latestRefundRequest.status === "completed"
+                    ? "Đã hoàn tiền"
+                    : latestRefundRequest.status === "processing"
+                      ? "Đang xử lý"
+                      : latestRefundRequest.status === "failed"
+                        ? "Xử lý thất bại"
+                        : latestRefundRequest.status === "rejected"
+                          ? "Đã từ chối"
+                          : "Chờ xử lý"}
+                </span>
+              </div>
+              <div className="flex justify-between text-amber-900">
+                <span>Mã hoàn tiền</span>
+                <strong>{latestRefundRequest.refund_code}</strong>
+              </div>
+              <div className="flex justify-between text-amber-900">
+                <span>Số tiền</span>
+                <strong>
+                  {formatPriceVND(
+                    Number(
+                      latestRefundRequest.approved_amount ??
+                        latestRefundRequest.requested_amount
+                    )
+                  )}
+                </strong>
+              </div>
+              {latestRefundRequest.transfer_reference && (
+                <div className="flex justify-between text-amber-900">
+                  <span>Mã giao dịch ngân hàng</span>
+                  <strong>{latestRefundRequest.transfer_reference}</strong>
+                </div>
+              )}
             </div>
           )}
 

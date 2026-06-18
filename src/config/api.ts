@@ -40,6 +40,7 @@ export const API_ENDPOINTS = {
     DETAIL: (id: number | string) => `/user/bookings/${id}`,
     DETAIL_BY_CODE: (bookingCode: string) => `/user/bookings/code/${bookingCode}`,
     INVOICE: (id: number | string) => `/user/bookings/${id}/invoice`,
+    REFUND_PREVIEW: (id: number | string) => `/user/bookings/${id}/refund-preview`,
     CANCEL: (id: number | string) => `/user/bookings/${id}/cancel`,
   },
   PAYMENTS: {

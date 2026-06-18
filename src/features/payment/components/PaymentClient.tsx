@@ -131,6 +131,21 @@ export function PaymentClient() {
           <SepayQrCard checkout={paymentData.sepay_checkout} isBankTransfer={isBankTransfer} />
         )}
 
+        {status === "pending" && Number(paymentData?.short_amount || 0) > 0 && (
+          <div className="mt-6 w-full max-w-md rounded-2xl border border-orange-200 bg-orange-50 px-5 py-4 text-sm text-orange-900">
+            <p className="font-bold">{t("partial_payment_title")}</p>
+            <div className="mt-2 flex justify-between">
+              <span>{t("partial_received")}</span>
+              <strong>{Number(paymentData?.received_amount || 0).toLocaleString("vi-VN")}đ</strong>
+            </div>
+            <div className="mt-1 flex justify-between">
+              <span>{t("partial_remaining")}</span>
+              <strong>{Number(paymentData?.short_amount || 0).toLocaleString("vi-VN")}đ</strong>
+            </div>
+            <p className="mt-2 text-xs">{t("partial_payment_hint")}</p>
+          </div>
+        )}
+
         {status !== "redirecting" && (status === "failed" || status === "pending" || status === "expired") && bookingData && !isBankTransfer && (
           <PaymentRetryPanel
             expiresAt={paymentData?.expires_at}
