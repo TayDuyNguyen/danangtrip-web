@@ -242,14 +242,18 @@
             "table": {
               "headers": ["Thời gian hủy", "Phí áp dụng", "Mức hoàn trả"],
               "rows": [
-                ["Trên 72 giờ trước giờ khởi hành", "0%", "Đủ điều kiện hoàn tối đa 100%"],
-                ["Từ 24-48 giờ trước giờ khởi hành", "50%", "Đủ điều kiện hoàn tối đa 50%"],
-                ["Dưới 24 giờ hoặc vắng mặt", "100%", "Không đủ điều kiện hoàn tiền"]
+                ["Từ 7 ngày trước giờ khởi hành", "0%", "Hoàn 100% số tiền đã thanh toán"],
+                ["Từ 3 đến dưới 7 ngày", "50%", "Hoàn 50% số tiền đã thanh toán"],
+                ["Dưới 3 ngày hoặc vắng mặt", "100%", "Không hoàn tiền"]
               ]
             }
           },
           {
-            "title": "2. Tour dịp Lễ, Tết và DIFF",
+            "title": "2. Thời gian ân hạn khi đặt nhầm",
+            "body": "Khách hàng được hoàn 100% nếu yêu cầu hủy trong vòng 30 phút sau khi thanh toán và tour còn ít nhất 12 giờ mới khởi hành. Quy định này không áp dụng cho tour Lễ, Tết hoặc mùa cao điểm."
+          },
+          {
+            "title": "3. Tour dịp Lễ, Tết và DIFF",
             "body": "Đối với tour diễn ra vào Tết Nguyên Đán, Tết Dương Lịch, Quốc khánh 2/9, 30/4-1/5 hoặc Lễ hội Pháo hoa Quốc tế Đà Nẵng (DIFF), yêu cầu hủy cần được thông báo trước ít nhất 7 ngày. Hủy sau thời hạn này có thể chịu phí 100% giá trị tour."
           },
           {
@@ -364,6 +368,17 @@
     "cancel_success": "Đơn hàng đã được yêu cầu hủy thành công.",
     "cancel_failed": "Hủy đơn hàng thất bại. Vui lòng thử lại.",
     "cancel_reason_min_error": "Lý do hủy tour phải có ít nhất 10 ký tự.",
+    "refund_preview_loading": "Đang tính khoản hoàn theo chính sách...",
+    "refund_preview_error": "Không thể tính khoản hoàn. Vui lòng thử lại.",
+    "refund_paid_amount": "Số tiền đã thanh toán",
+    "refund_rate": "Tỷ lệ được hoàn",
+    "refund_amount": "Số tiền dự kiến hoàn",
+    "refund_grace_applied": "Đang áp dụng thời gian ân hạn 30 phút.",
+    "refund_bank_title": "Tài khoản nhận hoàn tiền",
+    "refund_bank_select": "Chọn ngân hàng",
+    "refund_account_no": "Số tài khoản",
+    "refund_account_name": "Tên chủ tài khoản",
+    "refund_bank_required": "Vui lòng nhập đầy đủ thông tin tài khoản nhận hoàn tiền.",
     "button_close": "Đóng",
     "button_submitting": "Đang gửi yêu cầu...",
     "button_submit": "Xác nhận hủy",
@@ -394,6 +409,10 @@
     "coupon_discount": "Giảm giá coupon",
     "payment_method_label": "Phương thức TT",
     "payment_status_label": "Trạng thái TT",
+    "partial_payment_title": "Đã nhận một phần thanh toán",
+    "partial_received": "Đã nhận",
+    "partial_remaining": "Còn cần thanh toán",
+    "partial_payment_hint": "Vui lòng quét mã QR hiện tại để chuyển đúng phần tiền còn thiếu.",
     "booking_status_label": "Trạng thái đơn",
     "booking_states": {
       "pending": "Chờ xác nhận",

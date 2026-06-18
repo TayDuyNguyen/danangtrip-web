@@ -23,6 +23,9 @@ export type BookingFormValues = z.infer<typeof bookingSchema>;
 
 export const cancelBookingSchema = z.object({
   cancellation_reason: z.string().min(10, "cancel_reason_min_error"),
+  refund_bank_code: z.string().optional(),
+  refund_account_no: z.string().regex(/^[0-9]{6,30}$/, "refund_account_invalid").optional().or(z.literal("")),
+  refund_account_name: z.string().min(2, "refund_account_name_invalid").optional().or(z.literal("")),
 });
 
 export type CancelBookingFormValues = z.infer<typeof cancelBookingSchema>;
