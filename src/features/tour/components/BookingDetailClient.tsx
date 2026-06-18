@@ -1,12 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import { useState, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { useBookingDetail, useBookingDetailByCode } from "../hooks/useBookingQueries";
 import { isPaymentSessionExpired, usePayment } from "@/features/payment/hooks/usePayment";
-import { useAppConfig } from "@/hooks/use-app-config";
 import { BookingStatusTimeline } from "./BookingStatusTimeline";
 import { BookingTourInfoCard } from "./BookingTourInfoCard";
 import { BookingCustomerInfoCard } from "./BookingCustomerInfoCard";
@@ -18,7 +16,7 @@ import { Button } from "@/components/ui";
 import { toast } from "sonner";
 import { CreditCard, Download, Printer, XCircle } from "lucide-react";
 import { formatDate, formatDateTime, formatPriceVND } from "@/utils/format";
-import type { Booking, BookingItem, PaymentMethod } from "@/types";
+import type { Booking, BookingItem } from "@/types";
 
 interface BookingDetailClientProps {
   id?: string;
@@ -136,7 +134,6 @@ export function BookingDetailClient({ id, bookingCode }: BookingDetailClientProp
   const tBooking = useTranslations("tour.booking");
   const router = useRouter();
   const { retryPayment, isRetrying } = usePayment();
-  const { data: appConfig } = useAppConfig();
 
   const detailQuery = useBookingDetail(id as string);
   const detailByCodeQuery = useBookingDetailByCode(bookingCode as string);
@@ -144,7 +141,6 @@ export function BookingDetailClient({ id, bookingCode }: BookingDetailClientProp
   const { data: response, isLoading, error, refetch } = bookingCode ? detailByCodeQuery : detailQuery;
   const [isCancelOpen, setIsCancelOpen] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<Extract<PaymentMethod, "sepay" | "vnpay" | "momo" | "zalopay" | "bank_transfer"> | null>(null);
 
   const booking = response;
   const item = booking?.booking_items?.[0] || booking?.items?.[0];
@@ -192,47 +188,20 @@ export function BookingDetailClient({ id, bookingCode }: BookingDetailClientProp
   const latestRefundRequest = booking.refund_requests
     ?.slice()
     .sort((a, b) => b.id - a.id)[0];
-  const onlinePaymentMethods = ["sepay", "vnpay", "momo", "zalopay", "bank_transfer"] as const;
-  const methodLabels: Record<(typeof onlinePaymentMethods)[number], string> = {
-    sepay: "SePay VietQR",
-    vnpay: "VNPAY",
-    momo: "MoMo",
-    zalopay: "ZaloPay",
-    bank_transfer: "Chuyển khoản thủ công",
-  };
-  const methodIcons: Record<(typeof onlinePaymentMethods)[number], string | null> = {
-    sepay: "/images/payment/logo-sepay-blue.svg",
-    vnpay: "/images/payment/vnpay.png",
-    momo: "/images/payment/momo.png",
-    zalopay: "/images/payment/zalopay.png",
-    bank_transfer: null,
-  };
-  const normalizedBookingPaymentMethod = booking.payment_method === "payos" ? "sepay" : booking.payment_method;
-  const paymentOptions = onlinePaymentMethods
-    .filter((method) => {
-      if (!appConfig?.payment) return method === normalizedBookingPaymentMethod || method === "sepay";
-      if (method === "sepay") return (appConfig.payment.sepay ?? appConfig.payment.payos) !== false;
-      if (method === "bank_transfer") return appConfig.payment.cod !== false;
-      return appConfig.payment[method] !== false;
-    });
-  const activePaymentMethod =
-    selectedPaymentMethod ||
-    (onlinePaymentMethods.includes(normalizedBookingPaymentMethod as (typeof onlinePaymentMethods)[number])
-      ? (normalizedBookingPaymentMethod as Extract<PaymentMethod, "sepay" | "vnpay" | "momo" | "zalopay" | "bank_transfer">)
-      : "sepay");
   const canContinuePayment =
-    (onlinePaymentMethods.includes(normalizedBookingPaymentMethod as (typeof onlinePaymentMethods)[number])) &&
     ["pending", "failed", "unpaid", "partially_paid"].includes(booking.payment_status) &&
     booking.booking_status !== "cancelled";
 
   const handleContinuePayment = () => {
     const latestPayment = booking.latest_pending_payment;
     const latestPaymentMethod = latestPayment?.payment_method === "payos" ? "sepay" : latestPayment?.payment_method;
+    const canReusePendingPayment =
+      latestPaymentMethod === "sepay" || latestPaymentMethod === "bank_transfer";
 
     if (
       latestPayment?.transaction_code &&
       latestPayment.payment_status === "pending" &&
-      latestPaymentMethod === activePaymentMethod &&
+      canReusePendingPayment &&
       !isPaymentSessionExpired(latestPayment)
     ) {
       router.push(`/payment/result?transaction_code=${latestPayment.transaction_code}&booking_code=${booking.booking_code}`);
@@ -241,7 +210,7 @@ export function BookingDetailClient({ id, bookingCode }: BookingDetailClientProp
 
     retryPayment({
       bookingCode: booking.booking_code,
-      payment_method: activePaymentMethod,
+      payment_method: "sepay",
     });
   };
 
@@ -403,13 +372,13 @@ export function BookingDetailClient({ id, bookingCode }: BookingDetailClientProp
 
           {canContinuePayment && (
             <div className="rounded-[20px] border border-border bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.08)] print:hidden">
-              <div className="mb-4 flex items-center justify-between gap-3">
+              <div className="flex items-center justify-between gap-3">
                 <div>
                   <h3 className="text-sm font-semibold uppercase tracking-normal text-on-surface">
                     {tBooking("payment_method")}
                   </h3>
                   <p className="mt-1 text-xs text-on-surface-subtle">
-                    {tBooking("continue_payment")}
+                    SePay VietQR — {tBooking("continue_payment")}
                   </p>
                 </div>
                 <ActionIconButton
@@ -421,42 +390,6 @@ export function BookingDetailClient({ id, bookingCode }: BookingDetailClientProp
                 >
                   <CreditCard className="h-4 w-4" />
                 </ActionIconButton>
-              </div>
-
-              <div className="grid grid-cols-4 gap-2">
-                {paymentOptions.map((method) => {
-                  const isActive = activePaymentMethod === method;
-                  return (
-                    <div key={method} className="group relative">
-                      <button
-                        type="button"
-                        aria-label={methodLabels[method]}
-                        title={methodLabels[method]}
-                        onClick={() => setSelectedPaymentMethod(method)}
-                        className={`flex h-12 w-full items-center justify-center rounded-2xl border transition-all duration-200 active:scale-95 ${
-                          isActive
-                            ? "border-primary bg-[#fff4f6] shadow-[0_2px_8px_rgba(255,56,92,0.18)]"
-                            : "border-border bg-white hover:border-[#cfcfcf] hover:bg-[#f7f7f7]"
-                        }`}
-                      >
-                        {methodIcons[method] ? (
-                          <Image
-                            src={methodIcons[method]}
-                            alt=""
-                            width={24}
-                            height={24}
-                            className="h-6 w-6 object-contain"
-                          />
-                        ) : (
-                          <span className="text-[10px] font-black uppercase text-primary">QR</span>
-                        )}
-                      </button>
-                      <span className="pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 w-max -translate-x-1/2 rounded-full bg-[#222222] px-3 py-1.5 text-[11px] font-medium text-white opacity-0 shadow-[0_8px_16px_rgba(0,0,0,0.16)] transition-opacity duration-150 group-hover:opacity-100">
-                        {methodLabels[method]}
-                      </span>
-                    </div>
-                  );
-                })}
               </div>
             </div>
           )}

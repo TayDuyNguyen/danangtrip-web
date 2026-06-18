@@ -21,7 +21,6 @@ import { toast } from "sonner";
 import { useSearchParams } from "next/navigation";
 import type { Tour } from "@/types";
 import { usePayment } from "@/features/payment/hooks/usePayment";
-import { useAppConfig } from "@/hooks/use-app-config";
 import { formatPriceVND } from "@/utils/format";
 import { ROUTES } from "@/config";
 import { calculateTourPricing, getApplicablePromotionMatches } from "../utils/promotion-pricing";
@@ -39,7 +38,6 @@ export function BookingForm({ tour }: BookingFormProps) {
   const router = useRouter();
   const { user } = useAuthStore();
   const searchParams = useSearchParams();
-  const { data: config } = useAppConfig();
 
   const initialScheduleId = searchParams.get("tour_schedule_id")
     ? Number(searchParams.get("tour_schedule_id"))
@@ -95,7 +93,7 @@ export function BookingForm({ tour }: BookingFormProps) {
   } = useCheckTourAvailability(tour.id);
   const { createPayment, isCreating: isCreatingPayment } = usePayment();
 
-  const onlinePaymentMethods = ["sepay", "bank_transfer"] as const;
+  const onlinePaymentMethods = ["sepay"] as const;
 
   const availableSchedules = useMemo(
     () => schedules.filter(
@@ -258,20 +256,11 @@ export function BookingForm({ tour }: BookingFormProps) {
     tour.id
   ]);
 
-  // Dynamically default/switch payment method if selected gateway gets toggled off in settings
   useEffect(() => {
-    if (config?.payment) {
-      const isSepayOn = (config.payment.sepay ?? config.payment.payos) !== false;
-      const isCodOn = config.payment.cod !== false;
-
-      // If currently selected method is disabled, fall back
-      if (formData.payment_method === "sepay" && !isSepayOn) {
-        setFormData(prev => ({ ...prev, payment_method: "bank_transfer" }));
-      } else if (formData.payment_method === "bank_transfer" && !isCodOn) {
-        setFormData(prev => ({ ...prev, payment_method: "sepay" }));
-      }
+    if (formData.payment_method !== "sepay") {
+      setFormData((prev) => ({ ...prev, payment_method: "sepay" }));
     }
-  }, [config, formData.payment_method]);
+  }, [formData.payment_method]);
 
   const handleChange = (field: keyof BookingFormValues, value: string | number | boolean | null) => {
     setFormData(prev => ({ ...prev, [field]: value }));

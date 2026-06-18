@@ -8,10 +8,9 @@ import { formatCurrency } from "@/utils/format";
 
 interface Props {
   checkout: SepayCheckout;
-  isBankTransfer?: boolean;
 }
 
-export function SepayQrCard({ checkout, isBankTransfer = false }: Props) {
+export function SepayQrCard({ checkout }: Props) {
   const t = useTranslations("tour.payment.sepay");
   const locale = useLocale();
   const [qrLoadFailed, setQrLoadFailed] = useState(false);
@@ -26,7 +25,7 @@ export function SepayQrCard({ checkout, isBankTransfer = false }: Props) {
       <div className="text-center">
         <h3 className="text-lg font-bold text-on-surface">{t("title")}</h3>
         <p className="mt-1 text-sm leading-6 text-on-surface-subtle">
-          {isBankTransfer ? t("description_manual") : t("description")}
+          {t("description")}
         </p>
       </div>
 
