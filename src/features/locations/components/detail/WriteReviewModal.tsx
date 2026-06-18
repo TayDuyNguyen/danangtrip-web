@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { Star, X } from "@/components/icons/solar";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { toast } from "sonner";
 import { Button } from "@/components/ui";
 import { cn } from "@/lib/utils";
@@ -19,6 +19,7 @@ type Props = {
 
 export default function WriteReviewModal({ open, onClose, locationId, tourId }: Props) {
   const t = useTranslations("locations");
+  const locale = useLocale();
   const queryClient = useQueryClient();
   const [score, setScore] = useState(5);
   const [comment, setComment] = useState("");
@@ -48,26 +49,46 @@ export default function WriteReviewModal({ open, onClose, locationId, tourId }: 
 
       throw new Error("Review target is required.");
     },
-    onSuccess: (res) => {
+    onSuccess: async (res) => {
       if (res.success) {
-        toast.success(t("detail.review_submit_success"));
+        const partialImageWarning =
+          typeof res.message === "string" &&
+          res.message.toLowerCase().includes("images could not be uploaded");
+
+        if (partialImageWarning) {
+          toast.warning(
+            locale === "vi"
+              ? "Đánh giá đã gửi nhưng không tải được ảnh. Kiểm tra cấu hình Cloudinary hoặc thử ảnh nhỏ hơn."
+              : "Review submitted but images could not be uploaded."
+          );
+        } else {
+          toast.success(t("detail.review_submit_success"));
+        }
+
         if (tourId) {
-          void queryClient.invalidateQueries({ queryKey: ["tours", "ratings", tourId] });
-          void queryClient.invalidateQueries({ queryKey: ["tours", "ratingStats", tourId] });
-          void queryClient.invalidateQueries({ queryKey: ["tours", "checkRating", tourId] });
+          await queryClient.refetchQueries({ queryKey: ["tours", "ratings", tourId] });
+          await queryClient.refetchQueries({ queryKey: ["tours", "ratingStats", tourId] });
+          await queryClient.refetchQueries({ queryKey: ["tours", "checkRating", tourId] });
         } else if (locationId) {
-          void queryClient.invalidateQueries({ queryKey: ["locations", locationId, "ratings"] });
-          void queryClient.invalidateQueries({ queryKey: ["locations", locationId, "rating-stats"] });
-          void queryClient.invalidateQueries({ queryKey: ["locations", locationId, "rating-check"] });
+          await queryClient.refetchQueries({ queryKey: ["locations", locationId, "ratings"] });
+          await queryClient.refetchQueries({ queryKey: ["locations", locationId, "rating-stats"] });
+          await queryClient.refetchQueries({ queryKey: ["locations", locationId, "rating-check"] });
         }
         reset();
         onClose();
-      } else {
-        toast.error(getApiErrorMessage(res, t("detail.review_submit_error")));
+        return;
       }
+
+      toast.error(getApiErrorMessage(res, t("detail.review_submit_error")));
     },
     onError: (error) => {
       toast.error(getApiErrorMessage(error, t("detail.review_submit_error")));
+      if (locationId) {
+        void queryClient.invalidateQueries({ queryKey: ["locations", locationId, "rating-check"] });
+      }
+      if (tourId) {
+        void queryClient.invalidateQueries({ queryKey: ["tours", "checkRating", tourId] });
+      }
     },
   });
 

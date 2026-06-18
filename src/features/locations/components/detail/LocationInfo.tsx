@@ -5,6 +5,8 @@ import { MapPin, Phone, Globe, Clock, CheckCircle2 } from "@/components/icons/so
 import { RatingStars } from '@/components/ui';
 import type { Location } from '@/types';
 import { useTranslations } from 'next-intl';
+import { useQuery } from '@tanstack/react-query';
+import { locationService } from '@/services/location.service';
 import { normalizeOpeningHoursDisplay } from '@/features/locations/utils/opening-hours-display';
 
 interface LocationInfoProps {
@@ -16,7 +18,45 @@ const infoCardClass =
 
 const LocationInfo: React.FC<LocationInfoProps> = ({ location }) => {
   const t = useTranslations('locations');
-  const avgRating = Math.min(5, Math.max(0, parseFloat(location.avg_rating) || 0));
+  const fallbackRating = Math.min(5, Math.max(0, parseFloat(location.avg_rating) || 0));
+
+  const statsQuery = useQuery({
+    queryKey: ['locations', location.id, 'rating-stats'],
+    queryFn: async () => {
+      const res = await locationService.getRatingStats(location.id);
+      if (!res.success || !res.data) {
+        throw res;
+      }
+      return res.data;
+    },
+    staleTime: 60 * 1000,
+  });
+
+  const { avgRating, reviewCount } = useMemo(() => {
+    const stats = statsQuery.data;
+    if (!stats) {
+      return { avgRating: fallbackRating, reviewCount: location.review_count };
+    }
+
+    const total = Object.values(stats).reduce(
+      (sum, count) => sum + (typeof count === 'number' ? count : 0),
+      0
+    );
+
+    if (total === 0) {
+      return { avgRating: fallbackRating, reviewCount: location.review_count };
+    }
+
+    const totalScore = Object.entries(stats).reduce(
+      (sum, [star, count]) => sum + Number(star) * (typeof count === 'number' ? count : 0),
+      0
+    );
+
+    return {
+      avgRating: Math.min(5, Math.max(0, totalScore / total)),
+      reviewCount: total,
+    };
+  }, [statsQuery.data, fallbackRating, location.review_count]);
 
   const openingHoursDisplay = useMemo(
     () => normalizeOpeningHoursDisplay(location.opening_hours),
@@ -40,7 +80,7 @@ const LocationInfo: React.FC<LocationInfoProps> = ({ location }) => {
         </h1>
 
         <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-on-surface-subtle">
-          <RatingStars rating={avgRating} count={location.review_count} showText size="sm" />
+          <RatingStars rating={avgRating} count={reviewCount} showText size="sm" />
           {location.address && (
             <div className="flex items-center gap-1.5">
               <MapPin className="h-4 w-4 shrink-0 text-primary" />

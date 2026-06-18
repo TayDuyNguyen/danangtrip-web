@@ -62,6 +62,8 @@ export interface LocationReview {
   images?: string[];
   createdAt: string;
   helpfulCount?: number;
+  isOwn?: boolean;
+  status?: "pending" | "approved" | "rejected";
 }
 
 /** Weekly schedule as stored in API JSON (`opening_hours` column). */
