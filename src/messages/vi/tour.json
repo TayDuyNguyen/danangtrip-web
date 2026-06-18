@@ -212,12 +212,8 @@
           },
           {
             "title": "3. Giá dịch vụ và thanh toán",
-            "body": "Mọi mức giá hiển thị trên website được tính bằng Việt Nam Đồng (VND). Đà Nẵng Trip hỗ trợ các phương thức thanh toán sau:",
-            "items": [
-              "SePay VietQR: quét mã QR chuyển khoản, hệ thống tự động xác nhận thanh toán 24/7 sau khi giao dịch thành công.",
-              "Chuyển khoản thủ công: chuyển khoản vào tài khoản ngân hàng chính thức của Đà Nẵng Trip, đơn hàng thường được admin kiểm tra và xác nhận trong giờ làm việc."
-            ],
-            "note": "Với SePay VietQR, hệ thống tự động cập nhật đơn và gửi email xác nhận sau khi nhận IPN thanh toán thành công. Với chuyển khoản thủ công, đơn sẽ được xác nhận sau khi admin đối soát giao dịch."
+            "body": "Mọi mức giá hiển thị trên website được tính bằng Việt Nam Đồng (VND). Đà Nẵng Trip hỗ trợ thanh toán qua SePay VietQR: quét mã QR chuyển khoản, hệ thống tự động xác nhận thanh toán 24/7 sau khi giao dịch thành công.",
+            "note": "Sau khi nhận IPN thanh toán thành công, hệ thống tự động cập nhật đơn và gửi email xác nhận."
           },
           {
             "title": "4. Quy chuẩn tham gia tour",

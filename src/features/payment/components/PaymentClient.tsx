@@ -24,12 +24,9 @@ export function PaymentClient() {
  
   const { data: paymentData, isLoading: isPaymentLoading } = usePaymentStatus(transactionCode);
   const [nowMs, setNowMs] = useState(() => Date.now());
-  const isSessionExpired = paymentData && paymentData.payment_method !== "bank_transfer"
-    ? isPaymentSessionExpired(paymentData, nowMs)
-    : false;
+  const isSessionExpired = paymentData ? isPaymentSessionExpired(paymentData, nowMs) : false;
   const shouldPollBooking = !paymentData || !isSessionExpired;
   const { data: bookingData, isLoading: isBookingLoading } = useBookingForPayment(bookingCode, shouldPollBooking);
-  const isBankTransfer = paymentData?.payment_method === "bank_transfer" || bookingData?.payment_method === "bank_transfer";
   const { retryPayment, isRetrying } = usePayment();
 
   useEffect(() => {
@@ -128,7 +125,7 @@ export function PaymentClient() {
         )}
 
         {status === "pending" && paymentData?.sepay_checkout && !isSessionExpired && (
-          <SepayQrCard checkout={paymentData.sepay_checkout} isBankTransfer={isBankTransfer} />
+          <SepayQrCard checkout={paymentData.sepay_checkout} />
         )}
 
         {status === "pending" && Number(paymentData?.short_amount || 0) > 0 && (
@@ -146,7 +143,7 @@ export function PaymentClient() {
           </div>
         )}
 
-        {status !== "redirecting" && (status === "failed" || status === "pending" || status === "expired") && bookingData && !isBankTransfer && (
+        {status !== "redirecting" && (status === "failed" || status === "pending" || status === "expired") && bookingData && (
           <PaymentRetryPanel
             expiresAt={paymentData?.expires_at}
             fallbackStartedAt={paymentData?.created_at ?? bookingData.booked_at}

@@ -212,12 +212,8 @@
           },
           {
             "title": "3. Pricing and Payment",
-            "body": "All prices displayed on the website are in Vietnamese Dong (VND). Danang Trip supports the following payment methods:",
-            "items": [
-              "SePay VietQR: scan the transfer QR code, and the system automatically confirms payment 24/7 after a successful transaction.",
-              "Manual bank transfer: transfer to Danang Trip's official bank account, and the order is usually reviewed and confirmed by an admin during business hours."
-            ],
-            "note": "With SePay VietQR, the system automatically updates the order and sends a confirmation email after a successful payment IPN is received. With manual bank transfer, the order is confirmed after an admin reconciles the transaction."
+            "body": "All prices displayed on the website are in Vietnamese Dong (VND). Danang Trip supports SePay VietQR: scan the transfer QR code and the system automatically confirms payment 24/7 after a successful transaction.",
+            "note": "After a successful payment IPN is received, the system automatically updates the order and sends a confirmation email."
           },
           {
             "title": "4. Tour Participation Rules",

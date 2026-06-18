@@ -19,7 +19,7 @@
     },
     "s4": {
       "title": "4. Đặt tour & Chính sách thanh toán",
-      "body": "Khi bạn đặt tour trên Đà Nẵng Trip, bạn ký kết thỏa thuận trực tiếp với Đối tác cung cấp dịch vụ đó. Chúng tôi đóng vai trò trung gian kỹ thuật và không chịu trách nhiệm về chất lượng dịch vụ thực tế của Đối tác. Giá niêm yết đã bao gồm các loại phí và thuế được liệt kê rõ ràng tại thời điểm đặt. Hiện tại nền tảng hỗ trợ 2 phương thức thanh toán: (1) SePay VietQR — quét mã QR, hệ thống tự xác nhận 24/7 sau khi nhận IPN thanh toán thành công; (2) Chuyển khoản thủ công — chuyển khoản vào tài khoản ngân hàng chính thức và thường được admin kiểm tra, xác nhận trong giờ làm việc. Với SePay VietQR, email xác nhận được gửi tự động sau khi thanh toán thành công; với chuyển khoản thủ công, đơn được xác nhận sau khi admin đối soát giao dịch."
+      "body": "Khi bạn đặt tour trên Đà Nẵng Trip, bạn ký kết thỏa thuận trực tiếp với Đối tác cung cấp dịch vụ đó. Chúng tôi đóng vai trò trung gian kỹ thuật và không chịu trách nhiệm về chất lượng dịch vụ thực tế của Đối tác. Giá niêm yết đã bao gồm các loại phí và thuế được liệt kê rõ ràng tại thời điểm đặt. Nền tảng hỗ trợ thanh toán qua SePay VietQR — quét mã QR, hệ thống tự xác nhận 24/7 sau khi nhận IPN thanh toán thành công và gửi email xác nhận tự động."
     },
     "s5": {
       "title": "5. Hủy tour & Hoàn tiền",
