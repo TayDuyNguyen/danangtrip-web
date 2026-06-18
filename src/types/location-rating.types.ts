@@ -8,6 +8,7 @@ export interface LocationRatingListItem {
   comment: string | null;
   helpful_count: number;
   created_at: string;
+  status?: "pending" | "approved" | "rejected";
   user?: {
     id: number;
     username: string;
@@ -20,6 +21,7 @@ export interface LocationRatingListItem {
 
 export interface LocationRatingCheckData {
   has_rated: boolean;
+  has_public_rating?: boolean;
   can_rate?: boolean;
   message?: string | null;
   rating: LocationRatingListItem | Record<string, unknown> | null;

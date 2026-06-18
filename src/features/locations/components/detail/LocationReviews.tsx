@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { RatingStars, Button } from '@/components/ui';
 import { MessageSquare, ThumbsUp } from "@/components/icons/solar";
 import type { LocationReview } from '@/types';
+import type { LocationRatingListItem } from '@/types/location-rating.types';
 import { format } from 'date-fns';
 import { vi, enUS } from 'date-fns/locale';
 import { useTranslations, useLocale } from 'next-intl';
@@ -15,9 +16,11 @@ import { locationService } from '@/services/location.service';
 import { ratingService } from '@/services/rating.service';
 import { shouldRetryQuery } from '@/lib/react-query';
 import { mapLocationRatingToReview } from '@/features/locations/utils/map-location-rating';
+import { mergeUserReviewIntoList } from '@/features/locations/utils/merge-user-review';
 import { useAuthStore } from '@/store/auth.store';
 import WriteReviewModal from '@/features/locations/components/detail/WriteReviewModal';
 import { getApiErrorMessage } from '@/utils';
+import { cn } from '@/lib/utils';
 
 interface LocationReviewsProps {
   locationId: number;
@@ -33,7 +36,7 @@ const LocationReviews: React.FC<LocationReviewsProps> = ({
   const t = useTranslations('locations');
   const locale = useLocale();
   const queryClient = useQueryClient();
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, user } = useAuthStore();
   const [modalOpen, setModalOpen] = useState(false);
   const [showNudge, setShowNudge] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -58,7 +61,7 @@ const LocationReviews: React.FC<LocationReviewsProps> = ({
       return res.data;
     },
     enabled: mounted,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 60 * 1000,
     retry: shouldRetryQuery,
   });
 
@@ -108,16 +111,48 @@ const LocationReviews: React.FC<LocationReviewsProps> = ({
     onError: (error) => toast.error(getApiErrorMessage(error, t('detail.helpful_error'))),
   });
 
+  const myRating = ratingCheckQuery.data?.rating as LocationRatingListItem | null | undefined;
+
   const reviews: LocationReview[] = useMemo(() => {
     const pages = ratingsQuery.data?.pages;
-    if (!pages?.length) return [];
-    return pages.flatMap((p) => p.data.map((row) => mapLocationRatingToReview(row)));
-  }, [ratingsQuery.data?.pages]);
+    const publicReviews = !pages?.length
+      ? []
+      : pages.flatMap((p) => p.data.map((row) => mapLocationRatingToReview(row)));
+
+    return mergeUserReviewIntoList(
+      publicReviews,
+      myRating,
+      (row) => mapLocationRatingToReview(row, { isOwn: true })
+    );
+  }, [ratingsQuery.data?.pages, myRating]);
 
   const firstPage = ratingsQuery.data?.pages[0];
-  const totalReviews = firstPage?.total ?? initialReviewCount;
-  const safeAverage = Math.min(5, Math.max(0, Number.isFinite(initialAverageRating) ? initialAverageRating : 0));
+  const fallbackAverage = Math.min(5, Math.max(0, Number.isFinite(initialAverageRating) ? initialAverageRating : 0));
+
+  const statsTotal = useMemo(() => {
+    const stats = statsQuery.data;
+    if (!stats) return null;
+    return Object.values(stats).reduce((sum, count) => sum + (typeof count === 'number' ? count : 0), 0);
+  }, [statsQuery.data]);
+
+  const displayAverage = useMemo(() => {
+    const stats = statsQuery.data;
+    if (!stats || statsTotal === null || statsTotal === 0) {
+      return fallbackAverage;
+    }
+
+    const totalScore = Object.entries(stats).reduce(
+      (sum, [star, count]) => sum + Number(star) * (typeof count === 'number' ? count : 0),
+      0
+    );
+
+    return Math.min(5, Math.max(0, totalScore / statsTotal));
+  }, [statsQuery.data, statsTotal, fallbackAverage]);
+
+  const totalReviews = firstPage?.total ?? statsTotal ?? initialReviewCount;
+  const isCheckingRating = isAuthenticated && (ratingCheckQuery.isLoading || ratingCheckQuery.isFetching);
   const hasRated = Boolean(ratingCheckQuery.data?.has_rated);
+  const hasPublicRating = ratingCheckQuery.data?.has_public_rating ?? hasRated;
 
   const distribution = useMemo(() => {
     const s = statsQuery.data;
@@ -137,7 +172,7 @@ const LocationReviews: React.FC<LocationReviewsProps> = ({
       setShowNudge((prev) => !prev);
       return;
     }
-    if (hasRated) return;
+    if (isCheckingRating || hasRated) return;
     setModalOpen(true);
   };
 
@@ -166,14 +201,14 @@ const LocationReviews: React.FC<LocationReviewsProps> = ({
 
         <div className="flex items-center gap-6">
           <div className="text-right">
-            <p className="mb-1 text-4xl font-semibold leading-none text-primary">{safeAverage.toFixed(1)}</p>
-            <RatingStars rating={safeAverage} size="sm" />
+            <p className="mb-1 text-4xl font-semibold leading-none text-primary">{displayAverage.toFixed(1)}</p>
+            <RatingStars rating={displayAverage} size="sm" />
           </div>
           <div className="relative">
             <button
               type="button"
               className="rounded-full border border-border bg-white px-5 py-2.5 text-sm font-medium text-on-surface transition-all duration-300 hover:border-primary/25 hover:bg-[#fafafa] disabled:opacity-40"
-              disabled={hasRated}
+              disabled={isCheckingRating || hasRated}
               onClick={openWriteModal}
             >
               {t('detail.write_review')}
@@ -246,7 +281,17 @@ const LocationReviews: React.FC<LocationReviewsProps> = ({
         </div>
       )}
 
-      {hasRated && <p className="text-xs text-on-surface-subtle">{t('detail.already_reviewed')}</p>}
+      {hasRated && !hasPublicRating ? (
+        <p className="text-xs text-amber-700">{t('detail.review_status_pending')}</p>
+      ) : null}
+
+      {hasRated && myRating?.status === 'rejected' ? (
+        <p className="text-xs text-amber-700">{t('detail.review_status_rejected')}</p>
+      ) : null}
+
+      {hasRated && hasPublicRating ? (
+        <p className="text-xs text-on-surface-subtle">{t('detail.already_reviewed')}</p>
+      ) : null}
 
       {ratingsQuery.isLoading ? (
         <div className="grid gap-4">
@@ -265,7 +310,20 @@ const LocationReviews: React.FC<LocationReviewsProps> = ({
       <div className="grid gap-4">
         {reviews.length > 0 ? (
           reviews.map((review) => (
-            <div key={review.id} className="rounded-[22px] border border-border bg-white p-5 shadow-[0_10px_28px_rgba(15,23,42,0.05)] transition-all duration-300 hover:border-primary/20">
+            <div
+              key={review.id}
+              className={cn(
+                'rounded-[22px] border bg-white p-5 shadow-[0_10px_28px_rgba(15,23,42,0.05)] transition-all duration-300 hover:border-primary/20',
+                review.isOwn || (user?.id != null && review.userId === String(user.id))
+                  ? 'border-primary/30 ring-1 ring-primary/10'
+                  : 'border-border'
+              )}
+            >
+              {(review.isOwn || (user?.id != null && review.userId === String(user.id))) && (
+                <p className="mb-3 text-[11px] font-semibold uppercase tracking-wide text-primary">
+                  {t('detail.your_review_title')}
+                </p>
+              )}
               <div className="flex items-start gap-4">
                 <div className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border border-border bg-[#fafafa] shadow-sm">
                   {review.userAvatar ? (

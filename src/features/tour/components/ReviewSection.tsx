@@ -14,6 +14,7 @@ import { ratingService } from "@/services/rating.service";
 import { useAuthStore } from "@/store/auth.store";
 import type { LocationRatingListItem } from "@/types/location-rating.types";
 import { getApiErrorMessage } from "@/utils";
+import { cn } from "@/lib/utils";
 import WriteReviewModal from "@/features/locations/components/detail/WriteReviewModal";
 import { resolveMediaUrl } from "@/utils/media-url";
 
@@ -36,11 +37,21 @@ export default function ReviewSection({ tourId, rating, count }: ReviewSectionPr
 
   const { data: apiReviews, isLoading: loadingReviews } = useTourRatings(tourId, { per_page: 5 });
   const { data: stats } = useTourRatingStats(tourId);
-  const { data: checkRating } = useCheckTourRating(tourId, isAuthenticated);
+  const { data: checkRating, isLoading: isCheckingRating, isFetching: isFetchingCheck } = useCheckTourRating(tourId, isAuthenticated);
+  const { user } = useAuthStore();
 
-  const displayReviews = apiReviews ?? [];
+  const myRating = checkRating?.rating as LocationRatingListItem | null | undefined;
+
+  const displayReviews = useMemo(() => {
+    const list = apiReviews ?? [];
+    if (!myRating?.id) return list;
+    if (list.some((review) => review.id === myRating.id)) return list;
+    return [myRating, ...list];
+  }, [apiReviews, myRating]);
+
   const totalReviews = stats ? Object.values(stats).reduce((sum, value) => sum + value, 0) : safeCount;
   const hasRated = Boolean(checkRating?.has_rated);
+  const isCheckingReview = isAuthenticated && (isCheckingRating || isFetchingCheck);
   const helpfulMutation = useMutation({
     mutationFn: (ratingId: number) => ratingService.markHelpful(ratingId),
     onSuccess: (response) => {
@@ -75,9 +86,11 @@ export default function ReviewSection({ tourId, rating, count }: ReviewSectionPr
       return;
     }
 
-    if (!hasRated) {
-      setReviewModalOpen(true);
+    if (isCheckingReview || hasRated) {
+      return;
     }
+
+    setReviewModalOpen(true);
   };
 
   // Calculate dynamic average rating from client-side stats to avoid SSR cache issues
@@ -103,7 +116,7 @@ export default function ReviewSection({ tourId, rating, count }: ReviewSectionPr
           <div className="h-6 w-1.5 rounded-full bg-primary" />
           <h2 className="text-2xl font-black tracking-tight text-on-surface">{td("reviews_title")}</h2>
         </div>
-        {!hasRated && (
+        {(!hasRated && !isCheckingReview) && (
           <div className="relative hidden md:block">
             <Button
               type="button"
@@ -190,7 +203,7 @@ export default function ReviewSection({ tourId, rating, count }: ReviewSectionPr
         </div>
 
         <div className="space-y-6 md:col-span-8">
-          {!hasRated && (
+          {(!hasRated && !isCheckingReview) && (
             <div className="relative w-full md:hidden">
               <Button
                 type="button"
@@ -259,6 +272,7 @@ export default function ReviewSection({ tourId, rating, count }: ReviewSectionPr
             </div>
           ) : displayReviews.length > 0 ? (
             displayReviews.map((review: LocationRatingListItem) => {
+              const isOwnReview = user?.id != null && Number(user.id) === review.user_id;
               const avatar = resolveMediaUrl(review.user?.avatar_url ?? review.user?.avatar) ?? null;
               const displayName = review.user?.full_name || review.user?.username || td("user_anonymous");
               const reviewImages = review.images?.map((img) => resolveMediaUrl(img.image_url)).filter(Boolean) as string[];
@@ -266,8 +280,16 @@ export default function ReviewSection({ tourId, rating, count }: ReviewSectionPr
               return (
                 <div
                   key={review.id}
-                  className="space-y-4 rounded-[24px] border border-border bg-[#f7f7f7] p-6 transition-colors hover:border-primary/20 hover:bg-white"
+                  className={cn(
+                    "space-y-4 rounded-[24px] border p-6 transition-colors hover:border-primary/20 hover:bg-white",
+                    isOwnReview ? "border-primary/30 bg-white ring-1 ring-primary/10" : "border-border bg-[#f7f7f7]"
+                  )}
                 >
+                  {isOwnReview ? (
+                    <p className="text-[11px] font-semibold uppercase tracking-wide text-primary">
+                      {locale === "vi" ? "Đánh giá của bạn" : "Your review"}
+                    </p>
+                  ) : null}
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-3">
                       <div className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border border-border bg-[#fafafa] shadow-sm">
