@@ -8,6 +8,35 @@ import { serverApiGet } from "@/lib/server-api";
 import { Metadata } from "next";
 import type { LandingPage, PaginatedResponse, Tour, TourCategory } from "@/types";
 
+const ALLOWED_TOUR_QUERY_KEYS = [
+  "page",
+  "per_page",
+  "sort_by",
+  "sort_order",
+  "price_min",
+  "price_max",
+  "duration",
+  "tour_category_id",
+  "booking_availability",
+  "available_from",
+  "available_to",
+] as const;
+
+function pickTourQueryParams(
+  searchParams: Record<string, string | string[] | undefined>,
+): Record<string, string> {
+  const picked: Record<string, string> = {};
+
+  for (const key of ALLOWED_TOUR_QUERY_KEYS) {
+    const value = searchParams[key];
+    if (typeof value === "string" && value !== "") {
+      picked[key] = value;
+    }
+  }
+
+  return picked;
+}
+
 interface Props {
   params: Promise<{ locale: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -31,8 +60,8 @@ async function LandingContent({ locale, searchParams }: { locale: string; search
 
   // Fallback filters for Da Nang
   const filters = {
-    search: "Đà Nẵng", // Force Da Nang context
-    ...searchParams,
+    search: "Đà Nẵng",
+    ...pickTourQueryParams(searchParams),
   };
 
   const [toursResponse, categoriesResponse, landingResponse] = await Promise.all([

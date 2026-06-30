@@ -178,7 +178,7 @@ export const SearchResultHeader = ({
       ) {
         handleSelectSuggestion(flatSuggestions[selectedIndex]);
       } else {
-        commitSearch(inputValue);
+        commitSearch(event.currentTarget.value);
       }
       return;
     }
@@ -371,6 +371,7 @@ export const SearchResultHeader = ({
             <SearchInput
               value={inputValue}
               onChange={setInputValue}
+              onSubmit={commitSearch}
               onFocus={() => setIsFocused(true)}
               onKeyDown={handleKeyDown}
               placeholder={tSearch("suggestions.search_placeholder")}

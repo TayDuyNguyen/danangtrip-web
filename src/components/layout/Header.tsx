@@ -159,6 +159,7 @@ const Header = () => {
                 <Link
                   key={link.path}
                   href={link.path}
+                  aria-label={t(link.name)}
                   aria-current={isLinkActive ? "page" : undefined}
                   className={`group/nav-item relative flex items-center rounded-full px-3 py-2.5 text-[14px] transition-all duration-300 hover:scale-105 active:scale-95 group-hover/nav-item:px-5 xl:px-5 ${
                     isLinkActive
@@ -167,10 +168,11 @@ const Header = () => {
                   }`}
                 >
                   {Icon && (
-                    <Icon 
+                    <Icon
+                      aria-hidden
                       className={`w-[18px] h-[18px] shrink-0 transition-colors duration-200 ${
                         isLinkActive ? "text-primary" : "text-[#5f5f5f] group-hover/nav-item:text-primary"
-                      }`} 
+                      }`}
                     />
                   )}
                   <span className="text-[14px] transition-all duration-300 max-w-0 opacity-0 overflow-hidden group-hover/nav-item:max-w-[120px] group-hover/nav-item:opacity-100 group-hover/nav-item:ml-2 xl:max-w-[120px] xl:opacity-100 xl:ml-2 whitespace-nowrap">

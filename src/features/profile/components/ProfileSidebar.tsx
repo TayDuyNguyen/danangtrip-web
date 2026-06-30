@@ -7,83 +7,9 @@ import { Link } from "@/i18n/navigation";
 import { useAuthStore } from "@/features/auth";
 import { PROTECTED_ROUTES } from "@/config/routes";
 import { useAppStore } from "@/store/app.store";
-import {
-  User,
-  Lock,
-  BookOpen,
-  Heart,
-  Bell,
-  Coins,
-  Sparkles,
-  Star,
-  Trash2,
-} from "lucide-react";
+import { PROFILE_NAV_ITEMS } from "@/features/profile/profileNavItems";
 import { cn } from "@/utils/string";
 import { resolveMediaUrl } from "@/utils/media-url";
-
-interface SidebarItem {
-  key: string;
-  labelKey: string;
-  href: string;
-  icon: React.ComponentType<{ className?: string }>;
-}
-
-const SIDEBAR_ITEMS: SidebarItem[] = [
-  {
-    key: "profile",
-    labelKey: "sidebar.profile",
-    href: PROTECTED_ROUTES.PROFILE,
-    icon: User,
-  },
-  {
-    key: "change_password",
-    labelKey: "sidebar.change_password",
-    href: PROTECTED_ROUTES.PASSWORD,
-    icon: Lock,
-  },
-  {
-    key: "ratings",
-    labelKey: "sidebar.ratings",
-    href: PROTECTED_ROUTES.RATINGS,
-    icon: Star,
-  },
-  {
-    key: "recommendations",
-    labelKey: "sidebar.recommendations",
-    href: PROTECTED_ROUTES.RECOMMENDATIONS,
-    icon: Sparkles,
-  },
-  {
-    key: "bookings",
-    labelKey: "sidebar.bookings",
-    href: PROTECTED_ROUTES.BOOKINGS,
-    icon: BookOpen,
-  },
-  {
-    key: "points",
-    labelKey: "sidebar.points",
-    href: PROTECTED_ROUTES.POINTS,
-    icon: Coins,
-  },
-  {
-    key: "favorites",
-    labelKey: "sidebar.favorites",
-    href: PROTECTED_ROUTES.FAVORITES,
-    icon: Heart,
-  },
-  {
-    key: "notifications",
-    labelKey: "sidebar.notifications",
-    href: PROTECTED_ROUTES.NOTIFICATIONS,
-    icon: Bell,
-  },
-  {
-    key: "delete_account",
-    labelKey: "sidebar.delete_account",
-    href: PROTECTED_ROUTES.DELETE_ACCOUNT,
-    icon: Trash2,
-  },
-];
 
 export function ProfileSidebar() {
   const { user } = useAuthStore();
@@ -142,7 +68,7 @@ export function ProfileSidebar() {
         aria-label="Profile settings navigation"
         className="overflow-hidden rounded-[20px] border border-border bg-white shadow-[0_1px_3px_rgba(0,0,0,0.08)]"
       >
-        {SIDEBAR_ITEMS.map((item, index) => {
+        {PROFILE_NAV_ITEMS.map((item, index) => {
           const Icon = item.icon;
           const active = isActive(item.href);
           const isDestructive = item.key === "delete_account";

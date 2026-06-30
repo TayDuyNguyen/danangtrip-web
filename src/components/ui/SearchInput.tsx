@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useMemo, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { UilSearch } from "@iconscout/react-unicons";
 import { cn } from "@/utils/string";
 import { debounce } from "@/utils/debounce";
@@ -17,6 +17,7 @@ interface SearchInputProps {
   debounceMs?: number;
   label?: string;
   actionText?: string;
+  onSubmit?: (value: string) => void;
 }
 
 export default function SearchInput({
@@ -31,10 +32,14 @@ export default function SearchInput({
   debounceMs = 500,
   label = "Search",
   actionText = "Go",
+  onSubmit,
 }: SearchInputProps) {
   const autoId = useId();
   const inputId = `search-input-${autoId.replace(/:/g, "")}`;
+  const inputRef = useRef<HTMLInputElement>(null);
   const [localValue, setLocalValue] = useState(value);
+
+  const resolveValue = () => inputRef.current?.value ?? localValue;
 
   useEffect(() => {
     setLocalValue(value);
@@ -66,13 +71,15 @@ export default function SearchInput({
 
   const handleActionClick = () => {
     debouncedOnChange?.cancel();
-    onChange(localValue);
+    const val = resolveValue();
+    onChange(val);
+    onSubmit?.(val);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       debouncedOnChange?.cancel();
-      onChange(localValue);
+      onChange(resolveValue());
     }
 
     onKeyDown?.(e);
@@ -95,6 +102,7 @@ export default function SearchInput({
             {label}
           </label>
           <input
+            ref={inputRef}
             id={inputId}
             type="search"
             value={localValue}

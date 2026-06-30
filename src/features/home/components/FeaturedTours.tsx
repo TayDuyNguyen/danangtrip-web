@@ -75,10 +75,10 @@ const FeaturedTours = () => {
           {/* Navigation Buttons */}
           <button
             onClick={scrollLeft}
-            className={`absolute left-0 top-[40%] -translate-y-1/2 -translate-x-1/2 z-30 w-10 h-10 rounded-full bg-surface border border-border text-on-surface hover:bg-primary hover:border-primary hover:text-white flex items-center justify-center shadow-md transition-all hidden lg:flex active:scale-90 hover:scale-110 opacity-0 ${
+            className={`absolute left-0 top-[40%] -translate-y-1/2 -translate-x-1/2 z-30 w-10 h-10 rounded-full bg-surface border border-border text-on-surface hover:bg-primary hover:border-primary hover:text-white flex items-center justify-center shadow-md transition-all hidden lg:flex active:scale-90 hover:scale-110 ${
               canScrollLeft
-                ? "group-hover/nav:opacity-100 cursor-pointer"
-                : "group-hover/nav:opacity-10 pointer-events-none cursor-default"
+                ? "lg:opacity-70 group-hover/nav:opacity-100 cursor-pointer"
+                : "lg:opacity-10 pointer-events-none cursor-default"
             }`}
             aria-label={t("common.accessibility.previous")}
           >
@@ -87,10 +87,10 @@ const FeaturedTours = () => {
 
           <button
             onClick={scrollRight}
-            className={`absolute right-0 top-[40%] -translate-y-1/2 translate-x-1/2 z-30 w-10 h-10 rounded-full bg-surface border border-border text-on-surface hover:bg-primary hover:border-primary hover:text-white flex items-center justify-center shadow-md transition-all hidden lg:flex active:scale-90 hover:scale-110 opacity-0 ${
+            className={`absolute right-0 top-[40%] -translate-y-1/2 translate-x-1/2 z-30 w-10 h-10 rounded-full bg-surface border border-border text-on-surface hover:bg-primary hover:border-primary hover:text-white flex items-center justify-center shadow-md transition-all hidden lg:flex active:scale-90 hover:scale-110 ${
               canScrollRight
-                ? "group-hover/nav:opacity-100 cursor-pointer"
-                : "group-hover/nav:opacity-10 pointer-events-none cursor-default"
+                ? "lg:opacity-70 group-hover/nav:opacity-100 cursor-pointer"
+                : "lg:opacity-10 pointer-events-none cursor-default"
             }`}
             aria-label={t("common.accessibility.next")}
           >
