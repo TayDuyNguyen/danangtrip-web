@@ -1,0 +1,25 @@
+{
+  "cookies": [
+    {
+      "name": "NEXT_LOCALE",
+      "value": "vi",
+      "domain": "localhost",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "http://localhost:3000",
+      "localStorage": [
+        {
+          "name": "auth-storage",
+          "value": "{\"state\":{\"user\":null,\"token\":null,\"isAuthenticated\":false},\"version\":0}"
+        }
+      ]
+    }
+  ]
+}

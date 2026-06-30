@@ -15,7 +15,8 @@
   "hero_type_label": "Loại khám phá",
   "hero_chip_beaches": "Bãi biển",
   "hero_chip_food_tours": "Tour ẩm thực",
-  "hero_chip_local_guides": "Hướng dẫn bản địa",
+    "hero_chip_local_guides": "Hướng dẫn bản địa",
+    "hero_slides_label": "Ảnh giới thiệu trang chủ",
   "trending": "Xu hướng",
   "stats": {
     "users": "Khách hàng",

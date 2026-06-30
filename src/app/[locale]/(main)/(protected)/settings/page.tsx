@@ -1,18 +1,29 @@
-import { useTranslations } from "next-intl";
+import type { Metadata } from "next";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { ProfileLayoutWrapper } from "@/features/profile/components/ProfileLayoutWrapper";
+import { SettingsHub } from "@/features/profile/components/SettingsHub";
 
-export default function SettingsPage() {
-  const t = useTranslations("settings");
-  
+interface Props {
+  params: Promise<{ locale: string }>;
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "settings" });
+
+  return {
+    title: t("title"),
+    description: t("subtitle"),
+  };
+}
+
+export default async function SettingsPage({ params }: Props) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
-      <h1 className="text-on-surface-subtlexl font-bold text-white mb-6">{t("title")}</h1>
-      <div className="glass-shell">
-        <div className="glass-surface glass-inner rounded-lg p-6">
-          <p className="text-[#a3a3a3]">
-            {t("subtitle")}
-          </p>
-        </div>
-      </div>
-    </div>
+    <ProfileLayoutWrapper breadcrumbs={[{ labelKey: "breadcrumb.settings", href: "/settings" }]}>
+      <SettingsHub />
+    </ProfileLayoutWrapper>
   );
 }

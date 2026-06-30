@@ -12,6 +12,7 @@ import { useFavoriteToggle } from "@/hooks/useFavorite";
 import { useAuthStore } from "@/store/auth.store";
 import { localFavoriteLocations } from "@/utils/local-favorites";
 import { formatLocationPriceRange } from "@/utils/format";
+import { cn } from "@/utils/string";
 
 interface LocationCardProps {
   location: Location;
@@ -168,11 +169,13 @@ export default function LocationCard({ location, isFavorite = false }: LocationC
             handleFavoriteClick();
           }}
           disabled={toggleMutation.isPending}
-          className={[
-            "absolute right-4 top-4 z-20 flex h-11 w-11 items-center justify-center rounded-full border border-border bg-white/92 text-on-surface shadow-sm backdrop-blur-sm transition-all duration-300 group/heart",
-            optimisticIsFavorite ? "border-red-200 bg-red-500 text-white hover:bg-red-600" : "hover:border-primary/20 hover:text-red-500",
-            toggleMutation.isPending ? "cursor-not-allowed opacity-60" : "",
-          ].join(" ")}
+          className={cn(
+            "absolute right-4 top-4 z-20 flex h-11 w-11 items-center justify-center rounded-full border shadow-sm backdrop-blur-sm transition-all duration-300 group/heart",
+            optimisticIsFavorite
+              ? "border-red-200 bg-red-500 text-white hover:bg-red-600"
+              : "border-border bg-white/92 text-on-surface hover:border-primary/20 hover:text-red-500",
+            toggleMutation.isPending && "cursor-not-allowed opacity-60",
+          )}
           aria-label={t("buttons.favorite_aria")}
           aria-pressed={optimisticIsFavorite}
         >
@@ -186,9 +189,9 @@ export default function LocationCard({ location, isFavorite = false }: LocationC
               />
             </svg>
           ) : optimisticIsFavorite ? (
-            <IoHeart className="text-2xl text-white transition-transform group-hover/heart:scale-110" />
+            <IoHeart className="text-2xl transition-transform group-hover/heart:scale-110" />
           ) : (
-            <IoHeartOutline className="text-2xl transition-transform group-hover/heart:scale-110" />
+            <IoHeartOutline className="text-2xl text-on-surface transition-transform group-hover/heart:scale-110 group-hover:text-red-500" />
           )}
         </button>
       </div>

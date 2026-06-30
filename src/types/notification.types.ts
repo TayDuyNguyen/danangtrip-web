@@ -19,7 +19,7 @@ export interface NotificationListParams {
   per_page?: number;
   type?: string;
   read?: boolean;
-  is_read?: boolean;
+  is_read?: boolean | 0 | 1;
 }
 
 export interface NotificationUnreadCount {

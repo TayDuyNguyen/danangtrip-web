@@ -15,7 +15,8 @@
   "hero_type_label": "Explore type",
   "hero_chip_beaches": "Beaches",
   "hero_chip_food_tours": "Food tours",
-  "hero_chip_local_guides": "Local guides",
+    "hero_chip_local_guides": "Local guides",
+    "hero_slides_label": "Homepage intro slides",
   "trending": "Trending",
   "stats": {
     "users": "Customers",

@@ -17,6 +17,14 @@ import {
 import type { SearchSuggestionItem } from "@/types/search-suggestion.types";
 import IntroScene from "./IntroScene";
 
+const HERO_INTRO_IMAGES = [
+  "/images/intro/my_khe_beach.png",
+  "/images/intro/dragon_bridge.png",
+  "/images/intro/golden_bridge.png",
+  "/images/intro/lady_buddha.png",
+  "/images/intro/son_tra.png",
+] as const;
+
 const Hero = () => {
   const t = useTranslations();
   const router = useRouter();
@@ -32,7 +40,7 @@ const Hero = () => {
   const [searchType, setSearchType] = useState<SelectOption>(searchOptions[0]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
-  const [activeScene, setActiveScene] = useState(1);
+  const [slideIndex, setSlideIndex] = useState(0);
   const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
 
   const searchContainerRef = useRef<HTMLFormElement>(null);
@@ -107,14 +115,9 @@ const Hero = () => {
       <div className="container">
         <div className="relative min-h-[640px] overflow-hidden rounded-[32px] border border-border bg-black shadow-[0_30px_90px_rgba(0,0,0,0.18)] md:min-h-[720px]">
           <IntroScene
-            images={[
-              "/images/intro/my_khe_beach.png",
-              "/images/intro/dragon_bridge.png",
-              "/images/intro/golden_bridge.png",
-              "/images/intro/lady_buddha.png",
-              "/images/intro/son_tra.png",
-            ]}
-            onSceneChange={setActiveScene}
+            images={[...HERO_INTRO_IMAGES]}
+            slideIndex={slideIndex}
+            onSlideIndexChange={setSlideIndex}
           />
 
           <div className="absolute inset-0 bg-gradient-to-b from-black/18 via-black/26 to-black/62" />
@@ -243,16 +246,24 @@ const Hero = () => {
             <div className="flex-1" />
           </div>
 
-          <div className="absolute bottom-5 left-1/2 z-30 flex -translate-x-1/2 items-center gap-2.5">
-            {Array.from({ length: 5 }).map((_, idx) => {
+          <div
+            className="absolute bottom-5 left-1/2 z-30 flex -translate-x-1/2 items-center gap-2.5"
+            role="tablist"
+            aria-label={t("home.hero_slides_label")}
+          >
+            {HERO_INTRO_IMAGES.map((_, idx) => {
               const sceneNum = idx + 1;
+              const isActive = slideIndex === idx;
               return (
                 <button
                   key={sceneNum}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  aria-current={isActive ? "true" : undefined}
+                  onClick={() => setSlideIndex(idx)}
                   className={`h-2.5 rounded-full transition-all duration-300 ${
-                    activeScene === sceneNum
-                      ? "w-8 bg-white"
-                      : "w-2.5 bg-white/45"
+                    isActive ? "w-8 bg-white" : "w-2.5 bg-white/45 hover:bg-white/70"
                   }`}
                   aria-label={`Slide ${sceneNum}`}
                   suppressHydrationWarning

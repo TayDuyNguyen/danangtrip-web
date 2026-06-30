@@ -35,7 +35,7 @@ export function NotificationsPageClient() {
   const queryParams = {
     page,
     per_page: perPage,
-    is_read: activeTab === "unread" ? false : undefined,
+    ...(activeTab === "unread" ? { is_read: 0 as const } : {}),
   };
 
   const {

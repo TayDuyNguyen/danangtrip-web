@@ -1,13 +1,14 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import Image from "next/image";
 import { useLocale } from "next-intl";
 import { AnimatePresence, motion } from "framer-motion";
 
 interface IntroSceneProps {
   images?: string[];
-  onSceneChange?: (scene: number) => void;
+  slideIndex: number;
+  onSlideIndexChange: (index: number) => void;
 }
 
 type IntroImage = {
@@ -70,9 +71,8 @@ const INTRO_IMAGES: IntroImage[] = [
 
 const SLIDE_INTERVAL_MS = 7200;
 
-export default function IntroScene({ images, onSceneChange }: IntroSceneProps) {
+export default function IntroScene({ images, slideIndex, onSlideIndexChange }: IntroSceneProps) {
   const locale = useLocale();
-  const [index, setIndex] = useState(0);
 
   const slides = useMemo(() => {
     if (!images?.length) return INTRO_IMAGES;
@@ -83,18 +83,17 @@ export default function IntroScene({ images, onSceneChange }: IntroSceneProps) {
     });
   }, [images]);
 
-  const current = slides[index % slides.length];
+  const index = slideIndex % slides.length;
+  const current = slides[index];
   const isVi = locale === "vi";
 
   useEffect(() => {
-    onSceneChange?.(index + 1);
-
     const timer = window.setTimeout(() => {
-      setIndex((value) => (value + 1) % slides.length);
+      onSlideIndexChange((index + 1) % slides.length);
     }, SLIDE_INTERVAL_MS);
 
     return () => window.clearTimeout(timer);
-  }, [index, onSceneChange, slides.length]);
+  }, [index, onSlideIndexChange, slides.length]);
 
   return (
     <div className="absolute inset-0 z-0 overflow-hidden bg-black">

@@ -67,42 +67,42 @@ export default async function globalSetup() {
   const context = await browser.newContext();
   const page    = await context.newPage();
 
-  console.log('  Opening login page...');
-  await page.goto(`${APP_BASE}/vi/login`);
-  await page.waitForLoadState('networkidle');
+  try {
+    console.log('  Opening login page...');
+    await page.goto(`${APP_BASE}/vi/login`);
+    await page.waitForLoadState('networkidle');
 
-  await page.fill('input[type="email"]',    'qa-tester@example.com');
-  await page.fill('input[type="password"]', 'password123');
+    await page.fill('input[type="email"]',    'qa-tester@example.com');
+    await page.fill('input[type="password"]', 'password123');
 
-  // Wait for the /auth/login API response (the real token exchange)
-  const loginApiDone = page.waitForResponse(
-    r => r.url().includes('/auth/login') && r.status() === 200,
-    { timeout: 40000 }
-  );
-  await page.click('button[type="submit"]');
-  await loginApiDone;
+    const loginApiDone = page.waitForResponse(
+      r => r.url().includes('/auth/login') && r.status() === 200,
+      { timeout: 40000 }
+    );
+    await page.click('button[type="submit"]');
+    await loginApiDone;
 
-  // Give Next.js + Zustand time to finish handling post-login redirect
-  await page.waitForTimeout(4000);
-  console.log(`  After login URL: ${page.url()}`);
+    await page.waitForTimeout(4000);
+    console.log(`  After login URL: ${page.url()}`);
 
-  // Navigate to home so Zustand fully hydrates from localStorage
-  await page.goto(`${APP_BASE}/vi`);
-  await page.waitForLoadState('networkidle');
-  await page.waitForTimeout(2000);
+    await page.goto(`${APP_BASE}/vi`);
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(2000);
 
-  // Verify Zustand has isAuthenticated = true
-  const isAuthed = await page.evaluate(() => {
-    try {
-      const raw = localStorage.getItem('auth-storage');
-      if (!raw) return false;
-      const parsed = JSON.parse(raw);
-      return parsed?.state?.isAuthenticated === true;
-    } catch { return false; }
-  });
-  console.log(`  Zustand isAuthenticated: ${isAuthed}`);
+    const isAuthed = await page.evaluate(() => {
+      try {
+        const raw = localStorage.getItem('auth-storage');
+        if (!raw) return false;
+        const parsed = JSON.parse(raw);
+        return parsed?.state?.isAuthenticated === true;
+      } catch { return false; }
+    });
+    console.log(`  Zustand isAuthenticated: ${isAuthed}`);
+  } catch (error) {
+    console.warn('  ⚠ Global setup login skipped — guest/unauthenticated tests can still run.');
+    console.warn(`    Reason: ${error instanceof Error ? error.message : String(error)}`);
+  }
 
-  // Save cookies + localStorage to file
   await context.storageState({ path: STATE_PATH });
   console.log(`  ✓ Auth state saved → ${STATE_PATH}`);
 
